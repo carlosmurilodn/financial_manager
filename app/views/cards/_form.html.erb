@@ -1,0 +1,59 @@
+<%= form_with model: card, local: true do |f| %>
+  <!-- Linha 1: Nome e Número -->
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <%= f.label :name, t("cards.form.name") %>
+      <%= f.text_field :name, class: "form-control" %>
+    </div>
+
+    <div class="col-md-6">
+      <%= f.label :number, t("cards.form.number") %>
+      <%= f.text_field :number,
+            class: "form-control cartao",
+            placeholder: "1234 5678 1234 5678",
+            maxlength: 19,
+            oninput: "formatCardNumber(this)" %>
+    </div>
+  </div>
+
+  <!-- Linha 2: Limites e Datas -->
+  <div class="row mb-3">
+    <div class="col-md-3">
+      <%= f.label :total_limit, "Limite Total" %>
+      <%= f.text_field :total_limit,
+            class: "form-control moeda",
+            value: (card.total_limit.present? ? sprintf('%.2f', card.total_limit).gsub('.', ',') : "0,00"),
+            oninput: "formatMoeda(this)" %>
+    </div>
+
+    <div class="col-md-3">
+      <%= f.label :remaining_limit, "Limite Restante" %>
+      <%= f.text_field :remaining_limit,
+            class: "form-control moeda",
+            value: (card.remaining_limit.present? ? sprintf('%.2f', card.remaining_limit).gsub('.', ',') : "0,00"),
+            oninput: "formatMoeda(this)" %>
+    </div>
+
+    <div class="col-md-3">
+      <%= f.label :due_day, "Dia do Vencimento" %>
+      <%= f.select :due_day,
+          options_for_select((1..31).map { |d| [format('%02d', d), d] }, card.due_day),
+          { prompt: "Selecione o dia" },
+          class: "form-select" %>
+    </div>
+
+    <div class="col-md-3">
+      <%= f.label :best_day, "Melhor Dia de Compra" %>
+      <%= f.select :best_day,
+          options_for_select((1..31).map { |d| [format('%02d', d), d] }, card.best_day),
+          { prompt: "Selecione o dia" },
+          class: "form-select" %>
+    </div>
+  </div>
+
+  <!-- Linha 3: Botão de Salvar -->
+  <div class="mb-3">
+    <%= f.submit t("cards.form.submit"), class: "btn btn-primary" %>
+  </div>
+<% end %>
+

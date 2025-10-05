@@ -1,0 +1,14 @@
+<tfoot id="incomes-totals">
+  <tr>
+    <th colspan="1">Total Recebido</th>
+    <th colspan="5">R$ <%= number_with_precision(total_received, precision: 2) %></th>
+  </tr>
+  <tr>
+    <th colspan="1">Total Pendente</th>
+    <th colspan="5">R$ <%= number_with_precision(total_pending, precision: 2) %></th>
+  </tr>
+  <tr>
+    <th colspan="1">Total Geral</th>
+    <th colspan="5">R$ <%= number_with_precision(total_amount, precision: 2) %></th>
+  </tr>
+</tfoot>

@@ -1,0 +1,111 @@
+pt-BR:
+  # Geral
+  helpers:
+    submit:
+      create: "Criar %{model}"
+      update: "Atualizar %{model}"
+      submit: "Salvar"
+
+  # Modelos (singular, para botões e formulários)
+  models:
+    expense: "Despesa"
+    income: "Receita"
+    card: "Cartão"
+    category: "Categoria"
+
+  # Mensagens de flash
+  notices:
+    expense_created: "Despesa criada com sucesso!"
+    expense_updated: "Despesa atualizada com sucesso!"
+    expense_destroyed: "Despesa removida com sucesso!"
+    income_created: "Receita criada com sucesso!"
+    income_updated: "Receita atualizada com sucesso!"
+    income_destroyed: "Receita removida com sucesso!"
+    card_created: "Cartão criado com sucesso!"
+    card_updated: "Cartão atualizado com sucesso!"
+    card_destroyed: "Cartão removido com sucesso!"
+    category_created: "Categoria criada com sucesso!"
+    category_updated: "Categoria atualizada com sucesso!"
+    category_destroyed: "Categoria removida com sucesso!"
+
+  # Formulários
+  expenses:
+    form:
+      submit: "Salvar Despesa"
+      description: "Descrição"
+      amount: "Valor"
+      date: "Data"
+      balance_month: "Mês do Balanço"
+      category: "Categoria"
+      payment_method: "Forma de Pagamento"
+      card: "Cartão"
+      paid: "Pago?"
+
+  incomes:
+    form:
+      submit: "Salvar Receita"
+      description: "Descrição"
+      amount: "Valor"
+      date: "Data"
+      balance_month: "Mês do Balanço"
+      paid: "Recebida?"
+
+  cards:
+    form:
+      submit: "Salvar Cartão"
+      name: "Nome"
+      number: "Número do Cartão (opcional)"
+
+  categories:
+    form:
+      submit: "Salvar Categoria"
+      name: "Nome"
+
+  # Tabelas (plural)
+  tables:
+    expenses:
+      description: "Descrição"
+      amount: "Valor"
+      date: "Data"
+      balance_month: "Mês Referência"
+      category: "Categoria"
+      payment_method: "Pagamento"
+      card: "Cartão"
+      paid: "Paga?"
+      actions: "Ações"
+      total: "Total"
+
+    incomes:
+      description: "Descrição"
+      amount: "Valor"
+      date: "Data"
+      balance_month: "Mês Referência"
+      paid: "Recebida?"
+      actions: "Ações"
+      total: "Total"
+
+    cards:
+      name: "Nome"
+      number: "Número"
+      actions: "Ações"
+
+    categories:
+      name: "Nome"
+      actions: "Ações"
+
+  # Botões genéricos
+  buttons:
+    new:
+      feminine: "Nova %{model}"
+      masculine: "Novo %{model}"
+    edit: "Editar"
+    delete: "Excluir"
+    filter: "Filtrar"
+  boolean:
+    pago: "Sim"
+    nao_pago: "Não"
+  menus:
+    expenses: "Despesas"
+    incomes: "Receitas"
+    cards: "Cartões"
+    categories: "Categorias"

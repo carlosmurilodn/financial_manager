@@ -1,0 +1,19 @@
+<tr id="<%= dom_id(income) %>" class="<%= income.paid ? 'table-success' : 'table-warning' %>">
+  <td><%= income.description %></td>
+  <td>R$ <%= number_with_precision(income.amount, precision: 2) %></td>
+  <td><%= income.date.strftime("%d/%m/%Y") %></td>
+  <td><%= income.balance_month.strftime("%m/%Y") %></td>
+  <td>
+    <%= link_to (income.paid ? "Sim" : "Não"),
+                toggle_paid_income_path(income),
+                method: :patch,
+                data: { turbo_method: :patch, turbo_stream: true },
+                class: "btn btn-sm btn-secondary" %>
+  </td>
+  <td>
+    <%= link_to t("buttons.edit"), edit_income_path(income), class: "btn btn-sm btn-primary" %>
+    <%= link_to t("buttons.delete"), income_path(income),
+                data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
+                class: "btn btn-sm btn-danger" %>
+  </td>
+</tr>

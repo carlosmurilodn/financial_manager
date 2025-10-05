@@ -1,0 +1,94 @@
+<%= form_with model: expense, local: true do |f| %>
+  <!-- Descrição -->
+  <div class="row mb-3">
+    <div class="col-12">
+      <%= f.label :description, t("expenses.form.description") %>
+      <%= f.text_field :description, class: "form-control" %>
+    </div>
+  </div>
+
+  <!-- Valor + Pago / Data / Mês do Balanço -->
+  <div class="row mb-3 align-items-end">
+    <div class="col-md-4">
+      <%= f.label :amount, t("expenses.form.amount") %>
+      <div class="d-flex align-items-center gap-2">
+        <%= f.text_field :amount, class: "form-control moeda flex-grow-1", 
+            value: (expense.amount.present? ? sprintf('%.2f', expense.amount).gsub('.', ',') : "R$ 0,00"),
+            oninput: "formatMoeda(this)" %>
+
+        <div class="form-check mb-0">
+          <%= f.check_box :paid, class: "form-check-input", id: "expense_paid" %>
+          <%= f.label :paid, t("expenses.form.paid"), class: "form-check-label ms-1" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <%= f.label :date, t("expenses.form.date") %>
+      <%= f.date_field :date, class: "form-control" %>
+    </div>
+
+    <div class="col-md-4">
+      <%= f.label :balance_month, t("expenses.form.balance_month") %>
+      <%= f.date_field :balance_month, class: "form-control" %>
+    </div>
+  </div>
+
+  <!-- Categoria / Forma de Pagamento / Cartão -->
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <%= f.label :category_id, t("expenses.form.category") %>
+      <%= f.collection_select :category_id, Category.all, :id, :display_name, { prompt: "Selecione" }, { class: "form-select" } %>
+    </div>
+
+    <div class="col-md-4">
+      <%= f.label :payment_method, t("expenses.form.payment_method") %>
+      <%= f.select :payment_method, Expense.payment_method_names.map { |k,v| [v,k] },
+        { prompt: "Selecione" },
+        { class: "form-select", id: "payment_method_select" } %>
+    </div>
+
+    <div class="col-md-4">
+      <%= f.label :card_id, t("expenses.form.card") %>
+      <%= f.collection_select :card_id, Card.all, :id, :display_name, { prompt: "Selecione" }, { class: "form-select" } %>
+    </div>
+  </div>
+
+  <!-- Parcelamento (aparece só para crédito parcelado) -->
+  <div class="row mb-3" id="parcelamento_section" style="<%= expense.payment_method_credito_parcelado? ? '' : 'display:none;' %>">
+    
+    <div class="col-md-6">
+      <%= f.label :current_installment, "Parcela Atual" %>
+      <%= f.number_field :current_installment, class: "form-control", value: expense.current_installment || 1, min: 1 %>
+    </div>
+
+    <div class="col-md-6">
+      <%= f.label :installments_count, "Total de Parcelas" %>
+      <%= f.number_field :installments_count, class: "form-control", value: expense.installments_count || 1, min: 1 %>
+    </div>
+
+  </div>
+
+  <!-- Botão Salvar -->
+  <div class="mb-3">
+    <%= f.submit t("expenses.form.submit"), class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<script>
+  document.addEventListener("turbo:load", function() {
+    const paymentSelect = document.getElementById("payment_method_select");
+    const parcelSection = document.getElementById("parcelamento_section");
+
+    function toggleParcelSection() {
+      if (paymentSelect.value === "credito_parcelado") {
+        parcelSection.style.display = "flex";
+      } else {
+        parcelSection.style.display = "none";
+      }
+    }
+
+    paymentSelect.addEventListener("change", toggleParcelSection);
+    toggleParcelSection(); // exibe corretamente no load
+  });
+</script>

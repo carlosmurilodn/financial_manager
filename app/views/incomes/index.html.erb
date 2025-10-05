@@ -1,0 +1,40 @@
+<div class="container py-4">
+  <h1 class="mb-4">Receitas</h1>
+
+  <%= link_to t("buttons.new.feminine", model: t("models.income")), new_income_path, class: "btn btn-success mb-3" %>
+
+    <!-- Form de filtro por mês -->
+  <%= form_with url: incomes_path, method: :get, local: true, class: "mb-3" do |f| %>
+    <div class="row g-2">
+      <div class="col-auto">
+        <%= f.label :month, "Filtrar Mês" %>
+        <%= f.month_field :month, value: params[:month], class: "form-control" %>
+      </div>
+      <div class="col-auto align-self-end">
+        <%= f.submit t("buttons.filter"), class: "btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Descrição</th>
+        <th>Valor</th>
+        <th>Data</th>
+        <th>Mês Referência</th>
+        <th>Recebida?</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="incomes-list">
+      <% @incomes.each do |income| %>
+        <%= render partial: "income_row", locals: { income: income } %>
+      <% end %>
+    </tbody>
+      <%= render "incomes_totals", 
+      total_received: @total_received, 
+      total_pending: @total_pending, 
+      total_amount: @total_amount %>
+  </table>
+</div>

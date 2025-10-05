@@ -1,0 +1,44 @@
+<%= form_with model: income, local: true do |f| %>
+  <!-- Linha 1: Descrição -->
+  <div class="row mb-3">
+    <div class="col-12">
+      <%= f.label :description, t("incomes.form.description") %>
+      <%= f.text_field :description, class: "form-control" %>
+    </div>
+  </div>
+
+  <!-- Linha 2: Valor + Pago / Data / Mês do Balanço -->
+  <div class="row mb-3 align-items-end">
+    <!-- Valor + Pago -->
+    <div class="col-md-4">
+      <div class="d-flex align-items-center gap-3">
+        <div class="flex-grow-1">
+          <%= f.label :amount, t("incomes.form.amount") %>
+          <%= f.text_field :amount, class: "form-control moeda", 
+          value: (income.amount.present? ? sprintf('%.2f', income.amount).gsub('.', ',') : "0,00"),
+          oninput: "formatMoeda(this)" %>
+        </div>
+
+        <div class="form-check mb-2">
+          <%= f.check_box :paid, class: "form-check-input", id: "income_paid" %>
+          <%= f.label :paid, t("incomes.form.paid"), class: "form-check-label ms-1", for: "income_paid" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <%= f.label :date, t("incomes.form.date") %>
+      <%= f.date_field :date, class: "form-control" %>
+    </div>
+
+    <div class="col-md-4">
+      <%= f.label :balance_month, t("incomes.form.balance_month") %>
+      <%= f.date_field :balance_month, class: "form-control" %>
+    </div>
+  </div>
+
+  <!-- Linha 3: Botão de Salvar -->
+  <div class="mb-3">
+    <%= f.submit t("incomes.form.submit"), class: "btn btn-primary" %>
+  </div>
+<% end %>

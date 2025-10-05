@@ -1,0 +1,9 @@
+<%= turbo_stream.remove @income %>
+
+<%= turbo_stream.replace "incomes-totals" do %>
+  <%= render partial: "incomes_totals", locals: { 
+        total_received: @total_received, 
+        total_pending: @total_pending, 
+        total_amount: @total_amount 
+      } %>
+<% end %>

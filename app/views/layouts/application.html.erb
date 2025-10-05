@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gerenciador Financeiro💲</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "turbo", type: "module" %>
+
+  </head>
+
+  <script>
+    function formatMoeda(el) {
+      let val = el.value.replace(/\D/g, ""); // remove tudo que não é número
+      if (!val) {
+        el.value = "R$ 0,00";
+        return;
+      }
+
+      // transforma em número com 2 casas decimais
+      val = (parseInt(val) / 100).toFixed(2);
+
+      // separa parte inteira e decimal
+      let partes = val.split(".");
+      let inteiro = partes[0];
+      let decimal = partes[1];
+
+      // adiciona ponto a cada milhar
+      inteiro = inteiro.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+      el.value = "R$ " + inteiro + "," + decimal;
+    }
+
+    // Função para formatar número de cartão
+      function formatCardNumber(input) {
+        let value = input.value.replace(/\D/g, "")
+        value = value.slice(0, 16)
+        input.value = value.replace(/(.{4})/g, "$1 ").trim()
+      }
+
+    // Formata valores iniciais ao carregar a página
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".moeda").forEach(el => formatMoeda(el));    });
+  </script>
+
+  <body>
+    <div class="d-flex" id="wrapper">
+      <!-- Sidebar -->
+      <div id="sidebar-wrapper" class="text-white d-flex flex-column align-items-start" style="background-color: #3c9afdff;">
+        <div class="sidebar-header d-flex align-items-center justify-content-between w-100 px-3 py-2">
+          <span class="fs-5 fw-bold sidebar-title">Gerenciador Financeiro</span>
+          <button id="sidebarToggle" class="btn btn-sm" style="background-color: transparent; color: #000; font-size: 1.2rem;">☰</button>
+        </div>
+
+        <div class="list-group list-group-flush w-100 mt-2">
+          <%= link_to expenses_path, class: "list-group-item list-group-item-action d-flex align-items-center text-white", id: "link-expenses" do %>
+            <span class="icon me-2">💸</span>
+            <span class="link-text">Despesas</span>
+          <% end %>
+
+          <%= link_to incomes_path, class: "list-group-item list-group-item-action d-flex align-items-center text-white", id: "link-incomes" do %>
+            <span class="icon me-2">💰</span>
+            <span class="link-text">Receitas</span>
+          <% end %>
+
+          <%= link_to categories_path, class: "list-group-item list-group-item-action d-flex align-items-center text-white", id: "link-categories" do %>
+            <span class="icon me-2">🗂️</span>
+            <span class="link-text">Categorias</span>
+          <% end %>
+
+          <%= link_to cards_path, class: "list-group-item list-group-item-action d-flex align-items-center text-white", id: "link-cards" do %>
+            <span class="icon me-2">💳</span>
+            <span class="link-text">Cartões</span>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Page content -->
+      <div id="page-content-wrapper" class="flex-fill">
+        <div class="container-fluid py-4">
+          <% if flash.any? %>
+            <% flash.each do |key, msg| %>
+              <div class="alert alert-<%= key == 'notice' ? 'success' : 'danger' %> alert-dismissible fade show" role="alert">
+                <%= msg %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            <% end %>
+          <% end %>
+
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const updateSidebar = () => {
+        const wrapper = document.getElementById("wrapper");
+        const sidebar = document.getElementById("sidebar-wrapper");
+        const title = sidebar.querySelector(".sidebar-title");
+        const linkTexts = sidebar.querySelectorAll(".link-text");
+
+        const collapsed = localStorage.getItem("sidebar-collapsed") === "true";
+
+        if (collapsed) {
+          wrapper.classList.add("collapsed");
+        } else {
+          wrapper.classList.remove("collapsed");
+        }
+
+        linkTexts.forEach(el => el.style.display = collapsed ? "none" : "inline");
+        title.style.display = collapsed ? "none" : "inline";
+      };
+
+      document.addEventListener("turbo:load", () => {
+        updateSidebar();
+
+        const toggleButton = document.getElementById("sidebarToggle");
+        toggleButton.addEventListener("click", () => {
+          const wrapper = document.getElementById("wrapper");
+          wrapper.classList.toggle("collapsed");
+          localStorage.setItem("sidebar-collapsed", wrapper.classList.contains("collapsed"));
+          updateSidebar();
+        });
+      });
+    </script>
+
+
+    <style>
+      #wrapper {
+        display: flex;
+      }
+
+      /* Sidebar normal */
+      #sidebar-wrapper {
+        width: 220px;
+        min-height: 100vh;
+        transition: width 0.3s ease;
+      }
+
+      /* Sidebar recolhido */
+      #wrapper.collapsed #sidebar-wrapper {
+        width: 60px;
+      }
+
+      #page-content-wrapper {
+        flex: 1;
+        transition: margin-left 0.3s ease;
+      }
+
+      /* Links da sidebar */
+      .list-group-item {
+        background-color: transparent;
+        border: none;
+        color: white;
+      }
+
+      .list-group-item:hover {
+        background-color: rgba(103, 176, 236, 1) !important;
+      }
+
+      /* Ícones sempre visíveis */
+      .icon {
+        display: inline-block;
+      }
+
+      /* Textos sumirão quando recolher */
+      .link-text {
+        transition: opacity 0.3s ease;
+      }
+
+      .sidebar-header {
+        width: 100%;
+      }
+
+      /* Botão toggle */
+      #sidebarToggle {
+        cursor: pointer;
+      }
+    </style>
+  </body>
+</html>

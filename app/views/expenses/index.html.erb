@@ -1,0 +1,50 @@
+<div class="container py-4">
+  <h1 class="mb-4">Despesas</h1>
+
+  <%= link_to t("buttons.new.feminine", model: t("models.expense")), new_expense_path, class: "btn btn-success mb-3" %>
+
+    <!-- Form de filtro por mês -->
+  <%= form_with url: expenses_path, method: :get, local: true, class: "mb-3" do |f| %>
+    <div class="row g-2">
+      <div class="col-auto">
+        <%= f.label :month, "Filtrar Mês" %>
+        <%= f.month_field :month, value: params[:month], class: "form-control" %>
+      </div>
+      <div class="col-auto align-self-end">
+        <%= f.submit t("buttons.filter"), class: "btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Descrição</th>
+        <th>Parcela</th>
+        <th>Valor</th>
+        <th>Data</th>
+        <th>Mês Referência</th>
+        <th>Categoria</th>
+        <th>Pagamento</th>
+        <th>Cartão</th>
+        <th>Paga?</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="expenses-list">
+      <% @expenses.each do |expense| %>
+        <%= render partial: "expense_row", locals: { expense: expense } %>
+      <% end %>
+    </tbody>
+    <tfoot id="expenses-totals">
+      <tr>
+        <th colspan="1">Total Pago</th>
+        <th colspan="7">R$ <%= number_with_precision(@total_paid, precision: 2) %></th>
+      </tr>
+      <tr>
+        <th colspan="1">Total a Pagar</th>
+        <th colspan="7">R$ <%= number_with_precision(@total_unpaid, precision: 2) %></th>
+      </tr>
+    </tfoot>
+  </table>
+</div>

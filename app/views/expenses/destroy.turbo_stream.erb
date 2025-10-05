@@ -1,0 +1,5 @@
+<%= turbo_stream.remove @expense %>
+
+<%= turbo_stream.replace "expenses-totals" do %>
+  <%= render partial: "expenses_totals", locals: { total_paid: @total_paid, total_unpaid: @total_unpaid } %>
+<% end %>

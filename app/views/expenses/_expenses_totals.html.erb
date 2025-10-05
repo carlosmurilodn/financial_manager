@@ -1,0 +1,10 @@
+<tfoot id="expenses-totals">
+  <tr>
+    <th colspan="1">Total Pago</th>
+    <th colspan="7">R$ <%= number_with_precision(total_paid, precision: 2) %></th>
+  </tr>
+  <tr>
+    <th colspan="1">Total a Pagar</th>
+    <th colspan="7">R$ <%= number_with_precision(total_unpaid, precision: 2) %></th>
+  </tr>
+</tfoot>

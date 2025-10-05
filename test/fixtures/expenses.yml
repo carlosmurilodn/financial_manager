@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  amount: 9.99
+  date: 2025-10-04
+  balance_month: 2025-10-04
+  description: MyString
+  category: one
+  card: one
+  payment_method: 1
+  paid: false
+
+two:
+  amount: 9.99
+  date: 2025-10-04
+  balance_month: 2025-10-04
+  description: MyString
+  category: two
+  card: two
+  payment_method: 1
+  paid: false

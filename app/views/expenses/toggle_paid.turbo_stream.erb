@@ -1,7 +1,11 @@
-<%= turbo_stream.replace @expense do %>
-  <%= render partial: "expense_row", locals: { expense: @expense } %>
-<% end %>
+<turbo-stream action="replace" target="expense_<%= @expense.id %>">
+  <template>
+    <%= render partial: "expense_row", locals: { expense: @expense } %>
+  </template>
+</turbo-stream>
 
-<%= turbo_stream.replace "expenses-totals" do %>
-  <%= render partial: "expenses_totals", locals: { total_paid: @total_paid, total_unpaid: @total_unpaid } %>
-<% end %>
+<turbo-stream action="replace" target="expenses-totals">
+  <template>
+    <%= render partial: "expenses_totals" %>
+  </template>
+</turbo-stream>

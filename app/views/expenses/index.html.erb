@@ -1,9 +1,11 @@
 <div class="container py-4">
   <h1 class="mb-4">Despesas</h1>
 
-  <%= link_to t("buttons.new.feminine", model: t("models.expense")), new_expense_path, class: "btn btn-success mb-3" %>
+  <%= link_to t("buttons.new.feminine", model: t("models.expense")),
+              new_expense_path,
+              class: "btn btn-success mb-3" %>
 
-    <!-- Form de filtro por mês -->
+  <!-- Form de filtro por mês -->
   <%= form_with url: expenses_path, method: :get, local: true, class: "mb-3" do |f| %>
     <div class="row g-2">
       
@@ -69,7 +71,6 @@
     </div>
   <% end %>
 
-
   <table class="table table-striped">
     <thead>
       <tr>
@@ -90,6 +91,6 @@
         <%= render partial: "expense_row", locals: { expense: expense } %>
       <% end %>
     </tbody>
-      <%= render "expenses_totals" %>
+    <%= render "expenses_totals" %>
   </table>
 </div>

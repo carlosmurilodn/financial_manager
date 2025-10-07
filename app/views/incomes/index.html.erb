@@ -3,15 +3,42 @@
 
   <%= link_to t("buttons.new.feminine", model: t("models.income")), new_income_path, class: "btn btn-success mb-3" %>
 
-    <!-- Form de filtro por mês -->
-  <%= form_with url: incomes_path, method: :get, local: true, class: "mb-3" do |f| %>
+  <!-- Filtro por mês e ano -->
+  <%= form_with url: incomes_path, method: :get, local: true, class: "mb-3" do %>
     <div class="row g-2">
+      <!-- Filtro Mês -->
       <div class="col-auto">
-        <%= f.label :month, "Filtrar Mês" %>
-        <%= f.month_field :month, value: params[:month], class: "form-control" %>
+        <%= label_tag :month, "Mês" %>
+        <%= select_tag :month,
+          options_for_select(
+            I18n.t("date.month_names")[1..12].map.with_index { |m, i| [m.capitalize, i + 1] },
+            @month
+          ),
+          class: "form-select"
+        %>
       </div>
+
+      <!-- Filtro Ano -->
+      <div class="col-auto">
+        <%= label_tag :year, "Ano" %>
+        <%= select_tag :year,
+          options_for_select(
+            (Date.today.year - 5..Date.today.year + 1).to_a.reverse,
+            @year
+          ),
+          class: "form-select"
+        %>
+      </div>
+
+      <!-- Filtro Descrição -->
+      <div class="col-auto">
+        <%= label_tag :description, "Descrição" %>
+        <%= text_field_tag :description, @description_filter, class: "form-control", placeholder: "Buscar descrição..." %>
+      </div>
+
+      <!-- Botão Filtrar -->
       <div class="col-auto align-self-end">
-        <%= f.submit t("buttons.filter"), class: "btn btn-primary" %>
+        <%= submit_tag t("buttons.filter"), class: "btn btn-primary" %>
       </div>
     </div>
   <% end %>
@@ -38,3 +65,4 @@
       total_amount: @total_amount %>
   </table>
 </div>
+

@@ -6,15 +6,69 @@
     <!-- Form de filtro por mês -->
   <%= form_with url: expenses_path, method: :get, local: true, class: "mb-3" do |f| %>
     <div class="row g-2">
+      
+      <!-- Mês -->
       <div class="col-auto">
-        <%= f.label :month, "Filtrar Mês" %>
-        <%= f.month_field :month, value: params[:month], class: "form-control" %>
+        <%= f.label :month, "Mês" %>
+        <%= f.select :month, 
+              I18n.t("date.month_names")[1..12].each_with_index.map { |name, i| [name, i+1] },
+              { include_blank: "Todos", selected: params[:month]&.to_i || Date.today.month },
+              class: "form-control" %>
       </div>
+
+      <!-- Ano -->
+      <div class="col-auto">
+        <%= f.label :year, "Ano" %>
+        <%= f.select :year,
+              (2020..Date.today.year).to_a.reverse,
+              { include_blank: "Todos", selected: params[:year]&.to_i || Date.today.year },
+              class: "form-control" %>
+      </div>
+
+      <!-- Categoria -->
+      <div class="col-auto">
+        <%= f.label :category_id, "Categoria" %>
+        <%= f.select :category_id,
+              Category.order(:name).map { |c| [c.name, c.id] },
+              { include_blank: "Todas", selected: params[:category_id] },
+              class: "form-control" %>
+      </div>
+
+      <!-- Pagamento -->
+      <div class="col-auto">
+        <%= f.label :payment_method, "Pagamento" %>
+        <%= f.select :payment_method,
+              Expense.payment_methods.keys.map { |k| [k.humanize, k] },
+              { include_blank: "Todos", selected: params[:payment_method] },
+              class: "form-control" %>
+      </div>
+
+      <!-- Cartão -->
+      <div class="col-auto">
+        <%= f.label :card_id, "Cartão" %>
+        <%= f.select :card_id,
+              Card.order(:name).map { |c| [c.name, c.id] },
+              { include_blank: "Todos", selected: params[:card_id] },
+              class: "form-control" %>
+      </div>
+
+      <!-- Paga? -->
+      <div class="col-auto">
+        <%= f.label :paid, "Paga?" %>
+        <%= f.select :paid,
+              [["Todas", ""], ["Sim", true], ["Não", false]],
+              { selected: params[:paid] },
+              class: "form-control" %>
+      </div>
+
+      <!-- Botão Filtrar -->
       <div class="col-auto align-self-end">
         <%= f.submit t("buttons.filter"), class: "btn btn-primary" %>
       </div>
+
     </div>
   <% end %>
+
 
   <table class="table table-striped">
     <thead>
@@ -36,15 +90,6 @@
         <%= render partial: "expense_row", locals: { expense: expense } %>
       <% end %>
     </tbody>
-    <tfoot id="expenses-totals">
-      <tr>
-        <th colspan="1">Total Pago</th>
-        <th colspan="7">R$ <%= number_with_precision(@total_paid, precision: 2) %></th>
-      </tr>
-      <tr>
-        <th colspan="1">Total a Pagar</th>
-        <th colspan="7">R$ <%= number_with_precision(@total_unpaid, precision: 2) %></th>
-      </tr>
-    </tfoot>
+      <%= render "expenses_totals" %>
   </table>
 </div>

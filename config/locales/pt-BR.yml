@@ -54,7 +54,7 @@ pt-BR:
     form:
       submit: "Salvar Cartão"
       name: "Nome"
-      number: "Número do Cartão (opcional)"
+      number: "Número do Cartão"
 
   categories:
     form:
@@ -109,3 +109,6 @@ pt-BR:
     incomes: "Receitas"
     cards: "Cartões"
     categories: "Categorias"
+  date: 
+    month_names: [~, "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
+

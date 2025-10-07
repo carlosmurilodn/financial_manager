@@ -22,7 +22,7 @@
       <%= f.label :total_limit, "Limite Total" %>
       <%= f.text_field :total_limit,
             class: "form-control moeda",
-            value: (card.total_limit.present? ? sprintf('%.2f', card.total_limit).gsub('.', ',') : "0,00"),
+            value: card.total_limit.present? ? number_to_currency(card.total_limit, unit: "R$", separator: ",", delimiter: ".") : "R$ 0,00",
             oninput: "formatMoeda(this)" %>
     </div>
 
@@ -30,7 +30,7 @@
       <%= f.label :remaining_limit, "Limite Restante" %>
       <%= f.text_field :remaining_limit,
             class: "form-control moeda",
-            value: (card.remaining_limit.present? ? sprintf('%.2f', card.remaining_limit).gsub('.', ',') : "0,00"),
+            value: card.remaining_limit.present? ? number_to_currency(card.remaining_limit, unit: "R$", separator: ",", delimiter: ".") : "R$ 0,00",
             oninput: "formatMoeda(this)" %>
     </div>
 
@@ -56,4 +56,3 @@
     <%= f.submit t("cards.form.submit"), class: "btn btn-primary" %>
   </div>
 <% end %>
-

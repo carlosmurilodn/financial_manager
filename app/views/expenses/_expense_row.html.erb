@@ -15,7 +15,7 @@
   </td>
 
   <!-- Valor -->
-  <td>R$ <%= number_with_precision(expense.amount, precision: 2) %></td>
+  <td><%= number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".") %></td>
 
   <!-- Data de Vencimento -->
   <td>

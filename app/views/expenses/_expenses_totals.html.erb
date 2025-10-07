@@ -1,10 +1,14 @@
 <tfoot id="expenses-totals">
   <tr>
     <th colspan="1">Total Pago</th>
-    <th colspan="7">R$ <%= number_with_precision(total_paid, precision: 2) %></th>
+    <th colspan="9">R$ <%= number_with_precision(@total_paid || 0, precision: 2, delimiter: ".", separator: ",") %></th>
   </tr>
   <tr>
     <th colspan="1">Total a Pagar</th>
-    <th colspan="7">R$ <%= number_with_precision(total_unpaid, precision: 2) %></th>
+    <th colspan="9">R$ <%= number_with_precision(@total_unpaid || 0, precision: 2, delimiter: ".", separator: ",") %></th>
+  </tr>
+  <tr>
+    <th colspan="1">Saldo Líquido</th>
+    <th colspan="9">R$ <%= number_with_precision((@total_paid || 0) - (@total_unpaid || 0), precision: 2, delimiter: ".", separator: ",") %></th>
   </tr>
 </tfoot>

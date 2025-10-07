@@ -5,18 +5,32 @@ class ExpensesController < ApplicationController
     # Array que vai conter despesas e parcelas
     @expenses = []
 
-    # Buscar despesas ordenadas por mês do balanço e data
+    # Carrega todas as despesas e suas parcelas
     Expense.order(balance_month: :desc, date: :asc).each do |expense|
       @expenses << expense
       if expense.payment_method_credito_parcelado? && expense.installments.any?
-        expense.installments.order(:number).each do |inst|
-          @expenses << inst
-        end
+        expense.installments.order(:number).each { |inst| @expenses << inst }
       end
     end
 
+    # Define mês e ano padrão para o filtro
+    params[:month] ||= Date.today.month
+    params[:year]  ||= Date.today.year
+
+    # Aplica filtros
     filter_by_month
+    filter_by_category
+    filter_by_payment_method
+    filter_by_card
+    filter_by_paid
+
+    # Calcula os totais
     calculate_totals
+
+    # Garante que as variáveis de total nunca sejam nil
+    @total_paid   ||= 0
+    @total_unpaid ||= 0
+    @total_amount ||= 0
   end
 
   def show; end
@@ -39,7 +53,6 @@ class ExpensesController < ApplicationController
     end
   end
 
-
   def edit; end
 
   def update
@@ -60,17 +73,8 @@ class ExpensesController < ApplicationController
   def destroy
     @expense.destroy
 
-    # Recarrega @expenses para recalcular totais
-    @expenses = []
-    Expense.order(balance_month: :desc, date: :asc).each do |expense|
-      if expense.payment_method_credito_parcelado? && expense.is_parent
-        @expenses << expense
-        expense.installments.order(:number).each { |inst| @expenses << inst }
-      else
-        @expenses << expense
-      end
-    end
-
+    # Reconstrói @expenses para recalcular totais
+    rebuild_expenses_list
     calculate_totals
 
     respond_to do |format|
@@ -79,26 +83,12 @@ class ExpensesController < ApplicationController
     end
   end
 
-
   def toggle_paid
     @expense.update(paid: !@expense.paid)
 
-    # Reconstrói @expenses para recalcular os totais
-    @expenses = []
-
-    Expense.order(balance_month: :desc, date: :asc).each do |expense|
-      if expense.payment_method_credito_parcelado? && expense.is_parent
-        @expenses << expense
-        expense.installments.order(:number).each { |inst| @expenses << inst }
-      else
-        @expenses << expense
-      end
-    end
-
-    # Aplica filtro de mês se houver
+    # Reconstrói @expenses para recalcular totais
+    rebuild_expenses_list
     filter_by_month
-
-    # Calcula os totais
     calculate_totals
 
     respond_to do |format|
@@ -139,20 +129,49 @@ class ExpensesController < ApplicationController
   end
 
   # ----------------------
-  # Filtro por mês
+  # Filtros
   # ----------------------
   def filter_by_month
-    return unless params[:month].present?
+    return unless params[:month].present? && params[:year].present?
 
-    begin
-      date = Date.parse(params[:month] + "-01")
+    month = params[:month].to_i
+    year  = params[:year].to_i
 
-      @expenses.select! do |e|
-        month = e.is_a?(Installment) ? e.due_date : e.balance_month
-        (month.beginning_of_month..month.end_of_month).cover?(date)
+    @expenses.select! do |e|
+      date_to_check = e.is_a?(Installment) ? e.due_date : e.balance_month
+      date_to_check.month == month && date_to_check.year == year
+    end
+  end
+
+  def filter_by_category
+    return unless params[:category_id].present?
+    @expenses.select! { |e| e.category_id.to_s == params[:category_id].to_s }
+  end
+
+  def filter_by_payment_method
+    return unless params[:payment_method].present?
+    @expenses.select! { |e| e.payment_method == params[:payment_method] }
+  end
+
+  def filter_by_card
+    return unless params[:card_id].present?
+    @expenses.select! { |e| e.card_id.to_s == params[:card_id].to_s }
+  end
+
+  def filter_by_paid
+    return if params[:paid].blank?
+    value = ActiveModel::Type::Boolean.new.cast(params[:paid])
+    @expenses.select! { |e| e.paid == value }
+  end
+
+  # Reconstrói a lista de despesas incluindo parcelas
+  def rebuild_expenses_list
+    @expenses = []
+    Expense.order(balance_month: :desc, date: :asc).each do |expense|
+      @expenses << expense
+      if expense.payment_method_credito_parcelado? && expense.installments.any?
+        expense.installments.order(:number).each { |inst| @expenses << inst }
       end
-    rescue ArgumentError
-      flash.now[:alert] = "Data inválida"
     end
   end
 end

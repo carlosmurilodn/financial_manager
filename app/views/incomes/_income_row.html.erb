@@ -1,6 +1,6 @@
 <tr id="<%= dom_id(income) %>" class="<%= income.paid ? 'table-success' : 'table-warning' %>">
   <td><%= income.description %></td>
-  <td>R$ <%= number_with_precision(income.amount, precision: 2) %></td>
+  <td><%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %></td>
   <td><%= income.date.strftime("%d/%m/%Y") %></td>
   <td><%= income.balance_month.strftime("%m/%Y") %></td>
   <td>

@@ -1,14 +1,14 @@
 <tfoot id="expenses-totals">
   <tr>
     <th colspan="1">Total Pago</th>
-    <th colspan="7">R$ <%= number_with_precision(@total_paid, precision: 2) %></th>
+    <th colspan="9"><%= number_to_currency(@total_paid, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></th>
   </tr>
   <tr>
     <th colspan="1">Total a Pagar</th>
-    <th colspan="7">R$ <%= number_with_precision(@total_unpaid, precision: 2) %></th>
+    <th colspan="9"><%= number_to_currency(@total_unpaid, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></th>
   </tr>
   <tr>
     <th colspan="1">Saldo Líquido</th>
-    <th colspan="7">R$ <%= number_with_precision(@net_balance, precision: 2) %></th>
+    <th colspan="9"><%= number_to_currency(@net_balance, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></th>
   </tr>
 </tfoot>

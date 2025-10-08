@@ -25,22 +25,24 @@ class Expense < ApplicationRecord
   def generate_future_installments
     return unless installments_count.present? && current_installment.present?
 
-    # Calcula quantas parcelas ainda faltam
     remaining = installments_count.to_i - current_installment.to_i
     return if remaining <= 0
 
     remaining.times do |i|
       number = current_installment.to_i + i + 1
       due = date >> (i + 1) # adiciona i+1 meses à data da parcela atual
+      next_balance_month = balance_month.to_date >> (i + 1)
 
       installments.create!(
         number: number,
         amount: amount,
         due_date: due,
-        paid: false
+        paid: false,
+        balance_month: next_balance_month
       )
     end
   end
+
 
   def self.payment_method_names
     {

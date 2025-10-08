@@ -14,7 +14,7 @@
         <%= f.label :month, "Mês" %>
         <%= f.select :month, 
               I18n.t("date.month_names")[1..12].each_with_index.map { |name, i| [name, i+1] },
-              { include_blank: "Todos", selected: params[:month]&.to_i || Date.today.month },
+              { include_blank: "Todos", selected: @month },
               class: "form-control" %>
       </div>
 
@@ -22,8 +22,8 @@
       <div class="col-auto">
         <%= f.label :year, "Ano" %>
         <%= f.select :year,
-              (2020..Date.today.year).to_a.reverse,
-              { include_blank: "Todos", selected: params[:year]&.to_i || Date.today.year },
+              (2025..2030).to_a.reverse,
+              { include_blank: "Todos", selected: @year },
               class: "form-control" %>
       </div>
 
@@ -32,7 +32,7 @@
         <%= f.label :category_id, "Categoria" %>
         <%= f.select :category_id,
               Category.order(:name).map { |c| [c.name, c.id] },
-              { include_blank: "Todas", selected: params[:category_id] },
+              { include_blank: "Todas", selected: @category_filter },
               class: "form-control" %>
       </div>
 
@@ -41,7 +41,7 @@
         <%= f.label :payment_method, "Pagamento" %>
         <%= f.select :payment_method,
               Expense.payment_methods.keys.map { |k| [k.humanize, k] },
-              { include_blank: "Todos", selected: params[:payment_method] },
+              { include_blank: "Todos", selected: @payment_method_filter },
               class: "form-control" %>
       </div>
 
@@ -50,7 +50,7 @@
         <%= f.label :card_id, "Cartão" %>
         <%= f.select :card_id,
               Card.order(:name).map { |c| [c.name, c.id] },
-              { include_blank: "Todos", selected: params[:card_id] },
+              { include_blank: "Todos", selected: @card_filter },
               class: "form-control" %>
       </div>
 
@@ -59,7 +59,7 @@
         <%= f.label :paid, "Paga?" %>
         <%= f.select :paid,
               [["Todas", ""], ["Sim", true], ["Não", false]],
-              { selected: params[:paid] },
+              { selected: @paid_filter },
               class: "form-control" %>
       </div>
 

@@ -12,10 +12,11 @@
     <div class="col-md-4">
       <%= f.label :amount, t("expenses.form.amount") %>
       <div class="d-flex align-items-center gap-2">
-        <%= f.text_field :amount, class: "form-control moeda flex-grow-1", 
-            value: (expense.amount.present? ? sprintf('%.2f', expense.amount).gsub('.', ',') : "R$ 0,00"),
-            oninput: "formatMoeda(this)" %>
-
+        <%= f.text_field :amount, 
+          class: "form-control moeda flex-grow-1", 
+          value: (expense.amount.present? ? number_to_currency(expense.amount, unit: "R$", separator: ",", delimiter: ".", precision: 2) : "R$ 0,00"),
+          oninput: "formatMoeda(this)" %>
+          
         <div class="form-check mb-0">
           <%= f.check_box :paid, class: "form-check-input", id: "expense_paid" %>
           <%= f.label :paid, t("expenses.form.paid"), class: "form-check-label ms-1" %>

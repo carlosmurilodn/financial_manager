@@ -2,7 +2,7 @@ class Installment < ApplicationRecord
   belongs_to :expense
 
   # Herdar atributos da despesa mãe (somente leitura)
-  delegate :installments_count, :description, :category, :card, :payment_method, :balance_month, to: :expense
+  delegate :installments_count, :description, :category, :card, :payment_method, to: :expense
 
   # Validações
   validates :amount, presence: true, numericality: { greater_than: 0 }

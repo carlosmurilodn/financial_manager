@@ -24,7 +24,8 @@
 
   <!-- Mês do Balanço -->
   <td>
-    <%= expense.is_a?(Installment) ? expense.expense.balance_month.strftime("%m/%Y") : expense.balance_month.strftime("%m/%Y") %>
+    <% balance_date = expense.is_a?(Installment) ? expense.read_attribute(:balance_month) : expense.balance_month %>
+    <%= balance_date.strftime("%m/%Y") if balance_date.present? %>
   </td>
 
   <!-- Categoria -->

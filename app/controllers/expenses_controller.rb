@@ -2,7 +2,6 @@ class ExpensesController < ApplicationController
   before_action :set_expense, only: %i[show edit update destroy toggle_paid]
 
   def index
-    # Carrega despesas e aplica filtros
     load_expenses
   end
 
@@ -30,7 +29,6 @@ class ExpensesController < ApplicationController
     @expense.amount = normalize_amount(params[:expense][:amount])
 
     if @expense.update(expense_params.except(:amount))
-      # Regenerar parcelas futuras se for pai parcelado
       if @expense.payment_method_credito_parcelado? && @expense.is_parent
         @expense.installments.where("number > ?", @expense.current_installment).destroy_all
         @expense.generate_future_installments
@@ -53,22 +51,13 @@ class ExpensesController < ApplicationController
 
   def toggle_paid
     @expense.update(paid: !@expense.paid)
-
-    # Recarrega despesas e recalcula totais antes de renderizar
     load_expenses
 
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: [
-          turbo_stream.replace(
-            "expense_#{@expense.id}",
-            partial: "expense_row",
-            locals: { expense: @expense }
-          ),
-          turbo_stream.replace(
-            "expenses-totals",
-            partial: "expenses_totals"
-          )
+          turbo_stream.replace("expense_#{@expense.id}", partial: "expense_row", locals: { expense: @expense }),
+          turbo_stream.replace("expenses-totals", partial: "expenses_totals")
         ]
       end
       format.html { redirect_to expenses_path }
@@ -77,9 +66,6 @@ class ExpensesController < ApplicationController
 
   private
 
-  # --------------------------
-  # Utilitários
-  # --------------------------
   def set_expense
     @expense = Expense.find(params[:id])
   end
@@ -95,20 +81,23 @@ class ExpensesController < ApplicationController
   def normalize_amount(amount_param)
     return 0 if amount_param.blank?
     cleaned = amount_param.to_s.gsub(/[^\d,\.]/, '')
-    cleaned.tr!(',', '.') if cleaned.count(',') == 1 && cleaned.count('.') <= 1
-    cleaned.gsub!('.', '') if cleaned.count('.') > 1
-    cleaned.to_d
+    cleaned = cleaned.include?(',') ? cleaned.gsub('.', '').tr(',', '.') : cleaned.gsub('.', '')
+    BigDecimal(cleaned)
+  rescue ArgumentError
+    0
   end
 
   # --------------------------
-  # Carrega despesas e aplica filtros
+  # Carrega despesas e aplica filtros via params (sem sessão)
   # --------------------------
   def load_expenses
-    # Define mês/ano padrão
-    params[:month] ||= Date.today.month
-    params[:year]  ||= Date.today.year
+    @month = params[:month].present? ? params[:month].to_i : Date.today.month
+    @year  = params[:year].present? ? params[:year].to_i : Date.today.year
+    @category_filter = params[:category_id]
+    @payment_method_filter = params[:payment_method]
+    @card_filter = params[:card_id]
+    @paid_filter = params.key?(:paid) ? params[:paid] : nil
 
-    # Monta lista de despesas e parcelas
     @expenses = []
     Expense.order(balance_month: :desc, date: :asc).each do |expense|
       @expenses << expense
@@ -117,20 +106,18 @@ class ExpensesController < ApplicationController
       end
     end
 
-    # Aplica filtros
     filter_by_month
     filter_by_category
     filter_by_payment_method
     filter_by_card
     filter_by_paid
 
-    # Calcula totais e saldo líquido
     calculate_totals
     calculate_net_balance
   end
 
   # --------------------------
-  # Totais e Saldo
+  # Totais
   # --------------------------
   def calculate_totals
     @total_amount = @expenses.sum(&:amount)
@@ -139,50 +126,60 @@ class ExpensesController < ApplicationController
   end
 
   def calculate_net_balance
-    month = params[:month].to_i
-    year  = params[:year].to_i
-    return unless month.positive? && year.positive?
+    return unless @month.present? && @year.present?
 
-    month_start = Date.new(year, month, 1)
-    month_range = month_start.all_month
+    month_start = Date.new(@year, @month, 1)
+    accumulated_balance = 0
+    first_month = Expense.minimum(:balance_month) || Income.minimum(:balance_month) || month_start
+    current_month = first_month.beginning_of_month
 
-    total_received_incomes = Income.where(paid: true, balance_month: month_range).sum(:amount)
-    @net_balance = total_received_incomes - (@total_paid || 0)
+    while current_month <= month_start
+      month_range = current_month.all_month
+      incomes_total = Income.where(balance_month: month_range, paid: true).sum(:amount)
+      expenses_total = Expense.where(balance_month: month_range).sum do |e|
+        if e.payment_method_credito_parcelado? && e.installments.any?
+          e.installments.select(&:paid).sum(&:amount)
+        else
+          e.paid? ? e.amount : 0
+        end
+      end
+      accumulated_balance = accumulated_balance + incomes_total - expenses_total
+      current_month = current_month.next_month
+    end
+
+    @net_balance = accumulated_balance
+    @total_paid   = @expenses.select(&:paid?).sum(&:amount)
+    @total_unpaid = @expenses.reject(&:paid?).sum(&:amount)
   end
 
   # --------------------------
   # Filtros
   # --------------------------
   def filter_by_month
-    return unless params[:month].present? && params[:year].present?
-
-    month = params[:month].to_i
-    year  = params[:year].to_i
-
     @expenses.select! do |e|
       date_to_check = e.respond_to?(:due_date) ? e.due_date : e.balance_month
-      date_to_check.month == month && date_to_check.year == year
+      date_to_check.month == @month && date_to_check.year == @year
     end
   end
 
   def filter_by_category
-    return unless params[:category_id].present?
-    @expenses.select! { |e| e.category_id.to_s == params[:category_id].to_s }
+    return unless @category_filter.present?
+    @expenses.select! { |e| e.category_id.to_s == @category_filter.to_s }
   end
 
   def filter_by_payment_method
-    return unless params[:payment_method].present?
-    @expenses.select! { |e| e.payment_method == params[:payment_method] }
+    return unless @payment_method_filter.present?
+    @expenses.select! { |e| e.payment_method == @payment_method_filter }
   end
 
   def filter_by_card
-    return unless params[:card_id].present?
-    @expenses.select! { |e| e.card_id.to_s == params[:card_id].to_s }
+    return unless @card_filter.present?
+    @expenses.select! { |e| e.card_id.to_s == @card_filter.to_s }
   end
 
   def filter_by_paid
-    return if params[:paid].blank?
-    value = ActiveModel::Type::Boolean.new.cast(params[:paid])
+    return if @paid_filter.blank?
+    value = ActiveModel::Type::Boolean.new.cast(@paid_filter)
     @expenses.select! { |e| e.paid == value }
   end
 end

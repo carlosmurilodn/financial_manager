@@ -1,5 +1,6 @@
 class Card < ApplicationRecord
   has_many :expenses, dependent: :nullify
+  has_one_attached :icon
 
   before_validation :normalize_number
   before_save :normalize_currency_values

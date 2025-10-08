@@ -6,10 +6,7 @@ class ExpensesController < ApplicationController
   end
 
   def show; end
-
-  def new
-    @expense = Expense.new
-  end
+  def new; @expense = Expense.new; end
 
   def create
     @expense = Expense.new(expense_params)
@@ -64,6 +61,17 @@ class ExpensesController < ApplicationController
     end
   end
 
+  def clear_filters
+    session.delete(:expenses_month)
+    session.delete(:expenses_year)
+    session.delete(:expenses_description)
+    session.delete(:expenses_category_id)
+    session.delete(:expenses_payment_method)
+    session.delete(:expenses_card_id)
+    session.delete(:expenses_paid)
+    redirect_to expenses_path, notice: "Filtros limpos com sucesso!"
+  end
+
   private
 
   def set_expense
@@ -88,16 +96,60 @@ class ExpensesController < ApplicationController
   end
 
   # --------------------------
-  # Carrega despesas e aplica filtros via params (sem sessão)
+  # Carrega despesas e aplica filtros via params + session
   # --------------------------
   def load_expenses
-    @month = params[:month].present? ? params[:month].to_i : Date.today.month
-    @year  = params[:year].present? ? params[:year].to_i : Date.today.year
-    @category_filter = params[:category_id]
-    @payment_method_filter = params[:payment_method]
-    @card_filter = params[:card_id]
-    @paid_filter = params.key?(:paid) ? params[:paid] : nil
+    # --------------------------
+    # Mês
+    # --------------------------
+    session[:expenses_month] = params[:month].to_i if params[:month].present?
+    @month = session[:expenses_month]
+    @month = nil if @month.blank? || @month == 0   # "Todos"
 
+    # --------------------------
+    # Ano
+    # --------------------------
+    session[:expenses_year] = params[:year].to_i if params[:year].present?
+    @year = session[:expenses_year]
+    @year = nil if @year.blank? || @year == 0     # "Todos"
+
+    # --------------------------
+    # Descrição
+    # --------------------------
+    session[:expenses_description] = params[:description].to_s.strip if params[:description].present?
+    @description_filter = session[:expenses_description].presence   # nil se vazio
+
+    # --------------------------
+    # Categoria
+    # --------------------------
+    session[:expenses_category_id] = params[:category_id] if params[:category_id].present?
+    @category_filter = session[:expenses_category_id]
+    @category_filter = nil if @category_filter.to_i == 0  # "Todas"
+
+    # --------------------------
+    # Método de pagamento
+    # --------------------------
+    session[:expenses_payment_method] = params[:payment_method] || nil
+    @payment_method_filter = session[:expenses_payment_method]
+    @payment_method_filter = nil if @payment_method_filter.blank?  # "Todos"
+
+    # --------------------------
+    # Cartão
+    # --------------------------
+    session[:expenses_card_id] = params[:card_id] if params[:card_id].present?
+    @card_filter = session[:expenses_card_id]
+    @card_filter = nil if @card_filter.to_i == 0  # "Todos"
+
+    # --------------------------
+    # Pago
+    # --------------------------
+    session[:expenses_paid] = params[:paid] if params.key?(:paid)
+    @paid_filter = session[:expenses_paid]
+    @paid_filter = nil if @paid_filter.blank?  # "Todas"
+
+    # --------------------------
+    # Carregar despesas
+    # --------------------------
     @expenses = []
     Expense.order(balance_month: :desc, date: :asc).each do |expense|
       @expenses << expense
@@ -106,14 +158,58 @@ class ExpensesController < ApplicationController
       end
     end
 
+    # --------------------------
+    # Aplicar filtros
+    # --------------------------
     filter_by_month
     filter_by_category
     filter_by_payment_method
     filter_by_card
     filter_by_paid
+    filter_by_description
 
+    # --------------------------
+    # Totais
+    # --------------------------
     calculate_totals
     calculate_net_balance
+  end
+
+  # --------------------------
+  # Filtros
+  # --------------------------
+  def filter_by_month
+    return if @month.nil? || @year.nil?
+    @expenses.select! do |e|
+      date_to_check = e.respond_to?(:due_date) ? e.due_date : e.balance_month
+      date_to_check.month == @month && date_to_check.year == @year
+    end
+  end
+
+  def filter_by_category
+    return if @category_filter.nil?
+    @expenses.select! { |e| e.category_id.to_s == @category_filter.to_s }
+  end
+
+  def filter_by_payment_method
+    return if @payment_method_filter.nil?
+    @expenses.select! { |e| e.payment_method == @payment_method_filter }
+  end
+
+  def filter_by_card
+    return if @card_filter.nil?
+    @expenses.select! { |e| e.card_id.to_s == @card_filter.to_s }
+  end
+
+  def filter_by_paid
+    return if @paid_filter.nil?
+    value = ActiveModel::Type::Boolean.new.cast(@paid_filter)
+    @expenses.select! { |e| e.paid == value }
+  end
+
+  def filter_by_description
+    return if @description_filter.blank?
+    @expenses.select! { |e| e.description.to_s.downcase.include?(@description_filter.downcase) }
   end
 
   # --------------------------
@@ -150,36 +246,5 @@ class ExpensesController < ApplicationController
     @net_balance = accumulated_balance
     @total_paid   = @expenses.select(&:paid?).sum(&:amount)
     @total_unpaid = @expenses.reject(&:paid?).sum(&:amount)
-  end
-
-  # --------------------------
-  # Filtros
-  # --------------------------
-  def filter_by_month
-    @expenses.select! do |e|
-      date_to_check = e.respond_to?(:due_date) ? e.due_date : e.balance_month
-      date_to_check.month == @month && date_to_check.year == @year
-    end
-  end
-
-  def filter_by_category
-    return unless @category_filter.present?
-    @expenses.select! { |e| e.category_id.to_s == @category_filter.to_s }
-  end
-
-  def filter_by_payment_method
-    return unless @payment_method_filter.present?
-    @expenses.select! { |e| e.payment_method == @payment_method_filter }
-  end
-
-  def filter_by_card
-    return unless @card_filter.present?
-    @expenses.select! { |e| e.card_id.to_s == @card_filter.to_s }
-  end
-
-  def filter_by_paid
-    return if @paid_filter.blank?
-    value = ActiveModel::Type::Boolean.new.cast(@paid_filter)
-    @expenses.select! { |e| e.paid == value }
   end
 end

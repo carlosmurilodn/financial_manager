@@ -30,7 +30,7 @@
 
   <!-- Categoria -->
   <td>
-    <%= expense.is_a?(Installment) ? expense.expense.category.name : expense.category.name %>
+    <%= expense.is_a?(Installment) ? expense.expense.category.display_name : expense.category.display_name %>
   </td>
 
   <!-- Forma de Pagamento -->

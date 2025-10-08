@@ -3,46 +3,59 @@
 
   <%= link_to t("buttons.new.feminine", model: t("models.income")), new_income_path, class: "btn btn-success mb-3" %>
 
-  <!-- Filtro por mês e ano -->
+  <!-- Form de filtro -->
   <%= form_with url: incomes_path, method: :get, local: true, class: "mb-3" do %>
     <div class="row g-2">
-      <!-- Filtro Mês -->
+      
+      <!-- Mês -->
       <div class="col-auto">
         <%= label_tag :month, "Mês" %>
         <%= select_tag :month,
-          options_for_select(
-            I18n.t("date.month_names")[1..12].map.with_index { |m, i| [m.capitalize, i + 1] },
-            @month
-          ),
+          options_for_select([["Todos", 0]] + I18n.t("date.month_names")[1..12].map.with_index { |m, i| [m.capitalize, i + 1] }, @month || 0),
           class: "form-select"
         %>
       </div>
 
-      <!-- Filtro Ano -->
+      <!-- Ano -->
       <div class="col-auto">
         <%= label_tag :year, "Ano" %>
         <%= select_tag :year,
-          options_for_select(
-            (Date.today.year - 5..Date.today.year + 1).to_a.reverse,
-            @year
-          ),
+          options_for_select([["Todos", 0]] + (Date.today.year - 5..Date.today.year + 1).to_a.reverse, @year || 0),
           class: "form-select"
         %>
       </div>
 
-      <!-- Filtro Descrição -->
+      <!-- Descrição -->
       <div class="col-auto">
         <%= label_tag :description, "Descrição" %>
         <%= text_field_tag :description, @description_filter, class: "form-control", placeholder: "Buscar descrição..." %>
+      </div>
+
+      <!-- Pago? -->
+      <div class="col-auto">
+        <%= label_tag :paid, "Recebida?" %>
+        <%= select_tag :paid,
+          options_for_select([["Todos", ""], ["Sim", true], ["Não", false]], @paid_filter || ""),
+          class: "form-select"
+        %>
       </div>
 
       <!-- Botão Filtrar -->
       <div class="col-auto align-self-end">
         <%= submit_tag t("buttons.filter"), class: "btn btn-primary" %>
       </div>
+
+      <!-- Botão Limpar Filtros -->
+      <div class="col-auto align-self-end">
+        <%= link_to "Limpar Filtros",
+                clear_filters_incomes_path,
+                class: "btn btn-warning",
+                data: { turbo_method: :delete } %>
+      </div>
     </div>
   <% end %>
 
+  <!-- Tabela de receitas -->
   <table class="table table-striped">
     <thead>
       <tr>
@@ -59,10 +72,9 @@
         <%= render partial: "income_row", locals: { income: income } %>
       <% end %>
     </tbody>
-      <%= render "incomes_totals", 
-      total_received: @total_received, 
-      total_pending: @total_pending, 
-      total_amount: @total_amount %>
+    <%= render "incomes_totals", 
+        total_received: @total_received, 
+        total_pending: @total_pending, 
+        total_amount: @total_amount %>
   </table>
 </div>
-

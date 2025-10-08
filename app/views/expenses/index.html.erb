@@ -13,54 +13,65 @@
       <div class="col-auto">
         <%= f.label :month, "Mês" %>
         <%= f.select :month, 
-              I18n.t("date.month_names")[1..12].each_with_index.map { |name, i| [name, i+1] },
-              { include_blank: "Todos", selected: @month },
-              class: "form-control" %>
+              options_for_select(
+                [["Todos", 0]] + I18n.t("date.month_names")[1..12].map.with_index { |m, i| [m.capitalize, i+1] },
+                @month || 0
+              ),
+              {}, class: "form-control" %>
       </div>
 
       <!-- Ano -->
       <div class="col-auto">
         <%= f.label :year, "Ano" %>
         <%= f.select :year,
-              (2025..2030).to_a.reverse,
-              { include_blank: "Todos", selected: @year },
-              class: "form-control" %>
+              options_for_select(
+                [["Todos", 0]] + (2025..2030).to_a.reverse,
+                @year || 0
+              ),
+              {}, class: "form-control" %>
       </div>
 
+      <!-- Descrição -->
+      <div class="col-auto">
+        <%= f.label :description, "Descrição" %>
+        <%= f.text_field :description, value: @description_filter, class: "form-control", placeholder: "Buscar descrição..." %>
+      </div>
+      
       <!-- Categoria -->
       <div class="col-auto">
         <%= f.label :category_id, "Categoria" %>
-        <%= f.select :category_id,
-              Category.order(:name).map { |c| [c.name, c.id] },
-              { include_blank: "Todas", selected: @category_filter },
-              class: "form-control" %>
+        <%= select_tag :category_id,
+            options_for_select(
+              [["Todas", 0]] +
+              Category.all.sort_by(&:sort_name).map { |c| [c.display_name, c.id] },
+              @category_filter || 0
+            ),
+            class: "form-control" %>
       </div>
+
 
       <!-- Pagamento -->
       <div class="col-auto">
         <%= f.label :payment_method, "Pagamento" %>
         <%= f.select :payment_method,
-              Expense.payment_methods.keys.map { |k| [k.humanize, k] },
-              { include_blank: "Todos", selected: @payment_method_filter },
-              class: "form-control" %>
+              options_for_select([["Todos", ""]] + Expense.payment_methods.keys.map { |k| [k.humanize, k] }, @payment_method_filter || ""),
+              {}, class: "form-control" %>
       </div>
 
       <!-- Cartão -->
       <div class="col-auto">
         <%= f.label :card_id, "Cartão" %>
         <%= f.select :card_id,
-              Card.order(:name).map { |c| [c.name, c.id] },
-              { include_blank: "Todos", selected: @card_filter },
-              class: "form-control" %>
+              options_for_select([["Todos", 0]] + Card.order(:name).map { |c| [c.name, c.id] }, @card_filter || 0),
+              {}, class: "form-control" %>
       </div>
 
       <!-- Paga? -->
       <div class="col-auto">
         <%= f.label :paid, "Paga?" %>
         <%= f.select :paid,
-              [["Todas", ""], ["Sim", true], ["Não", false]],
-              { selected: @paid_filter },
-              class: "form-control" %>
+              options_for_select([["Todas", ""], ["Sim", true], ["Não", false]], @paid_filter || ""),
+              {}, class: "form-control" %>
       </div>
 
       <!-- Botão Filtrar -->
@@ -68,8 +79,16 @@
         <%= f.submit t("buttons.filter"), class: "btn btn-primary" %>
       </div>
 
+      <!-- Botão Limpar Filtros -->
+      <div class="col-auto align-self-end">
+        <%= link_to "Limpar Filtros",
+                clear_filters_expenses_path,
+                class: "btn btn-warning",
+                data: { turbo_method: :delete } %>
+      </div>
     </div>
   <% end %>
+
 
   <table class="table table-striped">
     <thead>

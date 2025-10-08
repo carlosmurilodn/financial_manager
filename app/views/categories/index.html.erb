@@ -13,7 +13,7 @@
     <tbody>
       <% @categories.each do |category| %>
         <tr id="<%= dom_id(category) %>">
-          <td><%= category.name %></td>
+          <td><%= category.display_name %></td>
           <td>
             <%= link_to t("buttons.edit"), edit_category_path(category), class: "btn btn-sm btn-primary" %>
             <%= link_to t("buttons.delete"), category,

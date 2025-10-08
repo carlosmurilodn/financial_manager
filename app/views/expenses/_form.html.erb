@@ -39,7 +39,7 @@
   <div class="row mb-3">
     <div class="col-md-4">
       <%= f.label :category_id, t("expenses.form.category") %>
-      <%= f.collection_select :category_id, Category.all, :id, :display_name, { prompt: "Selecione" }, { class: "form-select" } %>
+      <%= f.collection_select :category_id, Category.order(:name), :id, :display_name, { prompt: "Selecione" }, { class: "form-select" } %>
     </div>
 
     <div class="col-md-4">

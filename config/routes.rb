@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root "expenses#index"
+  root "home#index"
 
   resources :expenses do
     member do

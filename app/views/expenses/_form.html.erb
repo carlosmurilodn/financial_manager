@@ -77,118 +77,300 @@
     <%= f.submit t("expenses.form.submit"), class: "btn btn-primary" %>
   </div>
 
-  <!-- CSS INLINE -->
-  <style>
-    .custom-date-wrapper { position: relative; }
-    .custom-date { cursor: pointer; background-color: #fff !important; color: #333; font-weight: 500; }
-    .datepicker { position: absolute; top: 110%; left: 50%; margin-top: 10px;transform: translateX(-50%); background: #fff; border: 1px solid #ccc; border-radius: 10px; padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; width: 270px; width: 100%; }
-    .datepicker-header { display: flex; justify-content: space-between; align-items: center; font-weight: 600; margin-bottom: 8px; }
-    .datepicker-header button { background: none; border: none; font-size: 18px; cursor: pointer; color: #007bff; }
-    .datepicker table { width: 100%; text-align: center; border-collapse: collapse; font-size: 14px; }
-    .datepicker th { font-weight: 600; padding: 4px; color: #666; }
-    .datepicker td { padding: 6px; cursor: pointer; border-radius: 8px; transition: background 0.2s, color 0.2s; }
-    .datepicker td:hover { background: #007bff; color: white; }
-    .datepicker .active { background: #007bff; color: #fff; }
-    .datepicker .sunday, .datepicker .holiday { color: red !important; font-weight: bold; }
-  </style>
+<!-- CSS INLINE -->
+<style>
+  .custom-date-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
 
-  <!-- JS INLINE -->
-  <script>
-    document.addEventListener("turbo:load", function() {
-      // Toggle parcelamento
-      const paymentSelect = document.getElementById("payment_method_select");
-      const parcelSection = document.getElementById("parcelamento_section");
+  .custom-date {
+    cursor: pointer;
+    background-color: #fff !important;
+    color: #333;
+    font-weight: 500;
+    width: 100%;
+  }
+
+  .datepicker {
+    position: absolute;
+    top: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    width: 100%;
+    max-width: 270px;
+  }
+
+  .datepicker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .datepicker-header button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #007bff;
+    padding: 2px 8px;
+    transition: color 0.2s;
+  }
+
+  .datepicker-header button:hover {
+    color: #0056b3;
+  }
+
+  .datepicker table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    font-size: 14px;
+    table-layout: fixed;
+  }
+
+  .datepicker th {
+    font-weight: 600;
+    padding: 4px;
+    color: #666;
+  }
+
+  .datepicker td {
+    padding: 6px;
+    border-radius: 8px;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  /* Hover apenas nos dias válidos */
+  .datepicker td[data-date]:hover {
+    background: #007bff;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .datepicker td:not([data-date]) {
+    background: transparent;
+    cursor: default;
+  }
+
+  .datepicker .active {
+    background: #007bff;
+    color: #fff;
+  }
+
+  .datepicker .sunday,
+  .datepicker .holiday {
+    color: red !important;
+    font-weight: bold;
+  }
+
+  /* Tooltip apenas para feriados */
+  .datepicker td[title] {
+    position: relative;
+  }
+
+  .datepicker td[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0.9;
+  }
+
+  .datepicker td[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+  }
+</style>
+
+<!-- JS INLINE -->
+<script>
+  document.addEventListener("turbo:load", function () {
+    // Toggle parcelamento
+    const paymentSelect = document.getElementById("payment_method_select");
+    const parcelSection = document.getElementById("parcelamento_section");
+
+    if (paymentSelect && parcelSection) {
       function toggleParcelSection() {
-        if (paymentSelect.value === "credito_parcelado") parcelSection.style.display = "flex";
-        else parcelSection.style.display = "none";
+        parcelSection.style.display =
+          paymentSelect.value === "credito_parcelado" ? "flex" : "none";
       }
       paymentSelect.addEventListener("change", toggleParcelSection);
       toggleParcelSection();
+    }
 
-      // Calendário customizado
-      const allInputs = document.querySelectorAll(".custom-date");
-      const holidays = [
-        "01/01","21/04","01/05","07/09","12/10","02/11","15/11","25/12",
-        "24/10","28/10","20/11","08/12","14/12"
-      ];
+    // Calendário customizado
+    const allInputs = document.querySelectorAll(".custom-date");
 
-      allInputs.forEach(input => {
-        if (input.value && input.value.match(/^\d{4}-\d{2}-\d{2}$/)) {
-          const [y,m,d] = input.value.split("-");
-          input.value = `${d}/${m}/${y}`;
+    const holidays = {
+      "01/01": "Confraternização Universal",
+      "21/04": "Tiradentes",
+      "01/05": "Dia do Trabalhador",
+      "07/09": "Independência do Brasil",
+      "12/10": "Nossa Senhora Aparecida",
+      "02/11": "Finados",
+      "15/11": "Proclamação da República",
+      "25/12": "Natal",
+      "24/10": "Aniversário de Goiânia",
+      "28/10": "Dia do Servidor Público",
+      "20/11": "Consciência Negra",
+      "08/12": "Imaculada Conceição",
+      "14/12": "Fundação de Goiânia"
+    };
+
+    allInputs.forEach((input) => {
+      if (input.value && input.value.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        const [y, m, d] = input.value.split("-");
+        input.value = `${d}/${m}/${y}`;
+      }
+
+      input.addEventListener("focus", function () {
+        const existingPicker = document.querySelector(".datepicker");
+        if (existingPicker) existingPicker.remove();
+
+        const picker = document.createElement("div");
+        picker.classList.add("datepicker");
+
+        let current =
+          input.value && input.value.match(/^\d{2}\/\d{2}\/\d{4}$/)
+            ? parseDate(input.value)
+            : new Date();
+
+        renderCalendar(picker, current, input);
+        input.parentNode.appendChild(picker);
+
+        function handleClickOutside(e) {
+          if (
+            !e.target.closest(".custom-date-wrapper") &&
+            !e.target.closest(".datepicker")
+          ) {
+            picker.remove();
+            document.removeEventListener("click", handleClickOutside);
+          }
         }
 
-        input.addEventListener("focus", function() {
-          const existingPicker = document.querySelector(".datepicker");
-          if (existingPicker) existingPicker.remove();
-
-          const picker = document.createElement("div");
-          picker.classList.add("datepicker");
-
-          let current = input.value && input.value.match(/^\d{2}\/\d{2}\/\d{4}$/) ? parseDate(input.value) : new Date();
-          renderCalendar(picker, current, input);
-          input.parentNode.appendChild(picker);
-
-          // Fecha ao clicar fora
-          function handleClickOutside(e) {
-            if (!e.target.closest(".custom-date-wrapper")) {
-              picker.remove();
-              document.removeEventListener("click", handleClickOutside);
-            }
-          }
+        // Delay para não fechar ao clicar no botão de mês
+        setTimeout(() => {
           document.addEventListener("click", handleClickOutside);
+        }, 0);
+      });
+
+      function renderCalendar(picker, date, input) {
+        const month = date.getMonth();
+        const year = date.getFullYear();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const firstDay = new Date(year, month, 1).getDay();
+        const monthNames = [
+          "Janeiro",
+          "Fevereiro",
+          "Março",
+          "Abril",
+          "Maio",
+          "Junho",
+          "Julho",
+          "Agosto",
+          "Setembro",
+          "Outubro",
+          "Novembro",
+          "Dezembro"
+        ];
+
+        picker.innerHTML = `
+          <div class="datepicker-header">
+            <button type="button" class="prev-month">&lt;</button>
+            <span>${monthNames[month]} ${year}</span>
+            <button type="button" class="next-month">&gt;</button>
+          </div>
+          <table>
+            <thead>
+              <tr>${["D", "S", "T", "Q", "Q", "S", "S"]
+                .map((d) => `<th>${d}</th>`)
+                .join("")}</tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        `;
+
+        const tbody = picker.querySelector("tbody");
+        let html = "<tr>";
+        for (let i = 0; i < firstDay; i++) html += "<td></td>";
+
+        for (let d = 1; d <= daysInMonth; d++) {
+          const dayOfWeek = new Date(year, month, d).getDay();
+          const formatted = formatDateDisplay(year, month, d);
+          const shortDate = formatted.slice(0, 5);
+          let cls = "";
+          let title = "";
+
+          if (dayOfWeek === 0) cls += "sunday ";
+          if (holidays[shortDate]) {
+            cls += "holiday ";
+            title = holidays[shortDate];
+          }
+
+          html += `<td data-date="${formatted}" class="${cls.trim()}" ${
+            title ? `title="${title}"` : ""
+          }>${d}</td>`;
+
+          if ((firstDay + d) % 7 === 0) html += "</tr><tr>";
+        }
+
+        html += "</tr>";
+        tbody.innerHTML = html;
+
+        picker.querySelectorAll("td[data-date]").forEach((td) => {
+          td.addEventListener("click", () => {
+            input.value = td.dataset.date;
+            picker.remove();
+          });
         });
 
-        function renderCalendar(picker, date, input) {
-          const month = date.getMonth();
-          const year = date.getFullYear();
-          const daysInMonth = new Date(year, month+1, 0).getDate();
-          const firstDay = new Date(year, month, 1).getDay();
-          const monthNames = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-                              "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+        picker.querySelector(".prev-month").addEventListener("click", (e) => {
+          e.stopPropagation();
+          renderCalendar(picker, new Date(year, month - 1, 1), input);
+        });
 
-          picker.innerHTML = `
-            <div class="datepicker-header">
-              <button type="button" class="prev-month">&lt;</button>
-              <span>${monthNames[month]} ${year}</span>
-              <button type="button" class="next-month">&gt;</button>
-            </div>
-            <table>
-              <thead>
-                <tr>${["D","S","T","Q","Q","S","S"].map(d=>`<th>${d}</th>`).join("")}</tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          `;
+        picker.querySelector(".next-month").addEventListener("click", (e) => {
+          e.stopPropagation();
+          renderCalendar(picker, new Date(year, month + 1, 1), input);
+        });
+      }
 
-          const tbody = picker.querySelector("tbody");
-          let html = "<tr>";
-          for (let i=0;i<firstDay;i++) html += "<td></td>";
+      function formatDateDisplay(y, m, d) {
+        return `${String(d).padStart(2, "0")}/${String(m + 1).padStart(
+          2,
+          "0"
+        )}/${y}`;
+      }
 
-          for (let d=1; d<=daysInMonth; d++) {
-            const dayOfWeek = new Date(year, month, d).getDay();
-            const formatted = formatDateDisplay(year, month, d);
-            const shortDate = formatted.slice(0,5);
-            let cls = "";
-            if(dayOfWeek===0) cls+="sunday ";
-            if(holidays.includes(shortDate)) cls+="holiday ";
-            html += `<td data-date="${formatted}" class="${cls.trim()}">${d}</td>`;
-            if((firstDay+d)%7===0) html+="</tr><tr>";
-          }
-          html+="</tr>";
-          tbody.innerHTML = html;
-
-          picker.querySelectorAll("td[data-date]").forEach(td=>{
-            td.addEventListener("click", ()=>{ input.value=td.dataset.date; picker.remove(); });
-          });
-
-          picker.querySelector(".prev-month").addEventListener("click", ()=>{ renderCalendar(picker,new Date(year,month-1,1),input); });
-          picker.querySelector(".next-month").addEventListener("click", ()=>{ renderCalendar(picker,new Date(year,month+1,1),input); });
-        }
-
-        function formatDateDisplay(y,m,d){ return `${String(d).padStart(2,"0")}/${String(m+1).padStart(2,"0")}/${y}`; }
-        function parseDate(str){ const [d,m,y]=str.split("/"); return new Date(y,m-1,d); }
-      });
+      function parseDate(str) {
+        const [d, m, y] = str.split("/");
+        return new Date(y, m - 1, d);
+      }
     });
-  </script>
+  });
+</script>
 <% end %>

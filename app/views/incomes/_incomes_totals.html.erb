@@ -19,7 +19,7 @@
 
   <!-- Total Geral (incluindo saldo anterior) -->
   <tr>
-    <th colspan="1">Total Geral</th>
-    <th colspan="5">R$ <%= number_with_precision(@total_with_previous_balance, precision: 2, delimiter: ".", separator: ",") %></th>
+    <th colspan="1">Saldo Atual</th>
+    <th colspan="5">R$ <%= number_with_precision(@current_balance, precision: 2, delimiter: ".", separator: ",") %></th>
   </tr>
 </tfoot>

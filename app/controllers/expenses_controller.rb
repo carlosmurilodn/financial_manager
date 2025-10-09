@@ -224,27 +224,21 @@ class ExpensesController < ApplicationController
   def calculate_net_balance
     return unless @month.present? && @year.present?
 
-    month_start = Date.new(@year, @month, 1)
-    accumulated_balance = 0
-    first_month = Expense.minimum(:balance_month) || Income.minimum(:balance_month) || month_start
-    current_month = first_month.beginning_of_month
+    # Último dia do mês filtrado
+    filter_date = Date.new(@year, @month, -1)
 
-    while current_month <= month_start
-      month_range = current_month.all_month
-      incomes_total = Income.where(balance_month: month_range, paid: true).sum(:amount)
-      expenses_total = Expense.where(balance_month: month_range).sum do |e|
-        if e.payment_method_credito_parcelado? && e.installments.any?
-          e.installments.select(&:paid).sum(&:amount)
-        else
-          e.paid? ? e.amount : 0
-        end
-      end
-      accumulated_balance = accumulated_balance + incomes_total - expenses_total
-      current_month = current_month.next_month
-    end
+    # Total de receitas pagas até o mês filtrado
+    total_incomes = Income.where("balance_month <= ?", filter_date)
+                          .where(paid: true)
+                          .sum(:amount)
 
-    @net_balance = accumulated_balance
-    @total_paid   = @expenses.select(&:paid?).sum(&:amount)
-    @total_unpaid = @expenses.reject(&:paid?).sum(&:amount)
+    # Total de despesas pagas até o mês filtrado
+    total_expenses = Expense.where("balance_month <= ?", filter_date)
+                            .where(paid: true)
+                            .sum(:amount)
+
+    # Saldo líquido
+    @net_balance = total_incomes - total_expenses
   end
+
 end

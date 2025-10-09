@@ -62,17 +62,20 @@
 
     .datepicker {
       position: absolute;
-      top: 110%;
-      left: 0;
+      top: 110%;           /* continua abaixo do input */
+      left: 50%;            /* centraliza horizontalmente em relação ao input */
+      margin-top: 10px;   /* espaço entre input e calendário */
+      transform: translateX(-50%);
       background: #fff;
       border: 1px solid #ccc;
       border-radius: 10px;
       padding: 10px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       z-index: 1000;
-      width: 100%;
-      max-width: 270px;
+      width: 270px;        /* largura fixa, ou pode ser % */
+      max-width: 100%;     /* para não ultrapassar o input em telas pequenas */
     }
+
 
     .datepicker-header {
       display: flex;

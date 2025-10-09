@@ -63,20 +63,13 @@
                                                     .where(balance_month: Date.current.beginning_of_month..Date.current.end_of_month)
                                                     .sum(:amount) %>
 
-                  <li class="list-group-item d-flex align-items-center justify-content-between text-dark">
-                    <!-- Nome do cartão (esquerda) -->
-                    <span class="text-start flex-fill">
+                  <li class="list-group-item d-flex justify-content-between text-dark">
+                    <span>
                       <%= card.icon.present? ? image_tag(card.icon, width: 20, class: "me-2") : "💳" %>
-                      <%= card.name %>
+                      <%= card.name %> - Limite do Cartao: 
+                      <span class="text-success"><%= number_to_currency(card.total_limit, unit: "R$ ", separator: ",", delimiter: ".") %> +</span>
                     </span>
-
-                    <!-- Limite total (centro) -->
-                    <span class="text-success text-center flex-fill">
-                      <%= number_to_currency(card.total_limit, unit: "R$ ", separator: ",", delimiter: ".") %>
-                    </span>
-
-                    <!-- Saldo usado (direita) -->
-                    <span class="text-danger text-end flex-fill">
+                    <span class="text-danger">
                       <%= number_to_currency(total_expenses + total_installments, unit: "R$ ", separator: ",", delimiter: ".") %>
                     </span>
                   </li>

@@ -1,12 +1,245 @@
-<div class="container py-5 text-center">
-  <h1 class="text-primary mb-4">Financial Manager 💸</h1>
+<div class="container-fluid py-4">
 
-  <div class="alert alert-success" role="alert">
-    Bootstrap + Esbuild funcionando! ✅
+  <!-- Cards KPIs -->
+  <div class="row mb-4">
+    <div class="col-md-3 mb-3">
+      <div class="card text-center shadow card-small">
+        <div class="card-body">
+          <h6 class="card-title text-muted">Saldo Atual</h6>
+          <h4 class="text-success"><%= number_to_currency(Income.sum(:amount) - Expense.sum(:amount)) %></h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="card text-center shadow card-small">
+        <div class="card-body">
+          <h6 class="card-title text-muted">Receitas do Mês</h6>
+          <h4 class="text-primary"><%= number_to_currency(Income.where(balance_month: Date.current.beginning_of_month..Date.current.end_of_month).sum(:amount)) %></h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="card text-center shadow card-small">
+        <div class="card-body">
+          <h6 class="card-title text-muted">Despesas do Mês</h6>
+          <h4 class="text-danger"><%= number_to_currency(Expense.where(balance_month: Date.current.beginning_of_month..Date.current.end_of_month).sum(:amount)) %></h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="card text-center shadow card-small">
+        <div class="card-body">
+          <h6 class="card-title text-muted">Saldo Líquido</h6>
+          <h4 class="text-warning"><%= number_to_currency(Income.sum(:amount) - Expense.sum(:amount)) %></h4>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="mt-3">
-    <button class="btn btn-primary btn-lg">Botão principal</button>
-    <button class="btn btn-outline-secondary btn-lg">Botão secundário</button>
+  <!-- Gráficos e Saldo por Cartão -->
+  <div class="row mb-4">
+    <div class="col-lg-6 mb-3">
+      <!-- Gráfico de Pizza -->
+      <div class="card shadow">
+        <div class="card-body">
+          <h5 class="card-title">Distribuição de Despesas</h5>
+          <canvas id="despesasChart"></canvas>
+        </div>
+      </div>
+      <!-- Saldo por Cartão -->
+      <div class="row mb-4 mt-2">
+        <div class="col-12">
+          <div class="card shadow">
+            <div class="card-body">
+              <h5 class="card-title">Saldo Acumulado por Cartão (Mês Atual)</h5>
+              <ul class="list-group list-group-flush">
+                <% Card.all.each do |card| %>
+                  <% total_expenses = Expense.where(card: card)
+                                            .where(balance_month: Date.current.beginning_of_month..Date.current.end_of_month)
+                                            .sum(:amount) %>
+
+                  <% total_installments = Installment.joins(:expense)
+                                                    .where(expenses: { card_id: card.id })
+                                                    .where(balance_month: Date.current.beginning_of_month..Date.current.end_of_month)
+                                                    .sum(:amount) %>
+
+                  <li class="list-group-item d-flex justify-content-between text-dark">
+                    <span>
+                      <%= card.icon.present? ? image_tag(card.icon, width: 20, class: "me-2") : "💳" %>
+                      <%= card.name %> - Limite do Cartao: 
+                      <span class="text-success"><%= number_to_currency(card.total_limit, unit: "R$ ", separator: ",", delimiter: ".") %> +</span>
+                    </span>
+                    <span class="text-danger">
+                      <%= number_to_currency(total_expenses + total_installments, unit: "R$ ", separator: ",", delimiter: ".") %>
+                    </span>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+      <div class="card shadow">
+        <div class="card-body">
+          <h5 class="card-title">Receitas x Despesas (Últimos 4 meses)</h5>
+          <canvas id="receitasChart"></canvas>
+        </div>
+      </div>
+        <!-- Listas Recentes -->
+      <div class="colum">
+        <div class="col-lg-12 mb-2 mt-2">
+          <div class="card shadow">
+            <div class="card-body">
+              <h5 class="card-title">Despesas Recentes</h5>
+              <ul class="list-group list-group-flush">
+                <% Expense.order(date: :desc).limit(5).each do |expense| %>
+                  <li class="list-group-item d-flex justify-content-between text-dark">
+                    <span>
+                      <%= expense.date.strftime("%d/%m/%Y") %> - 
+                      <%= expense.category.emoji %> <%= expense.category.name %> - <%= expense.description %>
+                    </span>
+                    <span class="text-danger"><%= number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".") %></span>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 mb-3">
+          <div class="card shadow">
+            <div class="card-body">
+              <h5 class="card-title">Receitas Recentes</h5>
+              <ul class="list-group list-group-flush">
+                <% Income.order(date: :desc).limit(5).each do |income| %>
+                  <li class="list-group-item d-flex justify-content-between text-dark">
+                    <span>
+                      <%= income.date.strftime("%d/%m/%Y") %> - 
+                      <%= income.description.presence || "Receita" %>
+                    </span>
+                    <span class="text-success"><%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %></span>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+<script>
+  // Gráficos Turbo-friendly
+  let despesasChartInstance;
+  let receitasChartInstance;
+
+  document.addEventListener("turbo:load", () => {
+    const despesasCanvas = document.getElementById('despesasChart');
+    const receitasCanvas = document.getElementById('receitasChart');
+    if (!despesasCanvas || !receitasCanvas) return;
+
+    if (despesasChartInstance) despesasChartInstance.destroy();
+    if (receitasChartInstance) receitasChartInstance.destroy();
+
+    // --- Distribuição de Despesas ---
+    const despesasLabels = <%= raw Category.joins(:expenses).group(:name).pluck(:name).to_json %>;
+    const despesasValues = <%= raw Category.joins(:expenses).group(:name).sum('expenses.amount').values.to_json %>;
+
+    despesasChartInstance = new Chart(despesasCanvas.getContext('2d'), {
+          type: 'pie',
+          data: {
+            labels: despesasLabels,
+            datasets: [{
+              data: despesasValues,
+              backgroundColor: ['#FF6B6B',
+                                '#FFB56B',
+                                '#FFD93D',
+                                '#6BCB77',
+                                '#4D96FF',
+                                '#845EC2',
+                                '#FF70A6',
+                                '#00C9A7',
+                                '#FFC75F',
+                                '#F9F871',
+                                '#A0CED9',
+                                '#FF9671',
+                                '#B388EB',
+                                '#FFABAB',
+                                '#8AC926'],
+              borderColor: '#ffffff',
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: { 
+                  boxWidth: 20, 
+                  padding: 15, 
+                  color: '#343a40', 
+                  font: { size: 16 }
+                   
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: ctx => `${ctx.label}: R$ ${ctx.raw.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`
+                }
+              },
+              datalabels: {
+                color: '#ffffff',
+                font: { weight: 'bold', size: 14 },
+                formatter: (value, ctx) => {
+                  const label = ctx.chart.data.labels[ctx.dataIndex];
+                  const numberValue = Number(value); // converte para Number
+                  return `${label}\nR$ ${numberValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                },
+                anchor: 'center',
+                align: 'center',
+                textStrokeColor: '#000000',
+                textStrokeWidth: 2
+              }
+            }
+          },
+          plugins: [ChartDataLabels]
+        });
+
+
+    // --- Receitas x Despesas ---
+    const months = <%= raw 4.times.map { |i| (Date.current - i.months).strftime('%B') }.reverse.to_json %>;
+    const receitasValues = <%= raw 4.times.map { |i| Income.where(balance_month: (Date.current - i.months).beginning_of_month..(Date.current - i.months).end_of_month).sum(:amount) }.reverse.to_json %>;
+    const despesasValuesBar = <%= raw 4.times.map { |i| Expense.where(balance_month: (Date.current - i.months).beginning_of_month..(Date.current - i.months).end_of_month).sum(:amount) }.reverse.to_json %>;
+
+    receitasChartInstance = new Chart(receitasCanvas.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [
+          { label: 'Receitas', data: receitasValues, backgroundColor: '#0d6efd', borderRadius: 5 },
+          { label: 'Despesas', data: despesasValuesBar, backgroundColor: '#dc3545', borderRadius: 5 }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'top', labels: { color: '#343a40', font: { size: 14 } } },
+          tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: R$ ${ctx.raw.toLocaleString('pt-BR', {minimumFractionDigits: 2})}` } }
+        },
+        scales: {
+          y: { beginAtZero: true, ticks: { color: '#343a40', callback: val => 'R$ ' + val.toLocaleString('pt-BR') }, grid: { color: 'rgba(0,0,0,0.05)' } },
+          x: { ticks: { color: '#343a40' }, grid: { display: false } }
+        }
+      }
+    });
+  });
+</script>

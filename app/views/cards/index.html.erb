@@ -20,18 +20,58 @@
         <tr id="<%= dom_id(card) %>">
           <td><%= card.name %></td>
           <td><%= card.number.present? ? "**** **** **** #{card.number[-4..-1]}" : "" %></td>
-          <td><%= number_to_currency(card.total_limit || 0) %></td>
-          <td><%= number_to_currency(card.remaining_limit || 0) %></td>
+          <td><%= number_to_currency(card.total_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
+          <td><%= number_to_currency(card.remaining_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
           <td><%= card.due_day %></td>
           <td><%= card.best_day %></td>
           <td>
-            <%= link_to t("buttons.edit"), edit_card_path(card), class: "btn btn-sm btn-primary" %>
+            <%= link_to t("buttons.edit"), edit_card_path(card), class: "btn btn-sm btn-primary me-1" %>
             <%= link_to t("buttons.delete"), card,
                         data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
-                        class: "btn btn-sm btn-danger" %>
+                        class: "btn btn-sm btn-danger me-1" %>
+            <%= form_with url: pay_card_path(card), method: :post, data: { turbo_confirm: "Deseja marcar como pagas todas as despesas e parcelas NÃO pagas deste cartão para o mês atual?" }, class: "d-inline" do %>
+              <%= submit_tag "Pagar", class: "btn btn-sm btn-warning" %>
+            <% end %>
           </td>
         </tr>
       <% end %>
     </tbody>
   </table>
 </div>
+
+<script>
+  document.addEventListener("turbo:load", function () {
+    document.querySelectorAll(".pay-card-btn").forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        const cardId = e.currentTarget.dataset.cardId;
+        if (!cardId) return;
+
+        const confirmation = confirm("Deseja marcar como pagas todas as despesas e parcelas NÃO pagas deste cartão para o mês atual?");
+        if (!confirmation) return;
+
+        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        fetch(`/cards/${cardId}/pay`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": token,
+            "Accept": "text/html"
+          },
+          body: JSON.stringify({})
+        })
+        .then(response => {
+          if (response.redirected) {
+            window.location.href = response.url;
+          } else {
+            window.location.reload();
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Ocorreu um erro ao tentar pagar. Veja o console para mais detalhes.");
+        });
+      });
+    });
+  });
+</script>

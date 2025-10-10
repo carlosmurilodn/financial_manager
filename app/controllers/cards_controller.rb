@@ -1,5 +1,5 @@
 class CardsController < ApplicationController
-  before_action :set_card, only: %i[edit update destroy]
+  before_action :set_card, only: %i[edit update destroy pay]
 
   def index
     @cards = Card.order(:name)
@@ -38,6 +38,42 @@ class CardsController < ApplicationController
     end
   end
 
+  # -------------------------------
+  # Nova action: Pagar todas as despesas e parcelas não pagas do mês atual
+  # -------------------------------
+  def pay
+    start_of_month = Date.current.beginning_of_month
+    end_of_month   = Date.current.end_of_month
+
+    credit_methods = [
+      Expense.payment_methods[:credito_a_vista],
+      Expense.payment_methods[:credito_parcelado]
+    ]
+
+    ActiveRecord::Base.transaction do
+      # Atualiza despesas não pagas do cartão no mês atual
+      updated_expenses_count = @card.expenses
+                                    .where(paid: false, payment_method: credit_methods)
+                                    .where(balance_month: start_of_month..end_of_month)
+                                    .update_all(paid: true)
+
+      # Atualiza parcelas não pagas do cartão no mês atual
+      updated_installments_count = Installment.joins(:expense)
+                                              .where(paid: false)
+                                              .where(expenses: { card_id: @card.id, payment_method: credit_methods })
+                                              .where(installments: { balance_month: start_of_month..end_of_month })
+                                              .update_all(paid: true)
+
+      flash[:notice] = "Pagamentos atualizados: #{updated_expenses_count} despesas e #{updated_installments_count} parcelas marcadas como pagas."
+    end
+
+    redirect_to cards_path
+  rescue => e
+    Rails.logger.error("Erro ao pagar cartão ##{@card.id}: #{e.message}\n#{e.backtrace.first(8).join("\n")}")
+    flash[:alert] = "Ocorreu um erro ao processar o pagamento: #{e.message}"
+    redirect_to cards_path
+  end
+
   private
 
   def set_card
@@ -57,21 +93,13 @@ class CardsController < ApplicationController
       :best_day
     )
 
-    # Normaliza os valores de moeda (ex: "R$ 10.000,00" → 10000.0)
     permitted[:total_limit]     = parse_brazilian_currency(permitted[:total_limit])
     permitted[:remaining_limit] = parse_brazilian_currency(permitted[:remaining_limit])
-
     permitted
   end
 
-  # Converte string de moeda brasileira para decimal
   def parse_brazilian_currency(value)
     return nil if value.blank?
-
-    value.to_s
-         .gsub(/[^\d,]/, "") # remove tudo que não for número ou vírgula
-         .gsub(".", "")      # remove pontos de milhar
-         .gsub(",", ".")     # troca vírgula por ponto decimal
-         .to_f
+    value.to_s.gsub(/[^\d,]/, "").gsub(".", "").gsub(",", ".").to_f
   end
 end

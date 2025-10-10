@@ -23,7 +23,11 @@ Rails.application.routes.draw do
 
 
   resources :categories
-  resources :cards
+  resources :cards do
+    member do
+      post :pay
+    end
+  end
 
   resources :installments, only: [:edit, :update, :destroy] do
     patch :toggle_paid, on: :member

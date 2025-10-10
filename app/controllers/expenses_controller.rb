@@ -198,7 +198,10 @@ class ExpensesController < ApplicationController
 
   def filter_by_card
     return if @card_filter.nil?
-    @expenses.select! { |e| e.card_id.to_s == @card_filter.to_s }
+    @expenses.select! do |e|
+      card_id = e.is_a?(Installment) ? e.expense.card_id : e.card_id
+      card_id.to_s == @card_filter.to_s
+    end
   end
 
   def filter_by_paid

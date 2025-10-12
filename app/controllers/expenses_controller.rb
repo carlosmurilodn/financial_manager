@@ -188,13 +188,22 @@ class ExpensesController < ApplicationController
 
   def filter_by_category
     return if @category_filter.nil?
-    @expenses.select! { |e| e.category_id.to_s == @category_filter.to_s }
+
+    @expenses.select! do |e|
+      category_id = e.is_a?(Installment) ? e.expense.category_id : e.category_id
+      category_id.to_s == @category_filter.to_s
+    end
   end
 
   def filter_by_payment_method
     return if @payment_method_filter.nil?
-    @expenses.select! { |e| e.payment_method == @payment_method_filter }
+
+    @expenses.select! do |e|
+      method = e.is_a?(Installment) ? e.expense.payment_method : e.payment_method
+      method == @payment_method_filter
+    end
   end
+
 
   def filter_by_card
     return if @card_filter.nil?
@@ -206,14 +215,25 @@ class ExpensesController < ApplicationController
 
   def filter_by_paid
     return if @paid_filter.nil?
+
     value = ActiveModel::Type::Boolean.new.cast(@paid_filter)
-    @expenses.select! { |e| e.paid == value }
+    
+    @expenses.select! do |e|
+      paid_status = e.is_a?(Installment) ? e.paid : e.paid
+      paid_status == value
+    end
   end
+
 
   def filter_by_description
     return if @description_filter.blank?
-    @expenses.select! { |e| e.description.to_s.downcase.include?(@description_filter.downcase) }
+
+    @expenses.select! do |e|
+      description = e.is_a?(Installment) ? e.expense.description : e.description
+      description.to_s.downcase.include?(@description_filter.downcase)
+    end
   end
+
 
   # --------------------------
   # Totais

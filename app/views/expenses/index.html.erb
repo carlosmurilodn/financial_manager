@@ -1,4 +1,4 @@
-<div class="container py-4">
+<div class="container-fluid">
   <h1 class="mb-4">Despesas</h1>
 
   <%= link_to t("buttons.new.feminine", model: t("models.expense")),
@@ -93,16 +93,16 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>Descrição</th>
-        <th>Parcela</th>
-        <th>Valor</th>
-        <th>Data</th>
-        <th>Mês Referência</th>
-        <th>Categoria</th>
-        <th>Pagamento</th>
-        <th>Cartão</th>
-        <th>Paga?</th>
-        <th>Ações</th>
+        <th class="text-center">Descrição</th>
+        <th class="text-center">Parcela</th>
+        <th class="text-center">Valor</th>
+        <th class="text-center">Data</th>
+        <th class="text-center">Mês Referência</th>
+        <th class="text-center">Categoria</th>
+        <th class="text-center">Pagamento</th>
+        <th class="text-center">Cartão</th>
+        <th class="text-center">Paga?</th>
+        <th class="text-center">Ações</th>
       </tr>
     </thead>
     <tbody id="expenses-list">
@@ -111,5 +111,5 @@
       <% end %>
     </tbody>
     <%= render "expenses_totals" %>
-  </table>
+  </table>'
 </div>

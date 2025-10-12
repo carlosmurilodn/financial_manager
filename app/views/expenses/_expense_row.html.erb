@@ -18,12 +18,12 @@
   <td><%= number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".") %></td>
 
   <!-- Data de Vencimento -->
-  <td>
+  <td class="text-center">
     <%= expense.is_a?(Installment) ? expense.due_date.strftime("%d/%m/%Y") : expense.date.strftime("%d/%m/%Y") %>
   </td>
 
   <!-- Mês do Balanço -->
-  <td>
+  <td class="text-center">
     <% balance_date = expense.is_a?(Installment) ? expense.read_attribute(:balance_month) : expense.balance_month %>
     <%= balance_date.strftime("%m/%Y") if balance_date.present? %>
   </td>
@@ -44,7 +44,7 @@
   </td>
 
   <!-- Pago? -->
-  <td>
+  <td class="text-center">
     <%= link_to (expense.paid? ? "Sim" : "Não"),
             expense.is_a?(Installment) ? toggle_paid_installment_path(expense, month: params[:month]) : toggle_paid_expense_path(expense, month: params[:month]),
             method: :patch,
@@ -53,7 +53,7 @@
   </td>
 
   <!-- Ações -->
-  <td>
+  <td class="text-center">
     <%= link_to t("buttons.edit"),
                 expense.is_a?(Installment) ? edit_installment_path(expense) : edit_expense_path(expense),
                 class: "btn btn-sm btn-primary" %>

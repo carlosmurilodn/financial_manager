@@ -3,60 +3,83 @@ class HomeController < ApplicationController
     @hoje = Date.current
     @mes_atual = @hoje.beginning_of_month..@hoje.end_of_month
 
-    # --- Cards KPIs ---
-    @receitas_mes = Income.where(date: @mes_atual, paid: true).sum(:amount)
+    # --- KPIs ---
+    @saldo_atual = Income.where("balance_month <= ?", @hoje.end_of_month).sum(:amount) -
+                   Expense.where("balance_month <= ?", @hoje.end_of_month).sum(:amount) -
+                   Installment.where("balance_month <= ?", @hoje.end_of_month).sum(:amount)
 
-    @despesas_mes = Expense.includes(:installments).sum do |e|
-      if e.payment_method_credito_parcelado? && e.installments.any?
-        e.installments.select(&:paid?).sum(&:amount)
-      else
-        e.paid? ? e.amount : 0
-      end
+    @receitas_mes = Income.where(balance_month: @mes_atual).sum(:amount)
+    @despesas_mes = Expense.where(balance_month: @mes_atual).sum(:amount)
+    @saldo_liquido = Income.sum(:amount) - Expense.sum(:amount) - Installment.sum(:amount)
+
+    # --- Saldo por cartão ---
+    @cards_info = Card.all.map do |card|
+      total_expenses = Expense.where(card: card, balance_month: @mes_atual).sum(:amount)
+      total_installments = Installment.joins(:expense)
+                                      .where(expenses: { card_id: card.id })
+                                      .where(balance_month: @mes_atual)
+                                      .sum(:amount)
+      { card: card, total: total_expenses + total_installments }
     end
 
-    @saldo_atual = @receitas_mes - @despesas_mes
-    @saldo_liquido = @saldo_atual
+    # --- Despesas por categoria (gráfico) ---
+    @despesas_por_categoria = Category.all.map do |cat|
+      despesas_soma = Expense.where(category_id: cat.id, balance_month: @mes_atual).sum(:amount)
+      parcelas_soma = Installment.joins(:expense)
+                                 .where(expenses: { category_id: cat.id })
+                                 .where(balance_month: @mes_atual)
+                                 .sum(:amount)
+      [cat.name, despesas_soma + parcelas_soma]
+    end.reject { |_, total| total.zero? }
+     .sort_by { |_, total| -total }
+     .to_h
 
-    # --- Listas recentes ---
-    @despesas_recentes = Expense.includes(:category).order(date: :desc).limit(5)
-    @receitas_recentes = Income.order(date: :desc).limit(5)
+    # --- Detalhes das despesas (tooltip do gráfico) ---
+    despesas_com_parcelas_ids = Installment.where(balance_month: @mes_atual).select(:expense_id)
 
-    # --- Gráfico Despesas por Categoria ---
-    categorias = Category.includes(:expenses).all
-    @categorias_despesas = categorias.map(&:name)
-    @categorias_emoji = categorias.map(&:display_name)
+    @detalhes_despesas_por_categoria =
+      Expense.includes(:installments, :category)
+            .where("balance_month BETWEEN ? AND ? OR id IN (?)", @mes_atual.begin, @mes_atual.end, despesas_com_parcelas_ids)
+            .group_by { |e| e.category.name }
+            .transform_values do |expenses|
+        detalhes = []
 
-    @valores_despesas = categorias.map do |cat|
-      cat.expenses.includes(:installments).sum do |e|
-        if e.payment_method_credito_parcelado? && e.installments.any?
-          e.installments.select(&:paid?).sum(&:amount)
-        else
-          e.paid? ? e.amount : 0
+        expenses.each do |e|
+          parcelas_no_mes = e.installments.where(balance_month: @mes_atual)
+
+          if e.payment_method_credito_parcelado? && parcelas_no_mes.any?
+            # Inclui apenas parcelas do mês
+            parcelas_no_mes.each do |p|
+              valor_parcela = ActionController::Base.helpers.number_to_currency(
+                p.amount, unit: "R$ ", separator: ",", delimiter: "."
+              )
+              detalhes << "#{e.description} - Parcela #{p.number}/#{e.installments_count} (#{valor_parcela})"
+            end
+
+          elsif @mes_atual.cover?(e.balance_month)
+            # Despesa única ou parcela única no mês
+            valor = ActionController::Base.helpers.number_to_currency(
+              e.amount, unit: "R$ ", separator: ",", delimiter: "."
+            )
+            detalhes << "#{e.description} (#{valor})"
+          end
         end
+
+        detalhes
       end
+
+    # --- Receitas x Despesas (últimos 4 meses) ---
+    @meses_datas = 4.times.map { |i| @hoje - i.months }.reverse
+    @meses_labels = @meses_datas.map { |d| d.strftime('%B') }
+
+    @receitas_mensais = @meses_datas.map do |data|
+      Income.where(balance_month: data.beginning_of_month..data.end_of_month).sum(:amount)
     end
 
-    # Cores dinâmicas
-    cores_base = ['#dc3545','#fd7e14','#ffc107','#6c757d','#0d6efd','#198754']
-    @cores_despesas = (cores_base * ((@categorias_despesas.size / cores_base.size.to_f).ceil)).first(@categorias_despesas.size)
-
-    # --- Gráfico Receitas x Despesas últimos 4 meses ---
-    @meses = 3.downto(0).map { |i| (Date.current - i.months).strftime("%b") }
-
-    @valores_receitas = 3.downto(0).map do |i|
-      mes = (Date.current - i.months)
-      Income.where(date: mes.beginning_of_month..mes.end_of_month, paid: true).sum(:amount)
-    end
-
-    @valores_despesas = 3.downto(0).map do |i|
-      mes = (Date.current - i.months)
-      Expense.includes(:installments).sum do |e|
-        if e.payment_method_credito_parcelado? && e.installments.any?
-          e.installments.select { |p| p.paid? && p.due_date&.month == mes.month && p.due_date&.year == mes.year }.sum(&:amount)
-        else
-          e.paid? && e.date.month == mes.month && e.date.year == mes.year ? e.amount : 0
-        end
-      end
+    @despesas_mensais = @meses_datas.map do |data|
+      despesas_soma = Expense.where(balance_month: data.beginning_of_month..data.end_of_month).sum(:amount)
+      parcelas_soma = Installment.where(balance_month: data.beginning_of_month..data.end_of_month).sum(:amount)
+      despesas_soma + parcelas_soma
     end
   end
 end

@@ -1,4 +1,4 @@
-<div class="container-fluid py-4">
+<div class="container-fluid">
 
   <!-- Cards KPIs -->
   <div class="row mb-4">
@@ -6,31 +6,42 @@
       <div class="card text-center shadow card-small">
         <div class="card-body">
           <h6 class="card-title text-muted">Saldo Atual</h6>
-          <h4 class="text-success"><%= number_to_currency(Income.sum(:amount) - Expense.sum(:amount)) %></h4>
+          <h4 class="text-success">
+            <%= number_to_currency(@saldo_atual) %>
+          </h4>
         </div>
       </div>
     </div>
+
     <div class="col-md-3 mb-3">
       <div class="card text-center shadow card-small">
         <div class="card-body">
-          <h6 class="card-title text-muted">Receitas do Mês</h6>
-          <h4 class="text-primary"><%= number_to_currency(Income.where(balance_month: Date.current.beginning_of_month..Date.current.end_of_month).sum(:amount)) %></h4>
+          <h6 class="card-title text-muted">Receitas de <%= I18n.l(Date.current, format: "%B") %></h6>
+          <h4 class="text-primary">
+            <%= number_to_currency(@receitas_mes) %>
+          </h4>
         </div>
       </div>
     </div>
+
     <div class="col-md-3 mb-3">
       <div class="card text-center shadow card-small">
         <div class="card-body">
-          <h6 class="card-title text-muted">Despesas do Mês</h6>
-          <h4 class="text-danger"><%= number_to_currency(Expense.where(balance_month: Date.current.beginning_of_month..Date.current.end_of_month).sum(:amount)) %></h4>
+          <h6 class="card-title text-muted">Despesas de <%= I18n.l(Date.current, format: "%B") %></h6>
+          <h4 class="text-danger">
+            <%= number_to_currency(@despesas_mes) %>
+          </h4>
         </div>
       </div>
     </div>
+
     <div class="col-md-3 mb-3">
       <div class="card text-center shadow card-small">
         <div class="card-body">
           <h6 class="card-title text-muted">Saldo Líquido</h6>
-          <h4 class="text-warning"><%= number_to_currency(Income.sum(:amount) - Expense.sum(:amount)) %></h4>
+          <h4 class="text-warning">
+            <%= number_to_currency(@saldo_liquido) %>
+          </h4>
         </div>
       </div>
     </div>
@@ -39,38 +50,34 @@
   <!-- Gráficos e Saldo por Cartão -->
   <div class="row mb-4">
     <div class="col-lg-6 mb-3">
-      <!-- Gráfico de Pizza -->
+      <!-- Gráfico de Barras Horizontal -->
       <div class="card shadow">
-        <div class="card-body">
-          <h5 class="card-title">Distribuição de Despesas</h5>
+        <div class="card-body" style="height: 700px;">
+          <h5 class="card-title">Despesas por Categoria (<%= I18n.l(Date.current, format: "%B") %>)</h5>
           <canvas id="despesasChart"></canvas>
         </div>
       </div>
+
       <!-- Saldo por Cartão -->
       <div class="row mb-4 mt-2">
         <div class="col-12">
           <div class="card shadow">
             <div class="card-body">
-              <h5 class="card-title">Saldo Acumulado por Cartão (Mês Atual)</h5>
+              <h5 class="card-title">Saldo Acumulado por Cartão (<%= I18n.l(Date.current, format: "%B") %>)</h5>
               <ul class="list-group list-group-flush">
-                <% Card.all.each do |card| %>
-                  <% total_expenses = Expense.where(card: card)
-                                            .where(balance_month: Date.current.beginning_of_month..Date.current.end_of_month)
-                                            .sum(:amount) %>
-
-                  <% total_installments = Installment.joins(:expense)
-                                                    .where(expenses: { card_id: card.id })
-                                                    .where(balance_month: Date.current.beginning_of_month..Date.current.end_of_month)
-                                                    .sum(:amount) %>
-
+                <% @cards_info.each do |info| %>
+                  <% card = info[:card] %>
+                  <% total = info[:total] %>
                   <li class="list-group-item d-flex justify-content-between text-dark">
-                    <span>
+                    <span class="text-start flex-fill">
                       <%= card.icon.present? ? image_tag(card.icon, width: 20, class: "me-2") : "💳" %>
-                      <%= card.name %> - Limite do Cartao: 
-                      <span class="text-success"><%= number_to_currency(card.total_limit, unit: "R$ ", separator: ",", delimiter: ".") %> +</span>
+                      <%= card.name %>
                     </span>
-                    <span class="text-danger">
-                      <%= number_to_currency(total_expenses + total_installments, unit: "R$ ", separator: ",", delimiter: ".") %>
+                    <span class="text-center flex-fill text-success">
+                      <%= number_to_currency(card.total_limit, unit: "R$ ", separator: ",", delimiter: ".") %> +
+                    </span>
+                    <span class="text-end flex-fill text-danger">
+                      <%= number_to_currency(total, unit: "R$ ", separator: ",", delimiter: ".") %>
                     </span>
                   </li>
                 <% end %>
@@ -80,6 +87,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-lg-6 mb-3">
       <div class="card shadow">
         <div class="card-body">
@@ -87,20 +95,22 @@
           <canvas id="receitasChart"></canvas>
         </div>
       </div>
-        <!-- Listas Recentes -->
+
+      <!-- Listas Recentes -->
       <div class="colum">
         <div class="col-lg-12 mb-2 mt-2">
           <div class="card shadow">
             <div class="card-body">
               <h5 class="card-title">Despesas Recentes</h5>
               <ul class="list-group list-group-flush">
-                <% Expense.order(date: :desc).limit(5).each do |expense| %>
+                <% Expense.order(date: :desc).limit(7).each do |expense| %>
                   <li class="list-group-item d-flex justify-content-between text-dark">
                     <span>
-                      <%= expense.date.strftime("%d/%m/%Y") %> - 
-                      <%= expense.category.emoji %> <%= expense.category.name %> - <%= expense.description %>
+                      <%= expense.date.strftime("%d/%m/%Y") %> - <%= expense.category.emoji %> <%= expense.category.name %> - <%= expense.description %>
                     </span>
-                    <span class="text-danger"><%= number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".") %></span>
+                    <span class="text-danger">
+                      <%= number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
+                    </span>
                   </li>
                 <% end %>
               </ul>
@@ -113,7 +123,7 @@
             <div class="card-body">
               <h5 class="card-title">Receitas Recentes</h5>
               <ul class="list-group list-group-flush">
-                <% Income.order(date: :desc).limit(5).each do |income| %>
+                <% Income.order(date: :desc).limit(7).each do |income| %>
                   <li class="list-group-item d-flex justify-content-between text-dark">
                     <span>
                       <%= income.date.strftime("%d/%m/%Y") %> - 
@@ -130,7 +140,6 @@
     </div>
   </div>
 </div>
-
 
 <!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -149,76 +158,92 @@
     if (despesasChartInstance) despesasChartInstance.destroy();
     if (receitasChartInstance) receitasChartInstance.destroy();
 
-    // --- Distribuição de Despesas ---
-    const despesasLabels = <%= raw Category.joins(:expenses).group(:name).pluck(:name).to_json %>;
-    const despesasValues = <%= raw Category.joins(:expenses).group(:name).sum('expenses.amount').values.to_json %>;
+    // ==============================
+    // --- DISTRIBUIÇÃO DE DESPESAS ---
+    // ==============================
+    const despesasLabels = <%= raw @despesas_por_categoria.keys.to_json %>;
+    const despesasValues = <%= raw @despesas_por_categoria.values.to_json %>;
+    const despesasDetalhes = <%= raw @detalhes_despesas_por_categoria.to_json %>;
 
     despesasChartInstance = new Chart(despesasCanvas.getContext('2d'), {
-          type: 'pie',
-          data: {
-            labels: despesasLabels,
-            datasets: [{
-              data: despesasValues,
-              backgroundColor: ['#FF6B6B',
-                                '#FFB56B',
-                                '#FFD93D',
-                                '#6BCB77',
-                                '#4D96FF',
-                                '#845EC2',
-                                '#FF70A6',
-                                '#00C9A7',
-                                '#FFC75F',
-                                '#F9F871',
-                                '#A0CED9',
-                                '#FF9671',
-                                '#B388EB',
-                                '#FFABAB',
-                                '#8AC926'],
-              borderColor: '#ffffff',
-              borderWidth: 2
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: {
-                position: 'bottom',
-                labels: { 
-                  boxWidth: 20, 
-                  padding: 15, 
-                  color: '#343a40', 
-                  font: { size: 16 }
-                   
+      type: 'bar',
+      data: {
+        labels: despesasLabels,
+        datasets: [{
+          data: despesasValues,
+          backgroundColor: [
+            '#FF6B6B', '#FFB56B', '#FFD93D', '#6BCB77', '#4D96FF',
+            '#845EC2', '#FF70A6', '#00C9A7', '#FFC75F', '#F9F871',
+            '#A0CED9', '#FF9671', '#B388EB', '#FFABAB', '#8AC926'
+          ],
+          borderColor: '#ffffff',
+          borderWidth: 2,
+          borderRadius: 5
+        }]
+      },
+      options: {
+        layout: { padding: { bottom: 30, right: 80 } },
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                const index = ctx.dataIndex;                     
+                const categoria = ctx.chart.data.labels[index]; 
+                const despesas = despesasDetalhes[categoria] || [];
+
+                const valor = `Total: R$ ${ctx.raw.toLocaleString('pt-BR', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                })}`;
+
+                if (despesas.length === 0) {
+                  return [valor];
+                } else {
+                  const lista = despesas.map(d => `• ${d}`);
+                  return [valor, ...lista]; // cada item = uma linha separada
                 }
-              },
-              tooltip: {
-                callbacks: {
-                  label: ctx => `${ctx.label}: R$ ${ctx.raw.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`
-                }
-              },
-              datalabels: {
-                color: '#ffffff',
-                font: { weight: 'bold', size: 14 },
-                formatter: (value, ctx) => {
-                  const label = ctx.chart.data.labels[ctx.dataIndex];
-                  const numberValue = Number(value); // converte para Number
-                  return `${label}\nR$ ${numberValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-                },
-                anchor: 'center',
-                align: 'center',
-                textStrokeColor: '#000000',
-                textStrokeWidth: 2
               }
             }
           },
-          plugins: [ChartDataLabels]
-        });
+          datalabels: {
+            color: '#343a40',
+            anchor: 'end',
+            align: 'right',
+            font: { weight: 'bold', size: 14 },
+            formatter: (value) => `R$ ${Number(value).toLocaleString('pt-BR', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            })}`
+          }
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            ticks: {
+              color: '#343a40',
+              callback: val => 'R$ ' + val.toLocaleString('pt-BR')
+            },
+            grid: { color: 'rgba(0,0,0,0.05)' }
+          },
+          y: {
+            ticks: { color: '#343a40' },
+            grid: { display: false }
+          }
+        }
+      },
+      plugins: [ChartDataLabels]
+    });
 
-
-    // --- Receitas x Despesas ---
-    const months = <%= raw 4.times.map { |i| (Date.current - i.months).strftime('%B') }.reverse.to_json %>;
-    const receitasValues = <%= raw 4.times.map { |i| Income.where(balance_month: (Date.current - i.months).beginning_of_month..(Date.current - i.months).end_of_month).sum(:amount) }.reverse.to_json %>;
-    const despesasValuesBar = <%= raw 4.times.map { |i| Expense.where(balance_month: (Date.current - i.months).beginning_of_month..(Date.current - i.months).end_of_month).sum(:amount) }.reverse.to_json %>;
+    // ==============================
+    // --- RECEITAS X DESPESAS ---
+    // ==============================
+    const months = <%= raw @meses_labels.to_json %>;
+    const receitasValues = <%= raw @receitas_mensais.to_json %>;
+    const despesasValuesBar = <%= raw @despesas_mensais.to_json %>;
 
     receitasChartInstance = new Chart(receitasCanvas.getContext('2d'), {
       type: 'bar',
@@ -233,10 +258,21 @@
         responsive: true,
         plugins: {
           legend: { position: 'top', labels: { color: '#343a40', font: { size: 14 } } },
-          tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: R$ ${ctx.raw.toLocaleString('pt-BR', {minimumFractionDigits: 2})}` } }
+          tooltip: {
+            callbacks: {
+              label: ctx => `${ctx.dataset.label}: R$ ${ctx.raw.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+            }
+          }
         },
         scales: {
-          y: { beginAtZero: true, ticks: { color: '#343a40', callback: val => 'R$ ' + val.toLocaleString('pt-BR') }, grid: { color: 'rgba(0,0,0,0.05)' } },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#343a40',
+              callback: val => 'R$ ' + val.toLocaleString('pt-BR')
+            },
+            grid: { color: 'rgba(0,0,0,0.05)' }
+          },
           x: { ticks: { color: '#343a40' }, grid: { display: false } }
         }
       }

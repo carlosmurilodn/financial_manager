@@ -1,0 +1,144 @@
+.custom-date-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.custom-date {
+    cursor: pointer;
+    background-color: #fff !important;
+    color: #333;
+    font-weight: 500;
+    width: 100%;
+}
+
+.datepicker {
+    position: absolute;
+    top: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    width: 100%;
+    max-width: 270px;
+}
+
+/* HEADER: Usa Flexbox para centralizar */
+.datepicker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.datepicker-header button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #007bff;
+    padding: 2px 8px;
+    transition: color 0.2s;
+}
+
+.datepicker-header button:hover {
+    color: #0056b3;
+}
+
+/* NOVO: Estiliza e Centraliza Mês e Ano */
+.month-year-selects {
+    display: flex; /* Coloca os selects lado a lado */
+    justify-content: center; /* Centraliza eles no espaço disponível */
+    flex-grow: 1; /* Ocupa o espaço central */
+    gap: 8px; /* Espaçamento entre Mês e Ano */
+}
+
+.datepicker-header select {
+    padding: 4px 6px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-weight: 500;
+    min-width: 80px;
+}
+
+.datepicker table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    font-size: 14px;
+    table-layout: fixed;
+}
+
+.datepicker th {
+    font-weight: 600;
+    padding: 4px;
+    color: #666;
+}
+
+.datepicker td {
+    padding: 6px;
+    border-radius: 8px;
+    transition: background 0.2s, color 0.2s;
+}
+
+/* Hover apenas nos dias válidos */
+.datepicker td[data-date]:hover {
+    background: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+.datepicker td:not([data-date]) {
+    background: transparent;
+    cursor: default;
+}
+
+.datepicker .active {
+    background: #007bff;
+    color: #fff;
+}
+
+/* NOVO: Aplica vermelho ao Sábado */
+.datepicker .saturday, /* Sábado (6) */
+.datepicker .sunday,  /* Domingo (0) */
+.datepicker .holiday {
+    color: red !important;
+    font-weight: bold;
+}
+
+/* Tooltip apenas para feriados */
+.datepicker td[title] {
+    position: relative;
+}
+
+.datepicker td[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0.9;
+}
+
+.datepicker td[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}

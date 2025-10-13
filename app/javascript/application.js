@@ -1,2 +1,5 @@
 import "@hotwired/turbo-rails"
 import "bootstrap"
+import "../assets/stylesheets/date_picker.css"
+import "./date_picker"
+import "./utils"

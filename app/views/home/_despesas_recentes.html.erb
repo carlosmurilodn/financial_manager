@@ -2,8 +2,7 @@
   <div class="card-body d-flex flex-column h-100 p-3">
     <h5 class="card-title text-center mb-3">Despesas Recentes</h5>
 
-    <% despesas = Expense.order(date: :desc).limit(7) %>
-    <% linhas = despesas.size + 1 %>
+    <% linhas = @recent_expenses.size + 1 %>
     <% altura_linha = 100.0 / linhas %>
 
     <table class="table table-borderless text-dark mb-0" style="height: 100%; table-layout: fixed; border-collapse: collapse;">
@@ -16,8 +15,8 @@
       </thead>
 
       <tbody>
-        <% despesas.each_with_index do |expense, index| %>
-          <% borda = (index == despesas.size - 1) ? "none" : "1px solid #dc3545" %>
+        <% @recent_expenses.each_with_index do |expense, index| %>
+          <% borda = (index == @recent_expenses.size - 1) ? "none" : "1px solid #dc3545" %>
           <tr style="height: <%= altura_linha %>%;">
             <td class="text-start align-middle" style="border-bottom: <%= borda %>;">
               <%= expense.date.strftime("%d/%m/%Y") %>

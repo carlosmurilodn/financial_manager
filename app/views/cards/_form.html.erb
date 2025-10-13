@@ -1,5 +1,4 @@
 <%= form_with model: card, local: true do |f| %>
-  <!-- Linha 1: Nome e Número -->
   <div class="row mb-3">
     <div class="col-md-6">
       <%= f.label :name, t("cards.form.name") %>
@@ -9,29 +8,28 @@
     <div class="col-md-6">
       <%= f.label :number, t("cards.form.number") %>
       <%= f.text_field :number,
-            class: "form-control cartao",
+            class: "form-control card-number", # Classe 'cartao' ou '.card-number' para o utils.js
             placeholder: "1234 5678 1234 5678",
-            maxlength: 19,
-            oninput: "formatCardNumber(this)" %>
+            maxlength: 19
+      %>
     </div>
   </div>
 
-  <!-- Linha 2: Limites e Dias -->
   <div class="row mb-3">
     <div class="col-md-3">
       <%= f.label :total_limit, "Limite Total" %>
       <%= f.text_field :total_limit,
             class: "form-control moeda",
-            value: card.total_limit.present? ? number_to_currency(card.total_limit, unit: "R$", separator: ",", delimiter: ".") : "R$ 0,00",
-            oninput: "formatMoeda(this)" %>
+            value: card.total_limit.present? ? number_to_currency(card.total_limit, unit: "R$", separator: ",", delimiter: ".") : "R$ 0,00"
+      %>
     </div>
 
     <div class="col-md-3">
       <%= f.label :remaining_limit, "Limite Restante" %>
       <%= f.text_field :remaining_limit,
             class: "form-control moeda",
-            value: card.remaining_limit.present? ? number_to_currency(card.remaining_limit, unit: "R$", separator: ",", delimiter: ".") : "R$ 0,00",
-            oninput: "formatMoeda(this)" %>
+            value: card.remaining_limit.present? ? number_to_currency(card.remaining_limit, unit: "R$", separator: ",", delimiter: ".") : "R$ 0,00"
+      %>
     </div>
 
     <div class="col-md-3">
@@ -49,127 +47,7 @@
     </div>
   </div>
 
-  <!-- Botão Salvar -->
   <div class="mb-3">
     <%= f.submit t("cards.form.submit"), class: "btn btn-primary" %>
   </div>
-
-  <!-- CSS Inline -->
-  <style>
-    .custom-date-wrapper { position: relative; }
-    .custom-date-day {
-      cursor: pointer;
-      background-color: #fff !important;
-      color: #333;
-      font-weight: 500;
-    }
-
-    .datepicker {
-      position: absolute;
-      top: 110%;
-      left: 0;
-      margin-top: 10px;
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      z-index: 1000;
-      width: 100%; /* ocupa toda a largura do wrapper */
-      max-width: none; /* remove limite fixo */
-    }
-
-    .datepicker table {
-      width: 100%;
-      text-align: center;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
-
-    .datepicker td {
-      width: calc(100% / 7); /* cada dia ocupa 1/7 da tabela */
-      height: 36px;
-      line-height: 36px;
-      cursor: pointer;
-      border-radius: 6px;
-      transition: background 0.2s, color 0.2s;
-    }
-
-    /* Apenas dias válidos recebem hover */
-    .datepicker td[data-day]:hover {
-      background: #007bff;
-      color: #fff;
-    }
-
-    .datepicker .active {
-      background: #007bff;
-      color: #fff;
-    }
-
-    .datepicker .sunday {
-      color: red !important;
-      font-weight: bold;
-    }
-  </style>
-
-  <!-- JS Inline -->
-  <script>
-  document.addEventListener("turbo:load", function() {
-    const inputs = document.querySelectorAll(".custom-date-day");
-
-    inputs.forEach(input => {
-      if (input.value && !isNaN(input.value)) input.value = String(input.value).padStart(2,"0");
-
-      input.addEventListener("focus", function() {
-        const existing = document.querySelector(".datepicker");
-        if (existing) existing.remove();
-
-        const picker = document.createElement("div");
-        picker.classList.add("datepicker");
-
-        const today = new Date();
-        renderCalendar(picker, today, input);
-        input.parentNode.appendChild(picker);
-
-        function removePicker(e) {
-          if (!e.target.closest(".custom-date-wrapper")) {
-            picker.remove();
-            document.removeEventListener("click", removePicker);
-          }
-        }
-        setTimeout(() => document.addEventListener("click", removePicker), 0);
-      });
-
-      function renderCalendar(picker, date, input) {
-        const month = date.getMonth();
-        const year = date.getFullYear();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const firstDay = new Date(year, month, 1).getDay();
-
-        picker.innerHTML = `<table><tbody></tbody></table>`;
-        const tbody = picker.querySelector("tbody");
-        let html = "<tr>";
-
-        for (let i = 0; i < firstDay; i++) html += "<td></td>";
-
-        for (let d = 1; d <= daysInMonth; d++) {
-          const dayOfWeek = new Date(year, month, d).getDay();
-          const cls = dayOfWeek === 0 ? "sunday" : "";
-          html += `<td data-day="${String(d).padStart(2,"0")}" class="${cls}">${d}</td>`;
-          if ((firstDay + d) % 7 === 0) html += "</tr><tr>";
-        }
-
-        html += "</tr>";
-        tbody.innerHTML = html;
-
-        picker.querySelectorAll("td[data-day]").forEach(td => {
-          td.addEventListener("click", () => {
-            input.value = td.dataset.day;
-            picker.remove();
-          });
-        });
-      }
-    });
-  });
-  </script>
 <% end %>

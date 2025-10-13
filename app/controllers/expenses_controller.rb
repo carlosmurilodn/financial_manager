@@ -157,7 +157,6 @@ class ExpensesController < ApplicationController
         expense.installments.order(:number).each { |inst| @expenses << inst }
       end
     end
-
     # --------------------------
     # Aplicar filtros
     # --------------------------
@@ -167,14 +166,13 @@ class ExpensesController < ApplicationController
     filter_by_card
     filter_by_paid
     filter_by_description
-
     # --------------------------
     # Totais
     # --------------------------
     calculate_totals
     calculate_net_balance
   end
-
+  
   # --------------------------
   # Filtros
   # --------------------------
@@ -188,7 +186,6 @@ class ExpensesController < ApplicationController
 
   def filter_by_category
     return if @category_filter.nil?
-
     @expenses.select! do |e|
       category_id = e.is_a?(Installment) ? e.expense.category_id : e.category_id
       category_id.to_s == @category_filter.to_s
@@ -197,7 +194,6 @@ class ExpensesController < ApplicationController
 
   def filter_by_payment_method
     return if @payment_method_filter.nil?
-
     @expenses.select! do |e|
       method = e.is_a?(Installment) ? e.expense.payment_method : e.payment_method
       method == @payment_method_filter
@@ -215,9 +211,7 @@ class ExpensesController < ApplicationController
 
   def filter_by_paid
     return if @paid_filter.nil?
-
     value = ActiveModel::Type::Boolean.new.cast(@paid_filter)
-    
     @expenses.select! do |e|
       paid_status = e.is_a?(Installment) ? e.paid : e.paid
       paid_status == value
@@ -251,17 +245,12 @@ class ExpensesController < ApplicationController
     filter_date = Date.new(@year, @month, -1)
 
     # Total de receitas pagas até o mês filtrado
-    total_incomes = Income.where("balance_month <= ?", filter_date)
-                          .where(paid: true)
-                          .sum(:amount)
+    total_incomes = Income.where("balance_month <= ?", filter_date).where(paid: true).sum(:amount)
 
     # Total de despesas pagas até o mês filtrado
-    total_expenses = Expense.where("balance_month <= ?", filter_date)
-                            .where(paid: true)
-                            .sum(:amount)
+    total_expenses = Expense.where("balance_month <= ?", filter_date).where(paid: true).sum(:amount)
 
     # Saldo líquido
     @net_balance = total_incomes - total_expenses
   end
-
 end

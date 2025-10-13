@@ -8,38 +8,12 @@
 
     <!-- CSS do Rails -->
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_include_tag "turbo", type: "module" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   </head>
 
-  <script>
-    function formatMoeda(el) {
-      let val = el.value.replace(/\D/g, "");
-      if (!val) {
-        el.value = "R$ 0,00";
-        return;
-      }
-
-      val = (parseInt(val) / 100).toFixed(2);
-      let partes = val.split(".");
-      let inteiro = partes[0];
-      let decimal = partes[1];
-      inteiro = inteiro.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      el.value = "R$ " + inteiro + "," + decimal;
-    }
-
-    function formatCardNumber(input) {
-      let value = input.value.replace(/\D/g, "")
-      value = value.slice(0, 16)
-      input.value = value.replace(/(.{4})/g, "$1 ").trim()
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      document.querySelectorAll(".moeda").forEach(el => formatMoeda(el));
-    });
-  </script>
 
   <body style="background-color: #e2e2e2ff;">
     <div id="wrapper" class="d-flex">
@@ -59,6 +33,7 @@
           <% end %>
 
           <%= yield %>
+          
         </div>
       </div>
     </div>

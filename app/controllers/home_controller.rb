@@ -81,5 +81,24 @@ class HomeController < ApplicationController
       parcelas_soma = Installment.where(balance_month: data.beginning_of_month..data.end_of_month).sum(:amount)
       despesas_soma + parcelas_soma
     end
+
+
+    # Mês e ano selecionado (ou atual)
+    @month = (params[:month] || Date.current.month).to_i
+    @year = (params[:year] || Date.current.year).to_i
+    start_date = Date.new(@year, @month, 1)
+    end_date = start_date.end_of_month
+
+    # Buscar despesas e parcelas não pagas no período
+    @calendar_expenses_not_paid = Expense
+      .where(paid: false)
+      .where(date: start_date..end_date)
+      .includes(:category)
+
+    @calendar_installments_not_paid = Installment
+      .where(paid: false)
+      .where(due_date: start_date..end_date)
+      .includes(expense: :category)
+
   end
 end

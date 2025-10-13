@@ -1,0 +1,138 @@
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+<script>
+  // Gráficos Turbo-friendly
+  let despesasChartInstance;
+  let receitasChartInstance;
+
+  document.addEventListener("turbo:load", () => {
+    const despesasCanvas = document.getElementById('despesasChart');
+    const receitasCanvas = document.getElementById('receitasChart');
+    if (!despesasCanvas || !receitasCanvas) return;
+
+    if (despesasChartInstance) despesasChartInstance.destroy();
+    if (receitasChartInstance) receitasChartInstance.destroy();
+
+    // ==============================
+    // --- DISTRIBUIÇÃO DE DESPESAS ---
+    // ==============================
+    const despesasLabels = <%= raw @despesas_por_categoria.keys.to_json %>;
+    const despesasValues = <%= raw @despesas_por_categoria.values.to_json %>;
+    const despesasDetalhes = <%= raw @detalhes_despesas_por_categoria.to_json %>;
+
+    despesasChartInstance = new Chart(despesasCanvas.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: despesasLabels,
+        datasets: [{
+          data: despesasValues,
+          backgroundColor: [
+            '#FF6B6B', '#FFB56B', '#FFD93D', '#6BCB77', '#4D96FF',
+            '#845EC2', '#FF70A6', '#00C9A7', '#FFC75F', '#F9F871',
+            '#A0CED9', '#FF9671', '#B388EB', '#FFABAB', '#8AC926'
+          ],
+          borderColor: '#ffffff',
+          borderWidth: 2,
+          borderRadius: 5
+        }]
+      },
+      options: {
+        layout: { padding: { bottom: 30, right: 80 } },
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                const index = ctx.dataIndex;                     
+                const categoria = ctx.chart.data.labels[index]; 
+                const despesas = despesasDetalhes[categoria] || [];
+
+                const valor = `Total: R$ ${ctx.raw.toLocaleString('pt-BR', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                })}`;
+
+                if (despesas.length === 0) {
+                  return [valor];
+                } else {
+                  const lista = despesas.map(d => `• ${d}`);
+                  return [valor, ...lista]; // cada item = uma linha separada
+                }
+              }
+            }
+          },
+          datalabels: {
+            color: '#343a40',
+            anchor: 'end',
+            align: 'right',
+            font: { weight: 'bold', size: 14 },
+            formatter: (value) => `R$ ${Number(value).toLocaleString('pt-BR', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            })}`
+          }
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            ticks: {
+              color: '#343a40',
+              callback: val => 'R$ ' + val.toLocaleString('pt-BR')
+            },
+            grid: { color: 'rgba(0,0,0,0.05)' }
+          },
+          y: {
+            ticks: { color: '#343a40' },
+            grid: { display: false }
+          }
+        }
+      },
+      plugins: [ChartDataLabels]
+    });
+
+    // ==============================
+    // --- RECEITAS X DESPESAS ---
+    // ==============================
+    const months = <%= raw @meses_labels.to_json %>;
+    const receitasValues = <%= raw @receitas_mensais.to_json %>;
+    const despesasValuesBar = <%= raw @despesas_mensais.to_json %>;
+
+    receitasChartInstance = new Chart(receitasCanvas.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [
+          { label: 'Receitas', data: receitasValues, backgroundColor: '#0d6efd', borderRadius: 5 },
+          { label: 'Despesas', data: despesasValuesBar, backgroundColor: '#dc3545', borderRadius: 5 }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'top', labels: { color: '#343a40', font: { size: 14 } } },
+          tooltip: {
+            callbacks: {
+              label: ctx => `${ctx.dataset.label}: R$ ${ctx.raw.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#343a40',
+              callback: val => 'R$ ' + val.toLocaleString('pt-BR')
+            },
+            grid: { color: 'rgba(0,0,0,0.05)' }
+          },
+          x: { ticks: { color: '#343a40' }, grid: { display: false } }
+        }
+      }
+    });
+  });
+</script>

@@ -1,0 +1,38 @@
+<!-- Receitas Recentes -->
+<div class="card shadow" style="height: 400px;">
+  <div class="card-body d-flex flex-column h-100 p-3">
+    <h5 class="card-title text-center mb-3">Receitas Recentes</h5>
+
+    <% receitas = Income.order(date: :desc).limit(7) %>
+    <% linhas = receitas.size + 1 %> <!-- +1 para o cabeçalho -->
+    <% altura_linha = 100.0 / linhas %>
+
+    <table class="table table-borderless text-dark mb-0" style="height: 100%; table-layout: fixed; border-collapse: collapse;">
+      <thead>
+        <tr style="height: <%= altura_linha %>%;">
+          <th class="align-middle" style="border-bottom: 2px solid #198754;">Data</th>
+          <th class="align-middle" style="border-bottom: 2px solid #198754;">Descrição</th>
+          <th class="align-middle" style="border-bottom: 2px solid #198754;">Valor</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% receitas.each_with_index do |income, index| %>
+          <% # verifica se é a última linha %>
+          <% borda = (index == receitas.size - 1) ? "none" : "1px solid #198754" %>
+          <tr style="height: <%= altura_linha %>%;">
+            <td class="text-start align-middle" style="border-bottom: <%= borda %>;">
+              <%= income.date.strftime("%d/%m/%Y") %>
+            </td>
+            <td class="text-start align-middle" style="border-bottom: <%= borda %>;">
+              <%= income.description.presence || "Receita" %>
+            </td>
+            <td class="text-start align-middle text-success" style="border-bottom: <%= borda %>;">
+              <%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<div class="row mt-2">
+  <div class="col-12">
+    <div class="card shadow" style="height: 810px;">
+      <div class="card-body d-flex flex-column h-100 p-3">
+        <h5 class="card-title text-center mb-3">
+          Saldo Acumulado por Cartão (<%= I18n.l(Date.current, format: "%B") %>)
+        </h5>
+
+        <% linhas = @cards_info.size + 1 %> <!-- total de linhas (inclui cabeçalho) -->
+        <% altura_linha = 100.0 / linhas %>
+
+        <table class="table table-borderless text-dark mb-0" style="height: 100%; table-layout: fixed; border-collapse: collapse;">
+          <thead>
+            <tr style="height: <%= altura_linha %>%;">
+              <th class="align-middle" style="border-bottom: 2px solid #35363A;">Cartão</th>
+              <th class="align-middle" style="border-bottom: 2px solid #35363A;">Limite Total</th>
+              <th class="align-middle" style="border-bottom: 2px solid #35363A;">Saldo Acumulado</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @cards_info.each_with_index do |info, index| %>
+              <% card = info[:card] %>
+              <% total = info[:total] %>
+              <% borda = (index == @cards_info.size - 1) ? "none" : "1px solid #35363A" %>
+              <tr style="height: <%= altura_linha %>%;">
+                <td class="text-start align-middle" style="border-bottom: <%= borda %>;">
+                  <%= card.icon.present? ? image_tag(card.icon, width: 20, class: "me-2") : "💳" %>
+                  <%= card.name %>
+                </td>
+                <td class="text-start align-middle text-success" style="border-bottom: <%= borda %>;">
+                  <%= number_to_currency(card.total_limit, unit: "R$ ", separator: ",", delimiter: ".") %> +
+                </td>
+                <td class="text-start align-middle text-danger" style="border-bottom: <%= borda %>;">
+                  <%= number_to_currency(total, unit: "R$ ", separator: ",", delimiter: ".") %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

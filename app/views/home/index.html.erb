@@ -7,7 +7,7 @@
         <div class="card-body">
           <h6 class="card-title text-muted">Saldo Atual</h6>
           <h4 class="text-success">
-            <%= number_to_currency(@saldo_atual) %>
+            <%= number_to_currency(@saldo_atual, unit: "R$ ", separator: ",", delimiter: ".") %>
           </h4>
         </div>
       </div>
@@ -18,7 +18,7 @@
         <div class="card-body">
           <h6 class="card-title text-muted">Receitas de <%= I18n.l(Date.current, format: "%B") %></h6>
           <h4 class="text-primary">
-            <%= number_to_currency(@receitas_mes) %>
+            <%= number_to_currency(@receitas_mes, unit: "R$ ", separator: ",", delimiter: ".") %>
           </h4>
         </div>
       </div>
@@ -29,7 +29,7 @@
         <div class="card-body">
           <h6 class="card-title text-muted">Despesas de <%= I18n.l(Date.current, format: "%B") %></h6>
           <h4 class="text-danger">
-            <%= number_to_currency(@despesas_mes) %>
+            <%= number_to_currency(@despesas_mes, unit: "R$ ", separator: ",", delimiter: ".") %>
           </h4>
         </div>
       </div>
@@ -40,7 +40,7 @@
         <div class="card-body">
           <h6 class="card-title text-muted">Saldo Líquido</h6>
           <h4 class="text-warning">
-            <%= number_to_currency(@saldo_liquido) %>
+            <%= number_to_currency(@saldo_liquido, unit: "R$ ", separator: ",", delimiter: ".") %>
           </h4>
         </div>
       </div>

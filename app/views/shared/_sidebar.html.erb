@@ -4,6 +4,7 @@
     <button id="sidebarToggle" class="btn btn-sm text-black" style="background-color: transparent; font-size: 1.2rem;">☰</button>
   </div>
 
+  <!-- Links -->
   <div class="list-group list-group-flush w-100 mt-2">
     <%= link_to root_path, class: "list-group-item list-group-item-action d-flex align-items-center #{'active-menu' if current_page?(root_path)} text-white", id: "link-home", data: { turbo: false } do %>
       <span class="icon me-2">🏠</span>
@@ -30,12 +31,19 @@
       <span class="link-text">Cartões</span>
     <% end %>
   </div>
+
+  <!-- Relógio e Clima -->
+  <div class="w-100 px-3 py-2 mt-2 text-center border-bottom border-top border-secondary">
+    <div id="current-time" class="fs-6 fw-semibold"></div>
+    <div id="weather-info" class="ms-1"></div>
+  </div>
+
 </div>
 
-<!-- CSS da sidebar -->
+<!-- CSS -->
 <style>
   #sidebar-wrapper {
-    width: 220px;
+    width: 250px;
     transition: width 0.3s ease;
     z-index: 1000;
     background-color: #343a40;
@@ -45,46 +53,137 @@
     min-width: 60px;
   }
 
-    .list-group-item {
+  .list-group-item {
     background-color: transparent;
     border: none;
     color: white;
     transition: all 0.3s ease;
-    width: 100%; /* ocupa toda a largura do sidebar */
+    width: 100%;
     box-sizing: border-box;
     padding: 0.75rem 1rem;
     border-radius: 5px;
-    }
+  }
 
-    .list-group-item:hover {
+  .list-group-item:hover {
     background-color: rgba(103, 176, 236, 0.55) !important;
     border-radius: 5px;
-    width: calc(100% - 20px); /* 10px a menos de cada lado */
+    width: calc(100% - 20px);
     margin-left: 10px;
     margin-right: 10px;
-    }
+  }
 
-    .list-group-item.active-menu {
+  .list-group-item.active-menu {
     background-color: rgba(103, 176, 236, 1) !important;
     color: white !important;
     border-radius: 5px;
-
-    /* efeito “flutuante” */
-    width: calc(100% - 20px); /* 10px a menos de cada lado */
+    width: calc(100% - 20px);
     margin-left: 10px;
     margin-right: 10px;
-    }
+  }
 
+  #current-time {
+    font-size: 0.95rem;
+  }
+
+  #weather-info {
+    font-size: 0.8rem;
+    line-height: 1.3;
+  }
+
+  #weather-info img {
+    vertical-align: middle;
+  }
 
   .icon { display: inline-block; }
   .link-text { transition: opacity 0.3s ease; }
   .sidebar-header { width: 100%; }
   #sidebarToggle { cursor: pointer; }
+
+  .today-weather {
+    font-size: 1rem; /* ou 1.1rem, 1.2rem, conforme quiser */
+    font-weight: 600;
+  }
+
+  .today-weather span {
+    font-size: 1.1rem;
+  }
+
+  .today-weather img {
+    width: 50px !important;
+  }
+
+
+  
 </style>
 
-<!-- JS da sidebar -->
+<!-- JS -->
 <script>
-  const updateSidebar = () => {
+  // --- Atualiza hora em tempo real ---
+  function updateClock() {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    document.getElementById("current-time").textContent = timeStr;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // --- Clima com ícone + min/max ---
+  async function loadWeather() {
+    const apiKey = "d56b203c35ee12ffb7de5bf2aaf5eccd"; // 🔑 substitua pela sua chave do OpenWeatherMap
+    const city = "Goiânia,BR"; // altere se quiser
+    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=metric&lang=pt_br&appid=${apiKey}`;
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      if (!data.list) throw new Error("Sem dados");
+
+      // Hoje (média do dia)
+      const todayForecasts = data.list.slice(0, 8);
+      const temps = todayForecasts.map(f => f.main.temp);
+      const tempMin = Math.min(...todayForecasts.map(f => f.main.temp_min)).toFixed(0);
+      const tempMax = Math.max(...todayForecasts.map(f => f.main.temp_max)).toFixed(0);
+      const todayIcon = todayForecasts[0].weather[0].icon;
+      const todayDesc = todayForecasts[0].weather[0].description.toUpperCase();
+
+      let html = `
+        <div class="today-weather d-flex align-items-center justify-content-center flex-column">
+          <div class= " d-flex align-items-center justify-content-center flex-row">
+          <img src="https://openweathermap.org/img/wn/${todayIcon}.png" alt="${todayDesc}" width="50">
+          <span class="ms-1">${tempMin}°C / ${tempMax}°C</span>
+          </div>
+          <span class="ms-1 mb-2">${todayDesc}</span>
+        </div>
+      `;
+
+      // Próximos 3 dias
+      html += '<div class="mt-1">';
+      for (let i = 8; i <= 32; i += 8) {
+        const forecast = data.list[i];
+        if (!forecast) continue;
+        const day = new Date(forecast.dt_txt).toLocaleDateString('pt-BR', { weekday: 'short' });
+        const tMin = forecast.main.temp_min.toFixed(0);
+        const tMax = forecast.main.temp_max.toFixed(0);
+        const icon = forecast.weather[0].icon;
+        const desc = forecast.weather[0].description;
+        html += `
+          <div class="d-flex align-items-center justify-content-start">
+            <span class="ms-1">${day}:</span>
+            <img src="https://openweathermap.org/img/wn/${icon}.png" alt="" width="20">
+            <span class="ms-1">${tMin}°C / ${tMax}°C</span>
+          </div>
+        `;
+      }
+      html += '</div>';
+
+      document.getElementById("weather-info").innerHTML = html;
+    } catch (err) {
+      document.getElementById("weather-info").textContent = "Clima indisponível";
+    }
+  }
+
+  // --- Sidebar collapsible ---
+  function updateSidebar() {
     const wrapper = document.getElementById("wrapper");
     const sidebar = document.getElementById("sidebar-wrapper");
     const title = sidebar.querySelector(".sidebar-title");
@@ -96,10 +195,11 @@
 
     linkTexts.forEach(el => el.style.display = collapsed ? "none" : "inline");
     title.style.display = collapsed ? "none" : "inline";
-  };
+  }
 
   document.addEventListener("turbo:load", () => {
     updateSidebar();
+    loadWeather();
 
     const toggleButton = document.getElementById("sidebarToggle");
     toggleButton.addEventListener("click", () => {
@@ -107,11 +207,6 @@
       wrapper.classList.toggle("collapsed");
       localStorage.setItem("sidebar-collapsed", wrapper.classList.contains("collapsed"));
       updateSidebar();
-
-      document.querySelectorAll(".alert").forEach(alertEl => {
-        const alertInstance = new bootstrap.Alert(alertEl);
-        setTimeout(() => alertInstance.close(), 5000);
-      });
     });
   });
 </script>

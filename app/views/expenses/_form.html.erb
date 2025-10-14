@@ -1,8 +1,12 @@
 <%= form_with model: expense, local: true do |f| %>
   <div class="row mb-3">
-    <div class="col-12">
+    <div class="col-md-9">
       <%= f.label :description, t("expenses.form.description") %>
       <%= f.text_field :description, class: "form-control" %>
+    </div>
+    <div class="col-md-3">
+      <%= f.label :repetir, "Repetir (meses)" %>
+      <%= f.number_field :repetir, value: @expense.repetir || 0, min: 0, class: "form-control" %>
     </div>
   </div>
 

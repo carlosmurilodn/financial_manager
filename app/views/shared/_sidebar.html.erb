@@ -5,27 +5,27 @@
   </div>
 
   <div class="list-group list-group-flush w-100 mt-2">
-    <%= link_to root_path, class: "list-group-item list-group-item-action d-flex align-items-center #{'active-menu' if current_page?(root_path)} text-white", id: "link-home" do %>
+    <%= link_to root_path, class: "list-group-item list-group-item-action d-flex align-items-center #{'active-menu' if current_page?(root_path)} text-white", id: "link-home", data: { turbo: false } do %>
       <span class="icon me-2">🏠</span>
       <span class="link-text">Home</span>
     <% end %>
 
-    <%= link_to expenses_path, class: "list-group-item list-group-item-action d-flex align-items-center #{'active-menu' if current_page?(expenses_path)} text-white", id: "link-expenses" do %>
+    <%= link_to expenses_path, class: "list-group-item list-group-item-action d-flex align-items-center #{'active-menu' if current_page?(expenses_path)} text-white", id: "link-expenses", data: { turbo: false } do %>
       <span class="icon me-2">💸</span>
       <span class="link-text">Despesas</span>
     <% end %>
 
-    <%= link_to incomes_path, class: "list-group-item list-group-item-action d-flex align-items-center #{'active-menu' if current_page?(incomes_path)} text-white", id: "link-incomes" do %>
+    <%= link_to incomes_path, class: "list-group-item list-group-item-action d-flex align-items-center #{'active-menu' if current_page?(incomes_path)} text-white", id: "link-incomes", data: { turbo: false } do %>
       <span class="icon me-2">💰</span>
       <span class="link-text">Receitas</span>
     <% end %>
 
-    <%= link_to categories_path, class: "list-group-item list-group-item-action d-flex align-items-center #{'active-menu' if current_page?(categories_path)} text-white", id: "link-categories" do %>
+    <%= link_to categories_path, class: "list-group-item list-group-item-action d-flex align-items-center #{'active-menu' if current_page?(categories_path)} text-white", id: "link-categories", data: { turbo: false } do %>
       <span class="icon me-2">🗂️</span>
       <span class="link-text">Categorias</span>
     <% end %>
 
-    <%= link_to cards_path, class: "list-group-item list-group-item-action d-flex align-items-center #{'active-menu' if current_page?(cards_path)} text-white", id: "link-cards" do %>
+    <%= link_to cards_path, class: "list-group-item list-group-item-action d-flex align-items-center #{'active-menu' if current_page?(cards_path)} text-white", id: "link-cards", data: { turbo: false } do %>
       <span class="icon me-2">💳</span>
       <span class="link-text">Cartões</span>
     <% end %>

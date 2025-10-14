@@ -1,13 +1,8 @@
 class IncomesController < ApplicationController
   before_action :set_income, only: %i[show edit update destroy toggle_paid]
 
-  # Chaves de filtro para simplificar a manipulação da sessão
-  FILTER_KEYS = %i[month year description paid].freeze
-
   def index
-    load_filters
-    apply_filters
-    calculate_all_totals
+    load_incomes
   end
 
   def show; end
@@ -15,9 +10,17 @@ class IncomesController < ApplicationController
 
   def create
     @income = Income.new(income_params)
+    @income.repetir ||= 0
+
+    # Converter datas
+    @income.date = Date.strptime(income_params[:date], "%d/%m/%Y") rescue nil
+    @income.balance_month = Date.strptime(income_params[:balance_month], "%d/%m/%Y") rescue nil
+
     if @income.save
+      gerar_repeticoes(@income)
       redirect_to incomes_path, notice: "Receita criada com sucesso!"
     else
+      puts @income.errors.full_messages
       render :new, status: :unprocessable_entity
     end
   end
@@ -25,7 +28,10 @@ class IncomesController < ApplicationController
   def edit; end
 
   def update
-    if @income.update(income_params)
+    @income.date = Date.strptime(income_params[:date], "%d/%m/%Y") rescue nil
+    @income.balance_month = Date.strptime(income_params[:balance_month], "%d/%m/%Y") rescue nil
+
+    if @income.update(income_params.except(:date, :balance_month))
       redirect_to incomes_path, notice: "Receita atualizada com sucesso!"
     else
       render :edit, status: :unprocessable_entity
@@ -34,29 +40,58 @@ class IncomesController < ApplicationController
 
   def destroy
     @income.destroy
-    redirect_to incomes_path, notice: "Receita removida com sucesso!"
-  end
+    load_incomes
 
-  def clear_filters
-    session.delete(:incomes_filters)
-    redirect_to incomes_path, notice: "Filtros limpos com sucesso."
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.remove("income_#{@income.id}"),
+          turbo_stream.replace("incomes-totals", partial: "incomes_totals", locals: {
+            total_received: @total_received,
+            total_pending: @total_pending,
+            total_amount: @total_amount
+          })
+        ]
+      end
+      format.html { redirect_to incomes_path, notice: "Receita removida com sucesso!" }
+    end
   end
 
   def toggle_paid
     @income.update(paid: !@income.paid)
-    redirect_to incomes_path
+    load_incomes
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.replace("income_#{@income.id}", partial: "income_row", locals: { income: @income }),
+          turbo_stream.replace("incomes-totals", partial: "incomes_totals", locals: {
+            total_received: @total_received,
+            total_pending: @total_pending,
+            total_amount: @total_amount
+          })
+        ]
+      end
+      format.html { redirect_to incomes_path }
+    end
+  end
+
+  def clear_filters
+    session.delete(:incomes_month)
+    session.delete(:incomes_year)
+    session.delete(:incomes_description)
+    session.delete(:incomes_paid)
+    redirect_to incomes_path, notice: "Filtros limpos com sucesso!"
   end
 
   private
-
-  # -------------------------- Configuração e Parâmetros --------------------------
 
   def set_income
     @income = Income.find(params[:id])
   end
 
   def income_params
-    permitted = params.require(:income).permit(:amount, :description, :date, :balance_month, :paid)
+    permitted = params.require(:income).permit(:amount, :description, :date, :balance_month, :paid, :repetir)
     permitted[:amount] = parse_brazilian_currency(permitted[:amount])
     permitted
   end
@@ -66,94 +101,98 @@ class IncomesController < ApplicationController
     value.to_s.gsub(/[^\d,]/, "").gsub(".", "").tr(",", ".").to_f
   end
 
-  # -------------------------- Filtros --------------------------
+  # --------------------------
+  # Repetições
+  # --------------------------
+  def gerar_repeticoes(income)
+    repetir = income.repetir.to_i
+    return if repetir <= 0
 
-  # Carrega filtros da sessão/params e define variáveis de instância
-  def load_filters
-    session[:incomes_filters] ||= {}
-
-    FILTER_KEYS.each do |key|
-      # Atualiza a sessão apenas se o parâmetro estiver presente
-      session[:incomes_filters][key] = params[key] if params.key?(key)
-
-      # Define a variável de instância com o valor da sessão
-      value = session[:incomes_filters][key].presence
-      instance_variable_set("@#{key}_filter", value)
-    end
-
-    @month = @month_filter
-    @year = @year_filter
-    @description_filter = @description_filter&.strip # Garante a remoção de espaços
-    @paid_filter = @paid_filter.presence
-  end
-
-  # Aplica todos os filtros e define @incomes e @filter_date
-  def apply_filters
-    @incomes = Income.all
-    @filter_date = nil
-
-    # Filtro principal de data (mês/ano)
-    if @month.to_i > 0 && @year.to_i > 0
-      @filter_date = Date.new(@year.to_i, @month.to_i, 1) rescue Date.today
-      range = @filter_date.all_month # all_month é mais conciso
-      @incomes = @incomes.where(balance_month: range)
-    end
-
-    # Filtro de descrição
-    if @description_filter.present?
-      @incomes = @incomes.where("description ILIKE ?", "%#{@description_filter}%")
-    end
-
-    # Filtro de pago
-    if @paid_filter.present?
-      paid_value = ActiveModel::Type::Boolean.new.cast(@paid_filter)
-      @incomes = @incomes.where(paid: paid_value)
-    end
-
-    @incomes = @incomes.order(:date)
-  end
-
-  # -------------------------- Totais e Saldos --------------------------
-
-  def calculate_all_totals
-    if @filter_date
-      end_of_month = @filter_date.end_of_month
-
-      # Totais do mês filtrado
-      @total_received = @incomes.where(paid: true).sum(:amount) # Já filtrado por data
-      @total_pending = @incomes.where(paid: false).sum(:amount) # Já filtrado por data
-
-      # Saldo acumulado
-      total_incomes_acc = Income.where("balance_month <= ? AND paid = true", end_of_month).sum(:amount)
-      total_expenses_acc = total_expenses_until(end_of_month)
-
-      @current_balance = total_incomes_acc - total_expenses_acc
-      @previous_balance = calculate_previous_balance(@filter_date)
-
-    else
-      # Se não houver filtro de data, usa o conjunto completo
-      @total_received = @incomes.where(paid: true).sum(:amount)
-      @total_pending = @incomes.where(paid: false).sum(:amount)
-      @previous_balance = 0
-      @current_balance = @total_received - total_expenses_until(Date.today)
+    repetir.times do |i|
+      Income.create!(
+        description: income.description,
+        amount: income.amount,
+        date: income.date + (i + 1).month,
+        balance_month: income.balance_month + (i + 1).month,
+        paid: false
+      )
     end
   end
 
-  # Saldo do mês anterior
-  def calculate_previous_balance(filter_date)
-    start_of_month = filter_date.beginning_of_month
-    
-    previous_incomes = Income.where("balance_month < ? AND paid = true", start_of_month).sum(:amount)
-    # Total de despesas pagas ATÉ o dia anterior ao início do mês
-    previous_expenses = total_expenses_until(start_of_month - 1.day)
-    
-    previous_incomes - previous_expenses
+  # --------------------------
+  # Carrega receitas e aplica filtros via params + session
+  # --------------------------
+  def load_incomes
+    # --------------------------
+    # Mês
+    # --------------------------
+    session[:incomes_month] = params[:month].to_i if params[:month].present?
+    @month = session[:incomes_month]
+    @month = nil if @month.blank? || @month == 0   # "Todos"
+
+    # --------------------------
+    # Ano
+    # --------------------------
+    session[:incomes_year] = params[:year].to_i if params[:year].present?
+    @year = session[:incomes_year]
+    @year = nil if @year.blank? || @year == 0       # "Todos"
+
+    # --------------------------
+    # Descrição
+    # --------------------------
+    session[:incomes_description] = params[:description].to_s.strip if params[:description].present?
+    @description_filter = session[:incomes_description].presence
+
+    # --------------------------
+    # Pago
+    # --------------------------
+    session[:incomes_paid] = params[:paid] if params.key?(:paid)
+    @paid_filter = session[:incomes_paid]
+    @paid_filter = nil if @paid_filter.blank?
+
+    # --------------------------
+    # Carregar receitas
+    # --------------------------
+    @incomes = Income.order(balance_month: :asc, date: :asc).to_a
+
+    # --------------------------
+    # Aplicar filtros
+    # --------------------------
+    filter_by_month
+    filter_by_description
+    filter_by_paid
+
+    # --------------------------
+    # Totais
+    # --------------------------
+    calculate_totals
   end
 
-  # Soma despesas pagas (normais + parcelas) até uma data
-  def total_expenses_until(date)
-    normal_expenses = Expense.where("balance_month <= ? AND paid = true", date).sum(:amount)
-    installments_paid = Installment.where("due_date <= ? AND paid = true", date).sum(:amount)
-    normal_expenses + installments_paid
+  # --------------------------
+  # Filtros
+  # --------------------------
+  def filter_by_month
+    return if @month.nil? || @year.nil?
+    @incomes.select! { |i| i.balance_month.month == @month && i.balance_month.year == @year }
+  end
+
+  def filter_by_description
+    return if @description_filter.blank?
+    @incomes.select! { |i| i.description.to_s.downcase.include?(@description_filter.downcase) }
+  end
+
+  def filter_by_paid
+    return if @paid_filter.nil?
+    value = ActiveModel::Type::Boolean.new.cast(@paid_filter)
+    @incomes.select! { |i| i.paid == value }
+  end
+
+  # --------------------------
+  # Totais
+  # --------------------------
+  def calculate_totals
+    @total_amount   = @incomes.sum(&:amount)
+    @total_received = @incomes.select(&:paid?).sum(&:amount)
+    @total_pending  = @incomes.reject(&:paid?).sum(&:amount)
   end
 end

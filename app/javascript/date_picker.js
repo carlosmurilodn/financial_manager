@@ -1,4 +1,4 @@
-document.addEventListener("turbo:load", function () {
+document.addEventListener("turbo:render", function () {
     // Toggle parcelamento (mantido)
     const paymentSelect = document.getElementById("payment_method_select");
     const parcelSection = document.getElementById("parcelamento_section");

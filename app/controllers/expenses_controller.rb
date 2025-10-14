@@ -11,11 +11,23 @@ class ExpensesController < ApplicationController
   def create
     @expense = Expense.new(expense_params)
     @expense.amount = normalize_amount(params[:expense][:amount])
-    @expense.is_parent = true if @expense.payment_method_credito_parcelado?
+    @expense.repetir ||= 0
+
+    # Converter datas para Date
+    @expense.date = Date.strptime(expense_params[:date], "%d/%m/%Y") rescue nil
+    @expense.balance_month = Date.strptime(expense_params[:balance_month], "%d/%m/%Y") rescue nil
 
     if @expense.save
+      # Gerar repetições automáticas
+      gerar_repeticoes(@expense)
+
+      # Gerar parcelas, se for cartão parcelado
+      @expense.generate_future_installments if @expense.payment_method_credito_parcelado?
+
       redirect_to expenses_path, notice: "Despesa criada com sucesso!"
     else
+      puts @expense.errors.full_messages # exibe erros no console
+      
       render :new, status: :unprocessable_entity
     end
   end
@@ -26,7 +38,7 @@ class ExpensesController < ApplicationController
     @expense.amount = normalize_amount(params[:expense][:amount])
 
     if @expense.update(expense_params.except(:amount))
-      if @expense.payment_method_credito_parcelado? && @expense.is_parent
+      if @expense.payment_method_credito_parcelado?
         @expense.installments.where("number > ?", @expense.current_installment).destroy_all
         @expense.generate_future_installments
       end
@@ -82,7 +94,7 @@ class ExpensesController < ApplicationController
     params.require(:expense).permit(
       :amount, :description, :date, :balance_month,
       :category_id, :payment_method, :card_id, :paid,
-      :installments_count, :current_installment, :is_parent
+      :installments_count, :current_installment, :is_parent, :repetir
     )
   end
 
@@ -252,5 +264,24 @@ class ExpensesController < ApplicationController
 
     # Saldo líquido
     @net_balance = total_incomes - total_expenses
+  end
+
+  def gerar_repeticoes(expense)
+    # Garante que repetir seja inteiro
+    repetir = expense.repetir.to_i
+    return if repetir <= 0
+
+    repetir.times do |i|
+      Expense.create!(
+        description: expense.description,
+        amount: expense.amount,
+        category_id: expense.category_id,
+        payment_method: expense.payment_method,
+        card_id: expense.card_id,
+        date: expense.date + (i + 1).month,
+        balance_month: expense.balance_month + (i + 1).month, # 👈 obrigatório!
+        paid: false
+      )
+    end
   end
 end

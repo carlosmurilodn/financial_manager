@@ -21,6 +21,10 @@ class Expense < ApplicationRecord
 
   after_create :generate_future_installments, if: -> { payment_method_credito_parcelado? && is_parent }
 
+  attr_accessor :repetir
+
+  before_validation :set_default_repetir, unless: -> { repetir.present? }
+
   # Gera as parcelas futuras a partir da parcela atual
   def generate_future_installments
     return unless installments_count.present? && current_installment.present?
@@ -52,5 +56,11 @@ class Expense < ApplicationRecord
       "debito" => "Débito",
       "dinheiro" => "Dinheiro"
     }
+  end
+
+  private
+
+  def set_default_repetir
+    self.repetir = 0 if repetir.blank?
   end
 end

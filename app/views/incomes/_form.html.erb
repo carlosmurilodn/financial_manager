@@ -1,8 +1,13 @@
 <%= form_with model: income, local: true do |f| %>
   <div class="row mb-3">
-    <div class="col-12">
+    <div class="col-md-9">
       <%= f.label :description, t("incomes.form.description") %>
       <%= f.text_field :description, class: "form-control" %>
+    </div>
+
+    <div class="col-md-3">
+      <%= f.label :repetir, "Repetir (meses)" %>
+      <%= f.number_field :repetir, value: @income.repetir || 0, min: 0, class: "form-control" %>
     </div>
   </div>
 
@@ -14,7 +19,6 @@
           <%= f.text_field :amount, 
             class: "form-control moeda", 
             value: (income.amount.present? ? number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) : "R$ 0,00")
-            # oninput foi removido, a inicialização está em utils.js
           %>
         </div>
 

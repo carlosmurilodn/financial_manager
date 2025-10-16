@@ -63,3 +63,5 @@ const initializeFormUtils = () => {
 // Listener para o Turbo Rails: garante que o script seja executado
 // na carga inicial e em todas as navegações do Turbo.
 document.addEventListener("turbo:render", initializeFormUtils);
+document.addEventListener("turbo:load", initializeFormUtils);
+

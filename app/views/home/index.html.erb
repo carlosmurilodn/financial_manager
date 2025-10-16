@@ -1,7 +1,48 @@
 <div class="container-fluid">
-  <%= render "home/kpis" %>
-  <%= render "home/charts_and_cards" %>
-  <%= render "home/calendar" %>
+  <div class="row">
+    <div class="col-12 mb-1 mt-1 row_element">
+      <%= render "home/kpis" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-6 mb-1 mt-1 row_element">
+      <%= render "home/despesas_por_categoria" %>
+    </div>
+    <div class="col-lg-6 mb-1 mt-1 row_element">
+      <%= render "home/saldo_por_cartao" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-6 mb-1 mt-1 row_element">
+      <%= render "home/receitas_recentes" %>
+    </div>
+    <div class="col-lg-6 mb-1 mt-1 row_element">
+      <%= render "home/despesas_recentes" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 mb-1 mt-1 row_element">
+      <%= render "home/calendar" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 mb-1 mt-1 row_element">
+      <%= render "home/forecast_table", year: @year, months: @months %>
+    </div>
+  </div>
+
 </div>
 
 <%= render "home/scripts" %>
+
+<style>
+  .row_element{
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+</style>
+

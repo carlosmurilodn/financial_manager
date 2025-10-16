@@ -1,4 +1,4 @@
-<div class="row mb-5">
+<div class="row">
   <div class="col-12">
     <div class="card shadow">
       <div class="card-body">
@@ -11,7 +11,7 @@
                 root_path(month: @month - 1 == 0 ? 12 : @month - 1,
                           year: @month - 1 == 0 ? @year - 1 : @year),
                 class: "btn btn-secondary btn-lg",
-                data: { turbo_frame: "calendar" } %> <%# <-- Adicionado data-turbo-frame %>
+                data: { turbo_frame: "calendar", turbo_prefetch: "false" } %> <%# <-- Adicionado data-turbo-frame %>
 
             <h4 class="mb-0 fw-bold text-capitalize">
               <%= I18n.l(Date.new(@year, @month, 1), format: "%B de %Y") %>
@@ -22,7 +22,7 @@
                 root_path(month: @month + 1 == 13 ? 1 : @month + 1,
                           year: @month + 1 == 13 ? @year + 1 : @year),
                 class: "btn btn-secondary btn-lg",
-                data: { turbo_frame: "calendar" } %> <%# <-- Adicionado data-turbo-frame %>
+                data: { turbo_frame: "calendar", turbo_prefetch: "false" } %> <%# <-- Adicionado data-turbo-frame %>
           </div>
 
           <div class="table-responsive">
@@ -69,8 +69,9 @@
               </tbody>
             </table>
           </div>
-        
+
         </turbo-frame> <%# <--- FIM DO TURBO FRAME %>
+
       </div>
     </div>
   </div>

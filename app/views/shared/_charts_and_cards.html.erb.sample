@@ -6,7 +6,6 @@
   </div>
 
   <div class="col-lg-6 mb-1">
-    <%= render "home/receitas_x_despesas" %>
     <%= render "home/listas_recentes" %>
   </div>
 </div>

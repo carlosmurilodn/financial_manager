@@ -253,18 +253,25 @@ class ExpensesController < ApplicationController
   def calculate_net_balance
     return unless @month.present? && @year.present?
 
-    # Último dia do mês filtrado
-    filter_date = Date.new(@year, @month, -1)
+    current_month_start = Date.new(@year, @month, 1)
+    previous_month_end = current_month_start - 1.day
+    current_month_end = current_month_start.end_of_month
 
-    # Total de receitas pagas até o mês filtrado
-    total_incomes = Income.where("balance_month <= ?", filter_date).where(paid: true).sum(:amount)
+    # --- Saldo do mês anterior (todas as receitas e despesas até mês anterior) ---
+    receitas_anteriores = Income.where("balance_month <= ?", previous_month_end).sum(:amount)
+    despesas_anteriores = Expense.where("balance_month <= ?", previous_month_end).sum(:amount) +
+                          Installment.where("balance_month <= ?", previous_month_end).sum(:amount)
+    @previous_balance = receitas_anteriores - despesas_anteriores
 
-    # Total de despesas pagas até o mês filtrado
-    total_expenses = Expense.where("balance_month <= ?", filter_date).where(paid: true).sum(:amount)
+    # --- Saldo atual (somente receitas e parcelas pagas) ---
+    receitas_pag = Income.where("balance_month <= ? AND paid = ?", current_month_end, true).sum(:amount)
+    despesas_pag = Expense.where("balance_month <= ? AND paid = ?", current_month_end, true).sum(:amount) +
+                  Installment.where("balance_month <= ? AND paid = ?", current_month_end, true).sum(:amount)
 
     # Saldo líquido
-    @net_balance = total_incomes - total_expenses
+    @net_balance = receitas_pag - despesas_pag
   end
+
 
   def gerar_repeticoes(expense)
     # Garante que repetir seja inteiro

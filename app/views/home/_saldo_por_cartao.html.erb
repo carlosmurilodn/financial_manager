@@ -1,6 +1,4 @@
-<div class="row mt-2">
-  <div class="col-12">
-    <div class="card shadow" style="height: 810px;">
+    <div class="card shadow" style="height: 800px;">
       <div class="card-body d-flex flex-column h-100 p-3">
         <h5 class="card-title text-center mb-3">
           Saldo Acumulado por Cartão (<%= I18n.l(Date.current, format: "%B") %>)
@@ -14,6 +12,7 @@
             <tr style="height: <%= altura_linha %>%;">
               <th class="align-middle" style="border-bottom: 2px solid #35363A;">Cartão</th>
               <th class="align-middle" style="border-bottom: 2px solid #35363A;">Limite Total</th>
+              <th class="align-middle" style="border-bottom: 2px solid #35363A;">Limite Restante</th>
               <th class="align-middle" style="border-bottom: 2px solid #35363A;">Saldo Acumulado</th>
             </tr>
           </thead>
@@ -31,6 +30,9 @@
                 <td class="text-start align-middle text-success" style="border-bottom: <%= borda %>;">
                   <%= number_to_currency(card.total_limit, unit: "R$ ", separator: ",", delimiter: ".") %> +
                 </td>
+                <td class="text-start align-middle text-success" style="border-bottom: <%= borda %>;">
+                  <%= number_to_currency(card.remaining_limit, unit: "R$ ", separator: ",", delimiter: ".") %> +
+                </td>
                 <td class="text-start align-middle text-danger" style="border-bottom: <%= borda %>;">
                   <%= number_to_currency(total, unit: "R$ ", separator: ",", delimiter: ".") %>
                 </td>
@@ -40,5 +42,3 @@
         </table>
       </div>
     </div>
-  </div>
-</div>

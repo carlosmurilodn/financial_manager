@@ -119,54 +119,74 @@ class IncomesController < ApplicationController
     end
   end
 
+def load_incomes
   # --------------------------
-  # Carrega receitas e aplica filtros via params + session
+  # Mês e Ano
   # --------------------------
-  def load_incomes
-    # --------------------------
-    # Mês
-    # --------------------------
-    session[:incomes_month] = params[:month].to_i if params[:month].present?
-    @month = session[:incomes_month]
-    @month = nil if @month.blank? || @month == 0   # "Todos"
+  session[:incomes_month] = params[:month].to_i if params[:month].present?
+  @month = session[:incomes_month]
+  @month = nil if @month.blank? || @month == 0   # "Todos"
 
-    # --------------------------
-    # Ano
-    # --------------------------
-    session[:incomes_year] = params[:year].to_i if params[:year].present?
-    @year = session[:incomes_year]
-    @year = nil if @year.blank? || @year == 0       # "Todos"
+  session[:incomes_year] = params[:year].to_i if params[:year].present?
+  @year = session[:incomes_year]
+  @year = nil if @year.blank? || @year == 0      # "Todos"
 
-    # --------------------------
-    # Descrição
-    # --------------------------
-    session[:incomes_description] = params[:description].to_s.strip if params[:description].present?
-    @description_filter = session[:incomes_description].presence
+  # --------------------------
+  # Descrição e Pago
+  # --------------------------
+  session[:incomes_description] = params[:description].to_s.strip if params[:description].present?
+  @description_filter = session[:incomes_description].presence
 
-    # --------------------------
-    # Pago
-    # --------------------------
-    session[:incomes_paid] = params[:paid] if params.key?(:paid)
-    @paid_filter = session[:incomes_paid]
-    @paid_filter = nil if @paid_filter.blank?
+  session[:incomes_paid] = params[:paid] if params.key?(:paid)
+  @paid_filter = session[:incomes_paid]
+  @paid_filter = nil if @paid_filter.blank?
 
-    # --------------------------
-    # Carregar receitas
-    # --------------------------
-    @incomes = Income.order(balance_month: :asc, date: :asc).to_a
+  # --------------------------
+  # Carregar receitas e despesas
+  # --------------------------
+  all_incomes = Income.order(balance_month: :asc, date: :asc)
+  all_expenses = Expense.order(balance_month: :asc)
+  all_installments = Installment.order(balance_month: :asc)
 
-    # --------------------------
-    # Aplicar filtros
-    # --------------------------
-    filter_by_month
-    filter_by_description
-    filter_by_paid
+  # --------------------------
+  # Filtro por mês/ano (para view principal)
+  # --------------------------
+  @incomes = all_incomes.to_a
+  filter_by_month
+  filter_by_description
+  filter_by_paid
 
-    # --------------------------
-    # Totais
-    # --------------------------
-    calculate_totals
+  # --------------------------
+  # Totais
+  # --------------------------
+  calculate_totals
+
+  # --------------------------
+  # Saldo acumulado
+  # --------------------------
+  if @month && @year
+    # Mês anterior
+    previous_month_end = Date.new(@year, @month, 1) - 1.day
+
+    receitas_anteriores = all_incomes.where("balance_month <= ?", previous_month_end).sum(:amount)
+    despesas_anteriores = all_expenses.where("balance_month <= ?", previous_month_end).sum(:amount) +
+                          all_installments.where("balance_month <= ?", previous_month_end).sum(:amount)
+
+    @previous_balance = receitas_anteriores - despesas_anteriores
+
+    # Mês atual (até o final do mês)
+    current_month_end = Date.new(@year, @month, -1)
+    receitas_ate_mes = all_incomes.where("balance_month <= ? AND paid = ?", current_month_end, true).sum(:amount)
+    despesas_ate_mes = all_expenses.where("balance_month <= ? AND paid = ?", current_month_end, true).sum(:amount) +
+                       all_installments.where("balance_month <= ? AND paid = ?", current_month_end, true).sum(:amount)
+
+    @current_balance = receitas_ate_mes - despesas_ate_mes
+  else
+    @previous_balance = 0
+    @current_balance = 0
   end
+end
+
 
   # --------------------------
   # Filtros

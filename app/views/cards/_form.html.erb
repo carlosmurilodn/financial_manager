@@ -20,15 +20,16 @@
       <%= f.label :total_limit, "Limite Total" %>
       <%= f.text_field :total_limit,
             class: "form-control moeda",
-            value: card.total_limit.present? ? number_to_currency(card.total_limit, unit: "R$", separator: ",", delimiter: ".") : "R$ 0,00"
+            value: number_to_currency(card.total_limit || 0, unit: "R$", separator: ",", delimiter: ".")
       %>
     </div>
 
     <div class="col-md-3">
       <%= f.label :remaining_limit, "Limite Restante" %>
-      <%= f.text_field :remaining_limit,
-            class: "form-control moeda",
-            value: card.remaining_limit.present? ? number_to_currency(card.remaining_limit, unit: "R$", separator: ",", delimiter: ".") : "R$ 0,00"
+      <%= text_field_tag :remaining_limit_display,
+            number_to_currency(card.remaining_limit || 0, unit: "R$", separator: ",", delimiter: "."),
+            class: "form-control",
+            readonly: true
       %>
     </div>
 

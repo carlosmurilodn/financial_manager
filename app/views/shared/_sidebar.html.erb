@@ -1,6 +1,6 @@
 <div id="sidebar-wrapper" class="d-flex flex-column align-items-start text-white position-fixed vh-100">
   <div class="sidebar-header d-flex align-items-center justify-content-between w-100 px-3 py-2">
-    <span class="fs-5 fw-bold sidebar-title text-center">Gerenciador Financeiro</span>
+    <span class="fw-bold sidebar-title text-center">Gerenciador Financeiro 💲</span>
     <button id="sidebarToggle" class="btn btn-sm text-black" style="background-color: transparent; font-size: 1.2rem;">☰</button>
   </div>
 
@@ -46,7 +46,7 @@
     width: 250px;
     transition: width 0.3s ease;
     z-index: 1000;
-    background-color: #343a40;
+    background-color: #273f4b;
   }
 
   #wrapper.collapsed #sidebar-wrapper {
@@ -99,6 +99,11 @@
   .sidebar-header { width: 100%; }
   #sidebarToggle { cursor: pointer; }
 
+  .sidebar-header .sidebar-title {
+    font-size: 1.8rem;
+    color: #e2e2e2ff;
+  }
+
   .today-weather {
     font-size: 1rem; /* ou 1.1rem, 1.2rem, conforme quiser */
     font-weight: 600;
@@ -127,65 +132,70 @@
   setInterval(updateClock, 1000);
   updateClock();
 
-  // --- Clima com ícone + min/max ---
-  async function loadWeather() {
-    const apiKey = "d56b203c35ee12ffb7de5bf2aaf5eccd"; // 🔑 substitua pela sua chave do OpenWeatherMap
-    const city = "Goiânia,BR"; // altere se quiser
-    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=metric&lang=pt_br&appid=${apiKey}`;
+// --- Clima com ícone + atual + min/max ---
+async function loadWeather() {
+  const apiKey = "d56b203c35ee12ffb7de5bf2aaf5eccd"; // 🔑 substitua pela sua chave do OpenWeatherMap
+  const city = "Goiânia,BR"; // altere se quiser
+  const url = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=metric&lang=pt_br&appid=${apiKey}`;
 
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-      if (!data.list) throw new Error("Sem dados");
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    if (!data.list) throw new Error("Sem dados");
 
-      // Hoje (média do dia)
-      const todayForecasts = data.list.slice(0, 8);
-      const temps = todayForecasts.map(f => f.main.temp);
-      const tempMin = Math.min(...todayForecasts.map(f => f.main.temp_min)).toFixed(0);
-      const tempMax = Math.max(...todayForecasts.map(f => f.main.temp_max)).toFixed(0);
-      const todayIcon = todayForecasts[0].weather[0].icon;
-      const todayDesc = todayForecasts[0].weather[0].description.toUpperCase();
+    // --- Temperaturas ---
+    const todayForecasts = data.list.slice(0, 8);
+    const tempNow = data.list[0].main.temp.toFixed(0); // temperatura atual (próxima do momento)
+    const tempMin = Math.min(...todayForecasts.map(f => f.main.temp_min)).toFixed(0);
+    const tempMax = Math.max(...todayForecasts.map(f => f.main.temp_max)).toFixed(0);
+    const todayIcon = data.list[0].weather[0].icon;
+    const todayDesc = data.list[0].weather[0].description;
 
-      let html = `
-        <div class="today-weather d-flex align-items-center justify-content-center flex-column">
-          <div class= " d-flex align-items-center justify-content-center flex-row">
-          <img src="https://openweathermap.org/img/wn/${todayIcon}.png" alt="${todayDesc}" width="50">
-          <span class="ms-1">${tempMin}°C / ${tempMax}°C</span>
-          </div>
-          <span class="ms-1 mb-2">${todayDesc}</span>
+    // --- HTML principal do clima atual ---
+    let html = `
+      <div class="today-weather d-flex flex-column align-items-center justify-content-center text-center">
+        <div class="d-flex align-items-center justify-content-center">
+          <img src="https://openweathermap.org/img/wn/${todayIcon}@2x.png" alt="${todayDesc}" width="60">
+          <span class="fs-4 fw-bold ms-2">${tempNow}°C</span>
+        </div>
+        <div class="mt-1">
+          <span class="text-capitalize mt-1" style="font-size: 0.85rem;">${todayDesc}</span>
+          <br>
+          <small>Mín: ${tempMin}°C 🔻/ Máx: ${tempMax}°C 🔺</small>
+        </div>
+      </div>
+    `;
+
+    // --- Próximos 3 dias ---
+    html += '<div class="mt-2 w-100">';
+    for (let i = 8; i <= 32; i += 8) {
+      const forecast = data.list[i];
+      if (!forecast) continue;
+      const day = new Date(forecast.dt_txt).toLocaleDateString('pt-BR', { weekday: 'short' });
+      const tMin = forecast.main.temp_min.toFixed(0);
+      const tMax = forecast.main.temp_max.toFixed(0);
+      const icon = forecast.weather[0].icon;
+
+      html += `
+        <div class="d-flex align-items-center justify-content-center text-center">
+          <span class="text-capitalize" style="width: 50px;">${day}:</span>
+          <img src="https://openweathermap.org/img/wn/${icon}.png" alt="" width="25">
+          <span class="ms-1">${tMin}°C / ${tMax}°C</span>
         </div>
       `;
-
-      // Próximos 3 dias
-      html += '<div class="mt-1">';
-      for (let i = 8; i <= 32; i += 8) {
-        const forecast = data.list[i];
-        if (!forecast) continue;
-        const day = new Date(forecast.dt_txt).toLocaleDateString('pt-BR', { weekday: 'short' });
-        const tMin = forecast.main.temp_min.toFixed(0);
-        const tMax = forecast.main.temp_max.toFixed(0);
-        const icon = forecast.weather[0].icon;
-        const desc = forecast.weather[0].description;
-        html += `
-          <div class="d-flex align-items-center justify-content-start">
-            <span class="ms-1">${day}:</span>
-            <img src="https://openweathermap.org/img/wn/${icon}.png" alt="" width="20">
-            <span class="ms-1">${tMin}°C / ${tMax}°C</span>
-          </div>
-        `;
-      }
-      html += '</div>';
-
-      document.getElementById("weather-info").innerHTML = html;
-    } catch (err) {
-      document.getElementById("weather-info").textContent = "Clima indisponível";
     }
-  }
+    html += '</div>';
 
-  // --- Sidebar collapsible ---
-  function updateSidebar() {
-    const wrapper = document.getElementById("wrapper");
-    const sidebar = document.getElementById("sidebar-wrapper");
+    document.getElementById("weather-info").innerHTML = html;
+  } catch (err) {
+    document.getElementById("weather-info").textContent = "Clima indisponível";
+  }
+}
+
+// --- Sidebar collapsible ---
+function updateSidebar() {
+  const wrapper = document.getElementById("wrapper");
+  const sidebar = document.getElementById("sidebar-wrapper");
     const title = sidebar.querySelector(".sidebar-title");
     const linkTexts = sidebar.querySelectorAll(".link-text");
     const collapsed = localStorage.getItem("sidebar-collapsed") === "true";

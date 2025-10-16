@@ -1,6 +1,6 @@
 <!-- Cards KPIs -->
-<div class="row mb-4">
-  <div class="col-md-3 mb-3">
+<div class="row">
+  <div class="col-md-3 row_element">
     <div class="card text-center shadow card-small">
       <div class="card-body">
         <h6 class="card-title text-muted">Saldo Atual</h6>
@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <div class="col-md-3 mb-3">
+  <div class="col-md-3 row_element">
     <div class="card text-center shadow card-small">
       <div class="card-body">
         <h6 class="card-title text-muted">Receitas de <%= I18n.l(Date.current, format: "%B") %></h6>
@@ -22,7 +22,7 @@
     </div>
   </div>
 
-  <div class="col-md-3 mb-3">
+  <div class="col-md-3 row_element">
     <div class="card text-center shadow card-small">
       <div class="card-body">
         <h6 class="card-title text-muted">Despesas de <%= I18n.l(Date.current, format: "%B") %></h6>
@@ -33,7 +33,7 @@
     </div>
   </div>
 
-  <div class="col-md-3 mb-3">
+  <div class="col-md-3 row_element">
     <div class="card text-center shadow card-small">
       <div class="card-body">
         <h6 class="card-title text-muted">Saldo Líquido</h6>
@@ -44,3 +44,11 @@
     </div>
   </div>
 </div>
+
+
+<style>
+  .row_element{
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+</style>

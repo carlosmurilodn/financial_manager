@@ -5,15 +5,12 @@
 <script>
   // Gráficos Turbo-friendly
   let despesasChartInstance;
-  let receitasChartInstance;
 
   document.addEventListener("turbo:load", () => {
     const despesasCanvas = document.getElementById('despesasChart');
-    const receitasCanvas = document.getElementById('receitasChart');
-    if (!despesasCanvas || !receitasCanvas) return;
+    if (!despesasCanvas) return;
 
     if (despesasChartInstance) despesasChartInstance.destroy();
-    if (receitasChartInstance) receitasChartInstance.destroy();
 
     // ==============================
     // --- DISTRIBUIÇÃO DE DESPESAS ---
@@ -62,7 +59,7 @@
                   return [valor];
                 } else {
                   const lista = despesas.map(d => `• ${d}`);
-                  return [valor, ...lista]; // cada item = uma linha separada
+                  return [valor, ...lista];
                 }
               }
             }
@@ -94,46 +91,6 @@
         }
       },
       plugins: [ChartDataLabels]
-    });
-
-    // ==============================
-    // --- RECEITAS X DESPESAS ---
-    // ==============================
-    const months = <%= raw @meses_labels.to_json %>;
-    const receitasValues = <%= raw @receitas_mensais.to_json %>;
-    const despesasValuesBar = <%= raw @despesas_mensais.to_json %>;
-
-    receitasChartInstance = new Chart(receitasCanvas.getContext('2d'), {
-      type: 'bar',
-      data: {
-        labels: months,
-        datasets: [
-          { label: 'Receitas',data: receitasValues, borderColor: '#0d6efd',backgroundColor: '#599bffff', borderWidth:2, borderRadius: 10, borderSkipped: false },
-          { label: 'Despesas', data: despesasValuesBar, borderColor: '#dc3545', backgroundColor: '#dc727dff', borderWidth: 2,borderRadius: 10, borderSkipped: false }
-        ]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { position: 'top', labels: { color: '#343a40', font: { size: 14 } } },
-          tooltip: {
-            callbacks: {
-              label: ctx => `${ctx.dataset.label}: R$ ${ctx.raw.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
-            }
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              color: '#343a40',
-              callback: val => 'R$ ' + val.toLocaleString('pt-BR')
-            },
-            grid: { color: 'rgba(0,0,0,0.05)' }
-          },
-          x: { ticks: { color: '#343a40' }, grid: { display: false } }
-        }
-      }
     });
   });
 </script>

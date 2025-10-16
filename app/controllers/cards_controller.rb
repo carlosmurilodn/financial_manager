@@ -80,6 +80,13 @@ class CardsController < ApplicationController
     @card = Card.find(params[:id])
   end
 
+  def remaining_limit
+    total_expenses = expenses.where(paid: false).sum(:amount)
+    total_installments = installments.where(paid: false).sum(:amount)
+    limit - (total_expenses + total_installments)
+  end
+
+
   # -------------------------------
   # Strong parameters com normalização
   # -------------------------------
@@ -88,13 +95,11 @@ class CardsController < ApplicationController
       :name,
       :number,
       :total_limit,
-      :remaining_limit,
       :due_day,
       :best_day
     )
 
-    permitted[:total_limit]     = parse_brazilian_currency(permitted[:total_limit])
-    permitted[:remaining_limit] = parse_brazilian_currency(permitted[:remaining_limit])
+    permitted[:total_limit] = parse_brazilian_currency(permitted[:total_limit])
     permitted
   end
 

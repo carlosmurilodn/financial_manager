@@ -10,24 +10,37 @@ class Card < ApplicationRecord
             allow_blank: true,
             format: { with: /\A\d{16}\z/, message: "deve conter exatamente 16 números" }
 
-  validates :total_limit, :remaining_limit, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+  # 🔹 Remove validação de remaining_limit (pois agora é calculado)
+  validates :total_limit, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :due_day, :best_day, inclusion: { in: 1..31 }, allow_nil: true
+
+  # 🔹 Novo método calculado
+  def remaining_limit
+    total_limit.to_f - unpaid_total
+  end
 
   def display_name
     base = if number.present?
-            "#{name} (**** **** **** #{number[-4..-1]})"
-          else
-            name
-          end
-
-    if remaining_limit.present?
-      "#{base} - Restante: R$ #{'%.2f' % remaining_limit}"
+      "#{name} (**** **** **** #{number[-4..-1]})"
     else
-      base
+      name
     end
+
+    "#{base} - Restante: #{ActionController::Base.helpers.number_to_currency(remaining_limit, unit: 'R$ ', separator: ',', delimiter: '.')}"
   end
 
   private
+
+  def unpaid_total
+    # soma despesas e parcelas não pagas
+    unpaid_expenses = expenses.where(paid: false).sum(:amount)
+
+    unpaid_installments = Installment.joins(:expense)
+                                     .where(paid: false, expenses: { card_id: id })
+                                     .sum(:amount)
+
+    unpaid_expenses + unpaid_installments
+  end
 
   def normalize_number
     self.number = number.gsub(/\D/, "") if number.present?
@@ -35,7 +48,6 @@ class Card < ApplicationRecord
 
   def normalize_currency_values
     self.total_limit = parse_brazilian_currency(total_limit)
-    self.remaining_limit = parse_brazilian_currency(remaining_limit)
   end
 
   def parse_brazilian_currency(value)
@@ -43,9 +55,9 @@ class Card < ApplicationRecord
     return nil if value.blank?
 
     value.to_s
-         .gsub(/[^\d,]/, "") # remove R$, espaços etc.
-         .gsub(".", "")      # remove pontos (milhar)
-         .gsub(",", ".")     # troca vírgula por ponto (decimal)
+         .gsub(/[^\d,]/, "")
+         .gsub(".", "")
+         .gsub(",", ".")
          .to_f
   end
 end

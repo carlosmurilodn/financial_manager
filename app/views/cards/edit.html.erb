@@ -1,4 +1,4 @@
 <div class="container-fluid">
-  <h1><%= action_name == "new" ? "Novo Cartão" : "Editar Cartão" %></h1>
+  <h1> <%= image_tag "icons/card.png", alt: "Novo Cartão", class: "me-2", size: "40x40" %><%= action_name == "new" ? "Novo Cartão" : "Editar Cartão" %></h1>
   <%= render "form", card: @card %>
 </div>

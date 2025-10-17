@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <h1 class="mb-4">Despesas</h1>
+  <h1 class="mb-4"><%= image_tag "icons/expense.png", alt: "Despesas", class: "me-2", size: "40x40" %>Despesas</h1>
 
   <%= link_to t("buttons.new.feminine", model: t("models.expense")),
               new_expense_path,

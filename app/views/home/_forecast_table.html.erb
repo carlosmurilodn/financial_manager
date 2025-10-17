@@ -10,14 +10,14 @@
 
             <%= link_to "← Ano anterior",
                 root_path(year: prev_year),
-                class: "btn btn-secondary btn-lg",
+                class: "btn btn-warning btn-lg",
                 data: { turbo_frame: "forecast-table", turbo_prefetch: "false" } %>
 
             <h5 class="fw-bold mb-0">Previsão Financeira - <%= year %></h5>
 
             <%= link_to "Próximo ano →",
                 root_path(year: next_year),
-                class: "btn btn-secondary btn-lg",
+                class: "btn btn-warning btn-lg",
                 data: { turbo_frame: "forecast-table", turbo_prefetch: "false" } %>
           </div>
 

@@ -1,4 +1,4 @@
 <div class="container-fluid">
-  <h1><%= action_name == "new" ? "Nova Categoria" : "Editar Categoria" %></h1>
+  <h1><%= image_tag "icons/category.png", alt: "Nova Categoria", class: "me-2", size: "40x40" %><%= action_name == "new" ? "Nova Categoria" : "Editar Categoria" %></h1>
   <%= render "form", category: @category %>
 </div>

@@ -10,7 +10,7 @@
             <%= link_to "← Mês anterior",
                 root_path(month: @month - 1 == 0 ? 12 : @month - 1,
                           year: @month - 1 == 0 ? @year - 1 : @year),
-                class: "btn btn-secondary btn-lg",
+                class: "btn btn-warning btn-lg",
                 data: { turbo_frame: "calendar", turbo_prefetch: "false" } %> <%# <-- Adicionado data-turbo-frame %>
 
             <h4 class="mb-0 fw-bold text-capitalize">
@@ -21,7 +21,7 @@
             <%= link_to "Próximo mês →",
                 root_path(month: @month + 1 == 13 ? 1 : @month + 1,
                           year: @month + 1 == 13 ? @year + 1 : @year),
-                class: "btn btn-secondary btn-lg",
+                class: "btn btn-warning btn-lg",
                 data: { turbo_frame: "calendar", turbo_prefetch: "false" } %> <%# <-- Adicionado data-turbo-frame %>
           </div>
 

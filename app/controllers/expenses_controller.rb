@@ -84,6 +84,39 @@ class ExpensesController < ApplicationController
     redirect_to expenses_path, notice: "Filtros limpos com sucesso!"
   end
 
+  def report_pdf
+      load_expenses
+
+      # Se quiser filtrar (ex: por data, categoria, pago, etc.), use:
+      # @expenses = Expense.filter_by_params(params)
+
+      # Renderiza HTML para string usando a view PDF
+      html = render_to_string(
+        template: "expenses/report_pdf",
+        layout: "pdf"
+      )
+
+      # Opções PDFKit — mesmas da previsão financeira
+      pdf_options = {
+        page_size: "A4",
+        orientation: "Landscape",
+        print_media_type: true,
+        encoding: "UTF-8",
+        disable_smart_shrinking: false,
+        quiet: true,
+        root_url: request.base_url
+      }
+
+      # Gera e envia o PDF
+      pdf = PDFKit.new(html, pdf_options)
+
+      send_data pdf.to_pdf,
+                filename: "relatorio_despesas_#{Date.today.strftime("%d_%m_%Y")}.pdf",
+                type: "application/pdf",
+                disposition: "inline"
+  end
+
+
   private
 
   def set_expense
@@ -128,8 +161,8 @@ class ExpensesController < ApplicationController
     # --------------------------
     # Descrição
     # --------------------------
-    session[:expenses_description] = params[:description].to_s.strip if params[:description].present?
-    @description_filter = session[:expenses_description].presence   # nil se vazio
+    session[:expenses_description] = params[:description]&.strip
+    @description_filter = session[:expenses_description].presence
 
     # --------------------------
     # Categoria

@@ -1,0 +1,6 @@
+<h1 style="text-align: center;">Relatório de Despesas</h1>
+<p style="text-align: center;">
+  Gerado em <%= I18n.l(Date.today, format: "%d de %B de %Y") %>
+</p>
+
+<%= render partial: "expenses/report_table" %>

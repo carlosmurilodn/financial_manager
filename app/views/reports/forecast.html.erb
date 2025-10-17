@@ -1,0 +1,22 @@
+<div class="container mt-4">
+  <h1 class="fw-bold mb-4">📊 Relatório de Previsão Financeira</h1>
+
+  <div class="card shadow p-4 mb-4">
+    <%= form_with url: forecast_pdf_reports_path, method: :get, local: true, html: { target: "_blank" } do |f| %>
+      <div class="row align-items-end">
+        <div class="col-md-4">
+          <%= f.label :start_year, "Ano inicial", class: "form-label fw-semibold" %>
+          <%= f.number_field :start_year, value: @start_year, class: "form-control" %>
+        </div>
+        <div class="col-md-4">
+          <%= f.label :end_year, "Ano final", class: "form-label fw-semibold" %>
+          <%= f.number_field :end_year, value: @end_year, class: "form-control" %>
+        </div>
+        <div class="col-md-4">
+          <%= f.submit "Gerar PDF", class: "btn btn-success btn-lg w-100" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+</div>

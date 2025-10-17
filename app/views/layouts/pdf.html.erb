@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Previsão Financeira</title>
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <style>
+    /* Ajustes para PDF */
+    body { font-family: Arial, sans-serif; font-size: 12px; margin: 10mm; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    th, td { border: 1px solid #333; padding: 5px; text-align: center; }
+    th { background-color: #f0f0f0; }
+  </style>
+</head>
+<body>
+  <%= yield %>
+</body>
+</html>

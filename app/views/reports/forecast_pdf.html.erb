@@ -1,0 +1,37 @@
+<h1 style="text-align: center; margin-bottom: 30px;">
+  Previsão Financeira <%= start_year %> - <%= end_year %>
+</h1>
+
+<% @forecast_data.each do |year, months| %>
+  <h2 style="margin-top: 40px;">Ano <%= year %></h2>
+
+  <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+    <thead>
+      <tr style="background-color: #f2f2f2;">
+        <th style="text-align: center; padding: 8px; border: 1px solid #ddd;">Mês</th>
+        <th style="text-align: center; padding: 8px; border: 1px solid #ddd;">Receitas</th>
+        <th style="text-align: center; padding: 8px; border: 1px solid #ddd;">Despesas</th>
+        <th style="text-align: center; padding: 8px; border: 1px solid #ddd;">Saldo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% months.each do |month, data| %>
+        <tr>
+          <td style="padding: 8px; border: 1px solid #ddd; ">
+            <%= I18n.l(Date.new(year, month, 1), format: "%B") %>
+          </td>
+          <td style="text-align: center; padding: 8px; border: 1px solid #ddd; color: green;">
+            R$ <%= number_with_precision(data[:receitas], precision: 2, delimiter: ".", separator: ",") %>
+          </td>
+          <td style="text-align: center; padding: 8px; border: 1px solid #ddd; color: red;">
+            R$ <%= number_with_precision(data[:despesas], precision: 2, delimiter: ".", separator: ",") %>
+          </td>
+          <td style="text-align: center; padding: 8px; border: 1px solid #ddd;
+                     color: <%= data[:saldo] >= 0 ? 'green' : 'red' %>;">
+            R$ <%= number_with_precision(data[:saldo], precision: 2, delimiter: ".", separator: ",") %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

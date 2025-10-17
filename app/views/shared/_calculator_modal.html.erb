@@ -1,4 +1,4 @@
-<!-- Modal da Calculadora -->
+<!-- 🔢 CALCULADORA (MODAL INLINE) -->
 <div id="calculator-modal" class="modal-overlay">
   <div class="modal-content">
     <div class="modal-header">
@@ -18,134 +18,131 @@
   </div>
 </div>
 
-
+<!-- 💅 CSS -->
 <style>
-    /* --- Modal --- */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0,0,0,0.6);
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-}
+  /* --- Modal da Calculadora --- */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+  }
 
-.modal-content {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 12px;
-  width: 300px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  animation: fadeIn 0.3s ease;
-}
+  .modal-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    width: 300px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s ease;
+  }
 
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
 
-.modal-header h5 {
-  margin: 0;
-  font-weight: bold;
-}
+  .modal-header h5 {
+    margin: 0;
+    font-weight: bold;
+  }
 
-.close-modal {
-  border: none;
-  background: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
+  .close-modal {
+    border: none;
+    background: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
 
-.modal-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-#calc-display {
-  width: 100%;
-  padding: 8px;
-  font-size: 1.2rem;
-  text-align: right;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
+  #calc-display {
+    width: 100%;
+    padding: 8px;
+    font-size: 1.2rem;
+    text-align: right;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
 
-#calc-buttons {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  width: 100%;
-}
+  #calc-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    width: 100%;
+  }
 
-#calc-buttons button {
-  padding: 10px;
-  font-size: 1rem;
-  cursor: pointer;
-  border: none;
-  border-radius: 8px;
-  background-color: #e8e8e8;
-  transition: background-color 0.2s ease;
-}
+  #calc-buttons button {
+    padding: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background-color: #e8e8e8;
+    transition: background-color 0.2s ease;
+  }
 
-#calc-buttons button:hover {
-  background-color: #d0d0d0;
-}
+  #calc-buttons button:hover {
+    background-color: #d0d0d0;
+  }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
-}
-
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
 </style>
 
+<!-- ⚙️ JS -->
 <script>
-    // --- Modal da Calculadora ---
-document.addEventListener("turbo:load", () => {
-  const modal = document.getElementById("calculator-modal");
-  const openBtn = document.getElementById("link-calculator");
-  const closeBtn = modal.querySelector(".close-modal");
+  document.addEventListener("turbo:load", () => {
+    const modal = document.getElementById("calculator-modal");
+    const openBtn = document.getElementById("link-calculator");
+    if (!modal || !openBtn) return;
 
-  openBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    modal.style.display = "flex";
-  });
+    const closeBtn = modal.querySelector(".close-modal");
+    const display = document.getElementById("calc-display");
+    const buttons = document.querySelectorAll("#calc-buttons button");
 
-  closeBtn.addEventListener("click", () => {
-    modal.style.display = "none";
-  });
+    // --- abrir modal ---
+    openBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      display.value = ""; // abre sempre limpa
+      modal.style.display = "flex";
+    });
 
-  window.addEventListener("click", (event) => {
-    if (event.target === modal) {
-      modal.style.display = "none";
-    }
-  });
+    // --- fechar modal ---
+    closeBtn.addEventListener("click", () => modal.style.display = "none");
+    window.addEventListener("click", (event) => {
+      if (event.target === modal) modal.style.display = "none";
+    });
 
-  // --- Lógica da calculadora ---
-  const display = document.getElementById("calc-display");
-  const buttons = document.querySelectorAll("#calc-buttons button");
+    // --- lógica da calculadora ---
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const val = btn.textContent;
 
-  buttons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const val = btn.textContent;
-
-      if (val === "C") {
-        display.value = "";
-      } else if (val === "=") {
-        try {
-          display.value = eval(display.value || "0");
-        } catch {
-          display.value = "Erro";
+        if (val === "C") {
+          display.value = "";
+        } else if (val === "=") {
+          try {
+            display.value = eval(display.value || "0");
+          } catch {
+            display.value = "Erro";
+          }
+        } else {
+          display.value += val;
         }
-      } else {
-        display.value += val;
-      }
+      });
     });
   });
-});
-
 </script>

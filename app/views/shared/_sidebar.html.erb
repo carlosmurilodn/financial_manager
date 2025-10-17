@@ -30,10 +30,15 @@
       <%= image_tag "icons/card.png", alt: "Cartões", class: "icon me-2", size: "24x24" %>
       <span class="link-text">Cartões</span>
     <% end %>
-
+        
     <%= link_to "#", class: "list-group-item list-group-item-action d-flex align-items-center text-white", id: "link-calculator" do %>
       <%= image_tag "icons/calculator.png", alt: "Calculadora", class: "icon me-2", size: "24x24" %>
       <span class="link-text">Calculadora</span>
+    <% end %>
+
+    <%= link_to reports_path, class: "list-group-item list-group-item-action d-flex align-items-center #{'active-menu' if current_page?(reports_path)} text-white", id: "link-reports", data: { turbo: false } do %>
+      <%= image_tag "icons/report.png", alt: "Relatórios", class: "icon me-2", size: "24x24" %>
+      <span class="link-text">Relatórios</span>
     <% end %>
 
     
@@ -49,131 +54,189 @@
 
 <!-- CSS -->
 <style>
-  /* --- Modal da Calculadora --- */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0,0,0,0.6);
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
+  #sidebar-wrapper {
+    width: 250px;
+    transition: width 0.3s ease;
+    z-index: 1000;
+    background-color: #273f4b;
   }
 
-  .modal-content {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 12px;
-    width: 300px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    animation: fadeIn 0.3s ease;
+  #wrapper.collapsed #sidebar-wrapper {
+    min-width: 60px;
   }
 
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-
-  .modal-header h5 {
-    margin: 0;
-    font-weight: bold;
-  }
-
-  .close-modal {
+  .list-group-item {
+    background-color: transparent;
     border: none;
-    background: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-
-  .modal-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  #calc-display {
+    color: white;
+    transition: all 0.3s ease;
     width: 100%;
-    padding: 8px;
-    font-size: 1.2rem;
-    text-align: right;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    box-sizing: border-box;
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
   }
 
-  #calc-buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    width: 100%;
+  .list-group-item:hover {
+    background-color: rgba(103, 176, 236, 0.55) !important;
+    border-radius: 5px;
+    width: calc(100% - 20px);
+    margin-left: 10px;
+    margin-right: 10px;
   }
 
-  #calc-buttons button {
-    padding: 10px;
-    font-size: 1rem;
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    background-color: #e8e8e8;
-    transition: background-color 0.2s ease;
+  .list-group-item.active-menu {
+    background-color: rgba(103, 176, 236, 1) !important;
+    color: white !important;
+    border-radius: 5px;
+    width: calc(100% - 20px);
+    margin-left: 10px;
+    margin-right: 10px;
   }
 
-  #calc-buttons button:hover {
-    background-color: #d0d0d0;
+  #current-time {
+    font-size: 0.95rem;
   }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+  #weather-info {
+    font-size: 0.8rem;
+    line-height: 1.3;
   }
 
+  #weather-info img {
+    vertical-align: middle;
+  }
+
+  .icon { display: inline-block; }
+  .link-text { transition: opacity 0.3s ease; }
+  .sidebar-header { width: 100%; }
+  #sidebarToggle { cursor: pointer; }
+
+  .sidebar-header .sidebar-title {
+    font-size: 1.8rem;
+    color: #e2e2e2ff;
+  }
+
+  .today-weather {
+    font-size: 1rem; /* ou 1.1rem, 1.2rem, conforme quiser */
+    font-weight: 600;
+  }
+
+  .today-weather span {
+    font-size: 1.1rem;
+  }
+
+  .today-weather img {
+    width: 50px !important;
+  }
+
+
+  
 </style>
 
 <!-- JS -->
 <script>
-  document.addEventListener("turbo:load", () => {
-    const modal = document.getElementById("calculator-modal");
-    const openBtn = document.getElementById("link-calculator");
-    if (!modal || !openBtn) return;
+  // --- Atualiza hora em tempo real ---
+  function updateClock() {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    document.getElementById("current-time").textContent = timeStr;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
 
-    const closeBtn = modal.querySelector(".close-modal");
-    const display = document.getElementById("calc-display");
-    const buttons = document.querySelectorAll("#calc-buttons button");
+  // --- Clima com ícone + atual + min/max ---
+  async function loadWeather() {
+    const apiKey = "d56b203c35ee12ffb7de5bf2aaf5eccd";
+    const city = "Goiânia,BR";
+    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=metric&lang=pt_br&appid=${apiKey}`;
 
-    // --- abrir modal ---
-    openBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      display.value = ""; // abre sempre limpa
-      modal.style.display = "flex";
-    });
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      if (!data.list) throw new Error("Sem dados");
 
-    // --- fechar modal ---
-    closeBtn.addEventListener("click", () => (modal.style.display = "none"));
-    window.addEventListener("click", (event) => {
-      if (event.target === modal) modal.style.display = "none";
-    });
+      // --- HOJE ---
+      const todayForecasts = data.list.slice(0, 8);
+      const tempNow = data.list[0].main.temp.toFixed(0);
+      const tempMin = Math.min(...todayForecasts.map(f => f.main.temp_min)).toFixed(0);
+      const tempMax = Math.max(...todayForecasts.map(f => f.main.temp_max)).toFixed(0);
+      const todayIcon = data.list[0].weather[0].icon;
+      const todayDesc = data.list[0].weather[0].description;
 
-    // --- lógica da calculadora ---
-    buttons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        const val = btn.textContent;
+      let html = `
+        <div class="today-weather d-flex flex-column align-items-center justify-content-center text-center">
+          <div class="d-flex align-items-center justify-content-center">
+            <img src="https://openweathermap.org/img/wn/${todayIcon}@2x.png" alt="${todayDesc}" width="60">
+            <span class="fs-4 fw-bold ms-2">${tempNow}°C</span>
+          </div>
+          <div class="mt-1">
+            <span class="text-capitalize mt-1" style="font-size: 0.85rem;">${todayDesc}</span>
+            <br>
+            <small>Mín: ${tempMin}°C 🔻/ Máx: ${tempMax}°C 🔺</small>
+          </div>
+        </div>
+      `;
 
-        if (val === "C") {
-          display.value = "";
-        } else if (val === "=") {
-          try {
-            display.value = eval(display.value || "0");
-          } catch {
-            display.value = "Erro";
-          }
-        } else {
-          display.value += val;
-        }
+      // --- AGRUPAR PREVISÕES POR DIA ---
+      const grouped = {};
+      data.list.forEach(f => {
+        const date = f.dt_txt.split(" ")[0];
+        if (!grouped[date]) grouped[date] = [];
+        grouped[date].push(f);
+      });
+
+      // --- PEGAR OS PRÓXIMOS 3 DIAS ---
+      const dates = Object.keys(grouped).slice(1, 5);
+      html += '<div class="mt-2 w-100">';
+      for (const date of dates) {
+        const dayForecasts = grouped[date];
+        const day = new Date(date).toLocaleDateString('pt-BR', { weekday: 'short' });
+        const min = Math.min(...dayForecasts.map(f => f.main.temp_min)).toFixed(0);
+        const max = Math.max(...dayForecasts.map(f => f.main.temp_max)).toFixed(0);
+        const icon = dayForecasts[Math.floor(dayForecasts.length / 2)].weather[0].icon;
+
+        html += `
+          <div class="d-flex align-items-center justify-content-start ms-4">
+            <span class="text-capitalize" style="width: 50px;">${day}:</span>
+            <img src="https://openweathermap.org/img/wn/${icon}.png" alt="" width="25">
+            <span>${min}°C / ${max}°C</span>
+          </div>
+        `;
+      }
+      html += '</div>';
+
+      document.getElementById("weather-info").innerHTML = html;
+    } catch (err) {
+      document.getElementById("weather-info").textContent = "Clima indisponível";
+    }
+  }
+
+
+  // --- Sidebar collapsible ---
+  function updateSidebar() {
+    const wrapper = document.getElementById("wrapper");
+    const sidebar = document.getElementById("sidebar-wrapper");
+      const title = sidebar.querySelector(".sidebar-title");
+      const linkTexts = sidebar.querySelectorAll(".link-text");
+      const collapsed = localStorage.getItem("sidebar-collapsed") === "true";
+
+      if (collapsed) wrapper.classList.add("collapsed");
+      else wrapper.classList.remove("collapsed");
+
+      linkTexts.forEach(el => el.style.display = collapsed ? "none" : "inline");
+      title.style.display = collapsed ? "none" : "inline";
+    }
+
+    document.addEventListener("turbo:load", () => {
+      updateSidebar();
+      loadWeather();
+
+      const toggleButton = document.getElementById("sidebarToggle");
+      toggleButton.addEventListener("click", () => {
+        const wrapper = document.getElementById("wrapper");
+        wrapper.classList.toggle("collapsed");
+        localStorage.setItem("sidebar-collapsed", wrapper.classList.contains("collapsed"));
+        updateSidebar();
       });
     });
-  });
-
 </script>

@@ -81,11 +81,22 @@
 
       <!-- Botão Limpar Filtros -->
       <div class="col-auto align-self-end">
-        <%= link_to "Limpar Filtros",
-                clear_filters_expenses_path,
-                class: "btn btn-warning",
-                data: { turbo_method: :delete } %>
+        <%= link_to clear_filters_expenses_path,
+                    class: "btn btn-warning",
+                    data: { turbo_method: :delete } do %>
+          <i class="bi bi-x-circle me-1"></i> Limpar Filtros
+        <% end %>
       </div>
+
+      <!-- Botão Gerar PDF -->
+      <div class="col-auto align-self-end">
+        <%= link_to report_pdf_expenses_path(request.query_parameters), 
+                    class: "btn btn-danger", 
+                    target: "_blank" do %>
+          <i class="bi bi-file-earmark-pdf-fill me-1"></i> Gerar PDF
+        <% end %>
+      </div>
+
     </div>
   <% end %>
 

@@ -89,12 +89,15 @@ class HomeController < ApplicationController
   def set_category_details
     expense_ids_with_installments = Installment.where(balance_month: @mes_atual).pluck(:expense_id).uniq
 
-    @detalhes_despesas_por_categoria =
+    detalhes =
       Expense.includes(:installments, :category)
              .where(balance_month: @mes_atual)
              .or(Expense.where(id: expense_ids_with_installments))
              .group_by { |e| e.category.name }
              .transform_values { |expenses| format_expense_details(expenses) }
+    @detalhes_despesas_por_categoria = @despesas_por_categoria.keys.each_with_object({}) do |categoria, hash|
+      hash[categoria.strip] = detalhes[categoria]&.presence || []
+    end
   end
 
   def format_expense_details(expenses)

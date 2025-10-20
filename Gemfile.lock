@@ -191,6 +191,7 @@ GEM
     parser (3.3.9.0)
       ast (~> 2.4.1)
       racc
+    pdfkit (0.8.7.3)
     pg (1.6.2)
     pg (1.6.2-aarch64-linux)
     pg (1.6.2-aarch64-linux-musl)
@@ -328,11 +329,11 @@ GEM
       railties (>= 6.0.0)
     stringio (3.1.7)
     thor (1.4.0)
-    thruster (0.1.15)
-    thruster (0.1.15-aarch64-linux)
-    thruster (0.1.15-arm64-darwin)
-    thruster (0.1.15-x86_64-darwin)
-    thruster (0.1.15-x86_64-linux)
+    thruster (0.1.16)
+    thruster (0.1.16-aarch64-linux)
+    thruster (0.1.16-arm64-darwin)
+    thruster (0.1.16-x86_64-darwin)
+    thruster (0.1.16-x86_64-linux)
     timeout (0.4.3)
     tsort (0.2.0)
     turbo-rails (2.0.17)
@@ -355,6 +356,7 @@ GEM
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    wkhtmltopdf-binary (0.12.6.10)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.7.3)
@@ -379,6 +381,7 @@ DEPENDENCIES
   jbuilder
   jsbundling-rails
   kamal
+  pdfkit
   pg (~> 1.1)
   propshaft
   puma (>= 5.0)
@@ -393,6 +396,7 @@ DEPENDENCIES
   turbo-rails
   tzinfo-data
   web-console
+  wkhtmltopdf-binary
 
 BUNDLED WITH
    2.7.1

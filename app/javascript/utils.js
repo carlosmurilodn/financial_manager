@@ -60,6 +60,22 @@ const initializeFormUtils = () => {
   });
 };
 
+
+document.addEventListener("turbo:frame-load", function  (event) {
+    if (event.target.id === "modal") {
+      const modalBody = document.getElementById("modal-body");
+      const modalElement = document.getElementById("turboModal");
+      modalBody.innerHTML = event.target.innerHTML;
+
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+
+      // Limpa o conteúdo quando o modal for fechado
+      modalElement.addEventListener("hidden.bs.modal", () => {
+        modalBody.innerHTML = "";
+      }, { once: true });
+    }
+  });
 // Listener para o Turbo Rails: garante que o script seja executado
 // na carga inicial e em todas as navegações do Turbo.
 document.addEventListener("turbo:render", initializeFormUtils);

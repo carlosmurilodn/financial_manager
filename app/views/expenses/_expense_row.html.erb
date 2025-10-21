@@ -56,7 +56,8 @@
   <td class="text-center">
     <%= link_to t("buttons.edit"),
                 expense.is_a?(Installment) ? edit_installment_path(expense) : edit_expense_path(expense),
-                class: "btn btn-sm btn-primary" %>
+                class: "btn btn-sm btn-primary",
+                data: {turbo_frame: "modal"} %>
 
     <% unless expense.is_a?(Installment) %>
       <%= link_to t("buttons.delete"),

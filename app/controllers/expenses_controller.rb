@@ -24,11 +24,22 @@ class ExpensesController < ApplicationController
       # Gerar parcelas, se for cartão parcelado
       @expense.generate_future_installments if @expense.payment_method_credito_parcelado?
 
-      redirect_to expenses_path, notice: "Despesa criada com sucesso!"
+      respond_to do |format|
+        # Se for Turbo (ou modal), fecha o modal
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("modal", "")
+        end
+
+        # Fallback normal (HTML)
+        format.html do
+          redirect_to expenses_path, notice: "Despesa criada com sucesso!"
+        end
+      end
     else
-      puts @expense.errors.full_messages # exibe erros no console
-      
-      render :new, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream { render :new, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -42,11 +53,26 @@ class ExpensesController < ApplicationController
         @expense.installments.where("number > ?", @expense.current_installment).destroy_all
         @expense.generate_future_installments
       end
-      redirect_to expenses_path, notice: "Despesa atualizada com sucesso!"
+
+      respond_to do |format|
+        # Fecha o modal se estiver vindo via Turbo
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("modal", "")
+        end
+
+        # Fallback normal (recarrega a página)
+        format.html do
+          redirect_to expenses_path, notice: "Despesa atualizada com sucesso!"
+        end
+      end
     else
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream { render :edit, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
+
 
   def destroy
     @expense.destroy

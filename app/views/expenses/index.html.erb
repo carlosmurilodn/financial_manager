@@ -3,7 +3,8 @@
 
   <%= link_to t("buttons.new.feminine", model: t("models.expense")),
               new_expense_path,
-              class: "btn btn-success mb-3" %>
+              class: "btn btn-success mb-3",
+              data: {turbo_frame: "modal"} %>
 
   <!-- Form de filtro por mês -->
   <%= form_with url: expenses_path, method: :get, local: true, class: "mb-3" do |f| %>
@@ -123,4 +124,15 @@
     </tbody>
     <%= render "expenses_totals" %>
   </table>'
+</div>
+
+
+<turbo-frame id="modal"></turbo-frame>
+
+<div class="modal fade" id="turboModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div id="modal-body"></div>
+    </div>
+  </div>
 </div>

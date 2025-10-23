@@ -1,4 +1,13 @@
-<div class="container-fluid">
-  <h1><%= image_tag "icons/category.png", alt: "Nova Categoria", class: "me-2", size: "40x40" %><%= action_name == "new" ? "Nova Categoria" : "Editar Categoria" %></h1>
-  <%= render "form", category: @category %>
-</div>
+<turbo-frame id="modal">
+  <div class="modal-header">
+    <h5 class="modal-title">
+      <%= image_tag "icons/category.png", size: "30x30", class: "me-2" %>
+      <%= action_name == "new" ? "Nova Categoria" : "Editar Categoria" %>
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+  </div>
+
+  <div class="modal-body p-3 d-block">
+    <%= render "form", category: @category %>
+  </div>
+</turbo-frame>

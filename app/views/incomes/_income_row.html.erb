@@ -1,18 +1,25 @@
 <tr id="<%= dom_id(income) %>" class="<%= income.paid ? 'table-success' : 'table-warning' %>">
-  <td><%= income.description %></td>
-  <td><%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %></td>
-  <td><%= income.date.strftime("%d/%m/%Y") %></td>
-  <td><%= income.balance_month.strftime("%m/%Y") %></td>
-  <td>
+  <td class="text-center"><%= income.description %></td>
+  <td class="text-center">
+    <%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
+  </td>
+  <td class="text-center"><%= income.date.strftime("%d/%m/%Y") if income.date.present? %></td>
+  <td class="text-center"><%= income.balance_month.strftime("%m/%Y") if income.balance_month.present? %></td>
+  <td class="text-center">
     <%= link_to (income.paid ? "Sim" : "Não"),
                 toggle_paid_income_path(income),
                 method: :patch,
                 data: { turbo_method: :patch, turbo_stream: true },
                 class: "btn btn-sm btn-secondary" %>
   </td>
-  <td>
-    <%= link_to t("buttons.edit"), edit_income_path(income), class: "btn btn-sm btn-primary" %>
-    <%= link_to t("buttons.delete"), income_path(income),
+  <td class="text-center">
+    <%= link_to t("buttons.edit"),
+                edit_income_path(income),
+                class: "btn btn-sm btn-primary",
+                data: { turbo_frame: "modal" } %>
+
+    <%= link_to t("buttons.delete"),
+                income_path(income),
                 data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
                 class: "btn btn-sm btn-danger" %>
   </td>

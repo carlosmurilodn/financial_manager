@@ -1,7 +1,10 @@
 <div class="container-fluid">
   <h1 class="mb-4"><%= image_tag "icons/card.png", alt: "Cartões", class: "me-2", size: "40x40" %>Cartões</h1>
 
-  <%= link_to t("buttons.new.masculine", model: t("models.card")), new_card_path, class: "btn btn-success mb-3" %>
+  <%= link_to t("buttons.new.masculine", model: t("models.card")),
+      new_card_path,
+      class: "btn btn-success mb-3",
+      data: {turbo_frame: "modal"} %>
 
   <table class="table table-striped">
     <thead>
@@ -25,7 +28,10 @@
           <td><%= card.due_day %></td>
           <td><%= card.best_day %></td>
           <td>
-            <%= link_to t("buttons.edit"), edit_card_path(card), class: "btn btn-sm btn-primary me-1" %>
+            <%= link_to t("buttons.edit"),
+                edit_card_path(card),
+                class: "btn btn-sm btn-primary me-1",
+                data: {turbo_frame: "modal"} %>
             <%= link_to t("buttons.delete"), card,
                         data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
                         class: "btn btn-sm btn-danger me-1" %>
@@ -37,6 +43,18 @@
       <% end %>
     </tbody>
   </table>
+</div>
+
+<!-- Frame vazio para renderização dinâmica -->
+<turbo-frame id="modal" style="display: none;"></turbo-frame>
+
+<!-- Estrutura do modal principal -->
+<div class="modal fade" id="turboModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div id="modal-body" style="height: 370px;"></div>
+    </div>
+  </div>
 </div>
 
 <script>

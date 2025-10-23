@@ -13,9 +13,23 @@ class CardsController < ApplicationController
     @card = Card.new(card_params)
 
     if @card.save
-      redirect_to cards_path, notice: "Cartão criado com sucesso!"
+      respond_to do |format|
+        # Turbo: fecha o modal e recarrega a página inteira
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.append(
+            "modal",
+            "<turbo-stream action='visit' target='_top' url='#{cards_path}'></turbo-stream>".html_safe
+          )
+        end
+
+        # Fallback HTML
+        format.html { redirect_to cards_path, notice: "Cartão criado com sucesso!" }
+      end
     else
-      render :new, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream { render :new, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_entity }
+      end
     end
   end
 

@@ -18,10 +18,24 @@ class IncomesController < ApplicationController
 
     if @income.save
       gerar_repeticoes(@income)
-      redirect_to incomes_path, notice: "Receita criada com sucesso!"
+
+      respond_to do |format|
+        # Turbo: fecha o modal e recarrega a página inteira
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.append(
+            "modal",
+            "<turbo-stream action='visit' target='_top' url='#{incomes_path}'></turbo-stream>".html_safe
+          )
+        end
+
+        # Fallback HTML
+        format.html { redirect_to incomes_path, notice: "Receita criada com sucesso!" }
+      end
     else
-      puts @income.errors.full_messages
-      render :new, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream { render :new, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_entity }
+      end
     end
   end
 

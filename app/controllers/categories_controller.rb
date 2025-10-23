@@ -10,14 +10,29 @@ class CategoriesController < ApplicationController
     @category = Category.new
   end
 
-  def create
-    @category = Category.new(category_params)
-    if @category.save
-      redirect_to categories_path, notice: "Categoria criada com sucesso!"
-    else
-      render :new, status: :unprocessable_entity
+def create
+  @category = Category.new(category_params)
+
+  if @category.save
+    respond_to do |format|
+      # Turbo: fecha o modal e recarrega a página inteira
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.append(
+          "modal",
+          "<turbo-stream action='visit' target='_top' url='#{categories_path}'></turbo-stream>".html_safe
+        )
+      end
+
+      # Fallback HTML
+      format.html { redirect_to categories_path, notice: "Categoria criada com sucesso!" }
+    end
+  else
+    respond_to do |format|
+      format.turbo_stream { render :new, status: :unprocessable_entity }
+      format.html { render :new, status: :unprocessable_entity }
     end
   end
+end
 
   def edit; end
 

@@ -13,32 +13,25 @@ class ExpensesController < ApplicationController
     @expense.amount = normalize_amount(params[:expense][:amount])
     @expense.repetir ||= 0
 
-    # Converter datas para Date
+    # Converter datas
     @expense.date = Date.strptime(expense_params[:date], "%d/%m/%Y") rescue nil
     @expense.balance_month = Date.strptime(expense_params[:balance_month], "%d/%m/%Y") rescue nil
 
     if @expense.save
-      # Gerar repetições automáticas
       gerar_repeticoes(@expense)
-
-      # Gerar parcelas, se for cartão parcelado
       @expense.generate_future_installments if @expense.payment_method_credito_parcelado?
 
       respond_to do |format|
-        # Se for Turbo (ou modal), fecha o modal
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("modal", "")
-        end
+        # HTML normal
+        format.html { redirect_to expenses_path, notice: "Despesa criada com sucesso!" }
 
-        # Fallback normal (HTML)
-        format.html do
-          redirect_to expenses_path, notice: "Despesa criada com sucesso!"
-        end
+        # Turbo: apenas retorna vazio, JS vai fechar e recarregar
+        format.turbo_stream { render turbo_stream: "" }
       end
     else
       respond_to do |format|
-        format.turbo_stream { render :new, status: :unprocessable_entity }
         format.html { render :new, status: :unprocessable_entity }
+        format.turbo_stream { render :new, status: :unprocessable_entity }
       end
     end
   end

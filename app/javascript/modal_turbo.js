@@ -1,4 +1,3 @@
-// app/javascript/modal.js
 import { initializeFormUtils } from "./utils";
 import { initializeDatepicker } from "./date_picker";
 
@@ -12,11 +11,10 @@ document.addEventListener("turbo:frame-load", (event) => {
     const modal = new bootstrap.Modal(modalElement);
     modal.show();
 
-    // Inicializa utils e datepicker
     initializeFormUtils();
     initializeDatepicker();
 
-    // ---------- TOGGLE PARCELAMENTO AQUI ----------
+    // ---------- TOGGLE PARCELAMENTO ----------
     const paymentSelect = modalBody.querySelector("#payment_method_select");
     const parcelSection = modalBody.querySelector("#parcelamento_section");
     if (paymentSelect && parcelSection) {
@@ -24,15 +22,24 @@ document.addEventListener("turbo:frame-load", (event) => {
         parcelSection.style.display =
           paymentSelect.value === "credito_parcelado" ? "flex" : "none";
       };
-
-      // Estado inicial
       toggleParcelSection();
-
-      // Atualiza dinamicamente
       paymentSelect.addEventListener("change", toggleParcelSection);
     }
-    // ----------------------------------------------
 
+    // ---------- SUBMIT FORMULARIO ----------
+    const form = modalBody.querySelector("form");
+    if (form) {
+      form.addEventListener("turbo:submit-end", (e) => {
+        const { success } = e.detail;
+
+        if (success) {
+          modal.hide();                 // fecha modal
+          window.location.reload();     // recarrega página inteira
+        }
+      });
+    }
+
+    // ---------- LIMPEZA AO FECHAR ----------
     modalElement.addEventListener(
       "hidden.bs.modal",
       () => {

@@ -17,7 +17,6 @@
         <%= f.text_field :amount, 
           class: "form-control moeda flex-grow-1", 
           value: (expense.amount.present? ? number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) : "R$ 0,00")
-          # REMOVIDO: oninput: "formatMoeda(this)"
         %>
         <div class="form-check mb-0">
           <%= f.check_box :paid, class: "form-check-input", id: "expense_paid" %>
@@ -60,7 +59,7 @@
     </div>
   </div>
 
-  <div class="row mb-3" id="parcelamento_section" style="<%= expense.payment_method_credito_parcelado? ? '' : 'display:none;' %>">
+  <div class="row mb-3" id="parcelamento_section">
     <div class="col-md-6">
       <%= f.label :current_installment, "Parcela Atual" %>
       <%= f.number_field :current_installment, class: "form-control", value: expense.current_installment || 1, min: 1 %>

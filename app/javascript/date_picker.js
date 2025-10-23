@@ -1,4 +1,4 @@
-function initCustomScripts() {
+export function initializeDatepicker() {
   // Toggle parcelamento (mantido)
   const paymentSelect = document.getElementById("payment_method_select");
   const parcelSection = document.getElementById("parcelamento_section");
@@ -179,5 +179,5 @@ function initCustomScripts() {
 }
 
 // Executa no load inicial e em cada render do Turbo
-document.addEventListener("turbo:load", initCustomScripts);
-document.addEventListener("turbo:render", initCustomScripts);
+document.addEventListener("turbo:load", initializeDatepicker);
+document.addEventListener("turbo:render", initializeDatepicker);

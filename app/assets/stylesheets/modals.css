@@ -1,0 +1,21 @@
+  #turboModal .modal-dialog {
+  justify-content: center;
+  max-width: none;
+  align-items: center;
+  margin-left: 260px;
+}
+
+#turboModal .modal-content {
+  border-radius: 12px;     /* cantos suaves */
+  width: 1200px !important;
+}
+
+#modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  height: 550px;        /* evita rolagem externa */
+}
+
+#parcelamento_section {
+  display: none; /* escondido por padrão */
+}

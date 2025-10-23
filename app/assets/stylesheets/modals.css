@@ -13,7 +13,7 @@
 #modal-body {
   padding: 1.5rem;
   overflow-y: auto;
-  height: 550px;        /* evita rolagem externa */
+  height: 520px;        /* evita rolagem externa */
 }
 
 #parcelamento_section {

@@ -1,11 +1,12 @@
 <tr id="<%= dom_id(income) %>" class="<%= income.paid ? 'table-success' : 'table-warning' %>">
   <td class="text-center"><%= income.description %></td>
-  <td class="text-center">
+  <td class="text-center"><%= income.category&.display_name || "-" %></td>
+  <td class="text-center app-record-actions">
     <%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
   </td>
   <td class="text-center"><%= income.date.strftime("%d/%m/%Y") if income.date.present? %></td>
   <td class="text-center"><%= income.balance_month.strftime("%m/%Y") if income.balance_month.present? %></td>
-  <td class="text-center">
+  <td class="text-center app-record-actions">
     <%= link_to (income.paid ? "Sim" : "Não"),
                 toggle_paid_income_path(income),
                 method: :patch,

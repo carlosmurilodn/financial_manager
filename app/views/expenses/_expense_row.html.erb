@@ -11,11 +11,11 @@
 
   <td><%= number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".") %></td>
 
-  <td class="text-center">
+  <td class="text-center app-record-actions">
     <%= expense.date.strftime("%d/%m/%Y") %>
   </td>
 
-  <td class="text-center">
+  <td class="text-center app-record-actions">
     <%= expense.balance_month.strftime("%m/%Y") if expense.balance_month.present? %>
   </td>
 

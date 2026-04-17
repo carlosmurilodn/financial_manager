@@ -1,86 +1,91 @@
-<div class="container-fluid">
-  <h1 class="mb-4"><%= image_tag "icons/income.png", alt: "Receitas", class: "me-2", size: "40x40" %>Receitas</h1>
-
-  <%= link_to t("buttons.new.feminine", model: t("models.income")),
-      new_income_path,
-      class: "btn btn-success mb-3",
-      data: {turbo_frame: "modal"} %>
-
-  <!-- Form de filtro -->
-  <%= form_with url: incomes_path, method: :get, local: true, class: "mb-3" do %>
-    <div class="row g-2">
-      
-      <!-- Mês -->
-      <div class="col-auto">
-        <%= label_tag :month, "Mês" %>
-        <%= select_tag :month,
-          options_for_select([["Todos", 0]] + I18n.t("date.month_names")[1..12].map.with_index { |m, i| [m.capitalize, i + 1] }, @month || 0),
-          class: "form-select"
-        %>
-      </div>
-
-      <!-- Ano -->
-      <div class="col-auto">
-        <%= label_tag :year, "Ano" %>
-        <%= select_tag :year,
-          options_for_select([["Todos", 0]] + (Date.today.year - 5..Date.today.year + 1).to_a.reverse, @year || 0),
-          class: "form-select"
-        %>
-      </div>
-
-      <!-- Descrição -->
-      <div class="col-auto">
-        <%= label_tag :description, "Descrição" %>
-        <%= text_field_tag :description, @description_filter, class: "form-control", placeholder: "Buscar descrição..." %>
-      </div>
-
-      <!-- Pago? -->
-      <div class="col-auto">
-        <%= label_tag :paid, "Recebida?" %>
-        <%= select_tag :paid,
-          options_for_select([["Todos", ""], ["Sim", true], ["Não", false]], @paid_filter || ""),
-          class: "form-select"
-        %>
-      </div>
-
-      <!-- Botão Filtrar -->
-      <div class="col-auto align-self-end">
-        <%= submit_tag t("buttons.filter"), class: "btn btn-primary" %>
-      </div>
-
-      <!-- Botão Limpar Filtros -->
-      <div class="col-auto align-self-end">
-        <%= link_to "Limpar Filtros",
-                clear_filters_incomes_path,
-                class: "btn btn-warning",
-                data: { turbo_method: :delete } %>
+<section class="app-page">
+  <div class="app-page__hero">
+    <div class="app-page__hero-copy">
+      <span class="app-page__hero-icon">
+        <%= image_tag "icons/income.png", alt: "Receitas", size: "22x22" %>
+      </span>
+      <div>
+        <p class="app-page__eyebrow">Gestão</p>
+        <h1 class="app-page__title">Receitas</h1>
+        <p class="app-page__description">Organize suas entradas, acompanhe recebimentos e veja a evolução do caixa.</p>
       </div>
     </div>
-  <% end %>
 
-  <!-- Tabela de receitas -->
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Descrição</th>
-        <th>Valor</th>
-        <th>Data</th>
-        <th>Mês Referência</th>
-        <th>Recebida?</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody id="incomes-list">
-      <% @incomes.each do |income| %>
-        <%= render partial: "income_row", locals: { income: income } %>
-      <% end %>
-    </tbody>
-    <%= render "incomes_totals", 
-        total_received: @total_received, 
-        total_pending: @total_pending, 
-        total_amount: @total_amount %>
-  </table>
-</div>
+    <div class="app-page__hero-actions">
+      <%= link_to t("buttons.new.feminine", model: t("models.income")),
+          new_income_path,
+          class: "btn app-page__primary-btn",
+          data: { turbo_frame: "modal" } %>
+    </div>
+  </div>
+
+  <div class="app-panel">
+    <%= form_with url: incomes_path, method: :get, local: true, class: "app-filter-form" do %>
+      <div class="app-filter-grid app-filter-grid--incomes">
+        <div class="app-filter-field">
+          <%= label_tag :month, "Mês" %>
+          <%= select_tag :month,
+            options_for_select([["Todos", 0]] + I18n.t("date.month_names")[1..12].map.with_index { |m, i| [m.capitalize, i + 1] }, @month || 0),
+            class: "form-select" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= label_tag :year, "Ano" %>
+          <%= select_tag :year,
+            options_for_select([["Todos", 0]] + (Date.today.year - 5..Date.today.year + 1).to_a.reverse, @year || 0),
+            class: "form-select" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= label_tag :description, "Descrição" %>
+          <%= text_field_tag :description, @description_filter, class: "form-control", placeholder: "Buscar descrição..." %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= label_tag :paid, "Recebida?" %>
+          <%= select_tag :paid,
+            options_for_select([["Todos", ""], ["Sim", true], ["Não", false]], @paid_filter || ""),
+            class: "form-select" %>
+        </div>
+      </div>
+
+      <div class="app-filter-actions">
+        <%= submit_tag t("buttons.filter"), class: "btn app-page__primary-btn" %>
+        <%= link_to "Limpar Filtros",
+                clear_filters_incomes_path,
+                class: "btn app-page__secondary-btn",
+                data: { turbo_method: :delete } %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="app-panel app-panel--table">
+    <div class="table-responsive">
+      <table class="table app-table app-table--records app-table--index mb-0">
+        <thead>
+          <tr>
+            <th>Descrição</th>
+            <th>Categoria</th>
+            <th>Valor</th>
+            <th>Data</th>
+            <th>Mês Referência</th>
+            <th>Recebida?</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="incomes-list">
+          <% @incomes.each do |income| %>
+            <%= render partial: "income_row", locals: { income: income } %>
+          <% end %>
+        </tbody>
+        <%= render "incomes_totals",
+            total_received: @total_received,
+            total_pending: @total_pending,
+            total_amount: @total_amount %>
+      </table>
+    </div>
+  </div>
+</section>
 
 <!-- Frame vazio para renderização dinâmica -->
 <turbo-frame id="modal" style="display: none;"></turbo-frame>

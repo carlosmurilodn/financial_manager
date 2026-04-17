@@ -13,7 +13,7 @@ class HomeController < ApplicationController
     set_recent_expenses
     prepare_calendar_data
     set_forecast_data
-    @recent_incomes = Income.order(date: :desc).limit(RECENT_INCOMES_LIMIT)
+    @recent_incomes = Income.includes(:category).order(date: :desc).limit(RECENT_INCOMES_LIMIT)
   end
 
   private
@@ -100,7 +100,8 @@ class HomeController < ApplicationController
   end
 
   def set_calendar_data
-    @calendar_expenses_not_paid = Expense.where(paid: false, date: @calendar_range).includes(:category)
+    @calendar_expenses = Expense.where(date: @calendar_range).includes(:category)
+    @calendar_incomes = Income.where(date: @calendar_range).includes(:category)
   end
 
   def set_recent_expenses
@@ -118,16 +119,40 @@ class HomeController < ApplicationController
     end_date = @calendar_range.end.end_of_week(:sunday)
     @calendar_weeks = (start_date..end_date).to_a.in_groups_of(7)
 
-    @daily_expenses = {}
+    @daily_calendar_items = {}
+    @monthly_agenda_items = []
 
-    @calendar_expenses_not_paid.each do |expense|
-      @daily_expenses[expense.date] ||= []
-      @daily_expenses[expense.date] << {
-        amount: expense.amount,
-        description: expense.description,
-        category_emoji: expense.category&.emoji
+    @calendar_incomes.each do |income|
+      @daily_calendar_items[income.date] ||= { incomes: [], expenses: [] }
+      @daily_calendar_items[income.date][:incomes] << {
+        amount: income.amount,
+        description: [income.category&.emoji, income.description.presence || "Receita"].compact.join(" ")
+      }
+
+      @monthly_agenda_items << {
+        date: income.date,
+        type: :income,
+        description: [income.category&.emoji, income.description.presence || "Receita"].compact.join(" "),
+        amount: income.amount
       }
     end
+
+    @calendar_expenses.each do |expense|
+      @daily_calendar_items[expense.date] ||= { incomes: [], expenses: [] }
+      @daily_calendar_items[expense.date][:expenses] << {
+        amount: expense.amount,
+        description: [expense.category&.emoji, expense.description.presence || "Despesa"].compact.join(" ")
+      }
+
+      @monthly_agenda_items << {
+        date: expense.date,
+        type: :expense,
+        description: [expense.category&.emoji, expense.description.presence || "Despesa"].compact.join(" "),
+        amount: expense.amount
+      }
+    end
+
+    @monthly_agenda_items.sort_by! { |item| [item[:date], item[:type] == :expense ? 0 : 1, item[:description]] }
   end
 
   def set_forecast_data

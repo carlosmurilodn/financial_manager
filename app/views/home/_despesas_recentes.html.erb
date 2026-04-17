@@ -2,7 +2,7 @@
   <div class="dashboard-card__header">
     <div>
       <p class="dashboard-card__eyebrow">Movimentacoes</p>
-      <h2 class="dashboard-card__title">Despesas recentes</h2>
+      <h2 class="dashboard-card__title">Despesas Recentes</h2>
     </div>
 
     <div class="dashboard-card__pill dashboard-card__pill--danger">
@@ -15,7 +15,7 @@
     <% linhas = @recent_expenses.size + 1 %>
     <% altura_linha = 100.0 / linhas %>
 
-    <table class="table app-table mb-0" style="height: 100%; table-layout: fixed;">
+    <table class="table app-table app-table--recent-expenses mb-0" style="height: 100%; table-layout: fixed;">
       <thead>
         <tr style="height: <%= altura_linha %>%;">
           <th class="align-middle">Data</th>

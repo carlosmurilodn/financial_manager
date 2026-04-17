@@ -1,77 +1,78 @@
-<div class="container-fluid">
-  <h1 class="mb-4">
-    <%= image_tag "icons/expense.png", alt: "Despesas", class: "me-2", size: "40x40" %>
-    Relatório de Despesas
-  </h1>
-
-  <%= form_with url: report_expenses_path, method: :get, local: true, class: "mb-3" do |f| %>
-    <div class="row g-2">
-      <!-- Copiar exatamente os mesmos campos do index -->
-      <!-- Mês -->
-      <div class="col-auto">
-        <%= f.label :month, "Mês" %>
-        <%= f.select :month,
-              options_for_select([["Todos", 0]] + I18n.t("date.month_names")[1..12].map.with_index { |m, i| [m.capitalize, i+1] }, @month || 0),
-              {}, class: "form-control" %>
-      </div>
-
-      <!-- Ano -->
-      <div class="col-auto">
-        <%= f.label :year, "Ano" %>
-        <%= f.select :year,
-              options_for_select([["Todos", 0]] + (2025..2030).to_a.reverse, @year || 0),
-              {}, class: "form-control" %>
-      </div>
-
-      <!-- Descrição -->
-      <div class="col-auto">
-        <%= f.label :description, "Descrição" %>
-        <%= f.text_field :description, value: @description_filter, class: "form-control", placeholder: "Buscar descrição..." %>
-      </div>
-
-      <!-- Categoria -->
-      <div class="col-auto">
-        <%= f.label :category_id, "Categoria" %>
-        <%= select_tag :category_id,
-            options_for_select([["Todas", 0]] + Category.all.sort_by(&:sort_name).map { |c| [c.display_name, c.id] }, @category_filter || 0),
-            class: "form-control" %>
-      </div>
-
-      <!-- Pagamento -->
-      <div class="col-auto">
-        <%= f.label :payment_method, "Pagamento" %>
-        <%= f.select :payment_method,
-              options_for_select([["Todos", ""]] + Expense.payment_methods.keys.map { |k| [k.humanize, k] }, @payment_method_filter || ""),
-              {}, class: "form-control" %>
-      </div>
-
-      <!-- Cartão -->
-      <div class="col-auto">
-        <%= f.label :card_id, "Cartão" %>
-        <%= f.select :card_id,
-              options_for_select([["Todos", 0]] + Card.order(:name).map { |c| [c.name, c.id] }, @card_filter || 0),
-              {}, class: "form-control" %>
-      </div>
-
-      <!-- Pago -->
-      <div class="col-auto">
-        <%= f.label :paid, "Paga?" %>
-        <%= f.select :paid,
-              options_for_select([["Todas", ""], ["Sim", true], ["Não", false]], @paid_filter || ""),
-              {}, class: "form-control" %>
-      </div>
-
-      <div class="col-auto align-self-end">
-        <%= f.submit "Filtrar", class: "btn btn-primary" %>
-      </div>
-
-      <div class="col-auto align-self-end">
-        <%= link_to "Gerar PDF",
-                    report_pdf_expenses_path(format: :pdf, **params.to_unsafe_h),
-                    class: "btn btn-danger" %>
+<section class="app-page">
+  <div class="app-page__hero">
+    <div class="app-page__hero-copy">
+      <span class="app-page__hero-icon">
+        <%= image_tag "icons/expense.png", alt: "Despesas", size: "22x22" %>
+      </span>
+      <div>
+        <p class="app-page__eyebrow">Análises</p>
+        <h1 class="app-page__title">Relatório de Despesas</h1>
+        <p class="app-page__description">Cruze filtros, revise lançamentos e exporte uma visão consolidada em PDF.</p>
       </div>
     </div>
-  <% end %>
+  </div>
 
-  <%= render partial: "expenses/report_table" %>
-</div>
+  <div class="app-panel">
+    <%= form_with url: report_expenses_path, method: :get, local: true, class: "app-filter-form" do |f| %>
+      <div class="app-filter-grid app-filter-grid--expenses">
+        <div class="app-filter-field">
+          <%= f.label :month, "Mês" %>
+          <%= f.select :month,
+                options_for_select([["Todos", 0]] + I18n.t("date.month_names")[1..12].map.with_index { |m, i| [m.capitalize, i+1] }, @month || 0),
+                {}, class: "form-select" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= f.label :year, "Ano" %>
+          <%= f.select :year,
+                options_for_select([["Todos", 0]] + (2025..2030).to_a.reverse, @year || 0),
+                {}, class: "form-select" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= f.label :description, "Descrição" %>
+          <%= f.text_field :description, value: @description_filter, class: "form-control", placeholder: "Buscar descrição..." %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= f.label :category_id, "Categoria" %>
+          <%= select_tag :category_id,
+              options_for_select([["Todas", 0]] + Category.all.sort_by(&:sort_name).map { |c| [c.display_name, c.id] }, @category_filter || 0),
+              class: "form-select" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= f.label :payment_method, "Pagamento" %>
+          <%= f.select :payment_method,
+                options_for_select([["Todos", ""]] + Expense.payment_methods.keys.map { |k| [k.humanize, k] }, @payment_method_filter || ""),
+                {}, class: "form-select" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= f.label :card_id, "Cartão" %>
+          <%= f.select :card_id,
+                options_for_select([["Todos", 0]] + Card.order(:name).map { |c| [c.name, c.id] }, @card_filter || 0),
+                {}, class: "form-select" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= f.label :paid, "Paga?" %>
+          <%= f.select :paid,
+                options_for_select([["Todas", ""], ["Sim", true], ["Não", false]], @paid_filter || ""),
+                {}, class: "form-select" %>
+        </div>
+      </div>
+
+      <div class="app-filter-actions">
+        <%= f.submit "Filtrar", class: "btn app-page__primary-btn" %>
+        <%= link_to "Gerar PDF",
+                    report_pdf_expenses_path(format: :pdf, **params.to_unsafe_h),
+                    class: "btn app-page__danger-btn" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="app-panel app-panel--table">
+    <%= render partial: "expenses/report_table" %>
+  </div>
+</section>

@@ -45,6 +45,7 @@ pt-BR:
     form:
       submit: "Salvar Receita"
       description: "Descrição"
+      category: "Categoria"
       amount: "Valor"
       date: "Data"
       balance_month: "Mês do Balanço"
@@ -77,6 +78,7 @@ pt-BR:
 
     incomes:
       description: "Descrição"
+      category: "Categoria"
       amount: "Valor"
       date: "Data"
       balance_month: "Mês Referência"

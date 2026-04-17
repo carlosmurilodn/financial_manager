@@ -100,7 +100,7 @@ class IncomesController < ApplicationController
   end
 
   def income_params
-    permitted = params.require(:income).permit(:amount, :description, :date, :balance_month, :paid, :repetir)
+    permitted = params.require(:income).permit(:amount, :description, :date, :balance_month, :paid, :repetir, :category_id)
     permitted[:amount] = parse_brazilian_amount(permitted[:amount])
     permitted
   end
@@ -115,7 +115,8 @@ class IncomesController < ApplicationController
         amount: income.amount,
         date: income.date + (i + 1).month,
         balance_month: income.balance_month + (i + 1).month,
-        paid: false
+        paid: false,
+        category_id: income.category_id
       )
     end
   end
@@ -136,7 +137,7 @@ class IncomesController < ApplicationController
     @paid_filter = session[:incomes_paid]
     @paid_filter = nil if @paid_filter.blank?
 
-    all_incomes = Income.order(balance_month: :asc, date: :asc)
+    all_incomes = Income.includes(:category).order(balance_month: :asc, date: :asc)
     all_expenses = Expense.order(balance_month: :asc)
 
     @incomes = all_incomes.to_a

@@ -30,12 +30,19 @@
     </div>
 
     <div class="col-md-4">
+      <%= f.label :category_id, t("incomes.form.category") %>
+      <%= f.collection_select :category_id, Category.order(:name), :id, :display_name, { prompt: "Selecione" }, { class: "form-select" } %>
+    </div>
+
+    <div class="col-md-4">
       <%= f.label :date, t("incomes.form.date") %>
       <div class="custom-date-wrapper">
         <%= f.text_field :date, class: "form-control custom-date", autocomplete: "off", placeholder: "Selecione a data" %>
       </div>
     </div>
+  </div>
 
+  <div class="row mb-3 align-items-end">
     <div class="col-md-4">
       <%= f.label :balance_month, t("incomes.form.balance_month") %>
       <div class="custom-date-wrapper">

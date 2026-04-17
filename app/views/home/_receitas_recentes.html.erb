@@ -2,7 +2,7 @@
   <div class="dashboard-card__header">
     <div>
       <p class="dashboard-card__eyebrow">Movimentacoes</p>
-      <h2 class="dashboard-card__title">Receitas recentes</h2>
+      <h2 class="dashboard-card__title">Receitas Recentes</h2>
     </div>
 
     <div class="dashboard-card__pill dashboard-card__pill--success">
@@ -16,7 +16,7 @@
     <% linhas = receitas.size + 1 %>
     <% altura_linha = 100.0 / linhas %>
 
-    <table class="table app-table mb-0" style="height: 100%; table-layout: fixed;">
+    <table class="table app-table app-table--recent-incomes mb-0" style="height: 100%; table-layout: fixed;">
       <thead>
         <tr style="height: <%= altura_linha %>%;">
           <th class="align-middle">Data</th>
@@ -33,7 +33,7 @@
               <%= income.date.strftime("%d/%m/%Y") %>
             </td>
             <td class="text-start align-middle" style="border-bottom: <%= borda %>;">
-              <%= income.description.presence || "Receita" %>
+              <%= [income.category&.emoji, income.description.presence || "Receita"].compact.join(" ") %>
             </td>
             <td class="text-start align-middle text-success" style="border-bottom: <%= borda %>;">
               <%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>

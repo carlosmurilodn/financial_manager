@@ -1,52 +1,69 @@
-<div class="container-fluid">
-  <h1 class="mb-4"><%= image_tag "icons/card.png", alt: "Cartões", class: "me-2", size: "40x40" %>Cartões</h1>
+<section class="app-page">
+  <div class="app-page__hero">
+    <div class="app-page__hero-copy">
+      <span class="app-page__hero-icon">
+        <%= image_tag "icons/card.png", alt: "Cartões", size: "22x22" %>
+      </span>
+      <div>
+        <p class="app-page__eyebrow">Gestão</p>
+        <h1 class="app-page__title">Cartões</h1>
+        <p class="app-page__description">Acompanhe limites, vencimentos e acione rapidamente o fechamento do mês.</p>
+      </div>
+    </div>
 
-  <%= link_to t("buttons.new.masculine", model: t("models.card")),
-      new_card_path,
-      class: "btn btn-success mb-3",
-      data: {turbo_frame: "modal"} %>
+    <div class="app-page__hero-actions">
+      <%= link_to t("buttons.new.masculine", model: t("models.card")),
+          new_card_path,
+          class: "btn app-page__primary-btn",
+          data: { turbo_frame: "modal" } %>
+    </div>
+  </div>
 
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th><%= t("cards.form.name") %></th>
-        <th><%= t("cards.form.number") %></th>
-        <th>Limite Total</th>
-        <th>Limite Restante</th>
-        <th>Dia do Vencimento</th>
-        <th>Melhor Dia de Compra</th>
-        <th><%= t("tables.expenses.actions") %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @cards.each do |card| %>
-        <tr id="<%= dom_id(card) %>">
-          <td>
-            <%= card.icon.attached? ? image_tag(card.icon, width: 20, class: "me-2") : "💳" %>
-            <%= card.name %>
-          </td>
-          <td><%= card.number.present? ? "**** **** **** #{card.number[-4..-1]}" : "" %></td>
-          <td><%= number_to_currency(card.total_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
-          <td><%= number_to_currency(card.remaining_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
-          <td><%= card.due_day %></td>
-          <td><%= card.best_day %></td>
-          <td>
-            <%= link_to t("buttons.edit"),
-                edit_card_path(card),
-                class: "btn btn-sm btn-primary me-1",
-                data: {turbo_frame: "modal"} %>
-            <%= link_to t("buttons.delete"), card,
-                        data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
-                        class: "btn btn-sm btn-danger me-1" %>
-            <%= form_with url: pay_card_path(card), method: :post, data: { turbo_confirm: "Deseja marcar como pagas todas as despesas e parcelas NÃO pagas deste cartão para o mês atual?" }, class: "d-inline" do %>
-              <%= submit_tag "Pagar", class: "btn btn-sm btn-warning" %>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+  <div class="app-panel app-panel--table">
+    <div class="table-responsive">
+      <table class="table app-table app-table--records app-table--index mb-0">
+        <thead>
+          <tr>
+            <th><%= t("cards.form.name") %></th>
+            <th><%= t("cards.form.number") %></th>
+            <th>Limite Total</th>
+            <th>Limite Restante</th>
+            <th>Dia do Vencimento</th>
+            <th>Melhor Dia de Compra</th>
+            <th><%= t("tables.expenses.actions") %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @cards.each do |card| %>
+            <tr id="<%= dom_id(card) %>">
+              <td>
+                <%= card.icon.attached? ? image_tag(card.icon, width: 20, class: "me-2") : "💳" %>
+                <%= card.name %>
+              </td>
+              <td><%= card.number.present? ? "**** **** **** #{card.number[-4..-1]}" : "" %></td>
+              <td><%= number_to_currency(card.total_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
+              <td><%= number_to_currency(card.remaining_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
+              <td><%= card.due_day %></td>
+              <td><%= card.best_day %></td>
+              <td class="app-record-actions">
+                <%= link_to t("buttons.edit"),
+                    edit_card_path(card),
+                    class: "btn btn-sm btn-primary me-1",
+                    data: { turbo_frame: "modal" } %>
+                <%= link_to t("buttons.delete"), card,
+                            data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
+                            class: "btn btn-sm btn-danger me-1" %>
+                <%= form_with url: pay_card_path(card), method: :post, data: { turbo_confirm: "Deseja marcar como pagas todas as despesas e parcelas NÃO pagas deste cartão para o mês atual?" }, class: "d-inline" do %>
+                  <%= submit_tag "Pagar", class: "btn btn-sm btn-warning" %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
 
 <!-- Frame vazio para renderização dinâmica -->
 <turbo-frame id="modal" style="display: none;"></turbo-frame>

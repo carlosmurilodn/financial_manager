@@ -2,35 +2,75 @@
   <div class="dashboard-card__header">
     <div>
       <p class="dashboard-card__eyebrow">Planejamento</p>
-      <h2 class="dashboard-card__title">Previsao financeira anual</h2>
+      <h2 class="dashboard-card__title">Previsao Financeira Anual</h2>
     </div>
 
     <div class="dashboard-card__pill">
       <span class="material-symbols-rounded">query_stats</span>
-      <span>Projecao</span>
+      <span>Projeção</span>
     </div>
   </div>
 
   <div class="dashboard-card__body">
     <turbo-frame id="forecast-table">
-      <div class="dashboard-toolbar">
-        <% prev_year = year - 1 %>
-        <% next_year = year + 1 %>
+      <% prev_year = year - 1 %>
+      <% next_year = year + 1 %>
+      <% current_month = Date.current.year == year ? Date.current.month : nil %>
+      <% highest_balance_month, highest_balance_data = @forecast_data.max_by { |_, data| data[:saldo] } %>
+      <% highest_expense_month, highest_expense_data = @forecast_data.max_by { |_, data| data[:despesas] } %>
+      <% critical_start_month = Date.current.year == year ? Date.current.month : 1 %>
+      <% critical_month, critical_data = @forecast_data.find { |month, data| month >= critical_start_month && data[:saldo] < 0 } %>
 
-        <div class="dashboard-toolbar__actions">
-          <%= link_to "← Ano anterior",
-              root_path(year: prev_year),
-              class: "btn app-btn app-btn--ghost",
-              data: { turbo_frame: "forecast-table", turbo_prefetch: "false" } %>
+      <div class="app-forecast__summary">
+        <div class="app-forecast__summary-card app-forecast__summary-card--positive">
+          <span class="app-forecast__summary-label">Maior Saldo</span>
+          <strong class="app-forecast__summary-value">
+            <%= number_to_currency(highest_balance_data[:saldo], unit: "R$ ", separator: ",", delimiter: ".") %>
+          </strong>
+          <small><%= I18n.l(Date.new(year, highest_balance_month, 1), format: "%B") %></small>
         </div>
 
-        <h5 class="fw-bold mb-0">Previsao financeira - <%= year %></h5>
+        <div class="app-forecast__summary-card app-forecast__summary-card--danger">
+          <span class="app-forecast__summary-label">Maior Despesa</span>
+          <strong class="app-forecast__summary-value">
+            <%= number_to_currency(highest_expense_data[:despesas], unit: "R$ ", separator: ",", delimiter: ".") %>
+          </strong>
+          <small><%= I18n.l(Date.new(year, highest_expense_month, 1), format: "%B") %></small>
+        </div>
+
+        <div class="app-forecast__summary-card app-forecast__summary-card--warning">
+          <span class="app-forecast__summary-label">Próximo Mês Crítico</span>
+          <% if critical_month.present? %>
+            <strong class="app-forecast__summary-value">
+              <%= I18n.l(Date.new(year, critical_month, 1), format: "%B") %>
+            </strong>
+            <small><%= number_to_currency(critical_data[:saldo], unit: "R$ ", separator: ",", delimiter: ".") %></small>
+          <% else %>
+            <strong class="app-forecast__summary-value">Sem alerta</strong>
+            <small>Saldo positivo ao longo do ano</small>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="dashboard-toolbar app-forecast__nav">
+        <div class="dashboard-toolbar__actions">
+          <%= link_to root_path(year: prev_year),
+              class: "btn app-btn app-btn--ghost app-forecast__nav-btn",
+              aria: { label: "Ano anterior" },
+              data: { turbo_frame: "forecast-table", turbo_prefetch: "false" } do %>
+            <span class="material-symbols-rounded">chevron_left</span>
+          <% end %>
+        </div>
+
+        <h5 class="fw-bold mb-0 app-forecast__title">Previsao Financeira - <%= year %></h5>
 
         <div class="dashboard-toolbar__actions">
-          <%= link_to "Próximo ano →",
-              root_path(year: next_year),
-              class: "btn app-btn app-btn--ghost",
-              data: { turbo_frame: "forecast-table", turbo_prefetch: "false" } %>
+          <%= link_to root_path(year: next_year),
+              class: "btn app-btn app-btn--ghost app-forecast__nav-btn",
+              aria: { label: "Próximo ano" },
+              data: { turbo_frame: "forecast-table", turbo_prefetch: "false" } do %>
+            <span class="material-symbols-rounded">chevron_right</span>
+          <% end %>
         </div>
       </div>
 
@@ -47,16 +87,28 @@
           <tbody>
             <% months.each do |month| %>
               <% data = @forecast_data[month] %>
-              <tr>
-                <td><%= I18n.l(Date.new(year, month, 1), format: "%B") %></td>
+              <% row_classes = ["app-forecast__row"] %>
+              <% row_classes << "app-forecast__row--current" if current_month == month %>
+
+              <tr class="<%= row_classes.join(" ") %>">
+                <td class="app-forecast__month">
+                  <span class="app-forecast__month-copy">
+                    <span class="app-forecast__month-label"><%= I18n.l(Date.new(year, month, 1), format: "%B") %></span>
+                    <% if current_month == month %>
+                      <span class="app-forecast__month-badge">Atual</span>
+                    <% end %>
+                  </span>
+                </td>
                 <td class="text-success fw-semibold">
                   <%= number_to_currency(data[:receitas], unit: "R$ ", separator: ",", delimiter: ".") %>
                 </td>
                 <td class="text-danger fw-semibold">
                   <%= number_to_currency(data[:despesas], unit: "R$ ", separator: ",", delimiter: ".") %>
                 </td>
-                <td class="<%= data[:saldo] >= 0 ? 'text-success' : 'text-danger' %> fw-bold">
-                  <%= number_to_currency(data[:saldo], unit: "R$ ", separator: ",", delimiter: ".") %>
+                <td>
+                  <span class="app-forecast__saldo <%= data[:saldo] >= 0 ? 'app-forecast__saldo--positive' : 'app-forecast__saldo--negative' %>">
+                    <%= number_to_currency(data[:saldo], unit: "R$ ", separator: ",", delimiter: ".") %>
+                  </span>
                 </td>
               </tr>
             <% end %>

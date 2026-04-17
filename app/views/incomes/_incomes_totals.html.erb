@@ -2,24 +2,24 @@
   <!-- Saldo do mês anterior -->
   <tr>
     <th colspan="1">Saldo do Mês Anterior</th>
-    <th colspan="5">R$ <%= number_with_precision(@previous_balance || 0, precision: 2, delimiter: ".", separator: ",") %></th>
+    <th colspan="6">R$ <%= number_with_precision(@previous_balance || 0, precision: 2, delimiter: ".", separator: ",") %></th>
   </tr>
 
   <!-- Total Recebido -->
   <tr>
     <th colspan="1">Total Recebido</th>
-    <th colspan="5">R$ <%= number_with_precision(@total_received, precision: 2, delimiter: ".", separator: ",") %></th>
+    <th colspan="6">R$ <%= number_with_precision(@total_received, precision: 2, delimiter: ".", separator: ",") %></th>
   </tr>
 
   <!-- Total Pendente -->
   <tr>
     <th colspan="1">Total Pendente</th>
-    <th colspan="5">R$ <%= number_with_precision(@total_pending, precision: 2, delimiter: ".", separator: ",") %></th>
+    <th colspan="6">R$ <%= number_with_precision(@total_pending, precision: 2, delimiter: ".", separator: ",") %></th>
   </tr>
 
   <!-- Total Geral (incluindo saldo anterior) -->
   <tr>
     <th colspan="1">Saldo Atual</th>
-    <th colspan="5">R$ <%= number_with_precision(@current_balance, precision: 2, delimiter: ".", separator: ",") %></th>
+    <th colspan="6">R$ <%= number_with_precision(@current_balance, precision: 2, delimiter: ".", separator: ",") %></th>
   </tr>
 </tfoot>

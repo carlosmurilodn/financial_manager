@@ -41,12 +41,14 @@
     </div>
   </div>
 
-  <div class="dashboard-block">
-    <%= render "home/calendar" %>
-  </div>
+  <div class="dashboard-grid dashboard-grid--planning">
+    <div class="dashboard-grid__item">
+      <%= render "home/calendar" %>
+    </div>
 
-  <div class="dashboard-block">
-    <%= render "home/forecast_table", year: @year, months: @months %>
+    <div class="dashboard-grid__item">
+      <%= render "home/forecast_table", year: @year, months: @months %>
+    </div>
   </div>
 </section>
 

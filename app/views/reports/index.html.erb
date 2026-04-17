@@ -1,34 +1,28 @@
-<div class="container mt-4">
-  <h1 class="mb-4 fw-bold">Relatórios</h1>
-
-  <div class="row row-cols-1 row-cols-md-5 g-3">
-    <!-- 📊 Previsão Financeira -->
-    <div class="col">
-      <%= link_to forecast_reports_path, class: "text-decoration-none" do %>
-        <div class="card shadow h-100 text-center p-4 hover-shadow">
-          <h5 class="fw-bold text-dark">📊 Previsão Financeira</h5>
-        </div>
-      <% end %>
+<section class="app-page">
+  <div class="app-page__hero">
+    <div class="app-page__hero-copy">
+      <span class="app-page__hero-icon">
+        <span class="material-symbols-rounded">insert_chart</span>
+      </span>
+      <div>
+        <p class="app-page__eyebrow">Análises</p>
+        <h1 class="app-page__title">Relatórios</h1>
+        <p class="app-page__description">Acesse visões analíticas e relatórios estratégicos para acompanhar sua operação financeira.</p>
+      </div>
     </div>
-
-    <!-- 💸 Relatório de Despesas -->
-    <div class="col">
-      <%= link_to report_expenses_path, class: "text-decoration-none" do %>
-        <div class="card shadow h-100 text-center p-4 hover-shadow">
-          <h5 class="fw-bold text-dark">💸 Relatório de Despesas</h5>
-        </div>
-      <% end %>
-    </div>
-
   </div>
-</div>
 
-<style>
-  .hover-shadow {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .hover-shadow:hover {
-    transform: scale(1.03);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  }
-</style>
+  <div class="app-reports-grid">
+    <%= link_to forecast_reports_path, class: "app-report-card text-decoration-none" do %>
+      <span class="app-report-card__icon material-symbols-rounded">query_stats</span>
+      <strong>Previsão Financeira</strong>
+      <small>Projeção anual para acompanhar saldo, receitas e despesas.</small>
+    <% end %>
+
+    <%= link_to report_expenses_path, class: "app-report-card text-decoration-none" do %>
+      <span class="app-report-card__icon material-symbols-rounded">receipt_long</span>
+      <strong>Relatório de Despesas</strong>
+      <small>Consulta detalhada com filtros e exportação em PDF.</small>
+    <% end %>
+  </div>
+</section>

@@ -32,11 +32,18 @@
   </td>
 
   <td class="text-center">
-    <%= link_to (expense.paid? ? "Sim" : "Não"),
-            toggle_paid_expense_path(expense, month: params[:month]),
-            method: :patch,
-            data: { turbo_method: :patch, turbo_stream: true },
-            class: "btn btn-sm btn-secondary" %>
+    <% if expense.payment_method_credito_parcelado? %>
+      <%= link_to (expense.paid? ? "Sim" : "Não"),
+              toggle_paid_options_expense_path(expense, month: params[:month]),
+              class: "btn btn-sm btn-secondary",
+              data: { turbo_frame: "modal" } %>
+    <% else %>
+      <%= link_to (expense.paid? ? "Sim" : "Não"),
+              toggle_paid_expense_path(expense, month: params[:month]),
+              method: :patch,
+              data: { turbo_method: :patch, turbo_stream: true },
+              class: "btn btn-sm btn-secondary" %>
+    <% end %>
   </td>
 
   <td class="text-center">
@@ -45,9 +52,16 @@
                 class: "btn btn-sm btn-primary",
                 data: { turbo_frame: "modal" } %>
 
-    <%= link_to t("buttons.delete"),
-                expense_path(expense),
-                data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
-                class: "btn btn-sm btn-danger" %>
+    <% if expense.payment_method_credito_parcelado? %>
+      <%= link_to t("buttons.delete"),
+                  delete_options_expense_path(expense),
+                  class: "btn btn-sm btn-danger",
+                  data: { turbo_frame: "modal" } %>
+    <% else %>
+      <%= link_to t("buttons.delete"),
+                  expense_path(expense),
+                  data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
+                  class: "btn btn-sm btn-danger" %>
+    <% end %>
   </td>
 </tr>

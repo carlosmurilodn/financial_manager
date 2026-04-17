@@ -14,8 +14,8 @@
     <div class="col-md-4">
       <%= f.label :amount, t("expenses.form.amount") %>
       <div class="d-flex align-items-center gap-2">
-        <%= f.text_field :amount, 
-          class: "form-control moeda flex-grow-1", 
+        <%= f.text_field :amount,
+          class: "form-control moeda flex-grow-1",
           value: (expense.amount.present? ? number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) : "R$ 0,00")
         %>
         <div class="form-check mb-0">
@@ -48,7 +48,7 @@
 
     <div class="col-md-4">
       <%= f.label :payment_method, t("expenses.form.payment_method") %>
-      <%= f.select :payment_method, Expense.payment_method_names.map { |k,v| [v,k] },
+      <%= f.select :payment_method, Expense.payment_method_names.map { |k, v| [v, k] },
         { prompt: "Selecione" },
         { class: "form-select", id: "payment_method_select" } %>
     </div>
@@ -73,7 +73,20 @@
     </div>
   </div>
 
+  <% if expense.persisted? && expense.payment_method_credito_parcelado? %>
+    <div class="alert alert-info" role="alert">
+      Escolha abaixo se deseja atualizar apenas esta parcela ou aplicar as alterações desta parcela em diante.
+    </div>
+  <% end %>
+
   <div class="mb-3">
-    <%= f.submit t("expenses.form.submit"), class: "btn btn-primary" %>
+    <% if expense.persisted? && expense.payment_method_credito_parcelado? %>
+      <div class="d-flex gap-2 flex-wrap">
+        <%= f.submit "Atualizar só esta parcela", name: "update_scope", value: "single", class: "btn btn-primary" %>
+        <%= f.submit "Atualizar esta e próximas", name: "update_scope", value: "group", class: "btn btn-outline-primary" %>
+      </div>
+    <% else %>
+      <%= f.submit t("expenses.form.submit"), class: "btn btn-primary" %>
+    <% end %>
   </div>
 <% end %>

@@ -1,5 +1,5 @@
 class ExpensesController < ApplicationController
-  before_action :set_expense, only: %i[show edit update destroy toggle_paid]
+  before_action :set_expense, only: %i[show edit update destroy toggle_paid delete_options toggle_paid_options]
 
   def index
     load_expenses
@@ -11,6 +11,9 @@ class ExpensesController < ApplicationController
 
   def show; end
   def new; @expense = Expense.new; end
+  def edit; end
+  def delete_options; end
+  def toggle_paid_options; end
 
   def create
     @expense = Expense.new(expense_params)
@@ -34,13 +37,11 @@ class ExpensesController < ApplicationController
     end
   end
 
-  def edit; end
-
   def update
     @expense.amount = parse_brazilian_amount(params[:expense][:amount], blank: 0)
     assign_expense_dates
 
-    if @expense.update(expense_params.except(:amount))
+    if update_expense_and_group
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace("modal", "")
@@ -59,7 +60,7 @@ class ExpensesController < ApplicationController
   end
 
   def destroy
-    @expense.destroy
+    destroy_expense_with_scope
     load_expenses
 
     respond_to do |format|
@@ -69,13 +70,13 @@ class ExpensesController < ApplicationController
   end
 
   def toggle_paid
-    @expense.update(paid: !@expense.paid)
+    toggle_paid_with_scope
     load_expenses
 
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: [
-          turbo_stream.replace("expense_#{@expense.id}", partial: "expense_row", locals: { expense: @expense }),
+          turbo_stream.replace("expense_#{@expense.id}", partial: "expense_row", locals: { expense: @expense.reload }),
           turbo_stream.replace("expenses-totals", partial: "expenses_totals")
         ]
       end
@@ -137,6 +138,43 @@ class ExpensesController < ApplicationController
   def assign_expense_dates
     @expense.date = parse_brazilian_date(expense_params[:date])
     @expense.balance_month = parse_brazilian_date(expense_params[:balance_month])
+  end
+
+  def update_expense_and_group
+    Expense.transaction do
+      @expense.assign_attributes(expense_params.except(:amount, :date, :balance_month))
+      @expense.save!
+      @expense.sync_future_group_expenses! if apply_to_group?
+    end
+
+    true
+  rescue ActiveRecord::RecordInvalid => error
+    @expense = error.record if error.record.is_a?(Expense) && error.record.id == @expense.id
+    false
+  end
+
+  def apply_to_group?
+    params[:update_scope] == "group"
+  end
+
+  def destroy_expense_with_scope
+    Expense.transaction do
+      if params[:delete_scope] == "group"
+        @expense.destroy_from_current_onward!
+      else
+        @expense.destroy!
+      end
+    end
+  end
+
+  def toggle_paid_with_scope
+    Expense.transaction do
+      if params[:paid_scope] == "group"
+        @expense.toggle_paid_from_current_onward!
+      else
+        @expense.update!(paid: !@expense.paid)
+      end
+    end
   end
 
   def load_expenses

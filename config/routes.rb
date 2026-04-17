@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   resources :expenses do
     member do
+      get :delete_options
+      get :toggle_paid_options
       patch :toggle_paid
     end
     collection do

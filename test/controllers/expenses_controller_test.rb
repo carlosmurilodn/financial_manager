@@ -104,11 +104,192 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
         installments_count: future_expense.installments_count,
         current_installment: future_expense.current_installment,
         paid: true
-      }
+      },
+      update_scope: "single"
     }
 
     assert_redirected_to expenses_url
     assert_equal 200, future_expense.reload.amount.to_f
     assert_predicate future_expense, :paid?
+  end
+
+  test "updating a parcel with group scope propagates shared fields to future parcels" do
+    root = Expense.create!(
+      amount: 120,
+      date: Date.new(2026, 4, 16),
+      balance_month: Date.new(2026, 4, 1),
+      description: "Curso",
+      category: @category,
+      card: @card,
+      payment_method: :credito_parcelado,
+      installments_count: 3,
+      current_installment: 1,
+      paid: false
+    )
+
+    future_expense = Expense.find_by!(installment_group_id: root.id, current_installment: 2)
+
+    patch expense_url(root), params: {
+      expense: {
+        amount: "200,00",
+        description: "Curso Atualizado",
+        date: "20/04/2026",
+        balance_month: "01/04/2026",
+        category_id: root.category_id,
+        card_id: root.card_id,
+        payment_method: root.payment_method,
+        installments_count: root.installments_count,
+        current_installment: root.current_installment,
+        paid: true
+      },
+      update_scope: "group"
+    }
+
+    assert_redirected_to expenses_url
+    assert_equal "Curso Atualizado", future_expense.reload.description
+    assert_equal 200, future_expense.amount.to_f
+    assert_equal Date.new(2026, 5, 20), future_expense.date
+    assert_equal Date.new(2026, 5, 1), future_expense.balance_month
+    assert_not future_expense.paid?
+  end
+
+  test "updating the first parcel with single scope does not change future parcels" do
+    root = Expense.create!(
+      amount: 120,
+      date: Date.new(2026, 4, 16),
+      balance_month: Date.new(2026, 4, 1),
+      description: "Curso",
+      category: @category,
+      card: @card,
+      payment_method: :credito_parcelado,
+      installments_count: 3,
+      current_installment: 1,
+      paid: false
+    )
+
+    future_expense = Expense.find_by!(installment_group_id: root.id, current_installment: 2)
+
+    patch expense_url(root), params: {
+      expense: {
+        amount: "210,00",
+        description: "Curso Raiz",
+        date: "25/04/2026",
+        balance_month: "01/04/2026",
+        category_id: root.category_id,
+        card_id: root.card_id,
+        payment_method: root.payment_method,
+        installments_count: root.installments_count,
+        current_installment: root.current_installment,
+        paid: true
+      },
+      update_scope: "single"
+    }
+
+    assert_redirected_to expenses_url
+    assert_equal "Curso", future_expense.reload.description
+    assert_equal 120, future_expense.amount.to_f
+    assert_equal Date.new(2026, 5, 16), future_expense.date
+  end
+
+  test "destroying a parcel with single scope removes only that parcel" do
+    root = Expense.create!(
+      amount: 120,
+      date: Date.new(2026, 4, 16),
+      balance_month: Date.new(2026, 4, 1),
+      description: "Curso",
+      category: @category,
+      card: @card,
+      payment_method: :credito_parcelado,
+      installments_count: 3,
+      current_installment: 1,
+      paid: false
+    )
+
+    future_expense = Expense.find_by!(installment_group_id: root.id, current_installment: 2)
+    last_expense = Expense.find_by!(installment_group_id: root.id, current_installment: 3)
+
+    assert_difference("Expense.count", -1) do
+      delete expense_url(future_expense), params: { delete_scope: "single" }
+    end
+
+    assert_redirected_to expenses_url
+    assert_predicate root.reload, :persisted?
+    assert_raises(ActiveRecord::RecordNotFound) { future_expense.reload }
+    assert_predicate last_expense.reload, :persisted?
+  end
+
+  test "destroying a parcel with group scope removes that parcel and the next ones" do
+    root = Expense.create!(
+      amount: 120,
+      date: Date.new(2026, 4, 16),
+      balance_month: Date.new(2026, 4, 1),
+      description: "Curso",
+      category: @category,
+      card: @card,
+      payment_method: :credito_parcelado,
+      installments_count: 4,
+      current_installment: 1,
+      paid: false
+    )
+
+    second_expense = Expense.find_by!(installment_group_id: root.id, current_installment: 2)
+
+    assert_difference("Expense.count", -3) do
+      delete expense_url(second_expense), params: { delete_scope: "group" }
+    end
+
+    assert_redirected_to expenses_url
+    assert_predicate root.reload, :persisted?
+    assert_equal [1], Expense.where(installment_group_id: root.id).pluck(:current_installment)
+  end
+
+  test "toggling paid with single scope updates only the selected parcel" do
+    root = Expense.create!(
+      amount: 120,
+      date: Date.new(2026, 4, 16),
+      balance_month: Date.new(2026, 4, 1),
+      description: "Curso",
+      category: @category,
+      card: @card,
+      payment_method: :credito_parcelado,
+      installments_count: 3,
+      current_installment: 1,
+      paid: false
+    )
+
+    future_expense = Expense.find_by!(installment_group_id: root.id, current_installment: 2)
+    last_expense = Expense.find_by!(installment_group_id: root.id, current_installment: 3)
+
+    patch toggle_paid_expense_url(future_expense), params: { paid_scope: "single" }
+
+    assert_redirected_to expenses_url
+    assert_predicate future_expense.reload, :paid?
+    assert_not root.reload.paid?
+    assert_not last_expense.reload.paid?
+  end
+
+  test "toggling paid with group scope updates the selected parcel and the next ones" do
+    root = Expense.create!(
+      amount: 120,
+      date: Date.new(2026, 4, 16),
+      balance_month: Date.new(2026, 4, 1),
+      description: "Curso",
+      category: @category,
+      card: @card,
+      payment_method: :credito_parcelado,
+      installments_count: 4,
+      current_installment: 1,
+      paid: false
+    )
+
+    second_expense = Expense.find_by!(installment_group_id: root.id, current_installment: 2)
+    last_expense = Expense.find_by!(installment_group_id: root.id, current_installment: 4)
+
+    patch toggle_paid_expense_url(second_expense), params: { paid_scope: "group" }
+
+    assert_redirected_to expenses_url
+    assert_not root.reload.paid?
+    assert_predicate second_expense.reload, :paid?
+    assert_predicate last_expense.reload, :paid?
   end
 end

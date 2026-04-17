@@ -1,54 +1,53 @@
-<!-- Cards KPIs -->
-<div class="row">
-  <div class="col-md-3 row_element">
-    <div class="card text-center shadow card-small">
-      <div class="card-body">
-        <h6 class="card-title text-muted">Saldo Atual</h6>
-        <h4 class="text-success">
-          <%= number_to_currency(@saldo_atual, unit: "R$ ", separator: ",", delimiter: ".") %>
-        </h4>
-      </div>
+<div class="kpi-grid">
+  <div class="stat-card stat-card--success">
+    <div class="stat-card__icon">
+      <span class="material-symbols-rounded">account_balance_wallet</span>
+    </div>
+    <div>
+      <span class="stat-card__label">Saldo Atual</span>
+      <strong class="stat-card__value">
+        <%= number_to_currency(@saldo_atual, unit: "R$ ", separator: ",", delimiter: ".") %>
+      </strong>
+      <small class="stat-card__meta">Panorama consolidado das contas</small>
     </div>
   </div>
 
-  <div class="col-md-3 row_element">
-    <div class="card text-center shadow card-small">
-      <div class="card-body">
-        <h6 class="card-title text-muted">Receitas de <%= I18n.l(Date.current, format: "%B") %></h6>
-        <h4 class="text-primary">
-          <%= number_to_currency(@receitas_mes, unit: "R$ ", separator: ",", delimiter: ".") %>
-        </h4>
-      </div>
+  <div class="stat-card stat-card--primary">
+    <div class="stat-card__icon">
+      <span class="material-symbols-rounded">trending_up</span>
+    </div>
+    <div>
+      <span class="stat-card__label">Receitas de <%= I18n.l(Date.current, format: "%B") %></span>
+      <strong class="stat-card__value">
+        <%= number_to_currency(@receitas_mes, unit: "R$ ", separator: ",", delimiter: ".") %>
+      </strong>
+      <small class="stat-card__meta">Entradas registradas no mes</small>
     </div>
   </div>
 
-  <div class="col-md-3 row_element">
-    <div class="card text-center shadow card-small">
-      <div class="card-body">
-        <h6 class="card-title text-muted">Despesas de <%= I18n.l(Date.current, format: "%B") %></h6>
-        <h4 class="text-danger">
-          <%= number_to_currency(@despesas_mes, unit: "R$ ", separator: ",", delimiter: ".") %>
-        </h4>
-      </div>
+  <div class="stat-card stat-card--danger">
+    <div class="stat-card__icon">
+      <span class="material-symbols-rounded">trending_down</span>
+    </div>
+    <div>
+      <span class="stat-card__label">Despesas de <%= I18n.l(Date.current, format: "%B") %></span>
+      <strong class="stat-card__value">
+        <%= number_to_currency(@despesas_mes, unit: "R$ ", separator: ",", delimiter: ".") %>
+      </strong>
+      <small class="stat-card__meta">Saidas acumuladas no mes</small>
     </div>
   </div>
 
-  <div class="col-md-3 row_element">
-    <div class="card text-center shadow card-small">
-      <div class="card-body">
-        <h6 class="card-title text-muted">Saldo Líquido</h6>
-        <h4 class="text-warning">
-          <%= number_to_currency(@saldo_liquido, unit: "R$ ", separator: ",", delimiter: ".") %>
-        </h4>
-      </div>
+  <div class="stat-card stat-card--warning">
+    <div class="stat-card__icon">
+      <span class="material-symbols-rounded">finance</span>
+    </div>
+    <div>
+      <span class="stat-card__label">Saldo Liquido</span>
+      <strong class="stat-card__value">
+        <%= number_to_currency(@saldo_liquido, unit: "R$ ", separator: ",", delimiter: ".") %>
+      </strong>
+      <small class="stat-card__meta">Diferenca entre entradas e saidas</small>
     </div>
   </div>
 </div>
-
-
-<style>
-  .row_element{
-    padding-left: 4px !important;
-    padding-right: 4px !important;
-  }
-</style>

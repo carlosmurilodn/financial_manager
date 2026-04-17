@@ -1,78 +1,80 @@
-<div class="row">
-  <div class="col-12">
-    <div class="card shadow">
-      <div class="card-body">
-        
-        <turbo-frame id="calendar">
-          
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <% # Botão Mês anterior %>
-            <%= link_to "← Mês anterior",
-                root_path(month: @month - 1 == 0 ? 12 : @month - 1,
-                          year: @month - 1 == 0 ? @year - 1 : @year),
-                class: "btn btn-warning btn-lg",
-                data: { turbo_frame: "calendar", turbo_prefetch: "false" } %> <%# <-- Adicionado data-turbo-frame %>
-
-            <h4 class="mb-0 fw-bold text-capitalize">
-              <%= I18n.l(Date.new(@year, @month, 1), format: "%B de %Y") %>
-            </h4>
-
-            <% # Botão Próximo mês %>
-            <%= link_to "Próximo mês →",
-                root_path(month: @month + 1 == 13 ? 1 : @month + 1,
-                          year: @month + 1 == 13 ? @year + 1 : @year),
-                class: "btn btn-warning btn-lg",
-                data: { turbo_frame: "calendar", turbo_prefetch: "false" } %> <%# <-- Adicionado data-turbo-frame %>
-          </div>
-
-          <div class="table-responsive">
-            <table class="table table-bordered text-center align-middle shadow-sm">
-              <thead class="table-secondary">
-                <tr>
-                  <th>Dom</th>
-                  <th>Seg</th>
-                  <th>Ter</th>
-                  <th>Qua</th>
-                  <th>Qui</th>
-                  <th>Sex</th>
-                  <th>Sáb</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @calendar_weeks.each do |week| %>
-                  <tr>
-                    <% week.each do |date| %>
-                      <% if date.nil? || date.month != @month %>
-                        <td class="bg-light text-muted"></td>
-                      <% else %>
-                        <% daily_items = @daily_expenses[date] || [] %>
-                        <% day_class = date.wday == 0 ? "text-danger" : "" %>
-
-                        <td style="vertical-align: top; min-width: 150px;">
-                          <div class="fw-bold mb-1 fs-5 <%= day_class %>"><%= date.day %></div>
-
-                          <% daily_items.each do |item| %>
-                            <div class="mt-1 p-1 rounded text-white small" style="background-color: #FF6B6B;">
-                              <%= item[:category_emoji] %> <%= item[:description].presence || "Sem descrição" %><br>
-                              <strong><%= number_to_currency(item[:amount], unit: "R$ ", separator: ",", delimiter: ".") %></strong>
-                            </div>
-                          <% end %>
-
-                          <% if daily_items.empty? %>
-                            <span class="text-muted small"></span>
-                          <% end %>
-                        </td>
-                      <% end %>
-                    <% end %>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
-          </div>
-
-        </turbo-frame> <%# <--- FIM DO TURBO FRAME %>
-
-      </div>
+<div class="dashboard-card">
+  <div class="dashboard-card__header">
+    <div>
+      <p class="dashboard-card__eyebrow">Agenda</p>
+      <h2 class="dashboard-card__title">Calendario financeiro</h2>
     </div>
+
+    <div class="dashboard-card__pill">
+      <span class="material-symbols-rounded">calendar_month</span>
+      <span>Visao mensal</span>
+    </div>
+  </div>
+
+  <div class="dashboard-card__body">
+    <turbo-frame id="calendar">
+      <div class="dashboard-toolbar">
+        <div class="dashboard-toolbar__actions">
+          <%= link_to "← Mês anterior",
+              root_path(month: @month - 1 == 0 ? 12 : @month - 1,
+                        year: @month - 1 == 0 ? @year - 1 : @year),
+              class: "btn app-btn app-btn--ghost",
+              data: { turbo_frame: "calendar", turbo_prefetch: "false" } %>
+        </div>
+
+        <h4 class="mb-0 fw-bold text-capitalize">
+          <%= I18n.l(Date.new(@year, @month, 1), format: "%B de %Y") %>
+        </h4>
+
+        <div class="dashboard-toolbar__actions">
+          <%= link_to "Próximo mês →",
+              root_path(month: @month + 1 == 13 ? 1 : @month + 1,
+                        year: @month + 1 == 13 ? @year + 1 : @year),
+              class: "btn app-btn app-btn--ghost",
+              data: { turbo_frame: "calendar", turbo_prefetch: "false" } %>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table app-calendar-table align-middle">
+          <thead>
+            <tr>
+              <th>Dom</th>
+              <th>Seg</th>
+              <th>Ter</th>
+              <th>Qua</th>
+              <th>Qui</th>
+              <th>Sex</th>
+              <th>Sab</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @calendar_weeks.each do |week| %>
+              <tr>
+                <% week.each do |date| %>
+                  <% if date.nil? || date.month != @month %>
+                    <td class="app-calendar-table__empty"></td>
+                  <% else %>
+                    <% daily_items = @daily_expenses[date] || [] %>
+                    <% day_class = date.wday == 0 ? "text-danger" : "" %>
+
+                    <td class="app-calendar-table__day">
+                      <div class="app-calendar-table__date <%= day_class %>"><%= date.day %></div>
+
+                      <% daily_items.each do |item| %>
+                        <div class="app-calendar-event">
+                          <span><%= item[:category_emoji] %> <%= item[:description].presence || "Sem descrição" %></span>
+                          <strong><%= number_to_currency(item[:amount], unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+                        </div>
+                      <% end %>
+                    </td>
+                  <% end %>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </turbo-frame>
   </div>
 </div>

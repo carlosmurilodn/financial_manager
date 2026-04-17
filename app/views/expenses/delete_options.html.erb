@@ -3,7 +3,7 @@
     <div>
       <h5 class="modal-title">
         <%= image_tag "icons/expense.png", size: "30x30", class: "me-2" %>
-        Editar Despesa
+        Excluir Despesa
       </h5>
       <% if @expense.payment_method_credito_parcelado? %>
         <div class="text-muted small mt-1">
@@ -17,6 +17,18 @@
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
   </div>
   <div class="modal-body p-3">
-    <%= render "form", expense: @expense %>
+    <p class="mb-3">Escolha como deseja excluir esta despesa parcelada.</p>
+
+    <div class="d-flex gap-2 flex-wrap">
+      <%= link_to "Excluir só esta parcela",
+                  expense_path(@expense, delete_scope: "single"),
+                  class: "btn btn-danger",
+                  data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" } %>
+
+      <%= link_to "Excluir esta e próximas",
+                  expense_path(@expense, delete_scope: "group"),
+                  class: "btn btn-outline-danger",
+                  data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" } %>
+    </div>
   </div>
 </turbo-frame>

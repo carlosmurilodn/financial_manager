@@ -1,0 +1,35 @@
+<turbo-frame id="modal">
+  <div class="modal-header">
+    <div>
+      <h5 class="modal-title">
+        <%= image_tag "icons/expense.png", size: "30x30", class: "me-2" %>
+        <%= @expense.paid? ? "Desmarcar pagamento" : "Marcar como paga" %>
+      </h5>
+      <div class="text-muted small mt-1">
+        Parcela <%= @expense.current_installment %>/<%= @expense.installments_count %>
+        <% if @expense.installment_group_id.present? %>
+          • Grupo #<%= @expense.installment_group_id %>
+        <% end %>
+      </div>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+  </div>
+  <div class="modal-body p-3">
+    <p class="mb-3">
+      Escolha se deseja <%= @expense.paid? ? "desmarcar" : "marcar" %> apenas esta parcela
+      ou aplicar a alteração desta parcela em diante.
+    </p>
+
+    <div class="d-flex gap-2 flex-wrap">
+      <%= link_to "#{@expense.paid? ? 'Desmarcar' : 'Marcar'} só esta parcela",
+                  toggle_paid_expense_path(@expense, paid_scope: "single"),
+                  class: "btn btn-secondary",
+                  data: { turbo_method: :patch, turbo_stream: true } %>
+
+      <%= link_to "#{@expense.paid? ? 'Desmarcar' : 'Marcar'} esta e próximas",
+                  toggle_paid_expense_path(@expense, paid_scope: "group"),
+                  class: "btn btn-outline-secondary",
+                  data: { turbo_method: :patch, turbo_stream: true } %>
+    </div>
+  </div>
+</turbo-frame>

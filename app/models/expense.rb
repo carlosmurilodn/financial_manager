@@ -34,6 +34,47 @@ class Expense < ApplicationRecord
     "#{current_installment}/#{installments_count}"
   end
 
+  def parcelled_group_root?
+    payment_method_credito_parcelado? && installment_group_id.present? && installment_group_id == id
+  end
+
+  def sync_future_group_expenses!
+    return unless payment_method_credito_parcelado? && installment_group_id.present?
+
+    future_group_expenses.find_each do |expense|
+      month_offset = expense.current_installment - current_installment
+
+      expense.update!(
+        description: description,
+        amount: amount,
+        category: category,
+        card: card,
+        payment_method: payment_method,
+        installments_count: installments_count,
+        date: date >> month_offset,
+        balance_month: balance_month >> month_offset
+      )
+    end
+  end
+
+  def destroy_from_current_onward!
+    return destroy! unless payment_method_credito_parcelado? && installment_group_id.present?
+
+    self.class.where(installment_group_id: installment_group_id)
+              .where("current_installment >= ?", current_installment)
+              .destroy_all
+  end
+
+  def toggle_paid_from_current_onward!
+    return update!(paid: !paid) unless payment_method_credito_parcelado? && installment_group_id.present?
+
+    target_paid = !paid
+
+    self.class.where(installment_group_id: installment_group_id)
+              .where("current_installment >= ?", current_installment)
+              .update_all(paid: target_paid)
+  end
+
   def self.payment_method_names
     {
       "credito_a_vista" => "Crédito à Vista",
@@ -45,6 +86,12 @@ class Expense < ApplicationRecord
   end
 
   private
+
+  def future_group_expenses
+    self.class.where(installment_group_id: installment_group_id)
+              .where.not(id: id)
+              .where("current_installment > ?", current_installment)
+  end
 
   def generate_future_installment_expenses
     update_column(:installment_group_id, id)

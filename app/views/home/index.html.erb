@@ -1,48 +1,53 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-12 mb-1 mt-1 row_element">
-      <%= render "home/kpis" %>
+<section class="dashboard-page">
+  <div class="dashboard-hero">
+    <div>
+      <p class="dashboard-eyebrow">Painel financeiro</p>
+      <h1>Uma visao mais clara do seu dinheiro</h1>
+      <p class="dashboard-description">
+        Acompanhe saldo, receitas, despesas e previsoes em um layout mais moderno, leve e facil de ler.
+      </p>
+    </div>
+
+    <div class="dashboard-hero__badge">
+      <span class="material-symbols-rounded">monitoring</span>
+      <div>
+        <strong><%= I18n.l(Date.current, format: "%B de %Y") %></strong>
+        <small>Atualizado com os dados do periodo atual</small>
+      </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-lg-6 mb-1 mt-1 row_element">
+  <div class="dashboard-block">
+    <%= render "home/kpis" %>
+  </div>
+
+  <div class="dashboard-grid dashboard-grid--charts">
+    <div class="dashboard-grid__item dashboard-grid__item--wide">
       <%= render "home/despesas_por_categoria" %>
     </div>
-    <div class="col-lg-6 mb-1 mt-1 row_element">
+
+    <div class="dashboard-grid__item">
       <%= render "home/saldo_por_cartao" %>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-lg-6 mb-1 mt-1 row_element">
+  <div class="dashboard-grid">
+    <div class="dashboard-grid__item">
       <%= render "home/receitas_recentes" %>
     </div>
-    <div class="col-lg-6 mb-1 mt-1 row_element">
+
+    <div class="dashboard-grid__item">
       <%= render "home/despesas_recentes" %>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-lg-12 mb-1 mt-1 row_element">
-      <%= render "home/calendar" %>
-    </div>
+  <div class="dashboard-block">
+    <%= render "home/calendar" %>
   </div>
 
-  <div class="row">
-    <div class="col-lg-12 mb-1 mt-1 row_element">
-      <%= render "home/forecast_table", year: @year, months: @months %>
-    </div>
+  <div class="dashboard-block">
+    <%= render "home/forecast_table", year: @year, months: @months %>
   </div>
-
-</div>
+</section>
 
 <%= render "home/scripts" %>
-
-<style>
-  .row_element{
-    padding-left: 4px !important;
-    padding-right: 4px !important;
-  }
-</style>
-

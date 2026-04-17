@@ -1,7 +1,17 @@
-<!-- Gráfico de Barras Horizontal -->
-<div class="card shadow" style="height: 800px;">
-  <div class="card-body" style="height: 780px;">
-    <h5 class="card-title text-center">Despesas por Categoria (<%= I18n.l(Date.current, format: "%B") %>)</h5>
+<div class="dashboard-card dashboard-card--chart dashboard-card--mint">
+  <div class="dashboard-card__header">
+    <div>
+      <p class="dashboard-card__eyebrow">Analise mensal</p>
+      <h2 class="dashboard-card__title">Despesas por categoria</h2>
+    </div>
+
+    <div class="dashboard-card__pill">
+      <span class="material-symbols-rounded">pie_chart</span>
+      <span><%= I18n.l(Date.current, format: "%B") %></span>
+    </div>
+  </div>
+
+  <div class="dashboard-card__body dashboard-card__body--canvas">
     <canvas id="despesasChart"></canvas>
   </div>
 </div>

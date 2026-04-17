@@ -1,7 +1,6 @@
 class Expense < ApplicationRecord
   belongs_to :category
   belongs_to :card, optional: true
-  has_many :installments, dependent: :destroy
 
   enum :payment_method, {
     pix: 0,
@@ -15,38 +14,25 @@ class Expense < ApplicationRecord
   validates :date, :balance_month, :category_id, :payment_method, presence: true
   validates :card_id, presence: true, if: -> { payment_method_credito_a_vista? || payment_method_credito_parcelado? }
   validates :description, presence: true
+  validates :installments_count,
+            :current_installment,
+            presence: true,
+            numericality: { only_integer: true, greater_than: 0 },
+            if: :payment_method_credito_parcelado?
+  validate :current_installment_cannot_exceed_total_installments
 
-  # Campos do parcelamento
-  # attr_accessor :installments_count, :current_installment, :is_parent
-
-  after_create :generate_future_installments, if: -> { payment_method_credito_parcelado? && is_parent }
+  after_create :generate_future_installment_expenses, if: :should_generate_future_installment_expenses?
 
   attr_accessor :repetir
 
   before_validation :set_default_repetir, unless: -> { repetir.present? }
+  before_validation :set_default_installment_values
 
-  # Gera as parcelas futuras a partir da parcela atual
-  def generate_future_installments
-    return unless installments_count.present? && current_installment.present?
+  def installment_label
+    return "Unica" unless payment_method_credito_parcelado?
 
-    remaining = installments_count.to_i - current_installment.to_i
-    return if remaining <= 0
-
-    remaining.times do |i|
-      number = current_installment.to_i + i + 1
-      due = date >> (i + 1) # adiciona i+1 meses à data da parcela atual
-      next_balance_month = balance_month.to_date >> (i + 1)
-
-      installments.create!(
-        number: number,
-        amount: amount,
-        due_date: due,
-        paid: false,
-        balance_month: next_balance_month
-      )
-    end
+    "#{current_installment}/#{installments_count}"
   end
-
 
   def self.payment_method_names
     {
@@ -60,7 +46,49 @@ class Expense < ApplicationRecord
 
   private
 
+  def generate_future_installment_expenses
+    update_column(:installment_group_id, id)
+
+    remaining = installments_count.to_i - current_installment.to_i
+
+    remaining.times do |i|
+      next_installment = current_installment.to_i + i + 1
+
+      self.class.create!(
+        installment_group_id: id,
+        description: description,
+        category: category,
+        card: card,
+        payment_method: payment_method,
+        amount: amount,
+        date: date >> (i + 1),
+        balance_month: balance_month.to_date >> (i + 1),
+        installments_count: installments_count,
+        current_installment: next_installment,
+        paid: false,
+        repetir: 0
+      )
+    end
+  end
+
   def set_default_repetir
     self.repetir = 0 if repetir.blank?
+  end
+
+  def set_default_installment_values
+    self.installments_count = 1 if installments_count.blank?
+    self.current_installment = 1 if current_installment.blank?
+  end
+
+  def should_generate_future_installment_expenses?
+    payment_method_credito_parcelado? && installment_group_id.blank?
+  end
+
+  def current_installment_cannot_exceed_total_installments
+    return unless payment_method_credito_parcelado?
+    return if current_installment.blank? || installments_count.blank?
+    return unless current_installment.to_i > installments_count.to_i
+
+    errors.add(:current_installment, "não pode ser maior que o total de parcelas")
   end
 end

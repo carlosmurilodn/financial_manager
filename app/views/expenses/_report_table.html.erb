@@ -19,39 +19,34 @@
   <tbody>
     <% @expenses.each do |expense| %>
       <tr style="background-color: <%= expense.paid? ? '#d4edda' : '#fff3cd' %>;">
-        <td><%= expense.is_a?(Installment) ? expense.expense.description : expense.description %></td>
+        <td><%= expense.description %></td>
         <td>
-          <% if expense.is_a?(Installment) %>
-            <%= "#{expense.number}/#{expense.expense.installments_count || expense.expense.installments.size}" %>
-          <% elsif expense.payment_method_credito_parcelado? && expense.is_parent %>
+          <% if expense.payment_method_credito_parcelado? %>
             <%= "#{expense.current_installment}/#{expense.installments_count}" %>
           <% else %>
             Única
           <% end %>
         </td>
         <td>R$ <%= number_with_precision(expense.amount, precision: 2, delimiter: ".") %></td>
-        <td><%= expense.is_a?(Installment) ? expense.due_date.strftime("%d/%m/%Y") : expense.date.strftime("%d/%m/%Y") %></td>
-        <td>
-          <% balance_date = expense.is_a?(Installment) ? expense.read_attribute(:balance_month) : expense.balance_month %>
-          <%= balance_date.strftime("%m/%Y") if balance_date.present? %>
-        </td>
-        <td><%= expense.is_a?(Installment) ? expense.expense.category.display_name : expense.category.display_name %></td>
-        <td><%= expense.is_a?(Installment) ? expense.expense.payment_method.titleize : expense.payment_method.titleize %></td>
-        <td><%= expense.is_a?(Installment) ? expense.expense.card&.name : expense.card&.name %></td>
+        <td><%= expense.date.strftime("%d/%m/%Y") %></td>
+        <td><%= expense.balance_month.strftime("%m/%Y") if expense.balance_month.present? %></td>
+        <td><%= expense.category.display_name %></td>
+        <td><%= expense.payment_method.titleize %></td>
+        <td><%= expense.card&.name %></td>
         <td><%= expense.paid? ? "Sim" : "Não" %></td>
       </tr>
     <% end %>
   </tbody>
-    <tr>
-      <th colspan="6" style="text-align: right;">Total Pago</th>
-      <th colspan="3">R$ <%= number_with_precision(@total_paid, precision: 2, delimiter: ".") %></th>
-    </tr>
-    <tr>
-      <th colspan="6" style="text-align: right;">Total a Pagar</th>
-      <th colspan="3">R$ <%= number_with_precision(@total_unpaid, precision: 2, delimiter: ".") %></th>
-    </tr>
-    <tr>
-      <th colspan="6" style="text-align: right;">Saldo Líquido</th>
-      <th colspan="3">R$ <%= number_with_precision(@net_balance, precision: 2, delimiter: ".") %></th>
-    </tr>
+  <tr>
+    <th colspan="6" style="text-align: right;">Total Pago</th>
+    <th colspan="3">R$ <%= number_with_precision(@total_paid, precision: 2, delimiter: ".") %></th>
+  </tr>
+  <tr>
+    <th colspan="6" style="text-align: right;">Total a Pagar</th>
+    <th colspan="3">R$ <%= number_with_precision(@total_unpaid, precision: 2, delimiter: ".") %></th>
+  </tr>
+  <tr>
+    <th colspan="6" style="text-align: right;">Saldo Líquido</th>
+    <th colspan="3">R$ <%= number_with_precision(@net_balance, precision: 2, delimiter: ".") %></th>
+  </tr>
 </table>

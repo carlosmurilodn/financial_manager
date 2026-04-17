@@ -21,7 +21,10 @@
     <tbody>
       <% @cards.each do |card| %>
         <tr id="<%= dom_id(card) %>">
-          <td><%= card.name %></td>
+          <td>
+            <%= card.icon.attached? ? image_tag(card.icon, width: 20, class: "me-2") : "💳" %>
+            <%= card.name %>
+          </td>
           <td><%= card.number.present? ? "**** **** **** #{card.number[-4..-1]}" : "" %></td>
           <td><%= number_to_currency(card.total_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
           <td><%= number_to_currency(card.remaining_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>

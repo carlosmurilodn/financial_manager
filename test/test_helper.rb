@@ -7,8 +7,9 @@ module ActiveSupport
     # Run tests in parallel with specified workers
     parallelize(workers: :number_of_processors)
 
-    # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
-    fixtures :all
+    # Keep tests independent from fixture-wide truncation so they work with a
+    # regular local PostgreSQL role that does not have superuser privileges.
+    self.use_transactional_tests = true
 
     # Add more helper methods to be used by all tests here...
   end

@@ -2,24 +2,25 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  username: postgres.oiedvaxitboedsdkulhd
-  password: VCFsCbJbdHv03Fus
-  host: aws-1-sa-east-1.pooler.supabase.com
-  port: 6543
+  username: <%= ENV.fetch("DB_USERNAME", "carlos") %>
+  password: <%= ENV.fetch("DB_PASSWORD", "739937") %>
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  port: <%= ENV.fetch("DB_PORT", 5432) %>
+  # For details on connection pooling, see Rails configuration guide
+  # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  pool_mode: transaction
 
 
 development:
   <<: *default
-  database: postgres
+  database: financial_manager_development
 
 
 test:
   <<: *default
-  database: postgres
+  database: financial_manager_test
 
 
 production:
   <<: *default
-  database: postgres
+  database: financial_manager

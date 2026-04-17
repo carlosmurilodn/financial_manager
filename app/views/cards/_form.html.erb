@@ -48,6 +48,27 @@
     </div>
   </div>
 
+  <div class="row mb-3">
+    <div class="col-md-8">
+      <%= f.label :icon, "Ícone do Cartão" %>
+      <%= f.file_field :icon, class: "form-control", accept: "image/*" %>
+      <% if card.icon.attached? %>
+        <div class="form-text">Ícone atual anexado: <%= card.icon.filename.to_s %></div>
+      <% else %>
+        <div class="form-text">Você pode anexar uma imagem para exibir no dashboard.</div>
+      <% end %>
+    </div>
+
+    <% if card.icon.attached? %>
+      <div class="col-md-4 d-flex align-items-end">
+        <div class="form-check">
+          <%= check_box_tag "card[remove_icon]", "1", false, class: "form-check-input", id: "card_remove_icon" %>
+          <%= label_tag "card_remove_icon", "Remover ícone atual", class: "form-check-label" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
   <div class="mb-3">
     <%= f.submit t("cards.form.submit"), class: "btn btn-primary" %>
   </div>

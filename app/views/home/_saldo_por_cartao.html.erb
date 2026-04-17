@@ -24,7 +24,7 @@
               <% borda = (index == @cards_info.size - 1) ? "none" : "1px solid #35363A" %>
               <tr style="height: <%= altura_linha %>%;">
                 <td class="text-start align-middle" style="border-bottom: <%= borda %>;">
-                  <%= card.icon.present? ? image_tag(card.icon, width: 20, class: "me-2") : "💳" %>
+                  <%= card.icon.attached? ? image_tag(card.icon, width: 20, class: "me-2") : "💳" %>
                   <%= card.name %>
                 </td>
                 <td class="text-start align-middle text-success" style="border-bottom: <%= borda %>;">

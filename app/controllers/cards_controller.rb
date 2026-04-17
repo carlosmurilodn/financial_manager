@@ -14,7 +14,6 @@ class CardsController < ApplicationController
 
     if @card.save
       respond_to do |format|
-        # Turbo: fecha o modal e recarrega a página inteira
         format.turbo_stream do
           render turbo_stream: turbo_stream.append(
             "modal",
@@ -22,7 +21,6 @@ class CardsController < ApplicationController
           )
         end
 
-        # Fallback HTML
         format.html { redirect_to cards_path, notice: "Cartão criado com sucesso!" }
       end
     else
@@ -37,6 +35,7 @@ class CardsController < ApplicationController
 
   def update
     if @card.update(card_params)
+      remove_icon_attachment_if_requested
       redirect_to cards_path, notice: "Cartão atualizado com sucesso!"
     else
       render :edit, status: :unprocessable_entity
@@ -52,12 +51,9 @@ class CardsController < ApplicationController
     end
   end
 
-  # -------------------------------
-  # Nova action: Pagar todas as despesas e parcelas não pagas do mês atual
-  # -------------------------------
   def pay
     start_of_month = Date.current.beginning_of_month
-    end_of_month   = Date.current.end_of_month
+    end_of_month = Date.current.end_of_month
 
     credit_methods = [
       Expense.payment_methods[:credito_a_vista],
@@ -65,20 +61,12 @@ class CardsController < ApplicationController
     ]
 
     ActiveRecord::Base.transaction do
-      # Atualiza despesas não pagas do cartão no mês atual
       updated_expenses_count = @card.expenses
                                     .where(paid: false, payment_method: credit_methods)
                                     .where(balance_month: start_of_month..end_of_month)
                                     .update_all(paid: true)
 
-      # Atualiza parcelas não pagas do cartão no mês atual
-      updated_installments_count = Installment.joins(:expense)
-                                              .where(paid: false)
-                                              .where(expenses: { card_id: @card.id, payment_method: credit_methods })
-                                              .where(installments: { balance_month: start_of_month..end_of_month })
-                                              .update_all(paid: true)
-
-      flash[:notice] = "Pagamentos atualizados: #{updated_expenses_count} despesas e #{updated_installments_count} parcelas marcadas como pagas."
+      flash[:notice] = "Pagamentos atualizados: #{updated_expenses_count} despesas marcadas como pagas."
     end
 
     redirect_to cards_path
@@ -94,31 +82,21 @@ class CardsController < ApplicationController
     @card = Card.find(params[:id])
   end
 
-  def remaining_limit
-    total_expenses = expenses.where(paid: false).sum(:amount)
-    total_installments = installments.where(paid: false).sum(:amount)
-    limit - (total_expenses + total_installments)
-  end
-
-
-  # -------------------------------
-  # Strong parameters com normalização
-  # -------------------------------
   def card_params
-    permitted = params.require(:card).permit(
+    params.require(:card).permit(
       :name,
       :number,
       :total_limit,
+      :icon,
       :due_day,
       :best_day
     )
-
-    permitted[:total_limit] = parse_brazilian_currency(permitted[:total_limit])
-    permitted
   end
 
-  def parse_brazilian_currency(value)
-    return nil if value.blank?
-    value.to_s.gsub(/[^\d,]/, "").gsub(".", "").gsub(",", ".").to_f
+  def remove_icon_attachment_if_requested
+    return unless ActiveModel::Type::Boolean.new.cast(params.dig(:card, :remove_icon))
+    return if params.dig(:card, :icon).present?
+
+    @card.icon.purge_later if @card.icon.attached?
   end
 end

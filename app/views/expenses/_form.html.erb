@@ -63,11 +63,13 @@
     <div class="col-md-6">
       <%= f.label :current_installment, "Parcela Atual" %>
       <%= f.number_field :current_installment, class: "form-control", value: expense.current_installment || 1, min: 1 %>
+      <div class="form-text">Exemplo: se a compra está na 4 de 12, informe 4 aqui.</div>
     </div>
 
     <div class="col-md-6">
       <%= f.label :installments_count, "Total de Parcelas" %>
       <%= f.number_field :installments_count, class: "form-control", value: expense.installments_count || 1, min: 1 %>
+      <div class="form-text">O sistema gera automaticamente só as parcelas restantes.</div>
     </div>
   </div>
 

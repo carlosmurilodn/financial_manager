@@ -1,69 +1,53 @@
 <tr id="<%= dom_id(expense) %>" class="<%= expense.paid? ? 'table-success' : 'table-warning' %>">
-  <!-- Descrição -->
   <td><%= expense.description %></td>
 
-  <!-- Parcela n/total -->
   <td>
-    <% if expense.is_a?(Installment) %>
-      <% total = expense.expense.installments_count || expense.expense.installments.size %>
-      <%= "#{expense.number}/#{total}" %>
-    <% elsif expense.payment_method_credito_parcelado? && expense.is_parent %>
+    <% if expense.payment_method_credito_parcelado? %>
       <%= "#{expense.current_installment}/#{expense.installments_count}" %>
     <% else %>
       Única
     <% end %>
   </td>
 
-  <!-- Valor -->
   <td><%= number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".") %></td>
 
-  <!-- Data de Vencimento -->
   <td class="text-center">
-    <%= expense.is_a?(Installment) ? expense.due_date.strftime("%d/%m/%Y") : expense.date.strftime("%d/%m/%Y") %>
+    <%= expense.date.strftime("%d/%m/%Y") %>
   </td>
 
-  <!-- Mês do Balanço -->
   <td class="text-center">
-    <% balance_date = expense.is_a?(Installment) ? expense.read_attribute(:balance_month) : expense.balance_month %>
-    <%= balance_date.strftime("%m/%Y") if balance_date.present? %>
+    <%= expense.balance_month.strftime("%m/%Y") if expense.balance_month.present? %>
   </td>
 
-  <!-- Categoria -->
   <td>
-    <%= expense.is_a?(Installment) ? expense.expense.category.display_name : expense.category.display_name %>
+    <%= expense.category.display_name %>
   </td>
 
-  <!-- Forma de Pagamento -->
   <td>
-    <%= expense.is_a?(Installment) ? expense.expense.payment_method.titleize : expense.payment_method.titleize %>
+    <%= expense.payment_method.titleize %>
   </td>
 
-  <!-- Cartão -->
   <td>
-    <%= expense.is_a?(Installment) ? expense.expense.card&.name : expense.card&.name %>
+    <%= expense.card&.name %>
   </td>
 
-  <!-- Pago? -->
   <td class="text-center">
     <%= link_to (expense.paid? ? "Sim" : "Não"),
-            expense.is_a?(Installment) ? toggle_paid_installment_path(expense, month: params[:month]) : toggle_paid_expense_path(expense, month: params[:month]),
+            toggle_paid_expense_path(expense, month: params[:month]),
             method: :patch,
             data: { turbo_method: :patch, turbo_stream: true },
             class: "btn btn-sm btn-secondary" %>
   </td>
 
-  <!-- Ações -->
   <td class="text-center">
     <%= link_to t("buttons.edit"),
-                expense.is_a?(Installment) ? edit_installment_path(expense) : edit_expense_path(expense),
+                edit_expense_path(expense),
                 class: "btn btn-sm btn-primary",
-                data: {turbo_frame: "modal"} %>
+                data: { turbo_frame: "modal" } %>
 
-    <% unless expense.is_a?(Installment) %>
-      <%= link_to t("buttons.delete"),
-                  expense.is_a?(Installment) ? installment_path(expense) : expense_path(expense),
-                  data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
-                  class: "btn btn-sm btn-danger" %>
-    <% end %>
+    <%= link_to t("buttons.delete"),
+                expense_path(expense),
+                data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
+                class: "btn btn-sm btn-danger" %>
   </td>
 </tr>

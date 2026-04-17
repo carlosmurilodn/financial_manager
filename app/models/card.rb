@@ -3,18 +3,16 @@ class Card < ApplicationRecord
   has_one_attached :icon
 
   before_validation :normalize_number
-  before_save :normalize_currency_values
+  before_validation :normalize_currency_values
 
   validates :name, presence: true
   validates :number,
             allow_blank: true,
-            format: { with: /\A\d{16}\z/, message: "deve conter exatamente 16 números" }
+            format: { with: /\A\d{16}\z/, message: "deve conter exatamente 16 numeros" }
 
-  # 🔹 Remove validação de remaining_limit (pois agora é calculado)
   validates :total_limit, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :due_day, :best_day, inclusion: { in: 1..31 }, allow_nil: true
 
-  # 🔹 Novo método calculado
   def remaining_limit
     total_limit.to_f - unpaid_total
   end
@@ -32,14 +30,7 @@ class Card < ApplicationRecord
   private
 
   def unpaid_total
-    # soma despesas e parcelas não pagas
-    unpaid_expenses = expenses.where(paid: false).sum(:amount)
-
-    unpaid_installments = Installment.joins(:expense)
-                                     .where(paid: false, expenses: { card_id: id })
-                                     .sum(:amount)
-
-    unpaid_expenses + unpaid_installments
+    expenses.where(paid: false).sum(:amount)
   end
 
   def normalize_number
@@ -47,7 +38,7 @@ class Card < ApplicationRecord
   end
 
   def normalize_currency_values
-    self.total_limit = parse_brazilian_currency(total_limit)
+    self.total_limit = parse_brazilian_currency(total_limit_before_type_cast)
   end
 
   def parse_brazilian_currency(value)
@@ -56,7 +47,7 @@ class Card < ApplicationRecord
 
     value.to_s
          .gsub(/[^\d,]/, "")
-         .gsub(".", "")
+         .delete(".")
          .gsub(",", ".")
          .to_f
   end

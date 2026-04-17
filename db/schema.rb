@@ -10,23 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_08_174957) do
-  create_schema "auth"
-  create_schema "extensions"
-  create_schema "graphql"
-  create_schema "graphql_public"
-  create_schema "pgbouncer"
-  create_schema "realtime"
-  create_schema "storage"
-  create_schema "vault"
-
+ActiveRecord::Schema[8.0].define(version: 2026_04_16_233000) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "extensions.pg_stat_statements"
-  enable_extension "extensions.pgcrypto"
-  enable_extension "extensions.uuid-ossp"
-  enable_extension "graphql.pg_graphql"
   enable_extension "pg_catalog.plpgsql"
-  enable_extension "vault.supabase_vault"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -62,10 +48,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_08_174957) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "total_limit"
-    t.decimal "remaining_limit"
     t.integer "due_day"
     t.integer "best_day"
-    t.string "icon"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -88,12 +72,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_08_174957) do
     t.datetime "updated_at", null: false
     t.integer "installments_count", default: 1, null: false
     t.integer "current_installment", default: 1, null: false
-    t.date "first_due_date"
-    t.boolean "is_parent", default: false
-    t.bigint "parent_expense_id"
+    t.bigint "installment_group_id"
     t.index ["card_id"], name: "index_expenses_on_card_id"
     t.index ["category_id"], name: "index_expenses_on_category_id"
-    t.index ["parent_expense_id"], name: "index_expenses_on_parent_expense_id"
+    t.index ["installment_group_id"], name: "index_expenses_on_installment_group_id"
   end
 
   create_table "incomes", force: :cascade do |t|
@@ -106,23 +88,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_08_174957) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "installments", force: :cascade do |t|
-    t.bigint "expense_id", null: false
-    t.integer "number"
-    t.decimal "amount", precision: 10, scale: 2
-    t.date "due_date"
-    t.boolean "paid", default: false
-    t.date "payment_date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.date "balance_month"
-    t.index ["expense_id"], name: "index_installments_on_expense_id"
-  end
-
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "expenses", "cards"
   add_foreign_key "expenses", "categories"
-  add_foreign_key "expenses", "expenses", column: "parent_expense_id"
-  add_foreign_key "installments", "expenses"
 end

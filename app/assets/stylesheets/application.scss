@@ -70,8 +70,8 @@
   --calendar-event-bg: linear-gradient(135deg, rgba(239, 91, 107, 0.88), rgba(255, 128, 128, 0.92));
   --sidebar-width: 282px;
   --sidebar-width-collapsed: 94px;
-  --radius-lg: 20px;
-  --radius-md: 16px;
+  --radius-lg: 10px;
+  --radius-md: 10px;
 }
 
 html[data-theme="sage"] {
@@ -314,7 +314,7 @@ body {
   gap: 16px;
   padding: 22px 18px;
   border: 1px solid var(--sidebar-border);
-  border-radius: 34px;
+  border-radius: 10px;
   background: var(--sidebar-bg);
   box-shadow: var(--shadow-soft);
   color: var(--text-main);
@@ -332,7 +332,7 @@ body {
   place-items: center;
   width: 46px;
   height: 46px;
-  border-radius: 16px;
+  border-radius: 10px;
   background: var(--sidebar-logo-bg);
   color: var(--sidebar-logo-color);
   box-shadow: var(--sidebar-logo-shadow);
@@ -374,7 +374,7 @@ body {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid var(--nav-hover-border);
-  border-radius: 18px;
+  border-radius: 10px;
   background: var(--nav-hover-bg);
   color: var(--text-main);
   transition: 0.25s ease;
@@ -443,7 +443,7 @@ body {
   padding: 10px 14px;
   padding-right: 24px;
   border: 0;
-  border-radius: 18px;
+  border-radius: 10px;
   color: var(--nav-text);
   text-decoration: none;
   transition: 0.25s ease;
@@ -612,7 +612,7 @@ body {
   gap: 20px;
   padding: 28px 30px;
   border: 1px solid var(--hero-border);
-  border-radius: 32px;
+  border-radius: 10px;
   background: var(--hero-bg);
   box-shadow: var(--shadow-card);
   backdrop-filter: blur(22px);
@@ -659,7 +659,7 @@ body {
   gap: 14px;
   min-width: 255px;
   padding: 18px 20px;
-  border-radius: 24px;
+  border-radius: 10px;
 }
 
 .dashboard-hero__badge .material-symbols-rounded {
@@ -702,7 +702,7 @@ body {
   flex-shrink: 0;
   width: 52px;
   height: 52px;
-  border-radius: 18px;
+  border-radius: 10px;
   color: #fff;
 }
 
@@ -905,7 +905,7 @@ body {
   gap: 6px;
   margin-top: 8px;
   padding: 10px;
-  border-radius: 14px;
+  border-radius: px;
   background: var(--calendar-event-bg);
   color: #fff;
   font-size: 0.8rem;

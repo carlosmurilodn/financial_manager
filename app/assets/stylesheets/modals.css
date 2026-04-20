@@ -10,6 +10,17 @@
   width: 1200px !important;
 }
 
+#turboModal .modal-dialog.modal-wide {
+  width: 90vw;
+  max-width: 90vw;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+#turboModal .modal-dialog.modal-wide .modal-content {
+  width: 100% !important;
+}
+
 #modal-body {
   padding: 1.5rem;
   overflow-y: auto;
@@ -18,4 +29,123 @@
 
 #parcelamento_section {
   display: none; /* escondido por padrão */
+}
+
+.expense-modal-rows {
+  display: grid;
+  gap: 12px;
+}
+
+.expense-modal-row {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--table-border-color);
+  border-radius: 12px;
+  background: var(--table-surface);
+}
+
+.expense-modal-row__main,
+.expense-modal-grid {
+  display: grid;
+  grid-template-columns: minmax(190px, 1.5fr) 82px minmax(112px, 0.8fr) 76px repeat(5, minmax(126px, 1fr)) 36px;
+  gap: 10px;
+  align-items: end;
+}
+
+.expense-modal-grid--edit {
+  grid-template-columns: minmax(240px, 2fr) 120px 140px 90px repeat(5, minmax(140px, 1fr));
+}
+
+.expense-modal-field {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.expense-modal-field label {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.expense-modal-field .form-control,
+.expense-modal-field .form-select {
+  min-height: 34px;
+  font-size: 0.78rem;
+}
+
+.expense-modal-field--check,
+.expense-modal-field--paid {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+}
+
+.expense-modal-installments {
+  display: none;
+  grid-template-columns: repeat(2, minmax(120px, 180px));
+  gap: 10px;
+  justify-content: end;
+  padding-top: 6px;
+}
+
+.expense-modal-installments.is-visible {
+  display: grid;
+}
+
+.expense-modal-row__remove {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(242, 141, 166, 0.14);
+  color: var(--danger);
+}
+
+.expense-modal-row__remove.is-hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.expense-modal-row__remove .material-symbols-rounded {
+  font-size: 1rem;
+}
+
+.expense-modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.expense-modal-action-btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.expense-modal-action-btn .material-symbols-rounded {
+  font-size: 1.05rem;
+}
+
+@media (max-width: 1280px) {
+  .expense-modal-row__main,
+  .expense-modal-grid,
+  .expense-modal-grid--edit {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .expense-modal-row__remove {
+    width: 100%;
+  }
 }

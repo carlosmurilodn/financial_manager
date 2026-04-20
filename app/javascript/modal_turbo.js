@@ -1,5 +1,6 @@
 import { initializeFormUtils } from "./utils";
 import { initializeDatepicker } from "./date_picker";
+import { initializeExpenseForm } from "./expense_form";
 
 document.addEventListener("turbo:frame-load", (event) => {
   if (event.target.id === "modal") {
@@ -8,13 +9,18 @@ document.addEventListener("turbo:frame-load", (event) => {
     const modalDialog = modalElement.querySelector(".modal-dialog");
 
     modalBody.innerHTML = event.target.innerHTML;
+    modalBody.querySelectorAll("[data-expense-form-bound]").forEach((form) => {
+      delete form.dataset.expenseFormBound;
+    });
     modalDialog.classList.toggle("modal-xl", !!modalBody.querySelector("[data-modal-size='xl']"));
+    modalDialog.classList.toggle("modal-wide", !!modalBody.querySelector("[data-modal-size='wide']"));
 
     const modal = new bootstrap.Modal(modalElement);
     modal.show();
 
     initializeFormUtils();
     initializeDatepicker();
+    initializeExpenseForm();
 
     // ---------- TOGGLE PARCELAMENTO ----------
     const paymentSelect = modalBody.querySelector("#payment_method_select");

@@ -1,92 +1,132 @@
-<%= form_with model: expense, local: false, html: { id: "expense_form" } do |f| %>
-  <div class="row mb-3">
-    <div class="col-md-9">
-      <%= f.label :description, t("expenses.form.description") %>
-      <%= f.text_field :description, class: "form-control" %>
-    </div>
-    <div class="col-md-3">
-      <%= f.label :repetir, "Repetir (meses)" %>
-      <%= f.number_field :repetir, value: @expense.repetir || 0, min: 0, class: "form-control" %>
-    </div>
-  </div>
+<% categories = Category.order(:name) %>
+<% cards = Card.all %>
+<% payment_options = Expense.payment_method_names.map { |key, label| [label, key] } %>
 
-  <div class="row mb-3 align-items-end">
-    <div class="col-md-4">
-      <%= f.label :amount, t("expenses.form.amount") %>
-      <div class="d-flex align-items-center gap-2">
+<% if expense.persisted? %>
+  <%= form_with model: expense, local: false, html: { id: "expense_form" } do |f| %>
+    <div class="expense-modal-grid expense-modal-grid--edit">
+      <div class="expense-modal-field expense-modal-field--wide">
+        <%= f.label :description, t("expenses.form.description") %>
+        <%= f.text_field :description, class: "form-control" %>
+      </div>
+
+      <div class="expense-modal-field">
+        <%= f.label :repetir, "Repetir (meses)" %>
+        <%= f.number_field :repetir, value: @expense.repetir || 0, min: 0, class: "form-control" %>
+      </div>
+
+      <div class="expense-modal-field">
+        <%= f.label :amount, t("expenses.form.amount") %>
         <%= f.text_field :amount,
-          class: "form-control moeda flex-grow-1",
+          class: "form-control moeda",
           value: (expense.amount.present? ? number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) : "R$ 0,00")
         %>
-        <div class="form-check mb-0">
-          <%= f.check_box :paid, class: "form-check-input", id: "expense_paid" %>
-          <%= f.label :paid, t("expenses.form.paid"), class: "form-check-label ms-1" %>
+      </div>
+
+      <div class="expense-modal-field expense-modal-field--check">
+        <%= f.check_box :paid, class: "form-check-input", id: "expense_paid" %>
+        <%= f.label :paid, t("expenses.form.paid"), class: "form-check-label" %>
+      </div>
+
+      <div class="expense-modal-field">
+        <%= f.label :date, t("expenses.form.date") %>
+        <div class="custom-date-wrapper">
+          <%= f.text_field :date, class: "form-control custom-date", autocomplete: "off", placeholder: "Selecione a data" %>
         </div>
       </div>
-    </div>
 
-    <div class="col-md-4">
-      <%= f.label :date, t("expenses.form.date") %>
-      <div class="custom-date-wrapper">
-        <%= f.text_field :date, class: "form-control custom-date", autocomplete: "off", placeholder: "Selecione a data" %>
+      <div class="expense-modal-field">
+        <%= f.label :balance_month, t("expenses.form.balance_month") %>
+        <div class="custom-date-wrapper">
+          <%= f.text_field :balance_month, class: "form-control custom-date", autocomplete: "off", placeholder: "Selecione o mês" %>
+        </div>
+      </div>
+
+      <div class="expense-modal-field">
+        <%= f.label :category_id, t("expenses.form.category") %>
+        <%= f.collection_select :category_id, categories, :id, :display_name, { prompt: "Selecione" }, { class: "form-select" } %>
+      </div>
+
+      <div class="expense-modal-field">
+        <%= f.label :payment_method, t("expenses.form.payment_method") %>
+        <%= f.select :payment_method, payment_options,
+          { prompt: "Selecione" },
+          { class: "form-select", id: "payment_method_select" } %>
+      </div>
+
+      <div class="expense-modal-field">
+        <%= f.label :card_id, t("expenses.form.card") %>
+        <%= f.collection_select :card_id, cards, :id, :display_name, { prompt: "Selecione" }, { class: "form-select" } %>
       </div>
     </div>
 
-    <div class="col-md-4">
-      <%= f.label :balance_month, t("expenses.form.balance_month") %>
-      <div class="custom-date-wrapper">
-        <%= f.text_field :balance_month, class: "form-control custom-date", autocomplete: "off", placeholder: "Selecione o mês" %>
+    <div class="expense-modal-installments" id="parcelamento_section">
+      <div class="expense-modal-field">
+        <%= f.label :current_installment, "Parcela Atual" %>
+        <%= f.number_field :current_installment, class: "form-control", value: expense.current_installment || 1, min: 1 %>
+      </div>
+
+      <div class="expense-modal-field">
+        <%= f.label :installments_count, "Total de Parcelas" %>
+        <%= f.number_field :installments_count, class: "form-control", value: expense.installments_count || 1, min: 1 %>
       </div>
     </div>
-  </div>
 
-  <div class="row mb-3">
-    <div class="col-md-4">
-      <%= f.label :category_id, t("expenses.form.category") %>
-      <%= f.collection_select :category_id, Category.order(:name), :id, :display_name, { prompt: "Selecione" }, { class: "form-select" } %>
-    </div>
+    <% if expense.payment_method_credito_parcelado? %>
+      <div class="alert alert-info" role="alert">
+        Escolha abaixo se deseja atualizar apenas esta parcela ou aplicar as alterações desta parcela em diante.
+      </div>
+    <% end %>
 
-    <div class="col-md-4">
-      <%= f.label :payment_method, t("expenses.form.payment_method") %>
-      <%= f.select :payment_method, Expense.payment_method_names.map { |k, v| [v, k] },
-        { prompt: "Selecione" },
-        { class: "form-select", id: "payment_method_select" } %>
-    </div>
+    <div class="expense-modal-actions">
+      <% if expense.payment_method_credito_parcelado? %>
+        <%= button_tag name: "update_scope", value: "single", type: "submit", class: "btn btn-primary expense-modal-action-btn" do %>
+          <span class="material-symbols-rounded">save</span>
+          Atualizar só esta parcela
+        <% end %>
 
-    <div class="col-md-4">
-      <%= f.label :card_id, t("expenses.form.card") %>
-      <%= f.collection_select :card_id, Card.all, :id, :display_name, { prompt: "Selecione" }, { class: "form-select" } %>
-    </div>
-  </div>
-
-  <div class="row mb-3" id="parcelamento_section">
-    <div class="col-md-6">
-      <%= f.label :current_installment, "Parcela Atual" %>
-      <%= f.number_field :current_installment, class: "form-control", value: expense.current_installment || 1, min: 1 %>
-      <div class="form-text">Exemplo: se a compra está na 4 de 12, informe 4 aqui.</div>
-    </div>
-
-    <div class="col-md-6">
-      <%= f.label :installments_count, "Total de Parcelas" %>
-      <%= f.number_field :installments_count, class: "form-control", value: expense.installments_count || 1, min: 1 %>
-      <div class="form-text">O sistema gera automaticamente só as parcelas restantes.</div>
-    </div>
-  </div>
-
-  <% if expense.persisted? && expense.payment_method_credito_parcelado? %>
-    <div class="alert alert-info" role="alert">
-      Escolha abaixo se deseja atualizar apenas esta parcela ou aplicar as alterações desta parcela em diante.
+        <%= button_tag name: "update_scope", value: "group", type: "submit", class: "btn btn-outline-primary expense-modal-action-btn" do %>
+          <span class="material-symbols-rounded">done_all</span>
+          Atualizar esta e próximas
+        <% end %>
+      <% else %>
+        <%= button_tag type: "submit", class: "btn btn-primary expense-modal-action-btn" do %>
+          <span class="material-symbols-rounded">save</span>
+          <%= t("expenses.form.submit") %>
+        <% end %>
+      <% end %>
     </div>
   <% end %>
+<% else %>
+  <%= form_with url: expenses_path, local: false, html: { id: "expense_form", data: { expense_form: true } } do %>
+    <div class="expense-modal-rows" data-expense-rows>
+      <%= render "expenses/form_row",
+        index: 0,
+        categories: categories,
+        cards: cards,
+        payment_options: payment_options,
+        removable: false %>
+    </div>
 
-  <div class="mb-3">
-    <% if expense.persisted? && expense.payment_method_credito_parcelado? %>
-      <div class="d-flex gap-2 flex-wrap">
-        <%= f.submit "Atualizar só esta parcela", name: "update_scope", value: "single", class: "btn btn-primary" %>
-        <%= f.submit "Atualizar esta e próximas", name: "update_scope", value: "group", class: "btn btn-outline-primary" %>
-      </div>
-    <% else %>
-      <%= f.submit t("expenses.form.submit"), class: "btn btn-primary" %>
-    <% end %>
-  </div>
+    <template data-expense-row-template>
+      <%= render "expenses/form_row",
+        index: "NEW_RECORD",
+        categories: categories,
+        cards: cards,
+        payment_options: payment_options,
+        removable: true %>
+    </template>
+
+    <div class="expense-modal-actions">
+      <button type="button" class="btn btn-primary expense-modal-action-btn" data-add-expense-row>
+        <span class="material-symbols-rounded">add_circle</span>
+        Inserir Despesa
+      </button>
+
+      <button type="submit" class="btn btn-primary expense-modal-action-btn">
+        <span class="material-symbols-rounded">save</span>
+        <%= t("expenses.form.submit") %>
+      </button>
+    </div>
+  <% end %>
 <% end %>

@@ -5,7 +5,7 @@
         <span class="material-symbols-rounded">account_balance_wallet</span>
       </div>
       <div class="app-sidebar__brand-copy">
-        <span class="sidebar-title">Dashboard Financeiro</span>
+        <span class="sidebar-title">Gerenciador Financeiro</span>
         <small>Visao geral do sistema</small>
       </div>
       <button id="sidebarToggle" class="app-sidebar__toggle" type="button" aria-label="Alternar menu">
@@ -29,14 +29,14 @@
         <span class="link-text">Receitas</span>
       <% end %>
 
-      <%= link_to categories_path, class: "app-nav-link #{'active-menu' if current_page?(categories_path)}", id: "link-categories", data: { turbo: false } do %>
-        <span class="material-symbols-rounded app-nav-link__icon">category</span>
-        <span class="link-text">Categorias</span>
-      <% end %>
-
       <%= link_to cards_path, class: "app-nav-link #{'active-menu' if current_page?(cards_path)}", id: "link-cards", data: { turbo: false } do %>
         <span class="material-symbols-rounded app-nav-link__icon">credit_card</span>
         <span class="link-text">Cartoes</span>
+      <% end %>
+
+      <%= link_to categories_path, class: "app-nav-link #{'active-menu' if current_page?(categories_path)}", id: "link-categories", data: { turbo: false } do %>
+        <span class="material-symbols-rounded app-nav-link__icon">category</span>
+        <span class="link-text">Categorias</span>
       <% end %>
 
       <%= link_to "#", class: "app-nav-link", id: "link-calculator" do %>
@@ -74,8 +74,8 @@
 
 <script>
   const APP_THEMES = [
-    { id: "fincan", label: "Fincan Blue", nextLabel: "Noite Roxa", icon: "finance_mode" },
-    { id: "night", label: "Noite Roxa", nextLabel: "Fincan Blue", icon: "dark_mode" }
+    { id: "fincan", label: "Claro", nextLabel: "Dark", icon: "lightbulb" },
+    { id: "night", label: "Dark", nextLabel: "Claro", icon: "dark_mode" }
   ];
 
   function updateClock() {
@@ -85,14 +85,14 @@
     const seconds = String(now.getSeconds()).padStart(2, "0");
     const timeMarkup = `<span class="app-sidebar__time-main">${hours}:${minutes}</span><span class="app-sidebar__time-seconds">:${seconds}</span>`;
 
-    ["current-time", "dashboard-current-time"].forEach((id) => {
+    ["current-time", "dashboard-current-time", "app-page-current-time"].forEach((id) => {
       const timeNode = document.getElementById(id);
       if (timeNode) timeNode.innerHTML = timeMarkup;
     });
   }
 
   async function loadWeather() {
-    const weatherNodes = ["weather-info", "dashboard-weather-info"]
+    const weatherNodes = ["weather-info", "dashboard-weather-info", "app-page-weather-info"]
       .map((id) => document.getElementById(id))
       .filter(Boolean);
 
@@ -158,11 +158,25 @@
         </div>
       `;
 
+      const appPageWeatherMarkup = `
+        <div class="today-weather today-weather--compact ${dashboardWeatherClass}">
+          <div class="today-weather__current">
+            <img src="https://openweathermap.org/img/wn/${todayIcon}@2x.png" alt="${todayDesc}" width="30" height="30">
+            <strong>${tempNow}°C</strong>
+          </div>
+          <div class="today-weather__details">
+            <span class="text-capitalize">${todayDesc}</span>
+          </div>
+        </div>
+      `;
+
       const sidebarNode = document.getElementById("weather-info");
       const dashboardNode = document.getElementById("dashboard-weather-info");
+      const appPageNode = document.getElementById("app-page-weather-info");
 
       if (sidebarNode) sidebarNode.innerHTML = sidebarWeatherMarkup;
       if (dashboardNode) dashboardNode.innerHTML = dashboardWeatherMarkup;
+      if (appPageNode) appPageNode.innerHTML = appPageWeatherMarkup;
     } catch (error) {
       weatherNodes.forEach((node) => {
         node.textContent = "Clima indisponivel";

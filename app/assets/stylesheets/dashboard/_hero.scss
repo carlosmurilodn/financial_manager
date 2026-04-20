@@ -39,7 +39,7 @@
 .dashboard-description {
   max-width: 640px;
   margin: 10px 0 0;
-  color: var(--text-soft);
+  color: var(--dashboard-description-color);
 }
 
 .dashboard-hero__badge,
@@ -57,8 +57,11 @@
   gap: 10px;
   width: fit-content;
   max-width: 100%;
-  padding: 14px 16px;
+  margin: 0;
+  padding: 0;
+  border: 0;
   border-radius: 10px;
+  background: transparent;
 }
 
 .dashboard-hero__badge-item {
@@ -68,7 +71,7 @@
   min-height: 0;
   padding: 8px 10px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .dashboard-hero__badge-item--primary {
@@ -83,7 +86,8 @@
 
 .dashboard-hero__badge-item--weather {
   flex-direction: column;
-  min-width: 168px;
+  min-width: 230px;
+  min-height: 88px;
   padding: 0;
   overflow: hidden;
   border: 0;
@@ -101,6 +105,7 @@
 
 .dashboard-hero__badge-item--primary strong {
   display: block;
+  color: var(--dashboard-date-color);
   line-height: 1.35;
 }
 
@@ -112,9 +117,15 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
   min-height: 100%;
   padding: 10px 14px;
   background: rgba(66, 150, 241, 0.96);
+}
+
+.dashboard-hero__badge-item--weather .today-weather--placeholder {
+  min-height: 88px;
+  background: rgba(109, 153, 194, 0.96);
 }
 
 .dashboard-hero__badge-item--weather .today-weather__details {

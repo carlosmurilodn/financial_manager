@@ -1,7 +1,6 @@
 <section class="dashboard-page">
   <div class="dashboard-hero">
     <div>
-      <p class="dashboard-eyebrow">Painel financeiro</p>
       <h1>Uma visao mais clara do seu dinheiro</h1>
       <p class="dashboard-description">
         Acompanhe saldo, receitas, despesas e previsoes em um layout mais moderno, leve e facil de ler.
@@ -19,7 +18,9 @@
           <strong><%= "#{Date.current.day} de #{I18n.l(Date.current, format: '%B').capitalize} de #{Date.current.year}" %></strong>
         </div>
       </div>
-      <div id="dashboard-weather-info" class="dashboard-hero__badge-item dashboard-hero__badge-item--weather"></div>
+      <div id="dashboard-weather-info" class="dashboard-hero__badge-item dashboard-hero__badge-item--weather">
+        <div class="today-weather today-weather--dashboard today-weather--placeholder" aria-hidden="true"></div>
+      </div>
     </div>
   </div>
 

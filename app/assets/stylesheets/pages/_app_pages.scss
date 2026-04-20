@@ -19,27 +19,30 @@
 
 .app-page__hero {
   display: block;
-  padding: 24px 26px;
+  padding: 14px 16px;
 }
 
 .app-page__hero-top {
   display: grid;
   width: 100%;
   align-items: stretch;
-  gap: 18px;
+  gap: 10px;
 }
 
 .app-page__hero-top--expenses {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  display: flex;
+  align-items: stretch;
 }
 
 .app-page__hero-top--incomes {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  display: flex;
+  align-items: stretch;
 }
 
 .app-page__hero-top--cards,
 .app-page__hero-top--categories {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  display: flex;
+  align-items: stretch;
 }
 
 .app-page__hero-top--actions {
@@ -55,33 +58,49 @@
 .app-page__hero-copy {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
   min-width: 0;
+}
+
+.app-page__hero-unit {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.app-page__hero-unit > .stat-card,
+.app-page__hero-unit > .app-expenses-hero-kpis__action,
+.app-page__hero-unit > .app-page__hero-badge {
+  width: 100%;
+  height: 100%;
 }
 
 .app-page__hero-icon {
   display: inline-grid;
   place-items: center;
-  width: 54px;
-  height: 54px;
+  width: 42px;
+  height: 42px;
   flex-shrink: 0;
-  border-radius: 16px;
+  border-radius: 12px;
   background: var(--hero-badge-icon-bg);
   color: var(--hero-badge-icon-color);
 }
 
+.app-page__hero-icon .material-symbols-rounded {
+  font-size: 1.25rem;
+}
+
 .app-page__eyebrow {
-  margin: 0 0 8px;
+  margin: 0 0 3px;
   color: var(--text-soft);
-  font-size: 0.75rem;
+  font-size: 0.62rem;
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .app-page__title {
   margin: 0;
-  font-size: clamp(1.55rem, 2.4vw, 2rem);
+  font-size: clamp(1.15rem, 1.6vw, 1.45rem);
   font-weight: 800;
 }
 
@@ -111,6 +130,167 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+}
+
+.app-page__hero-badge {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 6px;
+}
+
+.app-page__hero-badge-item {
+  display: flex;
+  width: 50%;
+  flex: 0 0 auto;
+  align-items: center;
+  height: 100%;
+  padding: 4px 6px;
+  border-radius: 10px;
+  background: var(--app-page-hero-badge-item-bg);
+}
+
+.app-page__hero-badge-item--primary {
+  gap: 7px;
+}
+
+.app-page__hero-badge-item--primary > .material-symbols-rounded {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: var(--hero-badge-icon-bg);
+  color: var(--hero-badge-icon-color);
+  font-size: 1rem;
+}
+
+.app-page__hero-badge-item--primary strong {
+  display: block;
+  color: var(--dashboard-date-color);
+  font-size: 0.62rem;
+  line-height: 1.1;
+}
+
+.app-page__hero-time {
+  margin-bottom: 1px;
+  gap: 2px;
+  line-height: 1;
+}
+
+.app-page__hero-time .app-sidebar__time-main {
+  font-size: 0.9rem;
+}
+
+.app-page__hero-time .app-sidebar__time-seconds {
+  margin-bottom: 0;
+  font-size: 0.55rem;
+}
+
+.app-page__hero-badge-item--weather {
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+}
+
+.app-page__hero-badge-item--weather .today-weather {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 2px;
+  width: 100%;
+  height: 100%;
+  padding: 5px 7px;
+  background: rgba(109, 153, 194, 0.96);
+}
+
+.app-page__hero-badge-item--weather .today-weather--clear {
+  background: rgba(66, 150, 241, 0.96);
+}
+
+.app-page__hero-badge-item--weather .today-weather--clear-night {
+  background: rgba(31, 57, 111, 0.98);
+}
+
+.app-page__hero-badge-item--weather .today-weather--clouds {
+  background: rgba(109, 153, 194, 0.96);
+}
+
+.app-page__hero-badge-item--weather .today-weather--cloudy-night {
+  background: rgba(58, 76, 118, 0.98);
+}
+
+.app-page__hero-badge-item--weather .today-weather--rain {
+  background: rgba(72, 121, 170, 0.98);
+}
+
+.app-page__hero-badge-item--weather .today-weather--rain-night {
+  background: rgba(34, 53, 97, 0.98);
+}
+
+.app-page__hero-badge-item--weather .today-weather--drizzle {
+  background: rgba(88, 145, 175, 0.96);
+}
+
+.app-page__hero-badge-item--weather .today-weather--drizzle-night {
+  background: rgba(49, 72, 110, 0.98);
+}
+
+.app-page__hero-badge-item--weather .today-weather--storm {
+  background: rgba(53, 62, 110, 0.98);
+}
+
+.app-page__hero-badge-item--weather .today-weather--snow {
+  background: rgba(163, 197, 225, 0.96);
+}
+
+.app-page__hero-badge-item--weather .today-weather--mist {
+  background: rgba(120, 149, 169, 0.96);
+}
+
+.app-page__hero-badge-item--weather .today-weather__current {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.app-page__hero-badge-item--weather .today-weather__current img {
+  width: 30px;
+  height: 30px;
+}
+
+.app-page__hero-badge-item--weather .today-weather__current strong {
+  color: #ffffff;
+  font-size: 0.92rem;
+  line-height: 1;
+}
+
+.app-page__hero-badge-item--weather .today-weather__details {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.app-page__hero-badge-item--weather .today-weather__details span,
+.app-page__hero-badge-item--weather .today-weather__details small {
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-page__hero-badge-item--weather .today-weather__details span {
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+
+.app-page__hero-badge-item--weather .today-weather__details small {
+  font-size: 0.54rem;
 }
 
 .app-page__primary-btn,

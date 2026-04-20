@@ -67,24 +67,48 @@ class ExpensesController < ApplicationController
   def toggle_paid_options; end
 
   def create
-    @expense = Expense.new(expense_params)
-    @expense.amount = parse_brazilian_amount(params[:expense][:amount], blank: 0)
-    @expense.repetir ||= 0
+    if params[:expenses].present?
+      expense_rows = multiple_expenses_params
+      @expense = Expense.new
 
-    assign_expense_dates
+      if expense_rows.blank?
+        @expense.errors.add(:base, "Informe ao menos uma despesa.")
+        respond_to do |format|
+          format.html { render :new, status: :unprocessable_entity }
+          format.turbo_stream { render :new, status: :unprocessable_entity }
+        end
+        return
+      end
 
-    if @expense.save
-      create_recurring_expenses(@expense)
+      create_multiple_expenses!(expense_rows)
 
       respond_to do |format|
-        format.html { redirect_to expenses_path, notice: "Despesa criada com sucesso!" }
+        format.html { redirect_to expenses_path, notice: "Despesas criadas com sucesso!" }
         format.turbo_stream { render turbo_stream: "" }
       end
     else
-      respond_to do |format|
-        format.html { render :new, status: :unprocessable_entity }
-        format.turbo_stream { render :new, status: :unprocessable_entity }
+      @expense = build_expense(expense_params, params[:expense])
+
+      if @expense.save
+        create_recurring_expenses(@expense)
+
+        respond_to do |format|
+          format.html { redirect_to expenses_path, notice: "Despesa criada com sucesso!" }
+          format.turbo_stream { render turbo_stream: "" }
+        end
+      else
+        respond_to do |format|
+          format.html { render :new, status: :unprocessable_entity }
+          format.turbo_stream { render :new, status: :unprocessable_entity }
+        end
       end
+    end
+  rescue ActiveRecord::RecordInvalid => error
+    @expense = error.record.is_a?(Expense) ? error.record : Expense.new
+
+    respond_to do |format|
+      format.html { render :new, status: :unprocessable_entity }
+      format.turbo_stream { render :new, status: :unprocessable_entity }
     end
   end
 
@@ -224,6 +248,49 @@ class ExpensesController < ApplicationController
       :category_id, :payment_method, :card_id, :paid,
       :installments_count, :current_installment, :repetir
     )
+  end
+
+  def multiple_expenses_params
+    return [] unless params[:expenses].present?
+
+    params.require(:expenses).to_unsafe_h.values.filter_map do |raw_attributes|
+      attributes = ActionController::Parameters.new(raw_attributes).permit(
+        :amount, :description, :date, :balance_month,
+        :category_id, :payment_method, :card_id, :paid,
+        :installments_count, :current_installment, :repetir
+      )
+
+      attributes if expense_row_present?(attributes)
+    end
+  end
+
+  def expense_row_present?(attributes)
+    attributes[:description].present? ||
+      parse_brazilian_amount(attributes[:amount], blank: 0).positive? ||
+      attributes[:date].present? ||
+      attributes[:balance_month].present? ||
+      attributes[:category_id].present? ||
+      attributes[:payment_method].present? ||
+      attributes[:card_id].present?
+  end
+
+  def create_multiple_expenses!(expense_rows = multiple_expenses_params)
+    Expense.transaction do
+      expense_rows.each do |attributes|
+        expense = build_expense(attributes, attributes)
+        expense.save!
+        create_recurring_expenses(expense)
+      end
+    end
+  end
+
+  def build_expense(attributes, raw_attributes)
+    expense = Expense.new(attributes.except(:amount, :date, :balance_month))
+    expense.amount = parse_brazilian_amount(raw_attributes[:amount], blank: 0)
+    expense.date = parse_brazilian_date(raw_attributes[:date])
+    expense.balance_month = parse_brazilian_date(raw_attributes[:balance_month])
+    expense.repetir ||= 0
+    expense
   end
 
   def assign_expense_dates

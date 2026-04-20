@@ -1,0 +1,16 @@
+<div class="app-page__hero-badge">
+  <div class="app-page__hero-badge-item app-page__hero-badge-item--primary">
+    <span class="material-symbols-rounded">event_upcoming</span>
+    <div>
+      <div id="app-page-current-time" class="app-sidebar__time app-page__hero-time">
+        <span class="app-sidebar__time-main"><%= Time.current.strftime("%H:%M") %></span>
+        <span class="app-sidebar__time-seconds">:<%= Time.current.strftime("%S") %></span>
+      </div>
+      <strong><%= "#{Date.current.day} de #{I18n.l(Date.current, format: '%B').capitalize} de #{Date.current.year}" %></strong>
+    </div>
+  </div>
+
+  <div id="app-page-weather-info" class="app-page__hero-badge-item app-page__hero-badge-item--weather">
+    <div class="today-weather today-weather--compact today-weather--placeholder" aria-hidden="true"></div>
+  </div>
+</div>

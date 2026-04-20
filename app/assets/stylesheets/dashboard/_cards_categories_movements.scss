@@ -35,7 +35,7 @@
 
 .dashboard-card__body--category-summary,
 .dashboard-card__body--movement-feed {
-  scrollbar-color: #d0d8f3 transparent;
+  scrollbar-color: var(--scrollbar-thumb-color) transparent;
   scrollbar-width: thin;
 }
 
@@ -60,13 +60,13 @@
 .dashboard-card__body--movement-feed::-webkit-scrollbar-thumb {
   border: 2px solid transparent;
   border-radius: 0;
-  background: #d0d8f3;
+  background: var(--scrollbar-thumb-color);
   background-clip: padding-box;
 }
 
 .dashboard-card__body--category-summary::-webkit-scrollbar-thumb:hover,
 .dashboard-card__body--movement-feed::-webkit-scrollbar-thumb:hover {
-  background: #b9c5ee;
+  background: var(--scrollbar-thumb-color);
   background-clip: padding-box;
 }
 
@@ -544,7 +544,12 @@ html[data-theme="night"] .dashboard-category-item {
 
 .dashboard-movement-item__marker {
   flex-shrink: 0;
+  color: var(--dashboard-movement-marker-color);
   font-size: 0.9rem;
+}
+
+.material-symbols-rounded.dashboard-movement-item__marker {
+  color: var(--dashboard-movement-marker-color);
 }
 
 .dashboard-movement-item__main small {

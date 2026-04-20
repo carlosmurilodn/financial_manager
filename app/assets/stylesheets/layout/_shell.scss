@@ -235,12 +235,13 @@
 }
 
 .app-sidebar__time-main {
+  color: var(--dashboard-time-main-color);
   font-size: 1.35rem;
 }
 
 .app-sidebar__time-seconds {
   margin-bottom: 0.12rem;
-  color: var(--text-soft);
+  color: var(--dashboard-time-seconds-color);
   font-size: 0.72rem;
   font-weight: 700;
 }

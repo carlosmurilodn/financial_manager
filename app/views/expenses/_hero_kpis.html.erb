@@ -1,48 +1,56 @@
 <div id="expenses-hero-kpis" class="app-expenses-hero-kpis">
-  <%= link_to new_expense_path,
-              class: "app-expenses-hero-kpis__action",
-              data: { turbo_frame: "modal" } do %>
-    <span class="app-expenses-hero-kpis__action-icon">
-      <span class="material-symbols-rounded">add</span>
-    </span>
-    <span class="app-expenses-hero-kpis__action-copy">
-      <strong><%= t("buttons.new.feminine", model: t("models.expense")) %></strong>
-    </span>
-  <% end %>
+  <div class="app-page__hero-unit">
+    <%= link_to new_expense_path,
+                class: "app-expenses-hero-kpis__action",
+                data: { turbo_frame: "modal" } do %>
+      <span class="app-expenses-hero-kpis__action-icon">
+        <span class="material-symbols-rounded">add</span>
+      </span>
+      <span class="app-expenses-hero-kpis__action-copy">
+        <strong><%= t("buttons.new.feminine", model: t("models.expense")) %></strong>
+      </span>
+    <% end %>
+  </div>
 
-  <div class="stat-card stat-card--danger">
-    <div class="stat-card__icon">
-      <span class="material-symbols-rounded">payments</span>
-    </div>
-    <div>
-      <span class="stat-card__label">Total Pago</span>
-      <strong class="stat-card__value">
-        <%= number_to_currency(@total_paid, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
-      </strong>
+  <div class="app-page__hero-unit">
+    <div class="stat-card stat-card--danger">
+      <div class="stat-card__icon">
+        <span class="material-symbols-rounded">payments</span>
+      </div>
+      <div>
+        <span class="stat-card__label">Total Pago</span>
+        <strong class="stat-card__value">
+          <%= number_to_currency(@total_paid, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+        </strong>
+      </div>
     </div>
   </div>
 
-  <div class="stat-card stat-card--warning">
-    <div class="stat-card__icon">
-      <span class="material-symbols-rounded">schedule</span>
-    </div>
-    <div>
-      <span class="stat-card__label">Total a Pagar</span>
-      <strong class="stat-card__value">
-        <%= number_to_currency(@total_unpaid, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
-      </strong>
+  <div class="app-page__hero-unit">
+    <div class="stat-card stat-card--warning">
+      <div class="stat-card__icon">
+        <span class="material-symbols-rounded">schedule</span>
+      </div>
+      <div>
+        <span class="stat-card__label">Total a Pagar</span>
+        <strong class="stat-card__value">
+          <%= number_to_currency(@total_unpaid, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+        </strong>
+      </div>
     </div>
   </div>
 
-  <div class="stat-card stat-card--primary">
-    <div class="stat-card__icon">
-      <span class="material-symbols-rounded">account_balance</span>
-    </div>
-    <div>
-      <span class="stat-card__label">Saldo Líquido</span>
-      <strong class="stat-card__value">
-        <%= number_to_currency(@net_balance || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
-      </strong>
+  <div class="app-page__hero-unit">
+    <div class="stat-card stat-card--primary">
+      <div class="stat-card__icon">
+        <span class="material-symbols-rounded">account_balance</span>
+      </div>
+      <div>
+        <span class="stat-card__label">Saldo Líquido</span>
+        <strong class="stat-card__value">
+          <%= number_to_currency(@net_balance || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+        </strong>
+      </div>
     </div>
   </div>
 </div>

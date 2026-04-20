@@ -1,60 +1,70 @@
 <div id="cards-hero-kpis" class="app-cards-hero-kpis">
-  <%= link_to new_card_path,
-              class: "app-expenses-hero-kpis__action",
-              data: { turbo_frame: "modal" } do %>
-    <span class="app-expenses-hero-kpis__action-icon">
-      <span class="material-symbols-rounded">add</span>
-    </span>
-    <span class="app-expenses-hero-kpis__action-copy">
-      <strong><%= t("buttons.new.masculine", model: t("models.card")) %></strong>
-    </span>
-  <% end %>
+  <div class="app-page__hero-unit">
+    <%= link_to new_card_path,
+                class: "app-expenses-hero-kpis__action",
+                data: { turbo_frame: "modal" } do %>
+      <span class="app-expenses-hero-kpis__action-icon">
+        <span class="material-symbols-rounded">add</span>
+      </span>
+      <span class="app-expenses-hero-kpis__action-copy">
+        <strong><%= t("buttons.new.masculine", model: t("models.card")) %></strong>
+      </span>
+    <% end %>
+  </div>
 
-  <div class="stat-card stat-card--primary">
-    <div class="stat-card__icon">
-      <span class="material-symbols-rounded">account_balance_wallet</span>
-    </div>
-    <div>
-      <span class="stat-card__label">Limite Total</span>
-      <strong class="stat-card__value">
-        <%= number_to_currency(@cards_limit_total || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
-      </strong>
+  <div class="app-page__hero-unit">
+    <div class="stat-card stat-card--primary">
+      <div class="stat-card__icon">
+        <span class="material-symbols-rounded">account_balance_wallet</span>
+      </div>
+      <div>
+        <span class="stat-card__label">Limite Total</span>
+        <strong class="stat-card__value">
+          <%= number_to_currency(@cards_limit_total || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+        </strong>
+      </div>
     </div>
   </div>
 
-  <div class="stat-card stat-card--success">
-    <div class="stat-card__icon">
-      <span class="material-symbols-rounded">savings</span>
-    </div>
-    <div>
-      <span class="stat-card__label">Limite Disponível</span>
-      <strong class="stat-card__value">
-        <%= number_to_currency(@cards_limit_available || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
-      </strong>
-    </div>
-  </div>
-
-  <div class="stat-card stat-card--warning">
-    <div class="stat-card__icon">
-      <span class="material-symbols-rounded">credit_score</span>
-    </div>
-    <div>
-      <span class="stat-card__label">Limite Utilizado</span>
-      <strong class="stat-card__value">
-        <%= number_to_currency(@cards_limit_used || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
-      </strong>
+  <div class="app-page__hero-unit">
+    <div class="stat-card stat-card--success">
+      <div class="stat-card__icon">
+        <span class="material-symbols-rounded">savings</span>
+      </div>
+      <div>
+        <span class="stat-card__label">Limite Disponível</span>
+        <strong class="stat-card__value">
+          <%= number_to_currency(@cards_limit_available || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+        </strong>
+      </div>
     </div>
   </div>
 
-  <div class="stat-card stat-card--danger">
-    <div class="stat-card__icon">
-      <span class="material-symbols-rounded">receipt_long</span>
+  <div class="app-page__hero-unit">
+    <div class="stat-card stat-card--warning">
+      <div class="stat-card__icon">
+        <span class="material-symbols-rounded">credit_score</span>
+      </div>
+      <div>
+        <span class="stat-card__label">Limite Utilizado</span>
+        <strong class="stat-card__value">
+          <%= number_to_currency(@cards_limit_used || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+        </strong>
+      </div>
     </div>
-    <div>
-      <span class="stat-card__label">Faturas em Aberto</span>
-      <strong class="stat-card__value">
-        <%= number_to_currency(@cards_open_invoices || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
-      </strong>
+  </div>
+
+  <div class="app-page__hero-unit">
+    <div class="stat-card stat-card--danger">
+      <div class="stat-card__icon">
+        <span class="material-symbols-rounded">receipt_long</span>
+      </div>
+      <div>
+        <span class="stat-card__label">Faturas em Aberto</span>
+        <strong class="stat-card__value">
+          <%= number_to_currency(@cards_open_invoices || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+        </strong>
+      </div>
     </div>
   </div>
 </div>

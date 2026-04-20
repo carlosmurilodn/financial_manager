@@ -37,6 +37,11 @@
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
+.app-page__hero-top--cards,
+.app-page__hero-top--categories {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
 .app-page__hero-top--actions {
   grid-template-columns: max-content max-content;
   justify-content: start;
@@ -96,7 +101,9 @@
 
 .app-page__hero-top > .app-page__hero-kpis,
 .app-page__hero-top > .app-page__hero-kpis > .app-expenses-hero-kpis,
-.app-page__hero-top > .app-page__hero-kpis > .app-incomes-hero-kpis {
+.app-page__hero-top > .app-page__hero-kpis > .app-incomes-hero-kpis,
+.app-page__hero-top > .app-page__hero-kpis > .app-cards-hero-kpis,
+.app-page__hero-top > .app-page__hero-kpis > .app-categories-hero-kpis {
   display: contents;
 }
 

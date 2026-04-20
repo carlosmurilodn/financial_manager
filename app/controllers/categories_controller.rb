@@ -2,7 +2,7 @@ class CategoriesController < ApplicationController
   before_action :set_category, only: %i[edit update destroy]
 
   def index
-    @categories = Category.order(:name)
+    load_categories
   end
 
   def new
@@ -45,6 +45,7 @@ end
 
   def destroy
     @category.destroy
+    load_categories
 
     respond_to do |format|
       format.turbo_stream
@@ -53,6 +54,20 @@ end
   end
 
   private
+
+  def load_categories
+    @categories = Category.order(:name)
+
+    month_range = Date.current.beginning_of_month..Date.current.end_of_month
+    current_expenses = Expense.where(balance_month: month_range)
+    current_incomes = Income.where(balance_month: month_range)
+
+    @categories_month_expenses = current_expenses.sum(:amount)
+    @categories_month_incomes = current_incomes.sum(:amount)
+    @categories_top_expense_value = current_expenses.group(:category_id).sum(:amount).values.max || 0
+    @categories_uncategorized_value = current_expenses.where(category_id: nil).sum(:amount) +
+                                      current_incomes.where(category_id: nil).sum(:amount)
+  end
 
   def set_category
     @category = Category.find(params[:id])

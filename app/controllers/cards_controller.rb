@@ -2,7 +2,7 @@ class CardsController < ApplicationController
   before_action :set_card, only: %i[edit update destroy pay]
 
   def index
-    @cards = Card.order(:name)
+    load_cards
   end
 
   def new
@@ -44,6 +44,7 @@ class CardsController < ApplicationController
 
   def destroy
     @card.destroy
+    load_cards
 
     respond_to do |format|
       format.turbo_stream
@@ -77,6 +78,20 @@ class CardsController < ApplicationController
   end
 
   private
+
+  def load_cards
+    @cards = Card.order(:name)
+    @cards_limit_total = @cards.sum { |card| card.total_limit.to_f }
+    @cards_limit_available = @cards.sum { |card| card.remaining_limit.to_f }
+    @cards_limit_used = @cards_limit_total - @cards_limit_available
+
+    credit_methods = [
+      Expense.payment_methods[:credito_a_vista],
+      Expense.payment_methods[:credito_parcelado]
+    ]
+
+    @cards_open_invoices = Expense.where(paid: false, payment_method: credit_methods).sum(:amount)
+  end
 
   def set_card
     @card = Card.find(params[:id])

@@ -1,6 +1,6 @@
 <section class="app-page">
   <div class="app-page__hero">
-    <div class="app-page__hero-top app-page__hero-top--actions">
+    <div class="app-page__hero-top app-page__hero-top--cards">
       <div class="app-page__hero-copy">
         <span class="app-page__hero-icon">
           <span class="material-symbols-rounded">credit_card</span>
@@ -12,17 +12,8 @@
         </div>
       </div>
 
-      <div class="app-page__hero-actions">
-        <%= link_to new_card_path,
-            class: "app-page__hero-new-action",
-            data: { turbo_frame: "modal" } do %>
-          <span class="app-page__hero-new-action-icon">
-            <span class="material-symbols-rounded">add</span>
-          </span>
-          <span class="app-page__hero-new-action-copy">
-            <strong><%= t("buttons.new.masculine", model: t("models.card")) %></strong>
-          </span>
-        <% end %>
+      <div class="app-page__hero-kpis">
+        <%= render "hero_kpis" %>
       </div>
     </div>
   </div>

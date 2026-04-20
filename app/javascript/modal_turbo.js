@@ -5,8 +5,10 @@ document.addEventListener("turbo:frame-load", (event) => {
   if (event.target.id === "modal") {
     const modalBody = document.getElementById("modal-body");
     const modalElement = document.getElementById("turboModal");
+    const modalDialog = modalElement.querySelector(".modal-dialog");
 
     modalBody.innerHTML = event.target.innerHTML;
+    modalDialog.classList.toggle("modal-xl", !!modalBody.querySelector("[data-modal-size='xl']"));
 
     const modal = new bootstrap.Modal(modalElement);
     modal.show();
@@ -29,10 +31,23 @@ document.addEventListener("turbo:frame-load", (event) => {
     // ---------- SUBMIT FORMULARIO ----------
     const form = modalBody.querySelector("form");
     if (form) {
+      form.addEventListener("turbo:submit-start", () => {
+        if (form.dataset.stayModal !== "true") return;
+
+        const loadingOverlay = modalBody.querySelector("[data-invoice-loading]");
+        const submitButton = form.querySelector("[type='submit']");
+
+        loadingOverlay?.classList.add("is-visible");
+        submitButton?.setAttribute("disabled", "disabled");
+      });
+
       form.addEventListener("turbo:submit-end", (e) => {
         const { success } = e.detail;
 
-        if (success) {
+        modalBody.querySelector("[data-invoice-loading]")?.classList.remove("is-visible");
+        form.querySelector("[type='submit']")?.removeAttribute("disabled");
+
+        if (success && form.dataset.stayModal !== "true") {
           modal.hide();                 // fecha modal
           window.location.reload();     // recarrega página inteira
         }

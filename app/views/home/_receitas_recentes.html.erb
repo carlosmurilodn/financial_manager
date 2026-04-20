@@ -11,36 +11,31 @@
     </div>
   </div>
 
-  <div class="dashboard-card__body">
+  <div class="dashboard-card__body dashboard-card__body--movement-feed">
     <% receitas = @recent_incomes %>
-    <% linhas = receitas.size + 1 %>
-    <% altura_linha = 100.0 / linhas %>
 
-    <table class="table app-table app-table--recent-incomes mb-0" style="height: 100%; table-layout: fixed;">
-      <thead>
-        <tr style="height: <%= altura_linha %>%;">
-          <th class="align-middle">Data</th>
-          <th class="align-middle">Descricao</th>
-          <th class="align-middle">Valor</th>
-        </tr>
-      </thead>
+    <div class="dashboard-movement-feed dashboard-movement-feed--incomes">
+      <% month_labels = %w[jan fev mar abr mai jun jul ago set out nov dez] %>
+      <% receitas.each do |income| %>
+        <article class="dashboard-movement-item dashboard-movement-item--income">
+          <div class="dashboard-movement-item__date">
+            <strong><%= income.date.strftime("%d") %></strong>
+            <span><%= month_labels[income.date.month - 1] %></span>
+          </div>
 
-      <tbody>
-        <% receitas.each_with_index do |income, index| %>
-          <% borda = (index == receitas.size - 1) ? "none" : "1px solid rgba(34, 197, 94, 0.18)" %>
-          <tr style="height: <%= altura_linha %>%;">
-            <td class="text-start align-middle" style="border-bottom: <%= borda %>;">
-              <%= income.date.strftime("%d/%m/%Y") %>
-            </td>
-            <td class="text-start align-middle" style="border-bottom: <%= borda %>;">
-              <%= [income.category&.emoji, income.description.presence || "Receita"].compact.join(" ") %>
-            </td>
-            <td class="text-start align-middle text-success" style="border-bottom: <%= borda %>;">
-              <%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+          <div class="dashboard-movement-item__main">
+            <div class="dashboard-movement-item__title">
+              <span class="material-symbols-rounded dashboard-movement-item__marker"><%= income.category&.material_icon || "category" %></span>
+              <strong><%= income.description.presence || "Receita" %></strong>
+            </div>
+            <small><%= income.category&.name || "Sem categoria" %></small>
+          </div>
+
+          <strong class="dashboard-movement-item__amount">
+            <%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
+          </strong>
+        </article>
+      <% end %>
+    </div>
   </div>
 </div>

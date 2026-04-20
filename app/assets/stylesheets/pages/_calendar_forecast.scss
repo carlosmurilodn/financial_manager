@@ -1,0 +1,416 @@
+.dashboard-toolbar {
+  margin-bottom: 18px;
+}
+
+.dashboard-toolbar__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.app-calendar__title {
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.app-calendar__nav {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
+}
+
+.app-calendar__nav .dashboard-toolbar__actions:first-child {
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.app-calendar__nav .dashboard-toolbar__actions:last-child {
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.app-calendar__nav-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+
+.app-calendar__nav-btn .material-symbols-rounded {
+  font-size: 1.3rem;
+}
+
+.app-calendar-agenda {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--table-border-color);
+}
+
+.app-calendar-agenda__header {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 14px;
+}
+
+.app-calendar-agenda__header strong {
+  font-size: 0.92rem;
+}
+
+.app-calendar-agenda__header small,
+.app-calendar-agenda__type {
+  color: var(--text-soft);
+}
+
+.app-calendar-agenda__list {
+  display: grid;
+  gap: 10px;
+  max-height: 320px;
+  padding-right: 4px;
+  overflow-y: auto;
+}
+
+.app-calendar-agenda__item {
+  display: grid;
+  grid-template-columns: 52px 10px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--table-border-color);
+}
+
+.app-calendar-agenda__item:last-child {
+  border-bottom: 0;
+}
+
+.app-calendar-agenda__date {
+  display: grid;
+  justify-items: start;
+  gap: 2px;
+}
+
+.app-calendar-agenda__date strong {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.app-calendar-agenda__date span {
+  color: var(--text-soft);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.app-calendar-agenda__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.app-calendar-agenda__dot--income {
+  background: #74c398;
+}
+
+.app-calendar-agenda__dot--expense {
+  background: #ec8c97;
+}
+
+.app-calendar-agenda__content {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.app-calendar-agenda__type {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.app-calendar-agenda__description {
+  color: #6f6a74;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-wrap-mode: nowrap;
+}
+
+.app-calendar-agenda__value {
+  font-size: 0.9rem;
+  font-weight: 800;
+  white-space: nowrap;
+  align-self: start;
+}
+
+.app-calendar-agenda__value--income {
+  color: #13834b;
+}
+
+.app-calendar-agenda__value--expense {
+  color: #d83f4f;
+}
+
+.app-calendar-agenda__empty {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.88rem;
+}
+
+.app-forecast__summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.app-forecast__summary-card {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--table-border-color);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.64);
+}
+
+.app-forecast__summary-card small {
+  color: var(--text-soft);
+  font-size: 0.78rem;
+}
+
+.app-forecast__summary-card--positive {
+  background: var(--stat-success-bg);
+}
+
+.app-forecast__summary-card--danger {
+  background: var(--stat-danger-bg);
+}
+
+.app-forecast__summary-card--warning {
+  background: var(--stat-warning-bg);
+}
+
+.app-forecast__summary-label {
+  color: var(--text-soft);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.app-forecast__summary-value {
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.app-forecast__nav {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
+}
+
+.app-forecast__nav .dashboard-toolbar__actions:first-child {
+  justify-content: flex-start;
+}
+
+.app-forecast__nav .dashboard-toolbar__actions:last-child {
+  justify-content: flex-end;
+}
+
+.app-forecast__nav-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+
+.app-forecast__nav-btn .material-symbols-rounded {
+  font-size: 1.3rem;
+}
+
+.app-forecast__title {
+  text-align: center;
+}
+
+.app-calendar-table {
+  --bs-table-bg: transparent;
+  width: 100%;
+  margin-bottom: 0;
+  table-layout: fixed;
+}
+
+.app-calendar-table tbody tr {
+  height: 100%;
+}
+
+.app-calendar-table thead th {
+  border: 0;
+  color: var(--text-soft);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.app-calendar-table td {
+  min-width: 0;
+  padding: 10px 8px;
+  border-color: rgba(148, 163, 184, 0.16);
+  vertical-align: top;
+}
+
+.app-calendar-table tr > :first-child {
+  padding-left: 14px;
+}
+
+.app-calendar-table__empty {
+  background: var(--calendar-empty-bg);
+}
+
+.app-calendar-table__day {
+  position: relative;
+  height: 72px;
+}
+
+.app-calendar-table__day--today {
+  background-color: var(--calendar-today-bg);
+}
+
+.app-calendar-table__date {
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.app-calendar-table__markers {
+  display: grid;
+  gap: 6px;
+}
+
+.app-calendar-table__marker {
+  display: block;
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+}
+
+.app-calendar-table__marker--income {
+  background: rgba(116, 195, 152, 0.95);
+}
+
+.app-calendar-table__marker--expense {
+  background: rgba(236, 140, 151, 0.95);
+}
+
+.app-calendar-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 12px);
+  z-index: 2000;
+  display: none;
+  gap: 8px;
+  min-width: 220px;
+  max-width: 260px;
+  padding: 12px 14px;
+  border: 1px solid rgba(220, 225, 235, 0.95);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 18px 34px rgba(25, 31, 46, 0.16);
+  transform: translate(-50%, 8px);
+  transition: 0.2s ease;
+  pointer-events: none;
+}
+
+.app-calendar-table__day--has-events:hover .app-calendar-tooltip {
+  display: grid;
+  transform: translate(-50%, 0);
+}
+
+.app-calendar-tooltip__item {
+  display: grid;
+  gap: 3px;
+}
+
+.app-calendar-tooltip__description {
+  color: #6f6a74;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.app-calendar-tooltip__value {
+  font-size: 0.8rem;
+}
+
+.app-calendar-tooltip__value--income {
+  color: #13834b;
+}
+
+.app-calendar-tooltip__value--expense {
+  color: #d83f4f;
+}
+
+.app-table--forecast.table > tbody > tr:nth-child(odd) > td {
+  background-color: rgba(255, 255, 255, 0.56);
+}
+
+.app-table--forecast.table > tbody > tr:nth-child(even) > td {
+  background-color: rgba(246, 248, 252, 0.9);
+}
+
+.app-table--forecast.table > tbody > tr:hover > td {
+  background-color: rgba(88, 113, 231, 0.06);
+}
+
+.app-forecast__row--current > td {
+  background-color: rgba(88, 113, 231, 0.08) !important;
+}
+
+.app-forecast__month {
+  font-weight: 700;
+}
+
+.app-forecast__month-copy {
+  position: relative;
+  display: inline-block;
+}
+
+.app-forecast__month-label {
+  display: inline-block;
+}
+
+.app-forecast__month-badge {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 8px);
+  display: inline-flex;
+  align-items: center;
+  transform: translateY(-50%);
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(88, 113, 231, 0.12);
+  color: #5670e4;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.app-forecast__saldo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 132px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+.app-forecast__saldo--positive {
+  background: rgba(134, 207, 167, 0.16);
+  color: #3f9060;
+}
+
+.app-forecast__saldo--negative {
+  background: rgba(242, 154, 163, 0.16);
+  color: #d9535d;
+}
+

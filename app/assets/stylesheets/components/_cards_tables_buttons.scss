@@ -1,0 +1,178 @@
+.dashboard-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 24px;
+  border-radius: var(--radius-lg);
+}
+
+.dashboard-card--mint { background: var(--card-mint-bg); }
+.dashboard-card--lavender { background: var(--card-lavender-bg); }
+.dashboard-card--rose { background: var(--card-rose-bg); }
+.dashboard-card--peach { background: var(--card-peach-bg); }
+
+.dashboard-card__header,
+.dashboard-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.dashboard-card__body {
+  flex: 1;
+  margin-top: 20px;
+}
+
+.dashboard-card--calendar {
+  position: relative;
+  width: 34%;
+  max-width: 100%;
+  min-width: 360px;
+  z-index: 1200;
+  overflow: visible;
+}
+
+.dashboard-grid--planning .dashboard-card--calendar {
+  width: 100%;
+  min-width: 0;
+}
+
+.dashboard-card--calendar .table-responsive {
+  overflow: visible;
+}
+
+.dashboard-card--calendar .dashboard-card__body,
+.dashboard-card--calendar turbo-frame {
+  overflow: visible;
+}
+
+.dashboard-card__body--canvas {
+  min-height: 580px;
+}
+
+.dashboard-card__title {
+  font-size: 1.2rem;
+}
+
+.dashboard-card__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: var(--pill-bg);
+  color: var(--text-main);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.dashboard-card__pill--period {
+  gap: 6px;
+  padding: 6px;
+}
+
+.dashboard-card__period-label,
+.dashboard-card__period-button {
+  display: inline-flex;
+  align-items: center;
+}
+
+.dashboard-card__period-label {
+  gap: 8px;
+  padding: 4px 6px;
+  white-space: nowrap;
+}
+
+.dashboard-card__period-button {
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-soft);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.dashboard-card__period-button:hover {
+  background: var(--hero-badge-icon-bg);
+  color: var(--nav-active-icon-color);
+}
+
+.dashboard-card__period-button .material-symbols-rounded {
+  font-size: 1.1rem;
+}
+
+.dashboard-card__pill--success {
+  color: var(--pill-success-color);
+  background: var(--pill-success-bg);
+}
+
+.dashboard-card__pill--danger {
+  color: var(--pill-danger-color);
+  background: var(--pill-danger-bg);
+}
+
+.app-table {
+  --bs-table-bg: var(--table-surface);
+  --bs-table-striped-bg: transparent;
+  --bs-table-hover-bg: var(--table-hover-bg);
+  color: var(--table-row-text);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.app-table > :not(caption) > * > * {
+  padding: 1rem 0.85rem;
+  border-bottom-color: var(--table-border-color);
+  background-color: var(--table-surface);
+}
+
+.app-table thead th {
+  color: var(--table-head-color);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+
+.app-table tbody td {
+  color: var(--table-row-text);
+  font-weight: 400;
+}
+
+html[data-theme="fincan"] .app-table tbody td {
+  color: #5f6673;
+}
+
+.app-table__primary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-table__avatar {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: var(--avatar-bg);
+}
+
+.app-btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.85rem 1.2rem;
+  font-weight: 700;
+}
+
+.app-btn--ghost {
+  background: var(--ghost-btn-bg);
+  color: var(--text-main);
+  box-shadow: var(--ghost-btn-shadow);
+}

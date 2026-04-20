@@ -1,0 +1,124 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.dashboard-grid--planning {
+  grid-template-columns: minmax(320px, 2fr) minmax(0, 2fr);
+  align-items: stretch;
+}
+
+.dashboard-grid--charts {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.dashboard-grid--charts > .dashboard-grid__item {
+  height: 650px;
+  min-height: 0;
+}
+
+.dashboard-grid__item--movement-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-self: stretch;
+}
+
+.dashboard-grid__item--cards-summary {
+  align-self: stretch;
+}
+
+.dashboard-grid__item--cards-summary .dashboard-card {
+  height: 100%;
+  overflow: hidden;
+}
+
+.dashboard-grid--charts .dashboard-grid__item {
+  min-height: 0;
+}
+
+.dashboard-grid--charts .dashboard-card {
+  min-height: 0;
+}
+
+.dashboard-grid__item--movement-stack .dashboard-card {
+  height: auto;
+  min-height: 0;
+  overflow: hidden;
+  flex: 1;
+}
+
+.dashboard-grid__item--category-chart {
+  min-height: 0;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.stat-card {
+  display: flex;
+  gap: 16px;
+  padding: 22px;
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+}
+
+.stat-card__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  color: #fff;
+}
+
+.stat-card__label,
+.stat-card__meta {
+  display: block;
+}
+
+.stat-card__label {
+  margin-bottom: 6px;
+  color: var(--text-soft);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.stat-card__value {
+  display: block;
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  font-weight: 800;
+}
+
+.stat-card__meta {
+  margin-top: 6px;
+  color: var(--text-soft);
+  font-size: 0.82rem;
+}
+
+.stat-card--success {
+  background: var(--stat-success-bg);
+}
+
+.stat-card--primary {
+  background: var(--stat-primary-bg);
+}
+
+.stat-card--danger {
+  background: var(--stat-danger-bg);
+}
+
+.stat-card--warning {
+  background: var(--stat-warning-bg);
+}
+
+.stat-card--success .stat-card__icon { background: var(--stat-success-icon-bg); }
+.stat-card--primary .stat-card__icon { background: var(--stat-primary-icon-bg); }
+.stat-card--danger .stat-card__icon { background: var(--stat-danger-icon-bg); }
+.stat-card--warning .stat-card__icon { background: var(--stat-warning-icon-bg); }

@@ -1,21 +1,29 @@
 <section class="app-page">
   <div class="app-page__hero">
-    <div class="app-page__hero-copy">
-      <span class="app-page__hero-icon">
-        <%= image_tag "icons/card.png", alt: "Cartões", size: "22x22" %>
-      </span>
-      <div>
-        <p class="app-page__eyebrow">Gestão</p>
-        <h1 class="app-page__title">Cartões</h1>
-        <p class="app-page__description">Acompanhe limites, vencimentos e acione rapidamente o fechamento do mês.</p>
+    <div class="app-page__hero-top app-page__hero-top--actions">
+      <div class="app-page__hero-copy">
+        <span class="app-page__hero-icon">
+          <span class="material-symbols-rounded">credit_card</span>
+        </span>
+        <div>
+          <p class="app-page__eyebrow">Gestão</p>
+          <h1 class="app-page__title">Cartões</h1>
+          <%# <p class="app-page__description">Acompanhe limites, vencimentos e acione rapidamente o fechamento do mês.</p> %>
+        </div>
       </div>
-    </div>
 
-    <div class="app-page__hero-actions">
-      <%= link_to t("buttons.new.masculine", model: t("models.card")),
-          new_card_path,
-          class: "btn app-page__primary-btn",
-          data: { turbo_frame: "modal" } %>
+      <div class="app-page__hero-actions">
+        <%= link_to new_card_path,
+            class: "app-page__hero-new-action",
+            data: { turbo_frame: "modal" } do %>
+          <span class="app-page__hero-new-action-icon">
+            <span class="material-symbols-rounded">add</span>
+          </span>
+          <span class="app-page__hero-new-action-copy">
+            <strong><%= t("buttons.new.masculine", model: t("models.card")) %></strong>
+          </span>
+        <% end %>
+      </div>
     </div>
   </div>
 
@@ -48,13 +56,13 @@
               <td class="app-record-actions">
                 <%= link_to t("buttons.edit"),
                     edit_card_path(card),
-                    class: "btn btn-sm btn-primary me-1",
+                    class: "btn btn-sm btn-primary app-record-actions__edit me-1",
                     data: { turbo_frame: "modal" } %>
                 <%= link_to t("buttons.delete"), card,
                             data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
-                            class: "btn btn-sm btn-danger me-1" %>
+                            class: "btn btn-sm btn-danger app-record-actions__delete me-1" %>
                 <%= form_with url: pay_card_path(card), method: :post, data: { turbo_confirm: "Deseja marcar como pagas todas as despesas e parcelas NÃO pagas deste cartão para o mês atual?" }, class: "d-inline" do %>
-                  <%= submit_tag "Pagar", class: "btn btn-sm btn-warning" %>
+                  <%= submit_tag "Pagar", class: "btn btn-sm btn-warning app-record-actions__pay" %>
                 <% end %>
               </td>
             </tr>

@@ -1,0 +1,485 @@
+/* Inactive themes archive: sand + sage + ember + ember-dark */
+
+/* Archived orange themes: Aurora Laranja + Brasa Noturna */
+
+html[data-theme="ember"] {
+  --bs-body-font-size: 0.8rem;
+  --bs-heading-color: #7a2e0b;
+  --heading-color: #8a3b12;
+  --dashboard-h1-color: #ffffff;
+  --app-bg: #ffffff;
+  --app-bg-accent: #ffffff;
+  --app-bg-soft: rgba(242, 243, 246, 0.72);
+  --surface: rgba(246, 247, 249, 0.78);
+  --surface-border: rgba(20, 20, 24, 0.08);
+  --text-main: #3d2416;
+  --text-soft: #98694e;
+  --shadow-soft: 0 26px 50px rgba(76, 45, 28, 0.11);
+  --shadow-card: 0 18px 36px rgba(76, 45, 28, 0.12);
+  --primary: #ff590f;
+  --success: #36b887;
+  --danger: #d84d2a;
+  --warning: #ff590f;
+  --sidebar-border: rgba(255, 255, 255, 0.72);
+  --sidebar-bg: rgba(246, 247, 249, 0.86);
+  --sidebar-logo-bg: #ff590f;
+  --sidebar-logo-color: #111111;
+  --sidebar-logo-shadow: 0 10px 18px rgba(255, 89, 15, 0.24);
+  --sidebar-toggle-bg: rgba(247, 225, 199, 0.34);
+  --sidebar-toggle-shadow: inset 0 0 0 1px rgba(255, 156, 89, 0.2);
+  --nav-text: #98694e;
+  --nav-hover-bg: rgba(232, 234, 238, 0.78);
+  --nav-hover-border: rgba(255, 126, 38, 0.18);
+  --nav-icon-bg: rgba(232, 234, 238, 0.82);
+  --nav-icon-color: #b76533;
+  --nav-active-text: #111111;
+  --nav-active-icon-color: #111111;
+  --nav-active-bg: #ff590f;
+  --nav-active-bar: #ff590f;
+  --weather-panel-bg: rgba(246, 247, 249, 0.86);
+  --weather-panel-border: rgba(20, 20, 24, 0.08);
+  --hero-border: rgba(20, 20, 24, 0.08);
+  --hero-bg: rgba(246, 247, 249, 0.76);
+  --card-border: rgba(20, 20, 24, 0.08);
+  --hero-badge-icon-bg: #ff590f;
+  --hero-badge-icon-color: #111111;
+  --stat-success-bg: rgba(39, 159, 131, 0.2);
+  --stat-primary-bg: rgba(77, 102, 217, 0.2);
+  --stat-danger-bg: rgba(219, 111, 140, 0.2);
+  --stat-warning-bg: rgba(215, 156, 70, 0.2);
+  --stat-success-icon-bg: #279f83;
+  --stat-primary-icon-bg: #4d66d9;
+  --stat-danger-icon-bg: #db6f8c;
+  --stat-warning-icon-bg: #d79c46;
+  --card-mint-bg: rgba(246, 247, 249, 0.76);
+  --card-lavender-bg: rgba(238, 240, 244, 0.76);
+  --card-rose-bg: rgba(242, 243, 246, 0.76);
+  --card-peach-bg: rgba(232, 234, 239, 0.74);
+  --pill-bg: rgba(232, 234, 238, 0.82);
+  --pill-success-color: #23875f;
+  --pill-success-bg: rgba(54, 184, 135, 0.12);
+  --pill-danger-color: #c54928;
+  --pill-danger-bg: rgba(216, 77, 42, 0.12);
+  --table-surface: rgba(246, 247, 249, 0.82);
+  --table-surface-alt: rgba(238, 240, 244, 0.82);
+  --table-hover-bg: rgba(255, 156, 89, 0.14);
+  --table-head-color: #a44b1d;
+  --table-row-text: #3d2416;
+  --table-border-color: rgba(247, 225, 199, 0.42);
+  --avatar-bg: #ff9c59;
+  --ghost-btn-bg: #ff9c59;
+  --ghost-btn-shadow: 0 10px 18px rgba(111, 53, 19, 0.12);
+  --calendar-empty-bg: rgba(255, 248, 242, 0.74);
+  --calendar-today-bg: rgba(255, 89, 15, 0.14);
+  --calendar-event-bg: rgba(255, 89, 15, 0.92);
+}
+
+html[data-theme="ember"] h1,
+html[data-theme="ember"] h2,
+html[data-theme="ember"] h3,
+html[data-theme="ember"] h4,
+html[data-theme="ember"] h5,
+html[data-theme="ember"] h6 {
+  color: var(--heading-color);
+}
+
+html[data-theme="ember"] .dashboard-hero h1 {
+  color: var(--dashboard-h1-color);
+}
+
+html[data-theme="ember"] .dashboard-movement-item--expense,
+html[data-theme="ember"] .dashboard-card-balance,
+html[data-theme="ember"] .dashboard-category-item {
+  border-color: rgba(20, 20, 24, 0.08);
+  background: rgba(238, 240, 244, 0.62);
+}
+
+html[data-theme="ember"] .app-nav-link.active-menu .app-nav-link__icon,
+html[data-theme="ember"] .stat-card__icon,
+html[data-theme="ember"] .dashboard-hero__badge .material-symbols-rounded,
+html[data-theme="ember"] .app-btn--ghost,
+html[data-theme="ember"] .dashboard-card__period-button:hover {
+  color: #111111;
+}
+
+html[data-theme="ember"] .app-nav-link.active-menu .app-nav-link__icon {
+  background: #ff9c59;
+}
+
+html[data-theme="ember-dark"] {
+  --bs-body-font-size: 0.8rem;
+  --bs-heading-color: #ff590f;
+  --heading-color: #ff590f;
+  --dashboard-h1-color: #fff3e6;
+  --app-bg: #000000;
+  --app-bg-accent: #000000;
+  --app-bg-soft: #101116;
+  --surface: rgba(25, 26, 32, 0.78);
+  --surface-border: rgba(255, 255, 255, 0.06);
+  --text-main: #fff0e2;
+  --text-soft: #ffc89d;
+  --shadow-soft: 0 24px 55px rgba(0, 0, 0, 0.58);
+  --shadow-card: 0 18px 42px rgba(0, 0, 0, 0.68);
+  --primary: #ff590f;
+  --success: #7ed69e;
+  --danger: #ff590f;
+  --warning: #ffc89d;
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --sidebar-bg: rgba(19, 20, 25, 0.92);
+  --sidebar-logo-bg: #ff590f;
+  --sidebar-logo-color: #101116;
+  --sidebar-logo-shadow: 0 10px 18px rgba(255, 89, 15, 0.28);
+  --sidebar-toggle-bg: rgba(255, 126, 38, 0.08);
+  --sidebar-toggle-shadow: inset 0 0 0 1px rgba(255, 126, 38, 0.2);
+  --nav-text: #ffc89d;
+  --nav-hover-bg: rgba(44, 45, 53, 0.78);
+  --nav-hover-border: rgba(255, 126, 38, 0.18);
+  --nav-icon-bg: rgba(44, 45, 53, 0.8);
+  --nav-icon-color: #ffbd8a;
+  --nav-active-text: #101116;
+  --nav-active-icon-color: #101116;
+  --nav-active-bg: #ff590f;
+  --nav-active-bar: #ff590f;
+  --weather-panel-bg: rgba(25, 26, 32, 0.82);
+  --weather-panel-border: rgba(255, 255, 255, 0.06);
+  --hero-border: rgba(255, 255, 255, 0.06);
+  --hero-bg: rgba(25, 26, 32, 0.82);
+  --card-border: rgba(255, 255, 255, 0.06);
+  --hero-badge-icon-bg: #ff590f;
+  --hero-badge-icon-color: #101116;
+  --stat-success-bg: rgba(39, 159, 131, 0.15);
+  --stat-primary-bg: rgba(77, 102, 217, 0.15);
+  --stat-danger-bg: rgba(219, 111, 140, 0.15);
+  --stat-warning-bg: rgba(215, 156, 70, 0.15);
+  --stat-success-icon-bg: rgba(116, 195, 152, 0.7);
+  --stat-primary-icon-bg: rgba(134, 159, 237, 0.7);
+  --stat-danger-icon-bg: rgba(236, 140, 151, 0.7);
+  --stat-warning-icon-bg: rgba(239, 198, 110, 0.7);
+  --card-mint-bg: rgba(25, 26, 32, 0.78);
+  --card-lavender-bg: rgba(31, 32, 39, 0.78);
+  --card-rose-bg: rgba(28, 29, 36, 0.78);
+  --card-peach-bg: rgba(36, 37, 45, 0.74);
+  --pill-bg: rgba(255, 200, 157, 0.08);
+  --pill-success-color: #96e6b2;
+  --pill-success-bg: rgba(126, 214, 158, 0.12);
+  --pill-danger-color: #ff590f;
+  --pill-danger-bg: rgba(255, 112, 72, 0.14);
+  --table-surface: rgba(25, 26, 32, 0.86);
+  --table-surface-alt: rgba(18, 19, 24, 0.9);
+  --table-hover-bg: rgba(255, 156, 89, 0.14);
+  --table-head-color: #ff590f;
+  --table-row-text: #fff0e2;
+  --table-border-color: rgba(255, 255, 255, 0.08);
+  --avatar-bg: #ff590f;
+  --ghost-btn-bg: #ff590f;
+  --ghost-btn-shadow: 0 12px 20px rgba(13, 7, 4, 0.28);
+  --calendar-empty-bg: rgba(255, 200, 157, 0.04);
+  --calendar-today-bg: rgba(255, 126, 38, 0.16);
+  --calendar-event-bg: rgba(255, 89, 15, 0.9);
+}
+
+html[data-theme="ember-dark"] h1,
+html[data-theme="ember-dark"] h2,
+html[data-theme="ember-dark"] h3,
+html[data-theme="ember-dark"] h4,
+html[data-theme="ember-dark"] h5,
+html[data-theme="ember-dark"] h6 {
+  color: var(--heading-color);
+}
+
+html[data-theme="ember-dark"] {
+  scrollbar-color: #ff590f transparent;
+}
+
+html[data-theme="ember-dark"] * {
+  scrollbar-color: #ff590f transparent;
+}
+
+html[data-theme="ember-dark"] *::-webkit-scrollbar-thumb {
+  background: #ff590f !important;
+  background-clip: padding-box !important;
+}
+
+html[data-theme="ember-dark"] *::-webkit-scrollbar-thumb:hover {
+  background: #ff590f !important;
+  background-clip: padding-box !important;
+}
+
+html[data-theme="ember-dark"] .dashboard-movement-item--expense,
+html[data-theme="ember-dark"] .dashboard-card-balance,
+html[data-theme="ember-dark"] .dashboard-category-item {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(34, 35, 42, 0.72);
+}
+
+html[data-theme="ember-dark"] .app-nav-link.active-menu,
+html[data-theme="ember-dark"] .app-nav-link.active-menu .app-nav-link__icon,
+html[data-theme="ember-dark"] .app-nav-link.active-menu .link-text,
+html[data-theme="ember-dark"] .stat-card__icon,
+html[data-theme="ember-dark"] .dashboard-hero__badge .material-symbols-rounded,
+html[data-theme="ember-dark"] .app-btn--ghost,
+html[data-theme="ember-dark"] .dashboard-card__period-button:hover {
+  color: #101116;
+}
+
+html[data-theme="ember-dark"] .app-nav-link.active-menu,
+html[data-theme="ember-dark"] .app-nav-link.active-menu .app-nav-link__icon {
+  background: #ff590f;
+}
+
+html[data-theme="ember-dark"] .material-symbols-rounded.dashboard-movement-item__marker,
+html[data-theme="ember-dark"] .dashboard-movement-item__marker.material-symbols-rounded {
+  color: rgb(255, 240, 226);
+}
+
+html[data-theme="ember-dark"] .app-calendar-agenda__date strong {
+  color: var(--text-soft);
+}
+
+html[data-theme="ember-dark"] .app-forecast__summary-value,
+html[data-theme="ember-dark"] .app-sidebar__time,
+html[data-theme="ember-dark"] .app-sidebar__time-main,
+html[data-theme="ember-dark"] .app-sidebar__time-seconds,
+html[data-theme="ember-dark"] .dashboard-hero__badge-item--primary strong {
+  color: #ff9c59;
+}
+
+html[data-theme="sand"] {
+  --bs-body-font-size: 0.8rem;
+  --app-bg: #f7f6f4;
+  --app-bg-accent: #f7f6f4;
+  --app-bg-soft: #ffffff;
+  --bg-orb-1: rgba(255, 255, 255, 0.72);
+  --bg-orb-2: rgba(255, 190, 117, 0.08);
+  --bg-orb-3: rgba(255, 138, 61, 0.06);
+  --surface: #ffffff;
+  --surface-border: rgba(230, 226, 218, 0.9);
+  --text-main: #40362b;
+  --text-soft: #968777;
+  --shadow-soft: 0 24px 55px rgba(126, 118, 104, 0.08);
+  --shadow-card: 0 14px 30px rgba(126, 118, 104, 0.08);
+  --primary: #ff8b45;
+  --success: #84cfab;
+  --danger: #f2a0ac;
+  --warning: #f3c97f;
+  --sidebar-soft: #fffdf9;
+  --sidebar-border: rgba(235, 231, 224, 0.88);
+  --sidebar-bg: linear-gradient(180deg, #ffffff, #ffffff);
+  --sidebar-logo-bg: linear-gradient(135deg, #ffaf6f, #ff8b45);
+  --sidebar-logo-color: #ffffff;
+  --sidebar-logo-shadow: 0 10px 18px rgba(255, 139, 69, 0.22);
+  --sidebar-toggle-bg: #f8f1e7;
+  --sidebar-toggle-shadow: inset 0 0 0 1px rgba(214, 197, 171, 0.45);
+  --nav-text: #7f7265;
+  --nav-hover-bg: rgba(255, 139, 69, 0.08);
+  --nav-hover-border: transparent;
+  --nav-icon-bg: transparent;
+  --nav-icon-color: #8d8072;
+  --nav-active-text: #de8445;
+  --nav-active-icon-color: #de8445;
+  --nav-active-bg: linear-gradient(90deg, rgba(255, 170, 116, 0.16), rgba(255, 255, 255, 0));
+  --nav-active-bar: linear-gradient(180deg, #ffb16f, #ff8740);
+  --weather-panel-bg: linear-gradient(180deg, #ffffff, #ffffff);
+  --weather-panel-border: rgba(235, 231, 224, 0.88);
+  --hero-border: rgba(235, 231, 224, 0.9);
+  --hero-bg: linear-gradient(135deg, #ffffff, #ffffff);
+  --card-border: rgba(235, 231, 224, 0.9);
+  --hero-badge-icon-bg: #eef1ff;
+  --hero-badge-icon-color: #8ea4ea;
+  --stat-success-bg: linear-gradient(180deg, #edf9f1, #e3f4e9);
+  --stat-primary-bg: linear-gradient(180deg, #eef2ff, #e4ebff);
+  --stat-danger-bg: linear-gradient(180deg, #fff0f2, #ffe6ea);
+  --stat-warning-bg: linear-gradient(180deg, #fff7df, #ffefc8);
+  --stat-success-icon-bg: linear-gradient(135deg, #86cfa7, #74c398);
+  --stat-primary-icon-bg: linear-gradient(135deg, #9db1f6, #869fed);
+  --stat-danger-icon-bg: linear-gradient(135deg, #f29aa3, #ec8c97);
+  --stat-warning-icon-bg: linear-gradient(135deg, #f2cf84, #efc66e);
+  --card-mint-bg: linear-gradient(180deg, #ffffff, #ffffff);
+  --card-lavender-bg: linear-gradient(180deg, #ffffff, #ffffff);
+  --card-rose-bg: linear-gradient(180deg, #ffffff, #ffffff);
+  --card-peach-bg: linear-gradient(180deg, #ffffff, #ffffff);
+  --pill-bg: rgba(255, 255, 255, 0.88);
+  --pill-success-color: #13834b;
+  --pill-success-bg: rgba(34, 197, 94, 0.12);
+  --pill-danger-color: #d83f4f;
+  --pill-danger-bg: rgba(239, 68, 68, 0.1);
+  --table-surface: transparent;
+  --table-hover-bg: rgba(255, 255, 255, 0.44);
+  --table-head-color: var(--text-soft);
+  --table-row-text: var(--text-main);
+  --table-border-color: rgba(148, 163, 184, 0.18);
+  --avatar-bg: rgba(91, 91, 214, 0.1);
+  --ghost-btn-bg: rgba(255, 255, 255, 0.78);
+  --ghost-btn-shadow: 0 10px 18px rgba(148, 163, 184, 0.16);
+  --calendar-empty-bg: rgba(255, 255, 255, 0.35);
+  --calendar-today-bg: rgba(255, 139, 69, 0.14);
+  --calendar-event-bg: linear-gradient(135deg, rgba(239, 91, 107, 0.88), rgba(255, 128, 128, 0.92));
+  --sidebar-width: 282px;
+  --sidebar-width-collapsed: 94px;
+  --radius-lg: 10px;
+  --radius-md: 10px;
+}
+
+html[data-theme="sage"] {
+  --app-bg: #edf3ef;
+  --app-bg-accent: #e7efe9;
+  --app-bg-soft: #f8fbf8;
+  --bg-orb-1: rgba(255, 255, 255, 0.9);
+  --bg-orb-2: rgba(100, 224, 194, 0.12);
+  --bg-orb-3: rgba(52, 197, 166, 0.08);
+  --surface: #ffffff;
+  --surface-border: rgba(223, 232, 227, 0.96);
+  --text-main: #17312b;
+  --text-soft: #7a9188;
+  --shadow-soft: 0 22px 48px rgba(90, 121, 108, 0.1);
+  --shadow-card: 0 14px 28px rgba(92, 127, 112, 0.08);
+  --primary: #1ec8a5;
+  --success: #42c7a0;
+  --danger: #ff8e87;
+  --warning: #f0d37b;
+  --sidebar-border: rgba(223, 232, 227, 0.96);
+  --sidebar-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.938), rgba(246, 250, 247, 0.98));
+  --sidebar-logo-bg: linear-gradient(135deg, #86cfa7, #74c398);
+  --sidebar-logo-color: #ffffff;
+  --sidebar-logo-shadow: 0 10px 18px rgba(23, 49, 43, 0.18);
+  --sidebar-toggle-bg: #f5faf7;
+  --sidebar-toggle-shadow: inset 0 0 0 1px rgba(198, 223, 211, 0.5);
+  --nav-text: #89a197;
+  --nav-hover-bg: rgba(30, 200, 165, 0.07);
+  --nav-hover-border: transparent;
+  --nav-icon-bg: #f1faf6;
+  --nav-icon-color: #6ea996;
+  --nav-active-text: #1cb698;
+  --nav-active-icon-color: #1cb698;
+  --nav-active-bg: linear-gradient(90deg, rgba(30, 200, 165, 0.12), rgba(255, 255, 255, 0));
+  --nav-active-bar: linear-gradient(180deg, #57dbc0, #1ec8a5);
+  --weather-panel-bg: linear-gradient(180deg, #ffffff, #f7fbf9);
+  --weather-panel-border: rgba(223, 232, 227, 0.96);
+  --hero-border: rgba(223, 232, 227, 0.96);
+  --hero-bg: linear-gradient(135deg, #ffffff, #f4faf7);
+  --card-border: rgba(223, 232, 227, 0.96);
+  --hero-badge-icon-bg: rgba(255, 255, 255, 0);
+  --hero-badge-icon-color: #20c4a2;
+  --stat-success-bg: linear-gradient(180deg, #edf9f1, #e4f5eb);
+  --stat-primary-bg: linear-gradient(180deg, #eef2ff, #e7edff);
+  --stat-danger-bg: linear-gradient(180deg, #fff0f2, #ffe8ec);
+  --stat-warning-bg: linear-gradient(180deg, #fff7df, #fff0cb);
+  --stat-success-icon-bg: linear-gradient(135deg, #86cfa7, #74c398);
+  --stat-primary-icon-bg: linear-gradient(135deg, #9db1f6, #869fed);
+  --stat-danger-icon-bg: linear-gradient(135deg, #f29aa3, #ec8c97);
+  --stat-warning-icon-bg: linear-gradient(135deg, #f2cf84, #efc66e);
+  --card-mint-bg: linear-gradient(180deg, #ffffff, #ffffff);
+  --card-lavender-bg: linear-gradient(180deg, #ffffff, #ffffff);
+  --card-rose-bg: linear-gradient(180deg, #ffffff, #ffffff);
+  --card-peach-bg: linear-gradient(180deg, #ffffff, #ffffff);
+  --pill-bg: #f5faf7;
+  --pill-success-color: #18a986;
+  --pill-success-bg: rgba(30, 200, 165, 0.1);
+  --pill-danger-color: #e26e66;
+  --pill-danger-bg: rgba(255, 142, 135, 0.12);
+  --table-surface: #ffffff;
+  --table-hover-bg: rgba(30, 200, 165, 0.03);
+  --table-head-color: #8ca398;
+  --table-row-text: #17312b;
+  --table-border-color: rgba(221, 232, 226, 0.92);
+  --avatar-bg: rgba(30, 200, 165, 0.08);
+  --ghost-btn-bg: #ffffff;
+  --ghost-btn-shadow: 0 10px 18px rgba(99, 132, 118, 0.1);
+  --calendar-empty-bg: rgba(246, 250, 247, 0.9);
+  --calendar-today-bg: rgba(30, 200, 165, 0.14);
+  --calendar-event-bg: linear-gradient(135deg, rgba(30, 200, 165, 0.9), rgba(22, 181, 149, 0.94));
+}
+
+html[data-theme="sand"] .app-table--forecast.table > tbody > tr:nth-child(odd) > td {
+  background-color: rgba(255, 248, 239, 0.96);
+}
+
+html[data-theme="sand"] .app-table--forecast.table > tbody > tr:nth-child(even) > td {
+  background-color: rgba(255, 243, 226, 0.98);
+}
+
+html[data-theme="sand"] .app-table--forecast.table > tbody > tr:hover > td {
+  background-color: rgba(255, 177, 111, 0.12);
+}
+
+html[data-theme="sand"] .app-forecast__row--current > td {
+  background-color: rgba(255, 139, 69, 0.12) !important;
+}
+
+html[data-theme="sage"] .app-table--forecast.table > tbody > tr:nth-child(odd) > td {
+  background-color: rgba(241, 250, 246, 0.98);
+}
+
+html[data-theme="sage"] .app-table--forecast.table > tbody > tr:nth-child(even) > td {
+  background-color: rgba(232, 246, 240, 0.98);
+}
+
+html[data-theme="sage"] .app-table--forecast.table > tbody > tr:hover > td {
+  background-color: rgba(30, 200, 165, 0.1);
+}
+
+html[data-theme="sage"] .app-forecast__row--current > td {
+  background-color: rgba(30, 200, 165, 0.12) !important;
+}
+
+html[data-theme="sand"] .app-forecast__month-badge {
+  background: rgba(255, 139, 69, 0.14);
+  color: #de8445;
+}
+
+html[data-theme="sage"] .app-forecast__month-badge {
+  background: rgba(30, 200, 165, 0.14);
+  color: #1cb698;
+}
+
+html:is([data-theme="sand"], [data-theme="sage"]) .app-table--recent-incomes.table > :not(caption) > * > * {
+  color: #6f6a74 !important;
+  border-bottom-color: rgba(113, 154, 124, 0.22) !important;
+}
+
+html:is([data-theme="sand"], [data-theme="sage"]) .app-table--recent-incomes.table > thead > tr > th {
+  background-color: #5f8f71 !important;
+  color: #ffffff !important;
+}
+
+html:is([data-theme="sand"], [data-theme="sage"]) .app-table--recent-incomes.table > tbody > tr:nth-child(odd) > td {
+  background-color: #edf8ef !important;
+}
+
+html:is([data-theme="sand"], [data-theme="sage"]) .app-table--recent-incomes.table > tbody > tr:nth-child(even) > td {
+  background-color: #e2f0e6 !important;
+}
+
+html:is([data-theme="sand"], [data-theme="sage"]) .app-table--recent-incomes.table > tbody > tr:hover > td {
+  background-color: #d7eadc !important;
+}
+
+html:is([data-theme="sand"], [data-theme="sage"]) .app-table--recent-incomes.table > tbody > tr > td.text-success {
+  color: #6f6a74 !important;
+}
+
+html:is([data-theme="sand"], [data-theme="sage"]) .app-table--recent-expenses.table > :not(caption) > * > * {
+  color: #6f6a74 !important;
+  border-bottom-color: rgba(194, 126, 133, 0.2) !important;
+}
+
+html:is([data-theme="sand"], [data-theme="sage"]) .app-table--recent-expenses.table > thead > tr > th {
+  background-color: #b7646c !important;
+  color: #ffffff !important;
+}
+
+html:is([data-theme="sand"], [data-theme="sage"]) .app-table--recent-expenses.table > tbody > tr:nth-child(odd) > td {
+  background-color: #fff0f1 !important;
+}
+
+html:is([data-theme="sand"], [data-theme="sage"]) .app-table--recent-expenses.table > tbody > tr:nth-child(even) > td {
+  background-color: #fde5e8 !important;
+}
+
+html:is([data-theme="sand"], [data-theme="sage"]) .app-table--recent-expenses.table > tbody > tr:hover > td {
+  background-color: #f7d8dd !important;
+}
+
+html:is([data-theme="sand"], [data-theme="sage"]) .app-table--recent-expenses.table > tbody > tr > td.text-danger {
+  color: #6f6a74 !important;
+}

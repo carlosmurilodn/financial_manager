@@ -1,19 +1,15 @@
 class HomeController < ApplicationController
-  RECENT_EXPENSES_LIMIT = 6
-  RECENT_INCOMES_LIMIT = 6
-  MONTHS_FOR_CHART = 4
 
   def index
     set_current_dates
     calculate_kpis
     set_card_balances
     set_category_expenses_data
-    set_monthly_chart_data
     set_calendar_data
     set_recent_expenses
     prepare_calendar_data
     set_forecast_data
-    @recent_incomes = Income.includes(:category).order(date: :desc).limit(RECENT_INCOMES_LIMIT)
+    @recent_incomes = Income.includes(:category).where(balance_month: @mes_atual).order(date: :desc)
   end
 
   private
@@ -21,10 +17,44 @@ class HomeController < ApplicationController
   def set_current_dates
     @hoje = Date.current
     @mes_atual = @hoje.all_month
+    set_card_balance_period
+    set_category_expense_period
     @month = (params[:month] || @hoje.month).to_i
     @year = (params[:year] || @hoje.year).to_i
     start_date = Date.new(@year, @month, 1)
     @calendar_range = start_date.all_month
+  end
+
+  def set_card_balance_period
+    @card_balance_month = (params[:card_month] || @hoje.month).to_i
+    @card_balance_year = (params[:card_year] || @hoje.year).to_i
+    @card_balance_date = Date.new(@card_balance_year, @card_balance_month, 1)
+    @card_balance_range = @card_balance_date.all_month
+    @previous_card_balance_date = @card_balance_date.prev_month
+    @next_card_balance_date = @card_balance_date.next_month
+  rescue Date::Error
+    @card_balance_month = @hoje.month
+    @card_balance_year = @hoje.year
+    @card_balance_date = @hoje.beginning_of_month
+    @card_balance_range = @card_balance_date.all_month
+    @previous_card_balance_date = @card_balance_date.prev_month
+    @next_card_balance_date = @card_balance_date.next_month
+  end
+
+  def set_category_expense_period
+    @category_expense_month = (params[:category_month] || @hoje.month).to_i
+    @category_expense_year = (params[:category_year] || @hoje.year).to_i
+    @category_expense_date = Date.new(@category_expense_year, @category_expense_month, 1)
+    @category_expense_range = @category_expense_date.all_month
+    @previous_category_expense_date = @category_expense_date.prev_month
+    @next_category_expense_date = @category_expense_date.next_month
+  rescue Date::Error
+    @category_expense_month = @hoje.month
+    @category_expense_year = @hoje.year
+    @category_expense_date = @hoje.beginning_of_month
+    @category_expense_range = @category_expense_date.all_month
+    @previous_category_expense_date = @category_expense_date.prev_month
+    @next_category_expense_date = @category_expense_date.next_month
   end
 
   def data_in_month(model, month_range)
@@ -50,53 +80,52 @@ class HomeController < ApplicationController
   end
 
   def set_card_balances
-    @cards_info = Card.all.map do |card|
-      { card: card, total: total_expenses(@mes_atual, nil, card.id) }
+    @cards_info = Card.order(Arel.sql("due_day IS NULL, due_day ASC, name ASC")).map do |card|
+      total = accumulated_card_expenses(card)
+
+      {
+        card: card,
+        total: total,
+        remaining_limit: [card.total_limit.to_f - total.to_f, 0].max
+      }
     end
+  end
+
+  def accumulated_card_expenses(card)
+    expenses = Expense.where(card: card)
+                      .where("balance_month <= ?", @card_balance_range.end)
+
+    expenses = expenses.where(paid: true) unless future_card_balance_period?
+
+    expenses.sum(:amount)
+  end
+
+  def future_card_balance_period?
+    @card_balance_date > @hoje.beginning_of_month
   end
 
   def set_category_expenses_data
-    @despesas_por_categoria = Category.all.map do |category|
-      total = total_expenses(@mes_atual, category.id)
-      [category.name, total]
-    end.reject { |_, total| total.zero? }
-       .sort_by { |_, total| -total }
-       .to_h
+    expenses = Expense.includes(:category).where(balance_month: @category_expense_range)
+    total_month = expenses.sum(:amount).to_f
 
-    set_category_details
-  end
+    @category_expense_summaries = expenses.group_by(&:category).map do |category, category_expenses|
+      total = category_expenses.sum(&:amount).to_f
 
-  def set_category_details
-    details = Expense.includes(:category)
-                     .where(balance_month: @mes_atual)
-                     .group_by { |expense| expense.category.name }
-                     .transform_values { |expenses| format_expense_details(expenses) }
-
-    @detalhes_despesas_por_categoria = @despesas_por_categoria.keys.each_with_object({}) do |category, hash|
-      hash[category.strip] = details[category]&.presence || []
-    end
-  end
-
-  def format_expense_details(expenses)
-    helper = ActionController::Base.helpers
-
-    expenses.map do |expense|
-      amount = helper.number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".")
-
-      if expense.payment_method_credito_parcelado?
-        "#{expense.description} - Parcela #{expense.current_installment}/#{expense.installments_count} (#{amount})"
-      else
-        "#{expense.description} (#{amount})"
-      end
-    end
-  end
-
-  def set_monthly_chart_data
-    @meses_datas = MONTHS_FOR_CHART.times.map { |i| @hoje - i.months }.reverse
-    @meses_labels = @meses_datas.map { |date| date.strftime("%B") }
-
-    @receitas_mensais = @meses_datas.map { |date| data_in_month(Income, date.all_month).sum(:amount) }
-    @despesas_mensais = @meses_datas.map { |date| total_expenses(date.all_month) }
+      {
+        name: category&.clean_name || "Sem categoria",
+        icon: category&.material_icon || "category",
+        total: total,
+        count: category_expenses.size,
+        percent: total_month.positive? ? (total / total_month) * 100 : 0,
+        items: category_expenses.sort_by(&:date).map do |expense|
+          {
+            date: expense.date,
+            description: expense.description.presence || "Despesa",
+            amount: expense.amount
+          }
+        end
+      }
+    end.sort_by { |summary| -summary[:total] }
   end
 
   def set_calendar_data
@@ -105,13 +134,10 @@ class HomeController < ApplicationController
   end
 
   def set_recent_expenses
-    current_month_range = Date.current.all_month
-
-    @recent_expenses = Expense.where(balance_month: current_month_range)
-                              .includes(:category)
+    @recent_expenses = Expense.includes(:category)
                               .select(:id, :description, :amount, :date, :category_id)
-                              .sort_by(&:date)
-                              .last(RECENT_EXPENSES_LIMIT)
+                              .where(date: @mes_atual)
+                              .order(date: :desc, id: :desc)
   end
 
   def prepare_calendar_data
@@ -126,13 +152,13 @@ class HomeController < ApplicationController
       @daily_calendar_items[income.date] ||= { incomes: [], expenses: [] }
       @daily_calendar_items[income.date][:incomes] << {
         amount: income.amount,
-        description: [income.category&.emoji, income.description.presence || "Receita"].compact.join(" ")
+        description: [income.category&.clean_name, income.description.presence || "Receita"].compact.join(" - ")
       }
 
       @monthly_agenda_items << {
         date: income.date,
         type: :income,
-        description: [income.category&.emoji, income.description.presence || "Receita"].compact.join(" "),
+        description: [income.category&.clean_name, income.description.presence || "Receita"].compact.join(" - "),
         amount: income.amount
       }
     end
@@ -141,13 +167,13 @@ class HomeController < ApplicationController
       @daily_calendar_items[expense.date] ||= { incomes: [], expenses: [] }
       @daily_calendar_items[expense.date][:expenses] << {
         amount: expense.amount,
-        description: [expense.category&.emoji, expense.description.presence || "Despesa"].compact.join(" ")
+        description: [expense.category&.clean_name, expense.description.presence || "Despesa"].compact.join(" - ")
       }
 
       @monthly_agenda_items << {
         date: expense.date,
         type: :expense,
-        description: [expense.category&.emoji, expense.description.presence || "Despesa"].compact.join(" "),
+        description: [expense.category&.clean_name, expense.description.presence || "Despesa"].compact.join(" - "),
         amount: expense.amount
       }
     end

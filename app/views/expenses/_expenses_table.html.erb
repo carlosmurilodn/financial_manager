@@ -1,0 +1,31 @@
+<div id="expenses-table">
+  <div class="table-responsive">
+    <table class="table app-table app-table--records app-table--index mb-0">
+      <thead>
+        <tr>
+          <th class="text-center">Descrição</th>
+          <th class="text-center">Parcela</th>
+          <th class="text-center">Valor</th>
+          <th class="text-center">Data</th>
+          <th class="text-center">Mês Referência</th>
+          <th class="text-center">Categoria</th>
+          <th class="text-center">Pagamento</th>
+          <th class="text-center">Cartão</th>
+          <th class="text-center">Paga?</th>
+          <th class="text-center">Ações</th>
+        </tr>
+      </thead>
+      <tbody id="expenses-list">
+        <% @expenses.each do |expense| %>
+          <%= render partial: "expense_row", locals: { expense: expense } %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= render "shared/pagination",
+             current_page: @current_page,
+             total_pages: @total_pages,
+             base_params: request.query_parameters.except(:page),
+             aria_label: "Paginacao de despesas" %>
+</div>

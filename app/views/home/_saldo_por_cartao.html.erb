@@ -1,56 +1,82 @@
-<div class="dashboard-card dashboard-card--chart dashboard-card--lavender">
+<div class="dashboard-card dashboard-card--chart dashboard-card--lavender dashboard-card--cards-summary">
   <div class="dashboard-card__header">
     <div>
       <p class="dashboard-card__eyebrow">Cartoes</p>
-      <h2 class="dashboard-card__title">Saldo acumulado por cartao</h2>
+      <h2 class="dashboard-card__title">Saldo Acumulado por Cartão</h2>
     </div>
 
-    <div class="dashboard-card__pill">
-      <span class="material-symbols-rounded">credit_card</span>
-      <span><%= I18n.l(Date.current, format: "%B") %></span>
+    <div class="dashboard-card__pill dashboard-card__pill--period">
+      <%= link_to root_path(card_month: @previous_card_balance_date.month, card_year: @previous_card_balance_date.year),
+                  class: "dashboard-card__period-button",
+                  aria: { label: "Mês anterior" } do %>
+        <span class="material-symbols-rounded">chevron_left</span>
+      <% end %>
+      <span class="dashboard-card__period-label">
+        <span class="material-symbols-rounded">credit_card</span>
+        <span><%= I18n.l(@card_balance_date, format: "%B de %Y") %></span>
+      </span>
+      <%= link_to root_path(card_month: @next_card_balance_date.month, card_year: @next_card_balance_date.year),
+                  class: "dashboard-card__period-button",
+                  aria: { label: "Próximo mês" } do %>
+        <span class="material-symbols-rounded">chevron_right</span>
+      <% end %>
     </div>
   </div>
 
-  <div class="dashboard-card__body">
-    <% linhas = @cards_info.size + 1 %>
-    <% altura_linha = 100.0 / linhas %>
+  <div class="dashboard-card__body dashboard-card__body--cards-summary">
+    <div class="dashboard-cards-list">
+      <% @cards_info.first(5).each do |info| %>
+        <% card = info[:card] %>
+        <% total = info[:total].to_f %>
+        <% total_limit = card.total_limit.to_f %>
+        <% remaining_limit = info[:remaining_limit].to_f %>
+        <% usage_percent = total_limit.positive? ? [(total / total_limit) * 100, 100].min : 0 %>
+        <% remaining_percent = total_limit.positive? ? [(remaining_limit / total_limit) * 100, 0].max : 0 %>
 
-    <table class="table app-table mb-0" style="height: 100%; table-layout: fixed;">
-      <thead>
-        <tr style="height: <%= altura_linha %>%;">
-          <th class="align-middle">Cartao</th>
-          <th class="align-middle">Limite total</th>
-          <th class="align-middle">Limite restante</th>
-          <th class="align-middle">Saldo acumulado</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <% @cards_info.each_with_index do |info, index| %>
-          <% card = info[:card] %>
-          <% total = info[:total] %>
-          <% borda = (index == @cards_info.size - 1) ? "none" : "1px solid rgba(148, 163, 184, 0.22)" %>
-          <tr style="height: <%= altura_linha %>%;">
-            <td class="text-start align-middle" style="border-bottom: <%= borda %>;">
-              <div class="app-table__primary">
-                <span class="app-table__avatar">
-                  <%= card.icon.attached? ? image_tag(card.icon, width: 20) : "💳" %>
+        <article class="dashboard-card-balance">
+          <div class="dashboard-card-balance__usage">
+            <div class="dashboard-card-balance__header">
+              <div class="dashboard-card-balance__identity">
+                <span class="dashboard-card-balance__avatar">
+                  <% if card.icon.attached? %>
+                    <%= image_tag(card.icon, alt: card.name, class: "dashboard-card-balance__avatar-image") %>
+                  <% else %>
+                    <span class="dashboard-card-balance__avatar-fallback"><%= card.name.to_s.first(2).upcase %></span>
+                  <% end %>
                 </span>
-                <span><%= card.name %></span>
+                <div class="dashboard-card-balance__copy">
+                  <strong><%= card.name %></strong>
+                  <small>Uso atual do limite</small>
+                </div>
               </div>
-            </td>
-            <td class="text-start align-middle text-success" style="border-bottom: <%= borda %>;">
-              <%= number_to_currency(card.total_limit, unit: "R$ ", separator: ",", delimiter: ".") %>
-            </td>
-            <td class="text-start align-middle text-success" style="border-bottom: <%= borda %>;">
-              <%= number_to_currency(card.remaining_limit, unit: "R$ ", separator: ",", delimiter: ".") %>
-            </td>
-            <td class="text-start align-middle text-danger" style="border-bottom: <%= borda %>;">
-              <%= number_to_currency(total, unit: "R$ ", separator: ",", delimiter: ".") %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+
+              <div class="dashboard-card-balance__total">
+                <span><%= number_to_percentage(usage_percent, precision: 0) %></span>
+              </div>
+            </div>
+
+            <div class="dashboard-card-balance__progress" role="img" aria-label="Uso de <%= card.name %>: <%= number_to_percentage(usage_percent, precision: 0) %>">
+              <span class="dashboard-card-balance__progress-used" style="width: <%= usage_percent.round(1) %>%;"></span>
+              <span class="dashboard-card-balance__progress-remaining" style="width: <%= remaining_percent.round(1) %>%;"></span>
+            </div>
+          </div>
+
+          <div class="dashboard-card-balance__metrics">
+            <div>
+              <small>Limite total</small>
+              <strong class="is-positive"><%= number_to_currency(total_limit, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+            </div>
+            <div>
+              <small>Limite restante</small>
+              <strong class="is-positive"><%= number_to_currency(remaining_limit, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+            </div>
+            <div>
+              <small>Saldo acumulado</small>
+              <strong class="is-negative"><%= number_to_currency(total, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+            </div>
+          </div>
+        </article>
+      <% end %>
+    </div>
   </div>
 </div>

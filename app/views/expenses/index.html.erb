@@ -1,27 +1,32 @@
 <section class="app-page">
   <div class="app-page__hero">
-    <div class="app-page__hero-copy">
-      <span class="app-page__hero-icon">
-        <%= image_tag "icons/expense.png", alt: "Despesas", size: "22x22" %>
-      </span>
-      <div>
-        <p class="app-page__eyebrow">Gestão</p>
-        <h1 class="app-page__title">Despesas</h1>
-        <p class="app-page__description">Filtre, acompanhe parcelas e mantenha o controle do que já foi pago.</p>
+    <div class="app-page__hero-top app-page__hero-top--expenses">
+      <div class="app-page__hero-copy">
+        <span class="app-page__hero-icon">
+          <span class="material-symbols-rounded">receipt_long</span>
+        </span>
+        <div>
+          <p class="app-page__eyebrow">Gestão</p>
+          <h1 class="app-page__title">Despesas</h1>
+        </div>
+      </div>
+
+      <div class="app-page__hero-kpis">
+        <%= render "hero_kpis" %>
       </div>
     </div>
 
-    <div class="app-page__hero-actions">
-      <%= link_to t("buttons.new.feminine", model: t("models.expense")),
-                  new_expense_path,
-                  class: "btn app-page__primary-btn",
-                  data: { turbo_frame: "modal" } %>
-    </div>
+    <%# <p class="app-page__description">Filtre, acompanhe parcelas e mantenha o controle do que já foi pago.</p> %>
   </div>
 
   <div class="app-panel">
     <%= form_with url: expenses_path, method: :get, local: true, class: "app-filter-form" do |f| %>
       <div class="app-filter-grid app-filter-grid--expenses">
+        <div class="app-filter-field">
+          <%= f.label :description, "Descrição" %>
+          <%= f.text_field :description, value: @description_filter, class: "form-control", placeholder: "Buscar descrição..." %>
+        </div>
+
         <div class="app-filter-field">
           <%= f.label :month, "Mês" %>
           <%= f.select :month,
@@ -37,11 +42,6 @@
           <%= f.select :year,
                 options_for_select([["Todos", 0]] + (2025..2030).to_a.reverse, @year || 0),
                 {}, class: "form-select" %>
-        </div>
-
-        <div class="app-filter-field">
-          <%= f.label :description, "Descrição" %>
-          <%= f.text_field :description, value: @description_filter, class: "form-control", placeholder: "Buscar descrição..." %>
         </div>
 
         <div class="app-filter-field">
@@ -74,7 +74,9 @@
       </div>
 
       <div class="app-filter-actions">
-        <%= f.submit t("buttons.filter"), class: "btn app-page__primary-btn" %>
+        <%= f.button class: "btn app-page__primary-btn" do %>
+          <i class="bi bi-funnel me-1"></i> <%= t("buttons.filter") %>
+        <% end %>
 
         <%= link_to clear_filters_expenses_path,
                     class: "btn app-page__secondary-btn",
@@ -85,37 +87,20 @@
         <%= link_to report_pdf_expenses_path(request.query_parameters),
                     class: "btn app-page__danger-btn",
                     target: "_blank" do %>
-          <i class="bi bi-file-earmark-pdf-fill me-1"></i> Gerar PDF
+          <i class="bi bi-file-earmark-pdf me-1"></i> Gerar PDF
+        <% end %>
+
+        <%= link_to import_invoice_expenses_path,
+                    class: "btn app-page__secondary-btn app-filter-actions__import",
+                    data: { turbo_frame: "modal" } do %>
+          <span class="material-symbols-rounded me-1">upload_file</span> Importar Fatura
         <% end %>
       </div>
     <% end %>
   </div>
 
   <div class="app-panel app-panel--table">
-    <div class="table-responsive">
-      <table class="table app-table app-table--records app-table--index mb-0">
-        <thead>
-          <tr>
-            <th class="text-center">Descrição</th>
-            <th class="text-center">Parcela</th>
-            <th class="text-center">Valor</th>
-            <th class="text-center">Data</th>
-            <th class="text-center">Mês Referência</th>
-            <th class="text-center">Categoria</th>
-            <th class="text-center">Pagamento</th>
-            <th class="text-center">Cartão</th>
-            <th class="text-center">Paga?</th>
-            <th class="text-center">Ações</th>
-          </tr>
-        </thead>
-        <tbody id="expenses-list">
-          <% @expenses.each do |expense| %>
-            <%= render partial: "expense_row", locals: { expense: expense } %>
-          <% end %>
-        </tbody>
-        <%= render "expenses_totals" %>
-      </table>
-    </div>
+    <%= render "expenses_table" %>
   </div>
 </section>
 
@@ -128,4 +113,3 @@
     </div>
   </div>
 </div>
-

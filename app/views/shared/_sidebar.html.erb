@@ -61,41 +61,42 @@
         </button>
       </div>
 
-      <section class="app-sidebar__weather">
+      <%# <section class="app-sidebar__weather">
         <div class="app-sidebar__weather-header">
-          <span class="material-symbols-rounded">partly_cloudy_day</span>
           <span>Goiania</span>
         </div>
         <div id="current-time" class="app-sidebar__time"></div>
         <div id="weather-info"></div>
-      </section>
+      </section> %>
     </div>
   </div>
 </aside>
 
 <script>
   const APP_THEMES = [
-    { id: "sand", label: "Pastel Areia", nextLabel: "Mint Breeze", icon: "wb_sunny" },
-    { id: "sage", label: "Mint Breeze", nextLabel: "Noite Roxa", icon: "spa" },
-    { id: "night", label: "Noite Roxa", nextLabel: "Fincan Blue", icon: "dark_mode" },
-    { id: "fincan", label: "Fincan Blue", nextLabel: "Pastel Areia", icon: "finance_mode" }
+    { id: "fincan", label: "Fincan Blue", nextLabel: "Noite Roxa", icon: "finance_mode" },
+    { id: "night", label: "Noite Roxa", nextLabel: "Fincan Blue", icon: "dark_mode" }
   ];
 
   function updateClock() {
     const now = new Date();
-    const timeNode = document.getElementById("current-time");
-    if (!timeNode) return;
-
     const hours = String(now.getHours()).padStart(2, "0");
     const minutes = String(now.getMinutes()).padStart(2, "0");
     const seconds = String(now.getSeconds()).padStart(2, "0");
+    const timeMarkup = `<span class="app-sidebar__time-main">${hours}:${minutes}</span><span class="app-sidebar__time-seconds">:${seconds}</span>`;
 
-    timeNode.innerHTML = `<span class="app-sidebar__time-main">${hours}:${minutes}</span><span class="app-sidebar__time-seconds">:${seconds}</span>`;
+    ["current-time", "dashboard-current-time"].forEach((id) => {
+      const timeNode = document.getElementById(id);
+      if (timeNode) timeNode.innerHTML = timeMarkup;
+    });
   }
 
   async function loadWeather() {
-    const weatherNode = document.getElementById("weather-info");
-    if (!weatherNode) return;
+    const weatherNodes = ["weather-info", "dashboard-weather-info"]
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+
+    if (!weatherNodes.length) return;
 
     const apiKey = "d56b203c35ee12ffb7de5bf2aaf5eccd";
     const city = "Goiânia,BR";
@@ -112,8 +113,23 @@
       const tempMax = Math.max(...todayForecasts.map((forecast) => forecast.main.temp_max)).toFixed(0);
       const todayIcon = data.list[0].weather[0].icon;
       const todayDesc = data.list[0].weather[0].description;
+      const todayWeatherId = data.list[0].weather[0].id;
 
-      weatherNode.innerHTML = `
+      const dashboardWeatherClass = (() => {
+        const isNight = todayIcon.endsWith("n");
+
+        if (todayWeatherId >= 200 && todayWeatherId < 300) return "today-weather--storm";
+        if (todayWeatherId >= 300 && todayWeatherId < 400) return isNight ? "today-weather--drizzle-night" : "today-weather--drizzle";
+        if (todayWeatherId >= 500 && todayWeatherId < 600) return isNight ? "today-weather--rain-night" : "today-weather--rain";
+        if (todayWeatherId >= 600 && todayWeatherId < 700) return "today-weather--snow";
+        if (todayWeatherId >= 700 && todayWeatherId < 800) return "today-weather--mist";
+        if (todayWeatherId === 800) return isNight ? "today-weather--clear-night" : "today-weather--clear";
+        if (todayWeatherId > 800) return isNight ? "today-weather--cloudy-night" : "today-weather--clouds";
+
+        return isNight ? "today-weather--clear-night" : "today-weather--clear";
+      })();
+
+      const sidebarWeatherMarkup = `
         <div class="today-weather">
           <div class="today-weather__current">
             <img src="https://openweathermap.org/img/wn/${todayIcon}@2x.png" alt="${todayDesc}" width="34" height="34">
@@ -125,8 +141,32 @@
           </div>
         </div>
       `;
+
+      const dashboardWeatherMarkup = `
+        <div class="today-weather today-weather--dashboard ${dashboardWeatherClass}">
+          <div class="today-weather__current">
+            <img src="https://openweathermap.org/img/wn/${todayIcon}@2x.png" alt="${todayDesc}" width="68" height="68">
+            <div class="today-weather__current-copy">
+              <strong>${tempNow}°C</strong>
+              <span class="today-weather__city">Goiania</span>
+            </div>
+          </div>
+          <div class="today-weather__details">
+            <span class="text-capitalize">${todayDesc}</span>
+            <small>Min ${tempMin}°C · Max ${tempMax}°C</small>
+          </div>
+        </div>
+      `;
+
+      const sidebarNode = document.getElementById("weather-info");
+      const dashboardNode = document.getElementById("dashboard-weather-info");
+
+      if (sidebarNode) sidebarNode.innerHTML = sidebarWeatherMarkup;
+      if (dashboardNode) dashboardNode.innerHTML = dashboardWeatherMarkup;
     } catch (error) {
-      weatherNode.textContent = "Clima indisponivel";
+      weatherNodes.forEach((node) => {
+        node.textContent = "Clima indisponivel";
+      });
     }
   }
 
@@ -148,7 +188,8 @@
   }
 
   function getCurrentTheme() {
-    return localStorage.getItem("app-theme") || "sand";
+    const savedTheme = localStorage.getItem("app-theme");
+    return APP_THEMES.some((theme) => theme.id === savedTheme) ? savedTheme : "fincan";
   }
 
   function applyTheme(themeId) {

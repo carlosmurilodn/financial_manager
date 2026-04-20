@@ -1,21 +1,29 @@
 <section class="app-page">
   <div class="app-page__hero">
-    <div class="app-page__hero-copy">
-      <span class="app-page__hero-icon">
-        <%= image_tag "icons/category.png", alt: "Categorias", size: "22x22" %>
-      </span>
-      <div>
-        <p class="app-page__eyebrow">Gestão</p>
-        <h1 class="app-page__title">Categorias</h1>
-        <p class="app-page__description">Centralize a organização visual das suas receitas e despesas por categoria.</p>
+    <div class="app-page__hero-top app-page__hero-top--actions">
+      <div class="app-page__hero-copy">
+        <span class="app-page__hero-icon">
+          <span class="material-symbols-rounded">category</span>
+        </span>
+        <div>
+          <p class="app-page__eyebrow">Gestão</p>
+          <h1 class="app-page__title">Categorias</h1>
+          <%# <p class="app-page__description">Centralize a organização visual das suas receitas e despesas por categoria.</p> %>
+        </div>
       </div>
-    </div>
 
-    <div class="app-page__hero-actions">
-      <%= link_to t("buttons.new.feminine", model: t("models.category")),
-      new_category_path,
-      class: "btn app-page__primary-btn",
-      data: { turbo_frame: "modal" } %>
+      <div class="app-page__hero-actions">
+        <%= link_to new_category_path,
+            class: "app-page__hero-new-action",
+            data: { turbo_frame: "modal" } do %>
+          <span class="app-page__hero-new-action-icon">
+            <span class="material-symbols-rounded">add</span>
+          </span>
+          <span class="app-page__hero-new-action-copy">
+            <strong><%= t("buttons.new.feminine", model: t("models.category")) %></strong>
+          </span>
+        <% end %>
+      </div>
     </div>
   </div>
 
@@ -24,6 +32,7 @@
       <table class="table app-table app-table--records app-table--index mb-0">
         <thead>
           <tr>
+            <th>Ícone</th>
             <th><%= t("categories.form.name") %></th>
             <th><%= t("tables.expenses.actions") %></th>
           </tr>
@@ -31,12 +40,15 @@
         <tbody>
           <% @categories.each do |category| %>
             <tr id="<%= dom_id(category) %>">
+              <td>
+                <span class="material-symbols-rounded dashboard-category-item__icon"><%= category.material_icon %></span>
+              </td>
               <td><%= category.display_name %></td>
               <td class="app-record-actions">
-                <%= link_to t("buttons.edit"), edit_category_path(category), class: "btn btn-sm btn-primary", data: { turbo_frame: "modal" } %>
+                <%= link_to t("buttons.edit"), edit_category_path(category), class: "btn btn-sm btn-primary app-record-actions__edit", data: { turbo_frame: "modal" } %>
                 <%= link_to t("buttons.delete"), category,
                             data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
-                            class: "btn btn-sm btn-danger" %>
+                            class: "btn btn-sm btn-danger app-record-actions__delete" %>
               </td>
             </tr>
           <% end %>

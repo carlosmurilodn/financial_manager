@@ -1,0 +1,478 @@
+html[data-theme="fincan"] .app-table--recent-incomes.table > :not(caption) > * > * {
+  color: #6f6a74 !important;
+  border-bottom-color: rgba(113, 154, 124, 0.22) !important;
+}
+
+html[data-theme="fincan"] .app-table--recent-incomes.table > thead > tr > th {
+  background-color: #5f8f71 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="fincan"] .app-table--recent-incomes.table > tbody > tr:nth-child(odd) > td {
+  background-color: #edf8ef !important;
+}
+
+html[data-theme="fincan"] .app-table--recent-incomes.table > tbody > tr:nth-child(even) > td {
+  background-color: #e2f0e6 !important;
+}
+
+html[data-theme="fincan"] .app-table--recent-incomes.table > tbody > tr:hover > td {
+  background-color: #d7eadc !important;
+}
+
+html[data-theme="fincan"] .app-table--recent-incomes.table > tbody > tr > td.text-success {
+  color: #6f6a74 !important;
+}
+
+html[data-theme="fincan"] .app-table--recent-expenses.table > :not(caption) > * > * {
+  color: #6f6a74 !important;
+  border-bottom-color: rgba(194, 126, 133, 0.2) !important;
+}
+
+html[data-theme="fincan"] .app-table--recent-expenses.table > thead > tr > th {
+  background-color: #b7646c !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="fincan"] .app-table--recent-expenses.table > tbody > tr:nth-child(odd) > td {
+  background-color: #fff0f1 !important;
+}
+
+html[data-theme="fincan"] .app-table--recent-expenses.table > tbody > tr:nth-child(even) > td {
+  background-color: #fde5e8 !important;
+}
+
+html[data-theme="fincan"] .app-table--recent-expenses.table > tbody > tr:hover > td {
+  background-color: #f7d8dd !important;
+}
+
+html[data-theme="fincan"] .app-table--recent-expenses.table > tbody > tr > td.text-danger {
+  color: #6f6a74 !important;
+}
+
+html[data-theme="fincan"] #turboModal .modal-content {
+  background: var(--surface) !important;
+  border: 1px solid var(--surface-border) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+html[data-theme="fincan"] #modal-body {
+  background: rgba(248, 250, 255, 0.98) !important;
+  color: var(--text-main) !important;
+}
+
+html[data-theme="fincan"] #modal-body .modal-header {
+  border-bottom-color: var(--surface-border) !important;
+}
+
+html[data-theme="fincan"] #modal-body .modal-title,
+html[data-theme="fincan"] #modal-body label,
+html[data-theme="fincan"] #modal-body h6 {
+  color: var(--text-main) !important;
+}
+
+html[data-theme="fincan"] #modal-body .text-muted,
+html[data-theme="fincan"] #modal-body small {
+  color: var(--text-soft) !important;
+}
+
+html[data-theme="fincan"] #modal-body .form-control,
+html[data-theme="fincan"] #modal-body .form-select {
+  background: rgba(88, 113, 231, 0.06) !important;
+  color: var(--text-main) !important;
+  border-color: rgba(88, 113, 231, 0.18) !important;
+}
+
+html[data-theme="fincan"] #modal-body .form-control::placeholder {
+  color: rgba(127, 141, 165, 0.78) !important;
+}
+
+html[data-theme="fincan"] #modal-body .form-control:focus,
+html[data-theme="fincan"] #modal-body .form-select:focus {
+  background: rgba(88, 113, 231, 0.1) !important;
+  color: var(--text-main) !important;
+  border-color: var(--nav-active-icon-color) !important;
+  box-shadow: 0 0 0 0.2rem rgba(88, 113, 231, 0.14) !important;
+}
+
+html[data-theme="fincan"] #modal-body .app-panel {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border-color: var(--surface-border) !important;
+}
+
+html[data-theme="fincan"] #turboModal .btn-primary,
+html[data-theme="fincan"] #modal-body .btn-primary {
+  background: var(--hero-badge-icon-bg) !important;
+  border-color: transparent !important;
+  color: var(--nav-active-icon-color) !important;
+  font-weight: 700 !important;
+}
+
+html[data-theme="fincan"] #turboModal .btn-primary:hover,
+html[data-theme="fincan"] #turboModal .btn-primary:focus,
+html[data-theme="fincan"] #modal-body .btn-primary:hover,
+html[data-theme="fincan"] #modal-body .btn-primary:focus {
+  background: var(--nav-active-bg) !important;
+  border-color: transparent !important;
+  color: var(--nav-active-icon-color) !important;
+}
+
+html[data-theme="night"] .dashboard-eyebrow,
+html[data-theme="night"] .dashboard-card__eyebrow {
+  color: #ff79c6;
+}
+
+html[data-theme="night"] .dashboard-card__title,
+html[data-theme="night"] .dashboard-toolbar h4,
+html[data-theme="night"] .dashboard-toolbar h5 {
+  color: #ffd7ec;
+}
+
+html[data-theme="night"] .dashboard-hero h1 {
+  color: #fed7ec;
+}
+
+html[data-theme="night"] .app-sidebar__time-main,
+html[data-theme="night"] .dashboard-hero__badge-item--primary strong {
+  color: #ffd7ec;
+}
+
+html[data-theme="night"] .app-page__title {
+  color: #ffffff;
+}
+
+html[data-theme="night"] .app-forecast__summary-value {
+  color: #ffd7ec !important;
+}
+
+html[data-theme="night"] #turboModal .modal-title,
+html[data-theme="night"] #turboModal label,
+html[data-theme="night"] #turboModal h5,
+html[data-theme="night"] #turboModal h6,
+html[data-theme="night"] #modal-body .modal-title,
+html[data-theme="night"] #modal-body label,
+html[data-theme="night"] #modal-body h5,
+html[data-theme="night"] #modal-body h6 {
+  color: #ffd7ec !important;
+}
+
+html[data-theme="night"] .text-muted,
+html[data-theme="night"] #modal-body .text-muted,
+html[data-theme="night"] #modal-body small {
+  color: var(--text-soft) !important;
+}
+
+html[data-theme="night"] #modal-body {
+  background: var(--table-surface) !important;
+}
+
+html[data-theme="night"] #turboModal .modal-dialog {
+  background: transparent !important;
+}
+
+html[data-theme="night"] #turboModal .modal-content {
+  background: var(--table-surface) !important;
+  border: 0 !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+html[data-theme="night"] #modal-body .modal-header {
+  border-bottom-color: var(--table-border-color) !important;
+}
+
+html[data-theme="night"] #modal-body .form-control,
+html[data-theme="night"] #modal-body .form-select {
+  background: var(--nav-active-bg) !important;
+  color: #ffffff !important;
+  border-color: var(--table-border-color) !important;
+}
+
+html[data-theme="night"] #modal-body .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.62) !important;
+}
+
+html[data-theme="night"] #modal-body .form-control:focus,
+html[data-theme="night"] #modal-body .form-select:focus {
+  background: var(--nav-active-bg) !important;
+  color: #ffffff !important;
+  border-color: var(--nav-active-icon-color) !important;
+  box-shadow: 0 0 0 0.2rem rgba(255, 121, 198, 0.14) !important;
+}
+
+html[data-theme="night"] #modal-body .form-select option {
+  background: var(--table-surface) !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="night"] #turboModal .btn-primary,
+html[data-theme="night"] #modal-body .btn-primary {
+  background: var(--hero-badge-icon-bg) !important;
+  border-color: transparent !important;
+  color: #ffd7ec !important;
+  font-weight: 700 !important;
+}
+
+html[data-theme="night"] #turboModal .btn-primary:hover,
+html[data-theme="night"] #turboModal .btn-primary:focus,
+html[data-theme="night"] #modal-body .btn-primary:hover,
+html[data-theme="night"] #modal-body .btn-primary:focus {
+  background: var(--nav-active-bg) !important;
+  border-color: transparent !important;
+  color: #ffd7ec !important;
+}
+
+html[data-theme="night"] .app-table {
+  border: 1px solid var(--table-border-color);
+  box-shadow: inset 0 0 0 1px rgba(255, 121, 198, 0.04);
+}
+
+html[data-theme="night"] .app-table.table > :not(caption) > * > * {
+  color: var(--table-row-text) !important;
+  border-bottom-color: var(--table-border-color) !important;
+}
+
+html[data-theme="night"] .app-table.table > thead > tr > th {
+  background-color: var(--table-surface-alt) !important;
+  color: var(--table-head-color) !important;
+}
+
+html[data-theme="night"] .app-table.table > tbody > tr:nth-child(odd) > td {
+  background-color: var(--table-surface) !important;
+}
+
+html[data-theme="night"] .app-table.table > tbody > tr:nth-child(even) > td {
+  background-color: var(--table-surface-alt) !important;
+}
+
+html[data-theme="night"] .app-table tbody tr:hover td {
+  background-color: var(--table-hover-bg) !important;
+}
+
+html[data-theme="night"] .app-calendar-table > :not(caption) > * > * {
+  background-color: var(--table-surface);
+  color: var(--table-row-text);
+  border-color: var(--table-border-color);
+}
+
+html[data-theme="night"] .app-calendar-table thead th {
+  background-color: rgba(40, 32, 64, 0.98);
+  color: var(--table-head-color);
+}
+
+html[data-theme="night"] .app-calendar-table__day {
+  background-color: var(--table-surface);
+}
+
+html[data-theme="night"] .app-calendar-table__day--today {
+  background-color: var(--calendar-today-bg);
+}
+
+html[data-theme="night"] .app-calendar-table__empty {
+  background-color: var(--calendar-empty-bg);
+}
+
+html[data-theme="night"] .app-calendar-table__date {
+  color: var(--table-row-text);
+}
+
+html[data-theme="night"] .app-calendar__title {
+  color: var(--text-soft);
+}
+
+html[data-theme="night"] .dashboard-card--calendar .app-btn--ghost {
+  background: rgba(255, 121, 198, 0.14);
+  color: #ffd7ec;
+  box-shadow: inset 0 0 0 1px rgba(255, 121, 198, 0.2);
+}
+
+html[data-theme="night"] .dashboard-card--calendar .app-btn--ghost:hover {
+  background: rgba(255, 121, 198, 0.2);
+}
+
+html[data-theme="night"] .app-calendar-agenda__description {
+  color: #d8d2ea;
+}
+
+html[data-theme="night"] .app-calendar-agenda__header strong {
+  color: #ffd7ec;
+}
+
+html[data-theme="night"] .app-calendar-agenda__dot--income {
+  background: #86cfa7;
+}
+
+html[data-theme="night"] .app-calendar-agenda__dot--expense {
+  background: #f29aa3;
+}
+
+html[data-theme="night"] .app-forecast__summary-card {
+  background: var(--surface);
+}
+
+html[data-theme="night"] .app-forecast__summary-card--positive {
+  background: var(--stat-success-bg);
+}
+
+html[data-theme="night"] .app-forecast__summary-card--danger {
+  background: var(--stat-danger-bg);
+}
+
+html[data-theme="night"] .app-forecast__summary-card--warning {
+  background: var(--stat-warning-bg);
+}
+
+html[data-theme="night"] .app-table--forecast.table > tbody > tr:nth-child(odd) > td {
+  background-color: rgba(49, 38, 77, 0.96);
+}
+
+html[data-theme="night"] .app-table--forecast.table > tbody > tr:nth-child(even) > td {
+  background-color: rgba(40, 32, 64, 0.98);
+}
+
+html[data-theme="night"] .app-table--forecast.table > tbody > tr:hover > td {
+  background-color: rgba(255, 121, 198, 0.08);
+}
+
+html[data-theme="night"] .app-forecast__row--current > td {
+  background-color: rgba(255, 121, 198, 0.12) !important;
+}
+
+html[data-theme="night"] .app-forecast__month-badge {
+  background: rgba(255, 121, 198, 0.16);
+  color: #ffd7ec;
+}
+
+html[data-theme="night"] .app-forecast__saldo--positive {
+  background: rgba(103, 228, 128, 0.14);
+  color: #9cf3ad;
+}
+
+html[data-theme="night"] .app-forecast__saldo--negative {
+  background: rgba(255, 121, 198, 0.16);
+  color: #ffc0e2;
+}
+
+html[data-theme="night"] .app-forecast__nav .app-btn--ghost {
+  background: rgba(255, 121, 198, 0.14);
+  color: #ffd7ec;
+  box-shadow: inset 0 0 0 1px rgba(255, 121, 198, 0.2);
+}
+
+html[data-theme="night"] .app-forecast__nav .app-btn--ghost:hover {
+  background: rgba(255, 121, 198, 0.2);
+}
+
+html[data-theme="night"] .custom-date {
+  background-color: var(--table-surface) !important;
+  color: var(--table-row-text) !important;
+  border-color: var(--table-border-color) !important;
+}
+
+html[data-theme="night"] .datepicker {
+  background: var(--table-surface-alt);
+  border-color: var(--table-border-color);
+  color: var(--table-row-text);
+  box-shadow: var(--shadow-card);
+}
+
+html[data-theme="night"] .datepicker-header,
+html[data-theme="night"] .datepicker td {
+  color: var(--table-row-text);
+}
+
+html[data-theme="night"] .datepicker-header button,
+html[data-theme="night"] .datepicker-header button:hover {
+  color: #ffd7ec;
+}
+
+html[data-theme="night"] .datepicker-header select {
+  background: var(--table-surface);
+  border-color: var(--table-border-color);
+  color: var(--table-row-text);
+}
+
+html[data-theme="night"] .datepicker th {
+  color: var(--text-soft);
+}
+
+html[data-theme="night"] .datepicker td[data-date]:hover,
+html[data-theme="night"] .datepicker .active {
+  background: var(--nav-active-bg);
+  color: #ffd7ec;
+}
+
+html[data-theme="night"] .datepicker td[title]:hover::after {
+  background: var(--table-surface);
+  color: var(--table-row-text);
+  box-shadow: var(--shadow-card);
+}
+
+html[data-theme="night"] .datepicker td[title]:hover::before {
+  border-color: var(--table-surface) transparent transparent transparent;
+}
+
+html[data-theme="night"] .app-calendar-agenda__date strong,
+html[data-theme="night"] .app-calendar-tooltip__description {
+  color: #d8d2ea;
+}
+
+html[data-theme="night"] .app-calendar-tooltip {
+  background: var(--table-surface-alt);
+  border-color: var(--table-border-color);
+  color: var(--table-row-text) !important;
+  box-shadow: var(--shadow-card);
+}
+
+html[data-theme="night"] .app-table--records tbody tr:nth-child(odd) td,
+html[data-theme="night"] .app-table--records tbody tr:nth-child(even) td {
+  background-color: var(--table-surface) !important;
+  color: var(--table-row-text) !important;
+}
+
+html[data-theme="night"] .app-table--records tbody tr:nth-child(even) td {
+  background-color: var(--table-surface-alt) !important;
+}
+
+html[data-theme="night"] .app-table--records tbody tr:hover td {
+  background-color: var(--table-hover-bg) !important;
+}
+
+html[data-theme="night"] .app-record-actions__status,
+html[data-theme="night"] .app-record-actions__status:hover,
+html[data-theme="night"] .app-record-actions__status:focus {
+  color: #d8d2ea !important;
+}
+
+html[data-theme="night"] .app-record-actions__edit,
+html[data-theme="night"] .app-record-actions__edit:hover,
+html[data-theme="night"] .app-record-actions__edit:focus {
+  color: #b9c5ff !important;
+}
+
+html[data-theme="night"] .app-record-actions__pay,
+html[data-theme="night"] .app-record-actions__pay:hover,
+html[data-theme="night"] .app-record-actions__pay:focus {
+  color: #ffca80 !important;
+}
+
+html[data-theme="night"] #calc-display-container {
+  background: var(--table-surface-alt) !important;
+  border-color: var(--table-border-color) !important;
+}
+
+html[data-theme="night"] #calc-history,
+html[data-theme="night"] #calc-temp {
+  color: var(--text-soft) !important;
+}
+
+html[data-theme="night"] #calc-display {
+  color: var(--table-row-text) !important;
+}
+
+#wrapper.collapsed .app-sidebar {
+  width: var(--sidebar-width-collapsed);
+}
+
+#wrapper.collapsed .app-content {
+  margin-left: calc(var(--sidebar-width-collapsed) + 18px);
+}

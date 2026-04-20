@@ -1,0 +1,144 @@
+<turbo-frame id="modal">
+  <div data-modal-size="xl"></div>
+
+  <div class="modal-header">
+    <div>
+      <p class="app-page__eyebrow mb-1">Revisão de lançamentos</p>
+      <h5 class="modal-title">Importar Fatura</h5>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+  </div>
+
+  <div class="modal-body p-3 invoice-import-modal">
+    <div class="invoice-import-modal__loading" data-invoice-loading>
+      <div class="invoice-import-modal__loading-card">
+        <div class="spinner-border" role="status" aria-hidden="true"></div>
+        <strong>Analisando fatura...</strong>
+        <span>A IA local está lendo os lançamentos. Isso pode levar alguns segundos.</span>
+      </div>
+    </div>
+
+    <%= form_with url: analyze_invoice_expenses_path,
+                  method: :post,
+                  multipart: true,
+                  data: { turbo_frame: "modal", stay_modal: true },
+                  class: "row g-3 mb-4" do |f| %>
+      <div class="col-lg-4">
+        <%= f.label :invoice_file, "Arquivo da fatura", class: "form-label" %>
+        <%= f.file_field :invoice_file, class: "form-control", accept: ".pdf,.csv,.txt,.jpg,.jpeg,.png" %>
+        <small class="text-muted">CSV/TXT geram prévia local. PDF/imagem usam IA local por padrão; informe a senha se a fatura for protegida.</small>
+      </div>
+
+      <div class="col-lg-2">
+        <%= f.label :card_id, "Cartão padrão", class: "form-label" %>
+        <%= f.select :card_id,
+              options_for_select([["Selecionar cartão", ""]] + @cards.map { |card| [card.name, card.id] }, @selected_card_id),
+              {},
+              class: "form-select" %>
+      </div>
+
+      <div class="col-lg-2">
+        <%= f.label :due_date, "Vencimento", class: "form-label" %>
+        <%= f.date_field :due_date, value: @invoice_due_date, class: "form-control" %>
+      </div>
+
+      <div class="col-lg-2">
+        <%= f.label :invoice_password, "Senha da fatura", class: "form-label" %>
+        <%= f.password_field :invoice_password, class: "form-control", autocomplete: "off", placeholder: "Opcional" %>
+      </div>
+
+      <div class="col-lg-2 d-flex align-items-center">
+        <%= f.button class: "btn app-page__primary-btn w-100", style: "color: var(--nav-active-icon-color) !important; background: var(--hero-badge-icon-bg) !important; display: flex; justify-content: center; align-items: center;" do %>
+          <span class="material-symbols-rounded me-1">neurology</span>
+          Analisar
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @invoice_import_errors.present? %>
+      <div class="alert alert-warning py-2 mb-3">
+        <%= @invoice_import_errors.to_sentence %>
+      </div>
+    <% end %>
+
+    <%= form_with url: confirm_invoice_import_expenses_path,
+                  method: :post,
+                  data: { turbo_frame: "modal" },
+                  class: "app-panel app-panel--table mb-0" do %>
+      <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+        <div>
+          <p class="app-page__eyebrow mb-1">Itens encontrados</p>
+          <h6 class="mb-0">Revise antes de salvar</h6>
+        </div>
+        <button type="submit" class="btn app-page__secondary-btn" style="color: var(--nav-active-icon-color) !important; background: var(--hero-badge-icon-bg) !important; display: flex; justify-content: center; align-items: center;" <%= "disabled" if @invoice_preview_items.blank? %>>
+          <span class="material-symbols-rounded me-1">add_task</span>
+          Salvar lançamentos
+        </button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table app-table mb-0">
+          <thead>
+            <tr>
+              <th>Importar</th>
+              <th>Descrição</th>
+              <th>Valor</th>
+              <th>Data</th>
+              <th>Vencimento</th>
+              <th>Categoria</th>
+              <th>Pagamento</th>
+              <th>Cartão</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if @invoice_preview_items.present? %>
+              <% @invoice_preview_items.each_with_index do |item, index| %>
+                <tr>
+                  <td>
+                    <%= hidden_field_tag "invoice_items[#{index}][selected]", "0" %>
+                    <%= check_box_tag "invoice_items[#{index}][selected]", "1", item[:selected].blank? || ActiveModel::Type::Boolean.new.cast(item[:selected]), class: "form-check-input" %>
+                  </td>
+                  <td>
+                    <%= text_field_tag "invoice_items[#{index}][description]", item[:description], class: "form-control form-control-sm", required: true %>
+                  </td>
+                  <td>
+                    <%= text_field_tag "invoice_items[#{index}][amount]", item[:amount], class: "form-control form-control-sm moeda", required: true %>
+                  </td>
+                  <td>
+                    <%= text_field_tag "invoice_items[#{index}][date]", item[:date], class: "form-control form-control-sm", required: true %>
+                  </td>
+                  <td>
+                    <%= date_field_tag "invoice_items[#{index}][due_date]", item[:due_date], class: "form-control form-control-sm" %>
+                  </td>
+                  <td>
+                    <%= select_tag "invoice_items[#{index}][category_id]",
+                          options_for_select([["Selecione", ""]] + @categories.map { |category| [category.display_name, category.id] }, item[:category_id]),
+                          class: "form-select form-select-sm",
+                          required: true %>
+                  </td>
+                  <td>
+                    <%= select_tag "invoice_items[#{index}][payment_method]",
+                          options_for_select(Expense.payment_method_names.map { |key, label| [label, key] }, item[:payment_method]),
+                          class: "form-select form-select-sm",
+                          required: true %>
+                  </td>
+                  <td>
+                    <%= select_tag "invoice_items[#{index}][card_id]",
+                          options_for_select([["Sem cartão", ""]] + @cards.map { |card| [card.name, card.id] }, item[:card_id]),
+                          class: "form-select form-select-sm" %>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="8" class="text-center py-4 text-muted">
+                  Envie uma fatura para gerar a prévia dos lançamentos.
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  </div>
+</turbo-frame>

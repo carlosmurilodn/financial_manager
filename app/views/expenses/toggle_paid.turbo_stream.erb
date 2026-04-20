@@ -1,11 +1,11 @@
-<turbo-stream action="replace" target="expense_<%= @expense.id %>">
+<turbo-stream action="replace" target="expenses-table">
   <template>
-    <%= render partial: "expense_row", locals: { expense: @expense } %>
+    <%= render partial: "expenses_table" %>
   </template>
 </turbo-stream>
 
-<turbo-stream action="replace" target="expenses-totals">
+<turbo-stream action="replace" target="expenses-hero-kpis">
   <template>
-    <%= render partial: "expenses_totals" %>
+    <%= render partial: "hero_kpis" %>
   </template>
 </turbo-stream>

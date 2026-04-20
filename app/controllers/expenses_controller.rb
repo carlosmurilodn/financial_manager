@@ -12,6 +12,57 @@ class ExpensesController < ApplicationController
   def show; end
   def new; @expense = Expense.new; end
   def edit; end
+  def import_invoice
+    load_invoice_import_options
+    @invoice_preview_items = []
+    @invoice_import_errors = []
+  end
+
+  def analyze_invoice
+    load_invoice_import_options
+    @selected_card_id = params[:card_id]
+    @invoice_due_date = params[:due_date]
+
+    result = InvoiceImportAnalyzer.new(
+      file: params[:invoice_file],
+      card_id: @selected_card_id,
+      due_date: @invoice_due_date,
+      invoice_password: params[:invoice_password],
+      categories: @categories
+    ).call
+
+    @invoice_preview_items = result.items
+    @invoice_import_errors = result.errors
+
+    render :import_invoice
+  end
+
+  def confirm_invoice_import
+    importable_items = invoice_import_items.select { |item| ActiveModel::Type::Boolean.new.cast(item[:selected]) }
+
+    if importable_items.blank?
+      load_invoice_import_options
+      @invoice_preview_items = invoice_import_items
+      @invoice_import_errors = ["Selecione ao menos um lançamento para importar."]
+      render :import_invoice, status: :unprocessable_entity
+      return
+    end
+
+    created_count = create_invoice_expenses(importable_items)
+    success_message = "#{created_count} lançamentos importados com sucesso!"
+    flash[:notice] = success_message
+
+    respond_to do |format|
+      format.html { redirect_to expenses_path, notice: success_message }
+      format.turbo_stream { render turbo_stream: "" }
+    end
+  rescue ActiveRecord::RecordInvalid => error
+    load_invoice_import_options
+    @invoice_preview_items = invoice_import_items
+    @invoice_import_errors = ["Revise os lançamentos: #{error.record.errors.full_messages.to_sentence}"]
+    render :import_invoice, status: :unprocessable_entity
+  end
+
   def delete_options; end
   def toggle_paid_options; end
 
@@ -76,8 +127,8 @@ class ExpensesController < ApplicationController
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: [
-          turbo_stream.replace("expense_#{@expense.id}", partial: "expense_row", locals: { expense: @expense.reload }),
-          turbo_stream.replace("expenses-totals", partial: "expenses_totals")
+          turbo_stream.replace("expenses-table", partial: "expenses_table"),
+          turbo_stream.replace("expenses-hero-kpis", partial: "hero_kpis")
         ]
       end
       format.html { redirect_to expenses_path }
@@ -125,6 +176,46 @@ class ExpensesController < ApplicationController
 
   def set_expense
     @expense = Expense.find(params[:id])
+  end
+
+  def load_invoice_import_options
+    @cards = Card.order(:name)
+    @categories = Category.all.sort_by(&:sort_name)
+  end
+
+  def invoice_import_items
+    raw_items = params[:invoice_items] || {}
+    raw_items = raw_items.permit!.to_h if raw_items.respond_to?(:permit!)
+    raw_items.values.map(&:symbolize_keys)
+  end
+
+  def create_invoice_expenses(items)
+    Expense.transaction do
+      items.each do |item|
+        Expense.create!(
+          description: item[:description],
+          amount: parse_brazilian_amount(item[:amount], blank: 0),
+          date: parse_invoice_date(item[:date]),
+          balance_month: parse_invoice_date(item[:due_date]) || parse_invoice_date(item[:date]),
+          category_id: item[:category_id],
+          payment_method: item[:payment_method],
+          card_id: item[:card_id].presence,
+          paid: false,
+          installments_count: 1,
+          current_installment: 1
+        )
+      end
+    end
+
+    items.size
+  end
+
+  def parse_invoice_date(value)
+    return if value.blank?
+
+    Date.iso8601(value)
+  rescue ArgumentError
+    parse_brazilian_date(value)
   end
 
   def expense_params
@@ -216,6 +307,7 @@ class ExpensesController < ApplicationController
 
     calculate_totals
     calculate_net_balance
+    paginate_expenses if action_name == "index"
   end
 
   def filter_by_month
@@ -312,5 +404,17 @@ class ExpensesController < ApplicationController
     Expense.includes(:category, :card)
            .order(balance_month: :desc, date: :asc, current_installment: :asc)
            .to_a
+  end
+
+  def paginate_expenses
+    @per_page = 10
+    @total_expenses_count = @expenses.size
+    @total_pages = [(@total_expenses_count.to_f / @per_page).ceil, 1].max
+    @current_page = params[:page].to_i
+    @current_page = 1 if @current_page < 1
+    @current_page = @total_pages if @current_page > @total_pages
+
+    offset = (@current_page - 1) * @per_page
+    @expenses = @expenses.slice(offset, @per_page) || []
   end
 end

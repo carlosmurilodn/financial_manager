@@ -31,37 +31,37 @@
     <%= expense.card&.name %>
   </td>
 
-  <td class="text-center">
+  <td class="text-center app-record-actions">
     <% if expense.payment_method_credito_parcelado? %>
       <%= link_to (expense.paid? ? "Sim" : "Não"),
               toggle_paid_options_expense_path(expense, month: params[:month]),
-              class: "btn btn-sm btn-secondary",
+              class: "btn btn-sm btn-secondary app-record-actions__status",
               data: { turbo_frame: "modal" } %>
     <% else %>
       <%= link_to (expense.paid? ? "Sim" : "Não"),
               toggle_paid_expense_path(expense, month: params[:month]),
               method: :patch,
               data: { turbo_method: :patch, turbo_stream: true },
-              class: "btn btn-sm btn-secondary" %>
+              class: "btn btn-sm btn-secondary app-record-actions__status" %>
     <% end %>
   </td>
 
-  <td class="text-center">
+  <td class="text-center app-record-actions">
     <%= link_to t("buttons.edit"),
                 edit_expense_path(expense),
-                class: "btn btn-sm btn-primary",
+                class: "btn btn-sm btn-primary app-record-actions__edit",
                 data: { turbo_frame: "modal" } %>
 
     <% if expense.payment_method_credito_parcelado? %>
       <%= link_to t("buttons.delete"),
                   delete_options_expense_path(expense),
-                  class: "btn btn-sm btn-danger",
+                  class: "btn btn-sm btn-danger app-record-actions__delete",
                   data: { turbo_frame: "modal" } %>
     <% else %>
       <%= link_to t("buttons.delete"),
                   expense_path(expense),
                   data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
-                  class: "btn btn-sm btn-danger" %>
+                  class: "btn btn-sm btn-danger app-record-actions__delete" %>
     <% end %>
   </td>
 </tr>

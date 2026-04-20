@@ -55,11 +55,7 @@ class IncomesController < ApplicationController
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.remove("income_#{@income.id}"),
-          turbo_stream.replace("incomes-totals", partial: "incomes_totals", locals: {
-            total_received: @total_received,
-            total_pending: @total_pending,
-            total_amount: @total_amount
-          })
+          turbo_stream.replace("incomes-hero-kpis", partial: "hero_kpis")
         ]
       end
       format.html { redirect_to incomes_path, notice: "Receita removida com sucesso!" }
@@ -74,11 +70,7 @@ class IncomesController < ApplicationController
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.replace("income_#{@income.id}", partial: "income_row", locals: { income: @income }),
-          turbo_stream.replace("incomes-totals", partial: "incomes_totals", locals: {
-            total_received: @total_received,
-            total_pending: @total_pending,
-            total_amount: @total_amount
-          })
+          turbo_stream.replace("incomes-hero-kpis", partial: "hero_kpis")
         ]
       end
       format.html { redirect_to incomes_path }

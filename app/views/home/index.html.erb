@@ -9,11 +9,17 @@
     </div>
 
     <div class="dashboard-hero__badge">
-      <span class="material-symbols-rounded">monitoring</span>
-      <div>
-        <strong><%= I18n.l(Date.current, format: "%B de %Y") %></strong>
-        <small>Atualizado com os dados do periodo atual</small>
+      <div class="dashboard-hero__badge-item dashboard-hero__badge-item--primary">
+        <span class="material-symbols-rounded">event_upcoming</span>
+        <div>
+          <div id="dashboard-current-time" class="app-sidebar__time">
+            <span class="app-sidebar__time-main"><%= Time.current.strftime("%H:%M") %></span>
+            <span class="app-sidebar__time-seconds">:<%= Time.current.strftime("%S") %></span>
+          </div>
+          <strong><%= "#{Date.current.day} de #{I18n.l(Date.current, format: '%B').capitalize} de #{Date.current.year}" %></strong>
+        </div>
       </div>
+      <div id="dashboard-weather-info" class="dashboard-hero__badge-item dashboard-hero__badge-item--weather"></div>
     </div>
   </div>
 
@@ -22,22 +28,17 @@
   </div>
 
   <div class="dashboard-grid dashboard-grid--charts">
-    <div class="dashboard-grid__item dashboard-grid__item--wide">
-      <%= render "home/despesas_por_categoria" %>
+    <div class="dashboard-grid__item dashboard-grid__item--movement-stack">
+      <%= render "home/receitas_recentes" %>
+      <%= render "home/despesas_recentes" %>
     </div>
 
-    <div class="dashboard-grid__item">
+    <div class="dashboard-grid__item dashboard-grid__item--cards-summary">
       <%= render "home/saldo_por_cartao" %>
     </div>
-  </div>
 
-  <div class="dashboard-grid">
-    <div class="dashboard-grid__item">
-      <%= render "home/receitas_recentes" %>
-    </div>
-
-    <div class="dashboard-grid__item">
-      <%= render "home/despesas_recentes" %>
+    <div class="dashboard-grid__item dashboard-grid__item--category-chart">
+      <%= render "home/despesas_por_categoria" %>
     </div>
   </div>
 
@@ -52,4 +53,3 @@
   </div>
 </section>
 
-<%= render "home/scripts" %>

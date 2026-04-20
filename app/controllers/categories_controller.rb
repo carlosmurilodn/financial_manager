@@ -2,7 +2,6 @@ class CategoriesController < ApplicationController
   before_action :set_category, only: %i[edit update destroy]
 
   def index
-    # Ordena pelo nome puro, ignorando emoji
     @categories = Category.order(:name)
   end
 
@@ -60,7 +59,6 @@ end
   end
 
   def category_params
-    # Permite emoji + nome juntos
-    params.require(:category).permit(:name, :emoji)
+    params.require(:category).permit(:name, :icon)
   end
 end

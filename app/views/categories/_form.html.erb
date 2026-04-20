@@ -1,8 +1,8 @@
 <%= form_with model: category, local: true do |f| %>
   <div class="row mb-3">
     <div class="col-md-3">
-      <%= f.label :emoji, "Emoji" %>
-      <%= f.text_field :emoji, class: "form-control", placeholder: "💸" %>
+      <%= f.label :icon, "Ícone Google" %>
+      <%= f.text_field :icon, class: "form-control", placeholder: "receipt_long" %>
     </div>
     <div class="col-md-9">
       <%= f.label :name, t("categories.form.name") %>

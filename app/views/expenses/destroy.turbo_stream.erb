@@ -1,5 +1,7 @@
-<%= turbo_stream.remove @expense %>
+<%= turbo_stream.replace "expenses-table" do %>
+  <%= render partial: "expenses_table" %>
+<% end %>
 
-<%= turbo_stream.replace "expenses-totals" do %>
-  <%= render partial: "expenses_totals", locals: { total_paid: @total_paid, total_unpaid: @total_unpaid } %>
+<%= turbo_stream.replace "expenses-hero-kpis" do %>
+  <%= render partial: "hero_kpis" %>
 <% end %>

@@ -39,6 +39,7 @@ gem "thruster", require: false
 
 gem "pdfkit"
 gem "wkhtmltopdf-binary"
+gem "csv"
 
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]

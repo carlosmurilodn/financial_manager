@@ -1,17 +1,76 @@
-<div class="dashboard-card dashboard-card--chart dashboard-card--mint">
+<div class="dashboard-card dashboard-card--chart dashboard-card--mint dashboard-card--category-summary">
   <div class="dashboard-card__header">
     <div>
       <p class="dashboard-card__eyebrow">Analise mensal</p>
-      <h2 class="dashboard-card__title">Despesas por categoria</h2>
+      <h2 class="dashboard-card__title">Despesas por Categoria</h2>
     </div>
 
-    <div class="dashboard-card__pill">
-      <span class="material-symbols-rounded">pie_chart</span>
-      <span><%= I18n.l(Date.current, format: "%B") %></span>
+    <div class="dashboard-card__pill dashboard-card__pill--period">
+      <%= link_to root_path(category_month: @previous_category_expense_date.month, category_year: @previous_category_expense_date.year),
+                  class: "dashboard-card__period-button",
+                  aria: { label: "Mês anterior" } do %>
+        <span class="material-symbols-rounded">chevron_left</span>
+      <% end %>
+      <span class="dashboard-card__period-label">
+        <span class="material-symbols-rounded">pie_chart</span>
+        <span><%= I18n.l(@category_expense_date, format: "%B de %Y") %></span>
+      </span>
+      <%= link_to root_path(category_month: @next_category_expense_date.month, category_year: @next_category_expense_date.year),
+                  class: "dashboard-card__period-button",
+                  aria: { label: "Próximo mês" } do %>
+        <span class="material-symbols-rounded">chevron_right</span>
+      <% end %>
     </div>
   </div>
 
-  <div class="dashboard-card__body dashboard-card__body--canvas">
-    <canvas id="despesasChart"></canvas>
+  <div class="dashboard-card__body dashboard-card__body--category-summary">
+    <% if @category_expense_summaries.any? %>
+      <div class="dashboard-category-summary">
+        <% @category_expense_summaries.each do |summary| %>
+          <article class="dashboard-category-item">
+            <div class="dashboard-category-item__main">
+              <span class="material-symbols-rounded dashboard-category-item__icon"><%= summary[:icon] %></span>
+              <button type="button" class="dashboard-category-item__copy" aria-expanded="false">
+                <strong><%= summary[:name] %></strong>
+                <small><%= pluralize(summary[:count], "movimentação", "movimentações") %> no mes</small>
+                <span class="material-symbols-rounded dashboard-category-item__arrow">keyboard_arrow_down</span>
+              </button>
+            </div>
+
+            <div class="dashboard-category-item__value">
+              <strong><%= number_to_currency(summary[:total], unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+              <span><%= number_to_percentage(summary[:percent], precision: 0) %></span>
+            </div>
+
+            <div class="dashboard-category-item__progress" aria-label="<%= summary[:name] %>: <%= number_to_percentage(summary[:percent], precision: 0) %> do total">
+              <span style="width: <%= summary[:percent].round(1) %>%;"></span>
+            </div>
+
+            <div class="dashboard-category-item__details" role="tooltip">
+              <div class="dashboard-category-item__details-header">
+                <strong><%= summary[:name] %></strong>
+                <span><%= number_to_currency(summary[:total], unit: "R$ ", separator: ",", delimiter: ".") %></span>
+              </div>
+
+              <div class="dashboard-category-item__details-list">
+                <% summary[:items].each do |item| %>
+                  <div class="dashboard-category-item__details-row">
+                    <span><%= item[:description] %></span>
+                    <strong><%= number_to_currency(item[:amount], unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+                    <small><%= item[:date].strftime("%d/%m/%Y") %></small>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="dashboard-empty-state">
+        <span class="material-symbols-rounded">category</span>
+        <strong>Nenhuma despesa no mes</strong>
+        <small>As categorias aparecem aqui quando houver lancamentos.</small>
+      </div>
+    <% end %>
   </div>
 </div>

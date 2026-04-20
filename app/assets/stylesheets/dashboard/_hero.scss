@@ -1,0 +1,216 @@
+.dashboard-page {
+  display: grid;
+  gap: 20px;
+}
+
+.dashboard-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--hero-bg);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(22px);
+}
+
+.dashboard-eyebrow,
+.dashboard-card__eyebrow {
+  margin: 0 0 8px;
+  color: var(--text-soft);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.dashboard-hero h1,
+.dashboard-card__title {
+  margin: 0;
+  font-weight: 800;
+}
+
+.dashboard-hero h1 {
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+}
+
+.dashboard-description {
+  max-width: 640px;
+  margin: 10px 0 0;
+  color: var(--text-soft);
+}
+
+.dashboard-hero__badge,
+.dashboard-card,
+.stat-card {
+  border: 0;
+  background: var(--surface);
+  /*backdrop-filter: blur(22px);*/
+  box-shadow: var(--shadow-card);
+}
+
+.dashboard-hero__badge {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 14px 16px;
+  border-radius: 10px;
+}
+
+.dashboard-hero__badge-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: max-content;
+  min-height: 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.dashboard-hero__badge-item--primary {
+  align-items: center;
+  gap: 14px;
+}
+
+.dashboard-hero__badge-item--header,
+.dashboard-hero__badge-item--weather {
+  justify-content: center;
+}
+
+.dashboard-hero__badge-item--weather {
+  flex-direction: column;
+  min-width: 168px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+}
+
+.dashboard-hero__badge .material-symbols-rounded {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: var(--hero-badge-icon-bg);
+  color: var(--hero-badge-icon-color);
+}
+
+.dashboard-hero__badge-item--primary strong {
+  display: block;
+  line-height: 1.35;
+}
+
+.dashboard-hero__badge-item--primary .app-sidebar__time {
+  margin-bottom: 2px;
+}
+
+.dashboard-hero__badge-item--weather .today-weather {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 100%;
+  padding: 10px 14px;
+  background: rgba(66, 150, 241, 0.96);
+}
+
+.dashboard-hero__badge-item--weather .today-weather__details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+}
+
+.dashboard-hero__badge-item--weather .today-weather__current {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.dashboard-hero__badge-item--weather .today-weather__current img {
+  width: 68px;
+  height: 68px;
+}
+
+.dashboard-hero__badge-item--weather .today-weather__current-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dashboard-hero__badge-item--weather .today-weather__current strong {
+  color: #ffffff;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.dashboard-hero__badge-item--weather .today-weather__city {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.dashboard-hero__badge-item--weather .today-weather--clear {
+  background: rgba(66, 150, 241, 0.96);
+}
+
+.dashboard-hero__badge-item--weather .today-weather--clear-night {
+  background: rgba(31, 57, 111, 0.98);
+}
+
+.dashboard-hero__badge-item--weather .today-weather--clouds {
+  background: rgba(109, 153, 194, 0.96);
+}
+
+.dashboard-hero__badge-item--weather .today-weather--cloudy-night {
+  background: rgba(58, 76, 118, 0.98);
+}
+
+.dashboard-hero__badge-item--weather .today-weather--rain {
+  background: rgba(72, 121, 170, 0.98);
+}
+
+.dashboard-hero__badge-item--weather .today-weather--rain-night {
+  background: rgba(34, 53, 97, 0.98);
+}
+
+.dashboard-hero__badge-item--weather .today-weather--drizzle {
+  background: rgba(88, 145, 175, 0.96);
+}
+
+.dashboard-hero__badge-item--weather .today-weather--drizzle-night {
+  background: rgba(49, 72, 110, 0.98);
+}
+
+.dashboard-hero__badge-item--weather .today-weather--storm {
+  background: rgba(53, 62, 110, 0.98);
+}
+
+.dashboard-hero__badge-item--weather .today-weather--snow {
+  background: rgba(163, 197, 225, 0.96);
+}
+
+.dashboard-hero__badge-item--weather .today-weather--mist {
+  background: rgba(120, 149, 169, 0.96);
+}
+
+.dashboard-hero__badge-item--weather .today-weather__details span,
+.dashboard-hero__badge-item--weather .today-weather__details small {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.dashboard-hero__badge-item--weather .today-weather__details span {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.dashboard-hero__badge-item--weather .today-weather__details small {
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+

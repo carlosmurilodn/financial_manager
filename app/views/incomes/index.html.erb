@@ -1,21 +1,20 @@
 <section class="app-page">
   <div class="app-page__hero">
-    <div class="app-page__hero-copy">
-      <span class="app-page__hero-icon">
-        <%= image_tag "icons/income.png", alt: "Receitas", size: "22x22" %>
-      </span>
-      <div>
-        <p class="app-page__eyebrow">Gestão</p>
-        <h1 class="app-page__title">Receitas</h1>
-        <p class="app-page__description">Organize suas entradas, acompanhe recebimentos e veja a evolução do caixa.</p>
+    <div class="app-page__hero-top app-page__hero-top--incomes">
+      <div class="app-page__hero-copy">
+        <span class="app-page__hero-icon">
+          <span class="material-symbols-rounded">payments</span>
+        </span>
+        <div>
+          <p class="app-page__eyebrow">Gestão</p>
+          <h1 class="app-page__title">Receitas</h1>
+          <%# <p class="app-page__description">Organize suas entradas, acompanhe recebimentos e veja a evolução do caixa.</p> %>
+        </div>
       </div>
-    </div>
 
-    <div class="app-page__hero-actions">
-      <%= link_to t("buttons.new.feminine", model: t("models.income")),
-          new_income_path,
-          class: "btn app-page__primary-btn",
-          data: { turbo_frame: "modal" } %>
+      <div class="app-page__hero-kpis">
+        <%= render "hero_kpis" %>
+      </div>
     </div>
   </div>
 
@@ -78,10 +77,6 @@
             <%= render partial: "income_row", locals: { income: income } %>
           <% end %>
         </tbody>
-        <%= render "incomes_totals",
-            total_received: @total_received,
-            total_pending: @total_pending,
-            total_amount: @total_amount %>
       </table>
     </div>
   </div>

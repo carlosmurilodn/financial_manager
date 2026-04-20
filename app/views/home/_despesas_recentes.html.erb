@@ -11,35 +11,29 @@
     </div>
   </div>
 
-  <div class="dashboard-card__body">
-    <% linhas = @recent_expenses.size + 1 %>
-    <% altura_linha = 100.0 / linhas %>
+  <div class="dashboard-card__body dashboard-card__body--movement-feed">
+    <div class="dashboard-movement-feed dashboard-movement-feed--expenses">
+      <% month_labels = %w[jan fev mar abr mai jun jul ago set out nov dez] %>
+      <% @recent_expenses.each do |expense| %>
+        <article class="dashboard-movement-item dashboard-movement-item--expense">
+          <div class="dashboard-movement-item__date">
+            <strong><%= expense.date.strftime("%d") %></strong>
+            <span><%= month_labels[expense.date.month - 1] %></span>
+          </div>
 
-    <table class="table app-table app-table--recent-expenses mb-0" style="height: 100%; table-layout: fixed;">
-      <thead>
-        <tr style="height: <%= altura_linha %>%;">
-          <th class="align-middle">Data</th>
-          <th class="align-middle">Descricao</th>
-          <th class="align-middle">Valor</th>
-        </tr>
-      </thead>
+          <div class="dashboard-movement-item__main">
+            <div class="dashboard-movement-item__title">
+              <span class="material-symbols-rounded dashboard-movement-item__marker"><%= expense.category&.material_icon || "category" %></span>
+              <strong><%= expense.description.presence || "Despesa" %></strong>
+            </div>
+            <small><%= expense.category&.name || "Sem categoria" %></small>
+          </div>
 
-      <tbody>
-        <% @recent_expenses.each_with_index do |expense, index| %>
-          <% borda = (index == @recent_expenses.size - 1) ? "none" : "1px solid rgba(239, 68, 68, 0.16)" %>
-          <tr style="height: <%= altura_linha %>%;">
-            <td class="text-start align-middle" style="border-bottom: <%= borda %>;">
-              <%= expense.date.strftime("%d/%m/%Y") %>
-            </td>
-            <td class="text-start align-middle" style="border-bottom: <%= borda %>;">
-              <%= expense.category.emoji %> <%= expense.description %>
-            </td>
-            <td class="text-start align-middle text-danger" style="border-bottom: <%= borda %>;">
-              <%= number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+          <strong class="dashboard-movement-item__amount">
+            <%= number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
+          </strong>
+        </article>
+      <% end %>
+    </div>
   </div>
 </div>

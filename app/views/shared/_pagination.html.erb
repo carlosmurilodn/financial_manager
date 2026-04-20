@@ -1,0 +1,30 @@
+<% return if total_pages.to_i <= 1 %>
+
+<nav class="app-pagination" aria-label="<%= local_assigns[:aria_label] || 'Paginacao' %>">
+  <% previous_page = [current_page.to_i - 1, 1].max %>
+  <% next_page = [current_page.to_i + 1, total_pages.to_i].min %>
+
+  <%= link_to url_for(base_params.merge(page: previous_page)),
+              class: "app-pagination__link #{'is-disabled' if current_page.to_i <= 1}",
+              aria: { disabled: (current_page.to_i <= 1) } do %>
+    <span class="material-symbols-rounded">chevron_left</span>
+  <% end %>
+
+  <div class="app-pagination__pages">
+    <% pagination_sequence(current_page, total_pages).each do |item| %>
+      <% if item == :gap %>
+        <span class="app-pagination__ellipsis">...</span>
+      <% else %>
+        <%= link_to item,
+                    url_for(base_params.merge(page: item)),
+                    class: "app-pagination__link #{'is-active' if item == current_page.to_i}" %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= link_to url_for(base_params.merge(page: next_page)),
+              class: "app-pagination__link #{'is-disabled' if current_page.to_i >= total_pages.to_i}",
+              aria: { disabled: (current_page.to_i >= total_pages.to_i) } do %>
+    <span class="material-symbols-rounded">chevron_right</span>
+  <% end %>
+</nav>

@@ -1,0 +1,163 @@
+@media (max-width: 1199px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-filter-grid,
+  .app-filter-grid--expenses,
+  .app-filter-grid--incomes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-reports-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-card--calendar {
+    width: min(100%, 480px);
+    max-width: 100%;
+  }
+
+  .app-forecast__summary {
+    grid-template-columns: 1fr;
+  }
+
+  .app-calendar-agenda__item {
+    grid-template-columns: 44px 10px minmax(0, 1fr);
+  }
+
+  .app-calendar-agenda__value {
+    grid-column: 3;
+  }
+}
+
+@media (max-width: 991px) {
+  .app-sidebar {
+    position: sticky;
+    inset: 0;
+    width: 100%;
+    padding: 16px 16px 0;
+  }
+
+  .app-sidebar__inner {
+    height: auto;
+    border-radius: 28px;
+  }
+
+  .app-content,
+  #wrapper.collapsed .app-content {
+    margin-left: 0;
+  }
+
+  .app-shell {
+    flex-direction: column;
+  }
+
+  .app-content__inner {
+    padding: 18px 16px 28px;
+  }
+
+  .dashboard-hero,
+  .dashboard-card__header,
+  .dashboard-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .app-page__hero {
+    grid-template-columns: 1fr;
+  }
+
+  .app-page__hero-copy {
+    align-items: flex-start;
+  }
+
+  .app-expenses-hero-kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .app-filter-grid,
+  .app-filter-grid--expenses,
+  .app-filter-grid--incomes {
+    grid-template-columns: 1fr;
+  }
+
+  .app-calendar__nav {
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    align-items: center;
+  }
+
+  .app-forecast__nav {
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+  }
+
+  .dashboard-card--calendar {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .app-footer {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .app-footer__brand {
+    justify-content: center;
+  }
+
+  .app-footer__credit {
+    text-align: center;
+  }
+
+  .app-theme-toggle__copy {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-pagination {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .app-pagination__pages {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .app-panel,
+  .app-page__hero,
+  .app-report-card {
+    padding: 20px;
+  }
+
+  .dashboard-card,
+  .dashboard-hero {
+    padding: 20px;
+  }
+
+  .app-calendar-tooltip {
+    left: 8px;
+    right: 8px;
+    bottom: calc(100% + 8px);
+    min-width: 0;
+    max-width: none;
+    transform: translateY(8px);
+  }
+
+  .app-calendar-table__day--has-events:hover .app-calendar-tooltip {
+    transform: translateY(0);
+  }
+
+  .app-table > :not(caption) > * > * {
+    padding: 0.8rem 0.55rem;
+  }
+}

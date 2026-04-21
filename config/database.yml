@@ -1,26 +1,20 @@
 
 default: &default
-  adapter: postgresql
-  encoding: unicode
-  username: <%= ENV.fetch("DB_USERNAME", "carlos") %>
-  password: <%= ENV.fetch("DB_PASSWORD", "739937") %>
-  host: <%= ENV.fetch("DB_HOST", "localhost") %>
-  port: <%= ENV.fetch("DB_PORT", 5432) %>
-  # For details on connection pooling, see Rails configuration guide
-  # https://guides.rubyonrails.org/configuring.html#database-pooling
+  adapter: sqlite3
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
 
 
 development:
   <<: *default
-  database: financial_manager_development
+  database: <%= ENV.fetch("FINANCIAL_MANAGER_DATABASE_PATH", "/mnt/g/Meu Drive/OUTROS/gerenciador_financeiro/financial_manager.sqlite3") %>
 
 
 test:
   <<: *default
-  database: financial_manager_test
+  database: tmp/test.sqlite3
 
 
 production:
   <<: *default
-  database: financial_manager
+  database: <%= ENV.fetch("FINANCIAL_MANAGER_DATABASE_PATH", "/mnt/g/Meu Drive/OUTROS/gerenciador_financeiro/financial_manager.sqlite3") %>

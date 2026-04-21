@@ -2,9 +2,10 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-  overflow-y: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   padding-top: 4px;
-  padding-right: 4px;
+  scrollbar-width: none;
 }
 
 .dashboard-grid--charts,
@@ -34,30 +35,40 @@
 }
 
 .dashboard-card__body--category-summary,
-.dashboard-card__body--movement-feed {
+.dashboard-card__body--movement-feed,
+.dashboard-card__body--cards-summary,
+.dashboard-card-balance__details-list {
   scrollbar-color: var(--scrollbar-thumb-color) transparent;
   scrollbar-width: thin;
 }
 
 .dashboard-card__body--category-summary::-webkit-scrollbar,
-.dashboard-card__body--movement-feed::-webkit-scrollbar {
+.dashboard-card__body--movement-feed::-webkit-scrollbar,
+.dashboard-card__body--cards-summary::-webkit-scrollbar,
+.dashboard-card-balance__details-list::-webkit-scrollbar {
   width: 8px;
 }
 
 .dashboard-card__body--category-summary::-webkit-scrollbar-button,
-.dashboard-card__body--movement-feed::-webkit-scrollbar-button {
+.dashboard-card__body--movement-feed::-webkit-scrollbar-button,
+.dashboard-card__body--cards-summary::-webkit-scrollbar-button,
+.dashboard-card-balance__details-list::-webkit-scrollbar-button {
   display: none;
   width: 0;
   height: 0;
 }
 
 .dashboard-card__body--category-summary::-webkit-scrollbar-track,
-.dashboard-card__body--movement-feed::-webkit-scrollbar-track {
+.dashboard-card__body--movement-feed::-webkit-scrollbar-track,
+.dashboard-card__body--cards-summary::-webkit-scrollbar-track,
+.dashboard-card-balance__details-list::-webkit-scrollbar-track {
   background: transparent;
 }
 
 .dashboard-card__body--category-summary::-webkit-scrollbar-thumb,
-.dashboard-card__body--movement-feed::-webkit-scrollbar-thumb {
+.dashboard-card__body--movement-feed::-webkit-scrollbar-thumb,
+.dashboard-card__body--cards-summary::-webkit-scrollbar-thumb,
+.dashboard-card-balance__details-list::-webkit-scrollbar-thumb {
   border: 2px solid transparent;
   border-radius: 0;
   background: var(--scrollbar-thumb-color);
@@ -65,7 +76,9 @@
 }
 
 .dashboard-card__body--category-summary::-webkit-scrollbar-thumb:hover,
-.dashboard-card__body--movement-feed::-webkit-scrollbar-thumb:hover {
+.dashboard-card__body--movement-feed::-webkit-scrollbar-thumb:hover,
+.dashboard-card__body--cards-summary::-webkit-scrollbar-thumb:hover,
+.dashboard-card-balance__details-list::-webkit-scrollbar-thumb:hover {
   background: var(--scrollbar-thumb-color);
   background-clip: padding-box;
 }
@@ -81,13 +94,17 @@
 .dashboard-card-balance {
   display: flex;
   flex-direction: column;
-  flex: 1 1 0;
+  flex: 0 0 auto;
   min-height: 0;
   gap: 3px;
-  padding: 10px 12px;
+  padding: 8px 8px 2px 8px;
   border: 1px solid var(--card-border);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-card-balance--clickable {
+  cursor: pointer;
 }
 
 .dashboard-card-balance__header,
@@ -203,6 +220,140 @@
   line-height: 1.25;
 }
 
+.dashboard-card-balance__metric-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 2px;
+  min-width: 0;
+}
+
+.dashboard-card-balance__metric-action strong {
+  margin-top: 0;
+}
+
+.dashboard-card-balance__toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--hero-badge-icon-bg);
+  color: var(--nav-active-icon-color);
+  cursor: pointer;
+}
+
+.dashboard-card-balance__toggle:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+
+.dashboard-card-balance__toggle .material-symbols-rounded {
+  font-size: 1rem;
+  transition: transform 0.18s ease;
+}
+
+.dashboard-card-balance.is-open .dashboard-card-balance__toggle .material-symbols-rounded {
+  transform: rotate(180deg);
+}
+
+.dashboard-card-balance__details {
+  display: grid;
+  gap: 10px;
+  max-height: 0;
+  margin-top: 0;
+  padding: 0 12px;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: max-height 0.22s ease, margin 0.18s ease, opacity 0.18s ease, padding 0.18s ease, transform 0.18s ease;
+}
+
+.dashboard-card-balance.is-open .dashboard-card-balance__details {
+  max-height: 240px;
+  margin-top: 6px;
+  padding: 12px;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.dashboard-card-balance__details-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--table-border-color);
+}
+
+.dashboard-card-balance__details-header strong {
+  color: var(--text-main);
+  font-size: 0.9rem;
+}
+
+.dashboard-card-balance__details-header span {
+  color: var(--pill-danger-color);
+  font-size: 0.82rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.dashboard-card-balance__details-list {
+  display: grid;
+  gap: 8px;
+  max-height: 150px;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-gutter: stable;
+  cursor: default;
+}
+
+.dashboard-card-balance__details-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.dashboard-card-balance__details-row:last-child {
+  border-bottom: 0;
+}
+
+.dashboard-card-balance__details-row span {
+  overflow: hidden;
+  color: var(--text-main);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dashboard-card-balance__details-row strong {
+  color: var(--pill-danger-color);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.dashboard-card-balance__details-row small,
+.dashboard-card-balance__details-empty {
+  grid-column: 1 / -1;
+  color: var(--text-soft);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
 .dashboard-card-balance__metrics .is-positive {
   color: #1b9c63;
 }
@@ -218,8 +369,7 @@
   max-height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
-  padding-right: 4px;
-  scrollbar-gutter: stable;
+  scrollbar-width: none;
 }
 
 .dashboard-category-summary {

@@ -30,10 +30,12 @@
         <% total = info[:total].to_f %>
         <% total_limit = card.total_limit.to_f %>
         <% remaining_limit = info[:remaining_limit].to_f %>
+        <% card_expenses = info[:items] || [] %>
+        <% card_expenses_total = card_expenses.sum { |expense| expense[:amount].to_f } %>
         <% usage_percent = total_limit.positive? ? [(total / total_limit) * 100, 100].min : 0 %>
         <% remaining_percent = total_limit.positive? ? [(remaining_limit / total_limit) * 100, 0].max : 0 %>
 
-        <article class="dashboard-card-balance">
+        <article class="dashboard-card-balance <%= "dashboard-card-balance--clickable" if card_expenses.any? %>">
           <div class="dashboard-card-balance__usage">
             <div class="dashboard-card-balance__header">
               <div class="dashboard-card-balance__identity">
@@ -72,8 +74,49 @@
             </div>
             <div>
               <small>Saldo acumulado</small>
-              <strong class="is-negative"><%= number_to_currency(total, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+              <div class="dashboard-card-balance__metric-action">
+                <strong class="is-negative"><%= number_to_currency(total, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+                <button type="button"
+                        class="dashboard-card-balance__toggle"
+                        aria-expanded="false"
+                        aria-label="Mostrar despesas de <%= card.name %> em <%= I18n.l(@card_balance_date, format: "%B de %Y") %>"
+                        <%= "disabled" if card_expenses.blank? %>>
+                  <span class="material-symbols-rounded">keyboard_arrow_down</span>
+                </button>
+              </div>
             </div>
+          </div>
+
+          <div class="dashboard-card-balance__details" role="tooltip">
+            <div class="dashboard-card-balance__details-header">
+              <strong><%= card.name %></strong>
+              <span>
+                <%= pluralize(card_expenses.size, "despesa", "despesas") %>
+                · <%= number_to_currency(card_expenses_total, unit: "R$ ", separator: ",", delimiter: ".") %>
+              </span>
+            </div>
+
+            <% if card_expenses.any? %>
+              <div class="dashboard-card-balance__details-list">
+                <% card_expenses.each do |expense| %>
+                  <div class="dashboard-card-balance__details-row">
+                    <span>
+                      <% if expense[:installment_label].present? %>
+                        <%= "#{expense[:description]} #{expense[:installment_label]}" %>
+                      <% else %>
+                        <%= expense[:description] %>
+                      <% end %>
+                    </span>
+                    <strong><%= number_to_currency(expense[:amount], unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+                    <small><%= expense[:date].strftime("%d/%m/%Y") %></small>
+                  </div>
+                <% end %>
+              </div>
+            <% else %>
+              <div class="dashboard-card-balance__details-empty">
+                Nenhuma despesa neste mês de balanço.
+              </div>
+            <% end %>
           </div>
         </article>
       <% end %>

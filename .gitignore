@@ -27,6 +27,8 @@
 /tmp/storage/*
 !/tmp/storage/
 !/tmp/storage/.keep
+*.sqlite3
+*.sqlite3-*
 
 /public/assets
 

@@ -62,7 +62,7 @@ class HomeController < ApplicationController
   end
 
   def total_balance_before(model, date)
-    model.where("balance_month <= ?", date.end_of_month).sum(:amount)
+    model.where("balance_month <= ?", date.end_of_month).where(paid: true).sum(:amount)
   end
 
   def total_expenses(month_range, category_id = nil, card_id = nil)
@@ -79,29 +79,61 @@ class HomeController < ApplicationController
     @saldo_liquido = Income.sum(:amount) - Expense.sum(:amount)
   end
 
+  # def set_card_balances
+  #   @cards_info = Card.order(Arel.sql("due_day IS NULL, due_day ASC, name ASC")).map do |card|
+  #     total = accumulated_card_expenses(card)
+
+  #     {
+  #       card: card,
+  #       total: total,
+  #       remaining_limit: [card.total_limit.to_f - total.to_f, 0].max
+  #     }
+  #   end
+  # end
+
+  # def accumulated_card_expenses(card)
+  #   expenses = Expense.where(card: card)
+  #                     .where("balance_month <= ?", @card_balance_range.end)
+
+  #   expenses = expenses.where(paid: true) unless future_card_balance_period?
+
+  #   expenses.sum(:amount)
+  # end
+
+  # def future_card_balance_period?
+  #   @card_balance_date > @hoje.beginning_of_month
+  # end
+
   def set_card_balances
     @cards_info = Card.order(Arel.sql("due_day IS NULL, due_day ASC, name ASC")).map do |card|
-      total = accumulated_card_expenses(card)
+      committed_amount = unpaid_expenses_from_selected_month(card)
+      selected_month_expenses = card_expenses_from_selected_month(card)
 
       {
         card: card,
-        total: total,
-        remaining_limit: [card.total_limit.to_f - total.to_f, 0].max
+        total: committed_amount,
+        remaining_limit: [card.total_limit.to_f - committed_amount.to_f, 0].max,
+        items: selected_month_expenses.map do |expense|
+          {
+            date: expense.date,
+            description: expense.description.presence || "Despesa",
+            amount: expense.amount,
+            installment_label: expense.payment_method_credito_parcelado? ? expense.installment_label : nil
+          }
+        end
       }
     end
   end
 
-  def accumulated_card_expenses(card)
-    expenses = Expense.where(card: card)
-                      .where("balance_month <= ?", @card_balance_range.end)
-
-    expenses = expenses.where(paid: true) unless future_card_balance_period?
-
-    expenses.sum(:amount)
+  def unpaid_expenses_from_selected_month(card)
+    Expense.where(card: card, paid: false)
+          .where("balance_month >= ?", @card_balance_date.beginning_of_month)
+          .sum(:amount)
   end
 
-  def future_card_balance_period?
-    @card_balance_date > @hoje.beginning_of_month
+  def card_expenses_from_selected_month(card)
+    Expense.where(card: card, balance_month: @card_balance_range)
+           .order(:date, :description, :id)
   end
 
   def set_category_expenses_data

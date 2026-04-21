@@ -13,30 +13,7 @@ class ReportsController < ApplicationController
     @forecast_data = {}
 
     (@start_year.to_i..@end_year.to_i).each do |year|
-      @forecast_data[year] = {}
-
-      total_receitas_anteriores = Income.where("balance_month < ?", Date.new(year, 1, 1)).sum(:amount)
-      total_despesas_anteriores = Expense.where("balance_month < ?", Date.new(year, 1, 1)).sum(:amount)
-
-      (1..12).each do |month|
-        month_range = Date.new(year, month, 1).all_month
-
-        receitas_mes = Income.where(balance_month: month_range).sum(:amount)
-        despesas_mes = Expense.where(balance_month: month_range).sum(:amount)
-
-        saldo_anteriores = total_receitas_anteriores - total_despesas_anteriores
-        total_receitas = saldo_anteriores + receitas_mes
-        saldo_liquido = total_receitas - despesas_mes
-
-        @forecast_data[year][month] = {
-          receitas: total_receitas,
-          despesas: despesas_mes,
-          saldo: saldo_liquido
-        }
-
-        total_receitas_anteriores += receitas_mes
-        total_despesas_anteriores += despesas_mes
-      end
+      @forecast_data[year] = FinancialForecast.for_year(year)
     end
 
     html = render_to_string(

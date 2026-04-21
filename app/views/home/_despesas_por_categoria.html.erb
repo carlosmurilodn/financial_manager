@@ -1,3 +1,4 @@
+<turbo-frame id="category-expense-summary">
 <div class="dashboard-card dashboard-card--chart dashboard-card--mint dashboard-card--category-summary">
   <div class="dashboard-card__header">
     <div>
@@ -8,7 +9,8 @@
     <div class="dashboard-card__pill dashboard-card__pill--period">
       <%= link_to root_path(category_month: @previous_category_expense_date.month, category_year: @previous_category_expense_date.year),
                   class: "dashboard-card__period-button",
-                  aria: { label: "Mês anterior" } do %>
+                  aria: { label: "Mês anterior" },
+                  data: { turbo_frame: "category-expense-summary", turbo_prefetch: "false" } do %>
         <span class="material-symbols-rounded">chevron_left</span>
       <% end %>
       <span class="dashboard-card__period-label">
@@ -17,7 +19,8 @@
       </span>
       <%= link_to root_path(category_month: @next_category_expense_date.month, category_year: @next_category_expense_date.year),
                   class: "dashboard-card__period-button",
-                  aria: { label: "Próximo mês" } do %>
+                  aria: { label: "Próximo mês" },
+                  data: { turbo_frame: "category-expense-summary", turbo_prefetch: "false" } do %>
         <span class="material-symbols-rounded">chevron_right</span>
       <% end %>
     </div>
@@ -74,3 +77,4 @@
     <% end %>
   </div>
 </div>
+</turbo-frame>

@@ -105,19 +105,24 @@ class HomeController < ApplicationController
   # end
 
   def set_card_balances
-    @cards_info = Card.order(Arel.sql("due_day IS NULL, due_day ASC, name ASC")).map do |card|
+    @cards_info = Card.order(Arel.sql("total_limit DESC NULLS LAST, name ASC")).map do |card|
       committed_amount = unpaid_expenses_from_selected_month(card)
-      selected_month_expenses = card_expenses_from_selected_month(card)
+      selected_month_expenses = card_expenses_from_selected_month(card).to_a
+      selected_month_total = selected_month_expenses.sum(&:amount)
+      selected_month_paid = selected_month_expenses.empty? || selected_month_expenses.all?(&:paid?)
 
       {
         card: card,
         total: committed_amount,
         remaining_limit: [card.total_limit.to_f - committed_amount.to_f, 0].max,
+        month_total: selected_month_total,
+        month_paid: selected_month_paid,
         items: selected_month_expenses.map do |expense|
           {
             date: expense.date,
             description: expense.description.presence || "Despesa",
             amount: expense.amount,
+            paid: expense.paid?,
             installment_label: expense.payment_method_credito_parcelado? ? expense.installment_label : nil
           }
         end
@@ -215,28 +220,6 @@ class HomeController < ApplicationController
 
   def set_forecast_data
     @months = (1..12).to_a
-    @forecast_data = {}
-
-    total_receitas_anteriores = Income.where("balance_month < ?", Date.new(@year, 1, 1)).sum(:amount)
-    total_despesas_anteriores = Expense.where("balance_month < ?", Date.new(@year, 1, 1)).sum(:amount)
-
-    @months.each do |month|
-      month_range = Date.new(@year, month, 1).all_month
-      receitas_mes = Income.where(balance_month: month_range).sum(:amount)
-      despesas_mes = Expense.where(balance_month: month_range).sum(:amount)
-
-      saldo_anteriores = total_receitas_anteriores - total_despesas_anteriores
-      total_receitas = saldo_anteriores + receitas_mes
-      saldo_liquido = total_receitas - despesas_mes
-
-      @forecast_data[month] = {
-        receitas: total_receitas,
-        despesas: despesas_mes,
-        saldo: saldo_liquido
-      }
-
-      total_receitas_anteriores += receitas_mes
-      total_despesas_anteriores += despesas_mes
-    end
+    @forecast_data = FinancialForecast.for_year(@year)
   end
 end

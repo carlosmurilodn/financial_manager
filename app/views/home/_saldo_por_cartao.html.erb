@@ -1,3 +1,4 @@
+<turbo-frame id="card-balance-summary">
 <div class="dashboard-card dashboard-card--chart dashboard-card--lavender dashboard-card--cards-summary">
   <div class="dashboard-card__header">
     <div>
@@ -8,7 +9,8 @@
     <div class="dashboard-card__pill dashboard-card__pill--period">
       <%= link_to root_path(card_month: @previous_card_balance_date.month, card_year: @previous_card_balance_date.year),
                   class: "dashboard-card__period-button",
-                  aria: { label: "Mês anterior" } do %>
+                  aria: { label: "Mês anterior" },
+                  data: { turbo_frame: "card-balance-summary", turbo_prefetch: "false" } do %>
         <span class="material-symbols-rounded">chevron_left</span>
       <% end %>
       <span class="dashboard-card__period-label">
@@ -17,7 +19,8 @@
       </span>
       <%= link_to root_path(card_month: @next_card_balance_date.month, card_year: @next_card_balance_date.year),
                   class: "dashboard-card__period-button",
-                  aria: { label: "Próximo mês" } do %>
+                  aria: { label: "Próximo mês" },
+                  data: { turbo_frame: "card-balance-summary", turbo_prefetch: "false" } do %>
         <span class="material-symbols-rounded">chevron_right</span>
       <% end %>
     </div>
@@ -25,13 +28,16 @@
 
   <div class="dashboard-card__body dashboard-card__body--cards-summary">
     <div class="dashboard-cards-list">
-      <% @cards_info.first(5).each do |info| %>
+      <% @cards_info.each do |info| %>
         <% card = info[:card] %>
         <% total = info[:total].to_f %>
         <% total_limit = card.total_limit.to_f %>
         <% remaining_limit = info[:remaining_limit].to_f %>
         <% card_expenses = info[:items] || [] %>
         <% card_expenses_total = card_expenses.sum { |expense| expense[:amount].to_f } %>
+        <% month_total = info[:month_total].to_f %>
+        <% month_paid = info[:month_paid] %>
+        <% month_status_class = month_paid ? "is-positive" : "is-negative" %>
         <% usage_percent = total_limit.positive? ? [(total / total_limit) * 100, 100].min : 0 %>
         <% remaining_percent = total_limit.positive? ? [(remaining_limit / total_limit) * 100, 0].max : 0 %>
 
@@ -73,6 +79,12 @@
               <strong class="is-positive"><%= number_to_currency(remaining_limit, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
             </div>
             <div>
+              <small>Saldo do mes</small>
+              <strong class="<%= month_status_class %>">
+                <%= number_to_currency(month_total, unit: "R$ ", separator: ",", delimiter: ".") %>
+              </strong>
+            </div>
+            <div>
               <small>Saldo acumulado</small>
               <div class="dashboard-card-balance__metric-action">
                 <strong class="is-negative"><%= number_to_currency(total, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
@@ -99,7 +111,7 @@
             <% if card_expenses.any? %>
               <div class="dashboard-card-balance__details-list">
                 <% card_expenses.each do |expense| %>
-                  <div class="dashboard-card-balance__details-row">
+                  <div class="dashboard-card-balance__details-row <%= expense[:paid] ? "dashboard-card-balance__details-row--paid" : "dashboard-card-balance__details-row--pending" %>">
                     <span>
                       <% if expense[:installment_label].present? %>
                         <%= "#{expense[:description]} #{expense[:installment_label]}" %>
@@ -108,7 +120,7 @@
                       <% end %>
                     </span>
                     <strong><%= number_to_currency(expense[:amount], unit: "R$ ", separator: ",", delimiter: ".") %></strong>
-                    <small><%= expense[:date].strftime("%d/%m/%Y") %></small>
+                    <small><%= expense[:date].strftime("%d/%m/%Y") %> · <%= expense[:paid] ? "Pago" : "Pendente" %></small>
                   </div>
                 <% end %>
               </div>
@@ -123,3 +135,4 @@
     </div>
   </div>
 </div>
+</turbo-frame>

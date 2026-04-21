@@ -36,16 +36,42 @@
 }
 
 @media (max-width: 991px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .app-shell,
+  .app-content,
+  .app-content__inner,
+  .app-page,
+  .app-page > *,
+  .app-panel,
+  .app-report-card,
+  .dashboard-card {
+    min-width: 0;
+    max-width: 100%;
+  }
+
   .app-sidebar {
     position: sticky;
-    inset: 0;
+    top: 0;
+    inset-inline: 0;
     width: 100%;
-    padding: 16px 16px 0;
+    padding: 10px 12px 0;
+    z-index: 1040;
+  }
+
+  #wrapper.collapsed .app-sidebar {
+    width: 100%;
   }
 
   .app-sidebar__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     height: auto;
-    border-radius: 28px;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
   }
 
   .app-content,
@@ -58,7 +84,75 @@
   }
 
   .app-content__inner {
-    padding: 18px 16px 28px;
+    padding: 14px 12px 24px;
+  }
+
+  .app-sidebar__brand {
+    grid-column: 1 / -1;
+    justify-content: space-between;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .app-sidebar__brand-copy {
+    display: flex !important;
+    min-width: 0;
+  }
+
+  .sidebar-title,
+  .app-sidebar__brand-copy small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .app-sidebar__nav {
+    grid-column: 1 / -1;
+    display: flex;
+    flex: none;
+    gap: 8px;
+    min-width: 0;
+    margin-top: 0;
+    padding: 0 0 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .app-sidebar__nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .app-nav-link {
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    justify-content: center;
+    gap: 0;
+    padding: 0;
+  }
+
+  .app-nav-link::after {
+    inset: auto 10px 4px;
+    width: calc(100% - 20px);
+    height: 3px;
+  }
+
+  .app-nav-link .link-text {
+    display: none !important;
+  }
+
+  .app-nav-link__icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+  }
+
+  .app-theme-toggle-mobile {
+    display: flex;
+  }
+
+  .app-sidebar__footer {
+    display: none;
   }
 
   .dashboard-hero,
@@ -72,18 +166,151 @@
     grid-template-columns: 1fr;
   }
 
-  .app-page__hero-copy {
-    align-items: flex-start;
+  .app-page__hero-top,
+  .app-page__hero-top--expenses,
+  .app-page__hero-top--incomes,
+  .app-page__hero-top--cards,
+  .app-page__hero-top--categories {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 
-  .app-expenses-hero-kpis {
+  .app-page__hero-copy {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  .app-expenses-hero-kpis,
+  .app-incomes-hero-kpis,
+  .app-cards-hero-kpis,
+  .app-categories-hero-kpis {
     grid-template-columns: 1fr;
+  }
+
+  .app-page__hero-top > .app-page__hero-kpis,
+  .app-page__hero-top > .app-page__hero-kpis > .app-expenses-hero-kpis,
+  .app-page__hero-top > .app-page__hero-kpis > .app-incomes-hero-kpis,
+  .app-page__hero-top > .app-page__hero-kpis > .app-cards-hero-kpis,
+  .app-page__hero-top > .app-page__hero-kpis > .app-categories-hero-kpis {
+    display: grid;
+    gap: 10px;
+  }
+
+  .app-page__hero-badge {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    min-width: 0;
+    align-items: stretch;
+  }
+
+  .app-page__hero-badge-item {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .app-page__hero-badge-item--primary {
+    align-items: center;
+  }
+
+  .app-page__hero-badge-item--primary > div {
+    min-width: 0;
+  }
+
+  .app-page__hero-time {
+    justify-content: center;
+  }
+
+  .app-page__hero-badge-item--weather .today-weather {
+    min-height: 100%;
+  }
+
+  .app-page__hero-badge-item--weather .today-weather__current,
+  .app-page__hero-badge-item--weather .today-weather__details {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .dashboard-hero__badge {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .dashboard-hero__badge-item,
+  .dashboard-hero__badge-item--weather {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .dashboard-hero__badge-item--weather .today-weather {
+    justify-content: center;
+  }
+
+  .dashboard-hero__badge-item--primary {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .dashboard-hero__badge-item--primary .app-sidebar__time {
+    justify-content: center;
   }
 
   .app-filter-grid,
   .app-filter-grid--expenses,
   .app-filter-grid--incomes {
     grid-template-columns: 1fr;
+  }
+
+  .app-filter-grid--expenses .app-filter-field,
+  .app-filter-grid--incomes .app-filter-field {
+    grid-column: auto;
+  }
+
+  .app-filter-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .app-filter-actions .btn,
+  .app-filter-actions .app-filter-actions__import,
+  .app-filter-actions .app-per-page-control {
+    width: 100%;
+    flex: none;
+    margin-left: 0;
+  }
+
+  .app-per-page-control {
+    justify-content: center;
+  }
+
+  .app-list-toolbar {
+    justify-content: stretch;
+  }
+
+  .app-list-toolbar__form,
+  .app-list-toolbar .app-per-page-control {
+    width: 100%;
+  }
+
+  .app-panel--table {
+    overflow: hidden;
+  }
+
+  .table-responsive {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .app-table--records {
+    width: max-content;
+    min-width: 720px;
   }
 
   .app-calendar__nav {
@@ -98,6 +325,18 @@
   .dashboard-card--calendar {
     width: 100%;
     min-width: 0;
+    overflow: visible;
+    z-index: 1;
+  }
+
+  .dashboard-card--calendar .table-responsive,
+  .dashboard-card--calendar .dashboard-card__body,
+  .dashboard-card--calendar .app-calendar-table,
+  .dashboard-card--calendar .app-calendar-table tbody,
+  .dashboard-card--calendar .app-calendar-table tr,
+  .dashboard-card--calendar .app-calendar-table td,
+  .dashboard-card--calendar turbo-frame {
+    overflow: visible;
   }
 
   .app-footer {
@@ -119,6 +358,50 @@
 }
 
 @media (max-width: 767px) {
+  .app-page__hero-badge {
+    gap: 8px;
+  }
+
+  .app-page__hero-badge-item {
+    min-height: 74px;
+  }
+
+  .app-page__hero-badge-item--primary {
+    gap: 6px;
+    padding: 6px;
+  }
+
+  .app-page__hero-badge-item--primary > .material-symbols-rounded {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+  }
+
+  .app-page__hero-badge-item--primary strong {
+    font-size: 0.58rem;
+  }
+
+  .app-page__hero-time .app-sidebar__time-main {
+    font-size: 0.82rem;
+  }
+
+  .app-page__hero-time .app-sidebar__time-seconds {
+    font-size: 0.5rem;
+  }
+
+  .app-page__hero-badge-item--weather .today-weather__current {
+    gap: 3px;
+  }
+
+  .app-page__hero-badge-item--weather .today-weather__current img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .app-page__hero-badge-item--weather .today-weather__current strong {
+    font-size: 0.82rem;
+  }
+
   .kpi-grid {
     grid-template-columns: 1fr;
   }
@@ -136,25 +419,110 @@
   .app-panel,
   .app-page__hero,
   .app-report-card {
-    padding: 20px;
+    padding: 18px;
   }
 
   .dashboard-card,
   .dashboard-hero {
-    padding: 20px;
+    padding: 18px;
+  }
+
+  .dashboard-card--cards-summary .dashboard-card__pill--period,
+  .dashboard-card--category-summary .dashboard-card__pill--period {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
+    align-items: center;
+    width: 100%;
+    min-height: 48px;
+    padding: 4px 6px;
+  }
+
+  .dashboard-card--cards-summary .dashboard-card__period-button,
+  .dashboard-card--category-summary .dashboard-card__period-button {
+    width: 36px;
+    height: 36px;
+    justify-self: center;
+  }
+
+  .dashboard-card--cards-summary .dashboard-card__period-label,
+  .dashboard-card--category-summary .dashboard-card__period-label {
+    justify-content: center;
+    min-width: 0;
+    padding: 4px 8px;
+    text-align: center;
+  }
+
+  .dashboard-card--cards-summary .dashboard-card__period-label > span:last-child,
+  .dashboard-card--category-summary .dashboard-card__period-label > span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dashboard-grid--charts > .dashboard-grid__item--cards-summary {
+    height: 680px;
+  }
+
+  .app-panel--table {
+    padding: 12px;
+  }
+
+  .app-table--records {
+    min-width: 660px;
   }
 
   .app-calendar-tooltip {
-    left: 8px;
-    right: 8px;
+    left: 50%;
+    right: auto;
     bottom: calc(100% + 8px);
+    z-index: 2000;
+    width: max-content;
     min-width: 0;
-    max-width: none;
-    transform: translateY(8px);
+    max-width: min(220px, calc(100vw - 56px));
+    padding: 8px 10px;
+    gap: 6px;
+    border-radius: 10px;
+    transform: translate(-50%, 8px);
   }
 
   .app-calendar-table__day--has-events:hover .app-calendar-tooltip {
-    transform: translateY(0);
+    transform: translate(-50%, 0);
+  }
+
+  .app-calendar-table td:nth-child(1) .app-calendar-tooltip,
+  .app-calendar-table td:nth-child(2) .app-calendar-tooltip {
+    left: 0;
+    transform: translate(0, 8px);
+  }
+
+  .app-calendar-table td:nth-child(1).app-calendar-table__day--has-events:hover .app-calendar-tooltip,
+  .app-calendar-table td:nth-child(2).app-calendar-table__day--has-events:hover .app-calendar-tooltip {
+    transform: translate(0, 0);
+  }
+
+  .app-calendar-table td:nth-child(6) .app-calendar-tooltip,
+  .app-calendar-table td:nth-child(7) .app-calendar-tooltip {
+    right: 0;
+    left: auto;
+    transform: translate(0, 8px);
+  }
+
+  .app-calendar-table td:nth-child(6).app-calendar-table__day--has-events:hover .app-calendar-tooltip,
+  .app-calendar-table td:nth-child(7).app-calendar-table__day--has-events:hover .app-calendar-tooltip {
+    transform: translate(0, 0);
+  }
+
+  .app-calendar-tooltip__item {
+    gap: 2px;
+  }
+
+  .app-calendar-tooltip__description {
+    font-size: 0.72rem;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+  }
+
+  .app-calendar-tooltip__value {
+    font-size: 0.74rem;
   }
 
   .app-table > :not(caption) > * > * {

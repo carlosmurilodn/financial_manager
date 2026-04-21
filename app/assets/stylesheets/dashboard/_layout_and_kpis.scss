@@ -35,6 +35,12 @@
   overflow: hidden;
 }
 
+.dashboard-grid__item > turbo-frame {
+  display: block;
+  height: 100%;
+  min-height: 0;
+}
+
 .dashboard-grid--charts .dashboard-grid__item {
   min-height: 0;
 }

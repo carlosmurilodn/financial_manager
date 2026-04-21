@@ -12,9 +12,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
     <script>
-      const savedTheme = localStorage.getItem("app-theme");
-      const activeTheme = ["fincan", "night"].includes(savedTheme) ? savedTheme : "fincan";
+      const themeMedia = window.matchMedia("(prefers-color-scheme: dark)");
+      const mobileMedia = window.matchMedia("(max-width: 991px)");
+      const savedPreference = localStorage.getItem("app-theme-preference");
+      const legacyTheme = localStorage.getItem("app-theme");
+      const validPreferences = ["system", "fincan", "night"];
+      const themePreference = validPreferences.includes(savedPreference)
+        ? savedPreference
+        : mobileMedia.matches
+          ? "system"
+          : ["fincan", "night"].includes(legacyTheme)
+            ? legacyTheme
+            : "fincan";
+      const activeTheme = themePreference === "system"
+        ? themeMedia.matches ? "night" : "fincan"
+        : themePreference;
       document.documentElement.dataset.theme = activeTheme;
+      localStorage.setItem("app-theme-preference", themePreference);
       localStorage.setItem("app-theme", activeTheme);
     </script>
 

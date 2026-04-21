@@ -48,6 +48,11 @@
         <span class="material-symbols-rounded app-nav-link__icon">insert_chart</span>
         <span class="link-text">Relatorios</span>
       <% end %>
+
+      <button id="themeToggleMobile" class="app-nav-link app-nav-link--theme app-theme-toggle-mobile" type="button" aria-label="Alternar tema">
+        <span class="material-symbols-rounded app-nav-link__icon app-theme-toggle-mobile__icon">devices</span>
+        <span class="link-text app-theme-toggle-mobile__label">Sistema</span>
+      </button>
     </nav>
 
     <div class="app-sidebar__footer">
@@ -74,9 +79,17 @@
 
 <script>
   const APP_THEMES = [
-    { id: "fincan", label: "Claro", nextLabel: "Dark", icon: "lightbulb" },
-    { id: "night", label: "Dark", nextLabel: "Claro", icon: "dark_mode" }
+    { id: "system", label: "Sistema", icon: "devices" },
+    { id: "fincan", label: "Claro", icon: "lightbulb" },
+    { id: "night", label: "Dark", icon: "dark_mode" }
   ];
+
+  const APP_THEME_MEDIA = window.matchMedia("(prefers-color-scheme: dark)");
+  const APP_MOBILE_MEDIA = window.matchMedia("(max-width: 991px)");
+
+  function resolveTheme(themeId) {
+    return themeId === "system" ? (APP_THEME_MEDIA.matches ? "night" : "fincan") : themeId;
+  }
 
   function updateClock() {
     const now = new Date();
@@ -202,33 +215,51 @@
   }
 
   function getCurrentTheme() {
-    const savedTheme = localStorage.getItem("app-theme");
-    return APP_THEMES.some((theme) => theme.id === savedTheme) ? savedTheme : "fincan";
+    const savedPreference = localStorage.getItem("app-theme-preference");
+    if (APP_THEMES.some((theme) => theme.id === savedPreference)) return savedPreference;
+
+    const legacyTheme = localStorage.getItem("app-theme");
+    if (APP_MOBILE_MEDIA.matches) return "system";
+    return APP_THEMES.some((theme) => theme.id === legacyTheme) && legacyTheme !== "system" ? legacyTheme : "fincan";
   }
 
   function applyTheme(themeId) {
-    document.documentElement.dataset.theme = themeId;
-    localStorage.setItem("app-theme", themeId);
+    const activeTheme = resolveTheme(themeId);
+    document.documentElement.dataset.theme = activeTheme;
+    localStorage.setItem("app-theme-preference", themeId);
+    localStorage.setItem("app-theme", activeTheme);
+    updateThemeToggle();
+  }
+
+  function refreshSystemTheme() {
+    if (getCurrentTheme() !== "system") return;
+
+    const activeTheme = resolveTheme("system");
+    document.documentElement.dataset.theme = activeTheme;
+    localStorage.setItem("app-theme", activeTheme);
     updateThemeToggle();
   }
 
   function updateThemeToggle() {
-    const toggle = document.getElementById("themeToggle");
-    if (!toggle) return;
+    const toggles = [document.getElementById("themeToggle"), document.getElementById("themeToggleMobile")].filter(Boolean);
+    if (!toggles.length) return;
 
     const currentTheme = APP_THEMES.find((theme) => theme.id === getCurrentTheme()) || APP_THEMES[0];
     const nextTheme = APP_THEMES[(APP_THEMES.findIndex((theme) => theme.id === currentTheme.id) + 1) % APP_THEMES.length];
+    const activeThemeLabel = resolveTheme(currentTheme.id) === "night" ? "Dark" : "Claro";
 
-    const icon = toggle.querySelector(".app-theme-toggle__icon");
-    const label = toggle.querySelector(".app-theme-toggle__label");
-    const meta = toggle.querySelector(".app-theme-toggle__meta");
+    toggles.forEach((toggle) => {
+      const icon = toggle.querySelector(".app-theme-toggle__icon, .app-theme-toggle-mobile__icon");
+      const label = toggle.querySelector(".app-theme-toggle__label, .app-theme-toggle-mobile__label");
+      const meta = toggle.querySelector(".app-theme-toggle__meta");
 
-    if (icon) icon.textContent = currentTheme.icon;
-    if (label) label.textContent = currentTheme.label;
-    if (meta) meta.textContent = `Trocar para ${nextTheme.label}`;
+      if (icon) icon.textContent = currentTheme.icon;
+      if (label) label.textContent = currentTheme.label;
+      if (meta) meta.textContent = currentTheme.id === "system" ? `Usando ${activeThemeLabel}` : `Trocar para ${nextTheme.label}`;
 
-    toggle.setAttribute("title", `Tema atual: ${currentTheme.label}. Clique para alternar.`);
-    toggle.setAttribute("aria-label", `Tema atual: ${currentTheme.label}. Clique para alternar para ${nextTheme.label}.`);
+      toggle.setAttribute("title", `Tema atual: ${currentTheme.label}. Clique para alternar.`);
+      toggle.setAttribute("aria-label", `Tema atual: ${currentTheme.label}. Clique para alternar para ${nextTheme.label}.`);
+    });
   }
 
   document.addEventListener("turbo:load", () => {
@@ -238,20 +269,21 @@
     loadWeather();
 
     const toggleButton = document.getElementById("sidebarToggle");
-    if (!toggleButton || toggleButton.dataset.bound === "true") return;
+    if (toggleButton && toggleButton.dataset.bound !== "true") {
+      toggleButton.dataset.bound = "true";
+      toggleButton.addEventListener("click", () => {
+        const wrapper = document.getElementById("wrapper");
+        if (!wrapper) return;
 
-    toggleButton.dataset.bound = "true";
-    toggleButton.addEventListener("click", () => {
-      const wrapper = document.getElementById("wrapper");
-      if (!wrapper) return;
+        wrapper.classList.toggle("collapsed");
+        localStorage.setItem("sidebar-collapsed", wrapper.classList.contains("collapsed"));
+        updateSidebar();
+      });
+    }
 
-      wrapper.classList.toggle("collapsed");
-      localStorage.setItem("sidebar-collapsed", wrapper.classList.contains("collapsed"));
-      updateSidebar();
-    });
+    [document.getElementById("themeToggle"), document.getElementById("themeToggleMobile")].filter(Boolean).forEach((themeToggle) => {
+      if (themeToggle.dataset.bound === "true") return;
 
-    const themeToggle = document.getElementById("themeToggle");
-    if (themeToggle && themeToggle.dataset.bound !== "true") {
       themeToggle.dataset.bound = "true";
       themeToggle.addEventListener("click", () => {
         const currentTheme = getCurrentTheme();
@@ -259,8 +291,10 @@
         const nextTheme = APP_THEMES[(currentIndex + 1) % APP_THEMES.length];
         applyTheme(nextTheme.id);
       });
-    }
+    });
   });
+
+  APP_THEME_MEDIA.addEventListener("change", refreshSystemTheme);
 
   setInterval(updateClock, 1000);
 </script>

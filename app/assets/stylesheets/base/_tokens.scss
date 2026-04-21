@@ -1,5 +1,7 @@
 :root,
 html[data-theme="fincan"] {
+  --bs-font-sans-serif: "Nunito", sans-serif;
+  --bs-body-font-family: "Nunito", sans-serif;
   --bs-body-font-size: 0.9rem;
   --bs-heading-color: #e0e5f9;
   --heading-color: #727f92;
@@ -101,6 +103,8 @@ html[data-theme="fincan"] .dashboard-hero h1 {
 }
 
 html[data-theme="night"] {
+  --bs-font-sans-serif: "Nunito", sans-serif;
+  --bs-body-font-family: "Nunito", sans-serif;
   --bs-body-font-size: 0.9rem;
   --app-bg: #17131f;
   --app-bg-accent: #17131f;
@@ -184,7 +188,7 @@ html[data-theme="night"] {
 
 body {
   min-height: 100vh;
-  font-family: "Manrope", sans-serif;
+  font-family: "Nunito", sans-serif;
   color: var(--text-main);
   background: var(--app-bg);
   background-color: var(--app-bg) !important;

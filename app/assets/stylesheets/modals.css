@@ -1,13 +1,20 @@
-  #turboModal .modal-dialog {
+#turboModal .modal-dialog {
+  display: flex;
   justify-content: center;
-  max-width: none;
   align-items: center;
-  margin-left: 260px;
+  width: min(1200px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+  min-height: calc(100% - 1rem);
+  margin-right: auto;
+  margin-left: auto;
 }
 
 #turboModal .modal-content {
   border-radius: 12px;     /* cantos suaves */
-  width: 1200px !important;
+  width: 100% !important;
+  max-width: 100%;
+  max-height: calc(100vh - 32px);
+  overflow: hidden;
 }
 
 #turboModal .modal-dialog.modal-wide {
@@ -40,7 +47,8 @@
 #modal-body {
   padding: 1.5rem;
   overflow-y: auto;
-  height: 520px;        /* evita rolagem externa */
+  max-height: calc(100vh - 72px);
+  height: auto;
 }
 
 #parcelamento_section {
@@ -162,6 +170,86 @@
   }
 
   .expense-modal-row__remove {
+    width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  #turboModal {
+    padding: 0 !important;
+  }
+
+  #turboModal .modal-dialog,
+  #turboModal .modal-dialog.modal-wide {
+    width: calc(100vw - 20px);
+    max-width: calc(100vw - 20px);
+    height: auto;
+    max-height: none;
+    min-height: calc(100% - 20px);
+    margin: 10px auto;
+    align-items: center;
+  }
+
+  #turboModal .modal-content,
+  #turboModal .modal-dialog.modal-wide .modal-content {
+    width: 100% !important;
+    max-height: calc(100dvh - 20px);
+    border-radius: 10px;
+  }
+
+  #modal-body,
+  #turboModal .modal-dialog.modal-wide #modal-body {
+    height: auto !important;
+    max-height: calc(100dvh - 20px);
+    padding: 1rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  #modal-body > .modal-body,
+  #turboModal .modal-dialog.modal-wide #modal-body > .modal-body {
+    padding: 0;
+    overflow: visible;
+  }
+
+  #modal-body .modal-header {
+    align-items: flex-start;
+    gap: 12px;
+    padding: 0 0 1rem;
+  }
+
+  #modal-body .modal-title,
+  #modal-body h1,
+  #modal-body h2,
+  #modal-body h3,
+  #modal-body h4,
+  #modal-body h5 {
+    overflow-wrap: anywhere;
+  }
+
+  #modal-body .row {
+    --bs-gutter-x: 0.75rem;
+  }
+
+  #modal-body .form-control,
+  #modal-body .form-select,
+  #modal-body .input-group {
+    max-width: 100%;
+  }
+
+  .expense-modal-row__main,
+  .expense-modal-grid,
+  .expense-modal-grid--edit,
+  .expense-modal-installments {
+    grid-template-columns: 1fr;
+  }
+
+  .expense-modal-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .expense-modal-action-btn {
     width: 100%;
   }
 }

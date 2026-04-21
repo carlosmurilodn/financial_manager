@@ -346,6 +346,14 @@
   white-space: nowrap;
 }
 
+.dashboard-card-balance__details-row--paid strong {
+  color: #1b9c63;
+}
+
+.dashboard-card-balance__details-row--pending strong {
+  color: var(--pill-danger-color);
+}
+
 .dashboard-card-balance__details-row small,
 .dashboard-card-balance__details-empty {
   grid-column: 1 / -1;

@@ -3,15 +3,15 @@
     <table class="table app-table app-table--records app-table--index mb-0">
       <thead>
         <tr>
-          <th class="text-center">Descrição</th>
-          <th class="text-center">Parcela</th>
-          <th class="text-center">Valor</th>
-          <th class="text-center">Data</th>
-          <th class="text-center">Mês Referência</th>
-          <th class="text-center">Categoria</th>
-          <th class="text-center">Pagamento</th>
-          <th class="text-center">Cartão</th>
-          <th class="text-center">Paga?</th>
+          <th class="text-center"><%= sortable_table_header("Descrição", "description") %></th>
+          <th class="text-center"><%= sortable_table_header("Parcela", "installment") %></th>
+          <th class="text-center"><%= sortable_table_header("Valor", "amount") %></th>
+          <th class="text-center"><%= sortable_table_header("Data da Compra", "date") %></th>
+          <th class="text-center"><%= sortable_table_header("Mês de Referência", "balance_month") %></th>
+          <th class="text-center"><%= sortable_table_header("Categoria", "category") %></th>
+          <th class="text-center"><%= sortable_table_header("Forma de Pagamento", "payment_method") %></th>
+          <th class="text-center"><%= sortable_table_header("Cartão", "card") %></th>
+          <th class="text-center"><%= sortable_table_header("Foi Paga?", "paid") %></th>
           <th class="text-center">Ações</th>
         </tr>
       </thead>

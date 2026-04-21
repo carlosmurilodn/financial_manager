@@ -12,13 +12,29 @@
 
 #turboModal .modal-dialog.modal-wide {
   width: 90vw;
+  height: 90vh;
   max-width: 90vw;
+  max-height: 90vh;
   margin-right: auto;
   margin-left: auto;
 }
 
 #turboModal .modal-dialog.modal-wide .modal-content {
   width: 100% !important;
+  height: 100%;
+}
+
+#turboModal .modal-dialog.modal-wide #modal-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+#turboModal .modal-dialog.modal-wide #modal-body > .modal-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 #modal-body {

@@ -1,0 +1,11 @@
+<div class="app-per-page-control">
+  <%= label_tag :per_page, "Exibir", class: "app-per-page-control__label" %>
+  <%= select_tag :per_page,
+        options_for_select(per_page_options, @per_page || ApplicationController::DEFAULT_PER_PAGE),
+        class: "form-select app-per-page-control__select",
+        onchange: "this.form.requestSubmit()" %>
+  <span class="app-per-page-control__suffix">por página</span>
+  <%= hidden_field_tag :page, 1 %>
+  <%= hidden_field_tag :sort, params[:sort] if params[:sort].present? %>
+  <%= hidden_field_tag :direction, params[:direction] if params[:direction].present? %>
+</div>

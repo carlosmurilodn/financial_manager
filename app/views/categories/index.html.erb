@@ -23,12 +23,18 @@
   </div>
 
   <div class="app-panel app-panel--table">
+    <div class="app-list-toolbar">
+      <%= form_with url: categories_path, method: :get, local: true, class: "app-list-toolbar__form" do %>
+        <%= render "shared/per_page_select" %>
+      <% end %>
+    </div>
+
     <div class="table-responsive">
       <table class="table app-table app-table--records app-table--index mb-0">
         <thead>
           <tr>
-            <th>Ícone</th>
-            <th><%= t("categories.form.name") %></th>
+            <th><%= sortable_table_header("Ícone", "icon") %></th>
+            <th><%= sortable_table_header(t("categories.form.name"), "name") %></th>
             <th><%= t("tables.expenses.actions") %></th>
           </tr>
         </thead>
@@ -50,6 +56,12 @@
         </tbody>
       </table>
     </div>
+
+    <%= render "shared/pagination",
+              current_page: @current_page,
+              total_pages: @total_pages,
+              base_params: request.query_parameters.except(:page),
+              aria_label: "Paginacao de categorias" %>
   </div>
 </section>
 

@@ -80,9 +80,9 @@ class CardsController < ApplicationController
   private
 
   def load_cards
-    @cards = Card.order(:name)
-    @cards_limit_total = @cards.sum { |card| card.total_limit.to_f }
-    @cards_limit_available = @cards.sum { |card| card.remaining_limit.to_f }
+    cards = Card.order(:name).to_a
+    @cards_limit_total = cards.sum { |card| card.total_limit.to_f }
+    @cards_limit_available = cards.sum { |card| card.remaining_limit.to_f }
     @cards_limit_used = @cards_limit_total - @cards_limit_available
 
     credit_methods = [
@@ -91,6 +91,19 @@ class CardsController < ApplicationController
     ]
 
     @cards_open_invoices = Expense.where(paid: false, payment_method: credit_methods).sum(:amount)
+    cards = sort_collection(cards, sort_map: card_sort_map, default_sort: "name")
+    @cards = paginate_collection(cards, per_page: pagination_per_page(:cards_per_page))
+  end
+
+  def card_sort_map
+    {
+      "name" => ->(card) { card.name.to_s },
+      "number" => ->(card) { card.number.to_s },
+      "total_limit" => ->(card) { card.total_limit.to_d },
+      "remaining_limit" => ->(card) { card.remaining_limit.to_d },
+      "due_day" => ->(card) { card.due_day.to_i },
+      "closing_day" => ->(card) { card.closing_day.to_i }
+    }
   end
 
   def set_card
@@ -104,7 +117,7 @@ class CardsController < ApplicationController
       :total_limit,
       :icon,
       :due_day,
-      :best_day
+      :closing_day
     )
   end
 

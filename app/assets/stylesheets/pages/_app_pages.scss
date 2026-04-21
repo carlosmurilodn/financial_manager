@@ -45,16 +45,6 @@
   align-items: stretch;
 }
 
-.app-page__hero-top--actions {
-  grid-template-columns: max-content max-content;
-  justify-content: start;
-  align-items: center;
-}
-
-.app-page__hero-top--actions .app-page__hero-actions {
-  justify-content: flex-start;
-}
-
 .app-page__hero-copy {
   display: flex;
   align-items: center;
@@ -124,12 +114,6 @@
 .app-page__hero-top > .app-page__hero-kpis > .app-cards-hero-kpis,
 .app-page__hero-top > .app-page__hero-kpis > .app-categories-hero-kpis {
   display: contents;
-}
-
-.app-page__hero-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
 }
 
 .app-page__hero-badge {
@@ -332,6 +316,133 @@
   position: relative;
 }
 
+.invoice-file-picker {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 38px;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.invoice-file-picker__preview {
+  display: inline-grid;
+  place-items: center;
+  min-width: 38px;
+  min-height: 38px;
+  padding: 0;
+  border: 1px solid var(--table-border-color);
+  border-radius: 10px;
+  background: var(--table-surface);
+  color: var(--text-main);
+}
+
+.invoice-file-picker__preview:hover,
+.invoice-file-picker__preview:focus {
+  border-color: var(--hero-badge-icon-bg);
+  background: var(--hero-badge-icon-bg);
+  color: var(--nav-active-icon-color);
+}
+
+.invoice-file-picker__preview:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.invoice-file-picker__preview .material-symbols-rounded {
+  font-size: 1.18rem;
+}
+
+.invoice-import-list {
+  display: grid;
+  gap: 12px;
+}
+
+.invoice-import-item {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--table-border-color);
+  border-radius: 12px;
+  background: var(--table-surface);
+}
+
+.invoice-import-item__check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding-top: 22px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.invoice-import-item__fields {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.invoice-import-item__row {
+  display: grid;
+  gap: 10px;
+  align-items: end;
+  min-width: 0;
+}
+
+.invoice-import-item__row--main {
+  grid-template-columns: minmax(280px, 1fr) minmax(120px, 0.18fr) minmax(132px, 0.2fr);
+}
+
+.invoice-import-item__row--details {
+  grid-template-columns: minmax(150px, 0.35fr) minmax(220px, 0.55fr) minmax(320px, 1fr);
+}
+
+.invoice-import-field {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.invoice-import-field label,
+.invoice-import-field__label {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--text-soft);
+  text-transform: uppercase;
+}
+
+.invoice-import-field--description .form-control {
+  min-width: 0;
+}
+
+.invoice-import-payment {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.75fr) minmax(150px, 0.65fr);
+  gap: 10px;
+}
+
+.invoice-import-empty {
+  display: grid;
+  place-items: center;
+  min-height: 180px;
+  color: var(--text-soft);
+  text-align: center;
+}
+
+@media (max-width: 991px) {
+  .invoice-import-item,
+  .invoice-import-item__row,
+  .invoice-import-payment {
+    grid-template-columns: 1fr;
+  }
+
+  .invoice-import-item__check {
+    padding-top: 0;
+  }
+}
+
 .invoice-import-modal__loading {
   position: absolute;
   inset: 0;
@@ -502,6 +613,7 @@
 .app-filter-actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
 }
 
@@ -514,6 +626,49 @@
   font-weight: 500 !important;
   background: var(--hero-badge-icon-bg) !important;
   border-color: transparent !important;
+}
+
+.app-list-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.app-list-toolbar__form {
+  display: flex;
+  align-items: center;
+}
+
+.app-per-page-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 12px;
+  border: 1px solid var(--table-border-color);
+  border-radius: 10px;
+  background: var(--app-bg-soft);
+  color: var(--text-main);
+}
+
+.app-per-page-control__label,
+.app-per-page-control__suffix {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.82rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.app-per-page-control__select {
+  width: 84px;
+  min-height: 34px;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  border-color: var(--table-border-color) !important;
+  background-color: var(--app-bg-soft) !important;
+  color: var(--nav-active-icon-color) !important;
+  box-shadow: none;
 }
 
 .app-filter-actions__import .material-symbols-rounded {

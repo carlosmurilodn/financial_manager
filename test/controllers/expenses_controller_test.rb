@@ -14,7 +14,7 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
       number: "1234567812345678",
       total_limit: 5000,
       due_day: 10,
-      best_day: 5
+      closing_day: 5
     )
   end
 
@@ -22,6 +22,47 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
     get report_expenses_url
 
     assert_response :success
+  end
+
+  test "invalid turbo stream create renders new expense form" do
+    assert_no_difference("Expense.count") do
+      post expenses_url(format: :turbo_stream), params: {
+        expenses: {
+          "0" => {
+            amount: "",
+            description: "",
+            date: "",
+            balance_month: "",
+            category_id: "",
+            payment_method: "",
+            card_id: ""
+          }
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_includes response.body, "Nova Despesa"
+  end
+
+  test "sorting expenses applies before pagination" do
+    11.times do |index|
+      Expense.create!(
+        amount: index + 1,
+        description: "Despesa Ordenavel #{index + 1}",
+        date: Date.new(2026, 4, index + 1),
+        balance_month: Date.new(2026, 4, 1),
+        category: @category,
+        payment_method: :pix,
+        paid: false
+      )
+    end
+
+    get expenses_url(sort: "amount", direction: "desc", per_page: 10)
+
+    assert_response :success
+    assert_includes response.body, "Despesa Ordenavel 11"
+    assert_no_match(/Despesa Ordenavel 1[^0-9]/, response.body)
   end
 
   test "creating a parcelled expense from an arbitrary current installment generates grouped expenses" do
@@ -49,8 +90,50 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to expenses_url
     assert_equal (4..12).to_a, grouped_expenses.pluck(:current_installment)
+    assert_equal [Date.new(2026, 4, 16)], grouped_expenses.reorder(nil).distinct.pluck(:date)
     assert_equal Date.new(2026, 4, 1), grouped_expenses.first.balance_month
     assert_equal Date.new(2026, 12, 1), grouped_expenses.last.balance_month
+  end
+
+  test "creating a credit expense without balance month uses card billing due date" do
+    @card.update!(due_day: 10, closing_day: 20)
+
+    assert_difference("Expense.count", 1) do
+      post expenses_url, params: {
+        expense: {
+          amount: "150,00",
+          description: "Mercado",
+          date: "21/04/2026",
+          balance_month: "",
+          category_id: @category.id,
+          card_id: @card.id,
+          payment_method: "credito_a_vista",
+          paid: false
+        }
+      }
+    end
+
+    assert_redirected_to expenses_url
+    assert_equal Date.new(2026, 6, 10), Expense.order(:id).last.balance_month
+  end
+
+  test "creating a non credit expense without balance month uses purchase date" do
+    assert_difference("Expense.count", 1) do
+      post expenses_url, params: {
+        expense: {
+          amount: "80,00",
+          description: "Padaria",
+          date: "21/04/2026",
+          balance_month: "",
+          category_id: @category.id,
+          payment_method: "pix",
+          paid: false
+        }
+      }
+    end
+
+    assert_redirected_to expenses_url
+    assert_equal Date.new(2026, 4, 21), Expense.order(:id).last.balance_month
   end
 
   test "creating an expense with repetition creates future monthly expenses" do
@@ -148,7 +231,7 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to expenses_url
     assert_equal "Curso Atualizado", future_expense.reload.description
     assert_equal 200, future_expense.amount.to_f
-    assert_equal Date.new(2026, 5, 20), future_expense.date
+    assert_equal Date.new(2026, 4, 20), future_expense.date
     assert_equal Date.new(2026, 5, 1), future_expense.balance_month
     assert_not future_expense.paid?
   end
@@ -188,7 +271,7 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to expenses_url
     assert_equal "Curso", future_expense.reload.description
     assert_equal 120, future_expense.amount.to_f
-    assert_equal Date.new(2026, 5, 16), future_expense.date
+    assert_equal Date.new(2026, 4, 16), future_expense.date
   end
 
   test "destroying a parcel with single scope removes only that parcel" do

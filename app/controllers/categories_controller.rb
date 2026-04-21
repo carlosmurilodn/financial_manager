@@ -56,7 +56,7 @@ end
   private
 
   def load_categories
-    @categories = Category.order(:name)
+    categories = Category.order(:name).to_a
 
     month_range = Date.current.beginning_of_month..Date.current.end_of_month
     current_expenses = Expense.where(balance_month: month_range)
@@ -67,6 +67,15 @@ end
     @categories_top_expense_value = current_expenses.group(:category_id).sum(:amount).values.max || 0
     @categories_uncategorized_value = current_expenses.where(category_id: nil).sum(:amount) +
                                       current_incomes.where(category_id: nil).sum(:amount)
+    categories = sort_collection(categories, sort_map: category_sort_map, default_sort: "name")
+    @categories = paginate_collection(categories, per_page: pagination_per_page(:categories_per_page))
+  end
+
+  def category_sort_map
+    {
+      "icon" => ->(category) { category.material_icon.to_s },
+      "name" => ->(category) { category.display_name.to_s }
+    }
   end
 
   def set_category

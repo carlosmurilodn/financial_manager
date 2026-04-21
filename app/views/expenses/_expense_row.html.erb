@@ -1,7 +1,7 @@
 <tr id="<%= dom_id(expense) %>" class="<%= expense.paid? ? 'table-success' : 'table-warning' %>">
   <td><%= expense.description %></td>
 
-  <td>
+  <td class="text-center app-record-actions">
     <% if expense.payment_method_credito_parcelado? %>
       <%= "#{expense.current_installment}/#{expense.installments_count}" %>
     <% else %>
@@ -19,15 +19,15 @@
     <%= expense.balance_month.strftime("%m/%Y") if expense.balance_month.present? %>
   </td>
 
-  <td>
+  <td class="text-center app-record-actions">
     <%= expense.category.display_name %>
   </td>
 
-  <td>
+  <td class="text-center app-record-actions">
     <%= expense.payment_method.titleize %>
   </td>
 
-  <td>
+  <td class="text-center app-record-actions">
     <%= expense.card&.name %>
   </td>
 

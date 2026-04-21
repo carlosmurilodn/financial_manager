@@ -140,6 +140,7 @@ export function initializeDatepicker() {
       picker.querySelectorAll("td[data-date]").forEach((td) => {
         td.addEventListener("click", () => {
           input.value = td.dataset.date;
+          input.dispatchEvent(new Event("change", { bubbles: true }));
           picker.remove();
         });
       });

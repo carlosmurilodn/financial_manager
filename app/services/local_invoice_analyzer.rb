@@ -6,7 +6,7 @@ require "tempfile"
 
 class LocalInvoiceAnalyzer
   API_URL = ENV.fetch("LOCAL_INVOICE_AI_URL", "http://localhost:11434/api/chat")
-  DEFAULT_MODEL = ENV.fetch("LOCAL_INVOICE_MODEL", "llama3.2-vision")
+  DEFAULT_MODEL = ENV.fetch("LOCAL_INVOICE_MODEL", "ministral-3:8b")
   IMAGE_CONTENT_TYPES = %w[image/png image/jpeg image/jpg image/webp image/gif].freeze
   PDF_CONTENT_TYPES = %w[application/pdf].freeze
 
@@ -85,6 +85,7 @@ class LocalInvoiceAnalyzer
       Regras:
       - Extraia apenas compras à vista, ou seja, transações de compra feitas em estabelecimentos.
       - Ignore compras parceladas, parcelas, pagamentos, pagamento de fatura, boletos, subtotais, totais, cabeçalhos, rodapés, encargos informativos e saldos.
+      - Ignore compras parceladas, exemplos: descrição_da_compra parcela x de x, descrição_da_compra parcela x/x
       - Linhas como "PAGAMENTO DE FATURA VIA BOLETO", "Subtotal dos lançamentos", "Total geral dos lançamentos" e "Picpay Card final" não são despesas e não devem aparecer.
       - Use datas no formato dd/mm/aaaa.
       - Use valores no formato brasileiro, sem R$, por exemplo 123,45.
@@ -190,11 +191,22 @@ class LocalInvoiceAnalyzer
   end
 
   def api_error(response)
-    Result.new(items: [], errors: ["Erro #{response.code} ao chamar a IA local em #{API_URL}."])
+    message = api_error_message(response)
+    Result.new(items: [], errors: ["Erro #{response.code} ao chamar a IA local em #{API_URL}: #{message}"])
   end
 
   def request_timeout
     ENV.fetch("LOCAL_INVOICE_TIMEOUT", 420).to_i
+  end
+
+  def api_error_message(response)
+    message = JSON.parse(response.body).dig("error").presence || "verifique se o modelo #{DEFAULT_MODEL} está disponível no Ollama."
+
+    return "#{message} Rode: ollama pull #{DEFAULT_MODEL}" if message.match?(/model|not found|pull/i)
+
+    message
+  rescue JSON::ParserError
+    "verifique se o modelo #{DEFAULT_MODEL} está disponível no Ollama."
   end
 
   def ignored_entry?(description)

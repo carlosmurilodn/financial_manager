@@ -23,16 +23,22 @@
   </div>
 
   <div class="app-panel app-panel--table">
+    <div class="app-list-toolbar">
+      <%= form_with url: cards_path, method: :get, local: true, class: "app-list-toolbar__form" do %>
+        <%= render "shared/per_page_select" %>
+      <% end %>
+    </div>
+
     <div class="table-responsive">
       <table class="table app-table app-table--records app-table--index mb-0">
         <thead>
           <tr>
-            <th><%= t("cards.form.name") %></th>
-            <th><%= t("cards.form.number") %></th>
-            <th>Limite Total</th>
-            <th>Limite Restante</th>
-            <th>Dia do Vencimento</th>
-            <th>Melhor Dia de Compra</th>
+            <th><%= sortable_table_header(t("cards.form.name"), "name") %></th>
+            <th><%= sortable_table_header(t("cards.form.number"), "number") %></th>
+            <th><%= sortable_table_header("Limite Total", "total_limit") %></th>
+            <th><%= sortable_table_header("Limite Restante", "remaining_limit") %></th>
+            <th><%= sortable_table_header("Dia do Vencimento", "due_day") %></th>
+            <th><%= sortable_table_header("Dia de Fechamento", "closing_day") %></th>
             <th><%= t("tables.expenses.actions") %></th>
           </tr>
         </thead>
@@ -47,7 +53,7 @@
               <td><%= number_to_currency(card.total_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
               <td><%= number_to_currency(card.remaining_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
               <td><%= card.due_day %></td>
-              <td><%= card.best_day %></td>
+              <td><%= card.closing_day %></td>
               <td class="app-record-actions">
                 <%= link_to t("buttons.edit"),
                     edit_card_path(card),
@@ -65,6 +71,12 @@
         </tbody>
       </table>
     </div>
+
+    <%= render "shared/pagination",
+              current_page: @current_page,
+              total_pages: @total_pages,
+              base_params: request.query_parameters.except(:page),
+              aria_label: "Paginacao de cartoes" %>
   </div>
 </section>
 

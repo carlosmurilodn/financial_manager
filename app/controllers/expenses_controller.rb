@@ -10,8 +10,13 @@ class ExpensesController < ApplicationController
   end
 
   def show; end
-  def new; @expense = Expense.new; end
+
+  def new
+    @expense = Expense.new
+  end
+
   def edit; end
+
   def import_invoice
     load_invoice_import_options
     @invoice_preview_items = []
@@ -38,7 +43,9 @@ class ExpensesController < ApplicationController
   end
 
   def confirm_invoice_import
-    importable_items = invoice_import_items.select { |item| ActiveModel::Type::Boolean.new.cast(item[:selected]) }
+    importable_items = invoice_import_items.select do |item|
+      ActiveModel::Type::Boolean.new.cast(item[:selected])
+    end
 
     if importable_items.blank?
       load_invoice_import_options
@@ -54,7 +61,9 @@ class ExpensesController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to expenses_path, notice: success_message }
-      format.turbo_stream { render turbo_stream: "" }
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace("modal", "")
+      end
     end
   rescue ActiveRecord::RecordInvalid => error
     load_invoice_import_options
@@ -64,6 +73,7 @@ class ExpensesController < ApplicationController
   end
 
   def delete_options; end
+
   def toggle_paid_options; end
 
   def create
@@ -73,10 +83,7 @@ class ExpensesController < ApplicationController
 
       if expense_rows.blank?
         @expense.errors.add(:base, "Informe ao menos uma despesa.")
-        respond_to do |format|
-          format.html { render :new, status: :unprocessable_entity }
-          format.turbo_stream { render :new, status: :unprocessable_entity }
-        end
+        render_new_expense_with_errors
         return
       end
 
@@ -84,7 +91,9 @@ class ExpensesController < ApplicationController
 
       respond_to do |format|
         format.html { redirect_to expenses_path, notice: "Despesas criadas com sucesso!" }
-        format.turbo_stream { render turbo_stream: "" }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("modal", "")
+        end
       end
     else
       @expense = build_expense(expense_params, params[:expense])
@@ -94,22 +103,18 @@ class ExpensesController < ApplicationController
 
         respond_to do |format|
           format.html { redirect_to expenses_path, notice: "Despesa criada com sucesso!" }
-          format.turbo_stream { render turbo_stream: "" }
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace("modal", "")
+          end
         end
       else
-        respond_to do |format|
-          format.html { render :new, status: :unprocessable_entity }
-          format.turbo_stream { render :new, status: :unprocessable_entity }
-        end
+        render_new_expense_with_errors
       end
     end
   rescue ActiveRecord::RecordInvalid => error
     @expense = error.record.is_a?(Expense) ? error.record : Expense.new
 
-    respond_to do |format|
-      format.html { render :new, status: :unprocessable_entity }
-      format.turbo_stream { render :new, status: :unprocessable_entity }
-    end
+    render_new_expense_with_errors
   end
 
   def update
@@ -167,6 +172,7 @@ class ExpensesController < ApplicationController
     session.delete(:expenses_payment_method)
     session.delete(:expenses_card_id)
     session.delete(:expenses_paid)
+
     redirect_to expenses_path, notice: "Filtros limpos com sucesso!"
   end
 
@@ -197,6 +203,15 @@ class ExpensesController < ApplicationController
   end
 
   private
+
+  def render_new_expense_with_errors
+    respond_to do |format|
+      format.html { render :new, status: :unprocessable_entity }
+      format.turbo_stream do
+        render :new, formats: [:html], status: :unprocessable_entity
+      end
+    end
+  end
 
   def set_expense
     @expense = Expense.find(params[:id])
@@ -288,7 +303,7 @@ class ExpensesController < ApplicationController
     expense = Expense.new(attributes.except(:amount, :date, :balance_month))
     expense.amount = parse_brazilian_amount(raw_attributes[:amount], blank: 0)
     expense.date = parse_brazilian_date(raw_attributes[:date])
-    expense.balance_month = parse_brazilian_date(raw_attributes[:balance_month])
+    expense.balance_month = parse_brazilian_date(raw_attributes[:balance_month]) || default_balance_month_for(expense)
     expense.repetir ||= 0
     expense
   end
@@ -371,6 +386,8 @@ class ExpensesController < ApplicationController
     filter_by_card
     filter_by_paid
     filter_by_description
+
+    @expenses = sort_collection(@expenses, sort_map: expense_sort_map, default_sort: "balance_month", default_direction: "desc")
 
     calculate_totals
     calculate_net_balance
@@ -467,21 +484,34 @@ class ExpensesController < ApplicationController
     end
   end
 
+  def default_balance_month_for(expense)
+    return if expense.date.blank?
+    return expense.date unless expense.payment_method_credito_a_vista? || expense.payment_method_credito_parcelado?
+
+    expense.card&.billing_due_date_for(expense.date) || expense.date
+  end
+
   def expanded_expenses
     Expense.includes(:category, :card)
            .order(balance_month: :desc, date: :asc, current_installment: :asc)
            .to_a
   end
 
-  def paginate_expenses
-    @per_page = 10
-    @total_expenses_count = @expenses.size
-    @total_pages = [(@total_expenses_count.to_f / @per_page).ceil, 1].max
-    @current_page = params[:page].to_i
-    @current_page = 1 if @current_page < 1
-    @current_page = @total_pages if @current_page > @total_pages
+  def expense_sort_map
+    {
+      "description" => ->(expense) { expense.description.to_s },
+      "installment" => ->(expense) { expense.current_installment.to_i },
+      "amount" => ->(expense) { expense.amount.to_d },
+      "date" => ->(expense) { expense.date },
+      "balance_month" => ->(expense) { expense.balance_month },
+      "category" => ->(expense) { expense.category&.display_name.to_s },
+      "payment_method" => ->(expense) { expense.payment_method.to_s },
+      "card" => ->(expense) { expense.card&.name.to_s },
+      "paid" => ->(expense) { expense.paid? }
+    }
+  end
 
-    offset = (@current_page - 1) * @per_page
-    @expenses = @expenses.slice(offset, @per_page) || []
+  def paginate_expenses
+    @expenses = paginate_collection(@expenses, per_page: pagination_per_page(:expenses_per_page))
   end
 end

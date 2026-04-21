@@ -58,6 +58,7 @@
                 clear_filters_incomes_path,
                 class: "btn app-page__secondary-btn",
                 data: { turbo_method: :delete } %>
+        <%= render "shared/per_page_select" %>
       </div>
     <% end %>
   </div>
@@ -67,12 +68,12 @@
       <table class="table app-table app-table--records app-table--index mb-0">
         <thead>
           <tr>
-            <th>Descrição</th>
-            <th>Categoria</th>
-            <th>Valor</th>
-            <th>Data</th>
-            <th>Mês Referência</th>
-            <th>Recebida?</th>
+            <th><%= sortable_table_header("Descrição", "description") %></th>
+            <th><%= sortable_table_header("Categoria", "category") %></th>
+            <th><%= sortable_table_header("Valor", "amount") %></th>
+            <th><%= sortable_table_header("Data", "date") %></th>
+            <th><%= sortable_table_header("Mês Referência", "balance_month") %></th>
+            <th><%= sortable_table_header("Recebida?", "paid") %></th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -83,6 +84,12 @@
         </tbody>
       </table>
     </div>
+
+    <%= render "shared/pagination",
+              current_page: @current_page,
+              total_pages: @total_pages,
+              base_params: request.query_parameters.except(:page),
+              aria_label: "Paginacao de receitas" %>
   </div>
 </section>
 

@@ -1,6 +1,6 @@
 :root,
 html[data-theme="fincan"] {
-  --bs-body-font-size: 0.8rem;
+  --bs-body-font-size: 0.9rem;
   --bs-heading-color: #e0e5f9;
   --heading-color: #727f92;
   --dashboard-h1-color: #e0e5f9;
@@ -23,6 +23,8 @@ html[data-theme="fincan"] {
   --scrollbar-thumb-color: #5670e4;
   --shadow-soft: 0 26px 50px rgba(35, 55, 94, 0.12);
   --shadow-card: 0 18px 36px rgba(51, 72, 114, 0.14);
+  --shadow-neon: var(--shadow-card);
+  --shadow-neon-strong: var(--shadow-soft);
   --primary: #5871e7;
   --success: #35c4a4;
   --danger: #f28da6;
@@ -83,7 +85,6 @@ html[data-theme="fincan"] {
   --sidebar-width-collapsed: 94px;
   --radius-lg: 10px;
   --radius-md: 10px;
-  --bs-body-text-align: center;
 }
 
 html[data-theme="fincan"] h1,
@@ -100,7 +101,7 @@ html[data-theme="fincan"] .dashboard-hero h1 {
 }
 
 html[data-theme="night"] {
-  --bs-body-font-size: 0.8rem;
+  --bs-body-font-size: 0.9rem;
   --app-bg: #17131f;
   --app-bg-accent: #17131f;
   --app-bg-soft: #2a2141;
@@ -120,6 +121,8 @@ html[data-theme="night"] {
   --app-page-hero-badge-item-bg: rgba(149, 128, 255, 0.16);
   --shadow-soft: 0 24px 55px rgba(9, 7, 15, 0.45);
   --shadow-card: 0 18px 42px rgba(10, 8, 18, 0.5);
+  --shadow-neon: 0 0 10px rgba(255, 121, 198, 0.1), 0 0 18px rgba(149, 128, 255, 0.07), var(--shadow-card);
+  --shadow-neon-strong: 0 0 14px rgba(255, 121, 198, 0.16), 0 0 28px rgba(149, 128, 255, 0.12), var(--shadow-soft);
   --primary: #9580ff;
   --success: #67e480;
   --danger: #ff79c6;

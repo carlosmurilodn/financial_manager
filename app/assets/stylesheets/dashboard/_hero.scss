@@ -11,12 +11,11 @@
   padding: 20px;
   border: 0;
   border-radius: 10px;
-  background: var(--hero-bg);
+  background: var(--sidebar-bg);
   box-shadow: var(--shadow-card);
   backdrop-filter: blur(22px);
 }
 
-.dashboard-eyebrow,
 .dashboard-card__eyebrow {
   margin: 0 0 8px;
   color: var(--text-soft);
@@ -79,7 +78,6 @@
   gap: 14px;
 }
 
-.dashboard-hero__badge-item--header,
 .dashboard-hero__badge-item--weather {
   justify-content: center;
 }

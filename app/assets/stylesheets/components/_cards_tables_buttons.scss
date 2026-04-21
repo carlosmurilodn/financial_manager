@@ -47,10 +47,6 @@
   overflow: visible;
 }
 
-.dashboard-card__body--canvas {
-  min-height: 580px;
-}
-
 .dashboard-card__title {
   font-size: 1.2rem;
 }
@@ -137,31 +133,77 @@
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  text-align: center;
 }
 
+.app-table tbody tr :first-child {
+  text-align: center;
+}
+
+.app-table thead th:first-child {
+  text-align: start !important;
+}
+
+.app-table tbody tr :first-child {
+  text-align: start !important;
+}
 
 .app-table tbody td {
   color: var(--table-row-text);
-  font-weight: 400;
+  font-weight: 500;
+}
+
+.app-table-sort {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 28px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.app-table thead th:first-child .app-table-sort {
+  justify-content: flex-start;
+}
+
+.app-table-sort__label {
+  min-width: 0;
+}
+
+.app-table-sort__icon {
+  flex: 0 0 auto;
+  color: var(--text-soft);
+  font-size: 1rem;
+  line-height: 1;
+  opacity: 0.72;
+  transition: color 0.18s ease, opacity 0.18s ease, transform 0.18s ease;
+}
+
+.app-table-sort:hover .app-table-sort__icon,
+.app-table-sort:focus-visible .app-table-sort__icon,
+.app-table-sort.is-active .app-table-sort__icon {
+  color: var(--nav-active-icon-color);
+  opacity: 1;
+}
+
+.app-table-sort:focus-visible {
+  outline: 2px solid var(--nav-active-icon-color);
+  outline-offset: 4px;
+  border-radius: 6px;
 }
 
 html[data-theme="fincan"] .app-table tbody td {
   color: #5f6673;
-}
-
-.app-table__primary {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.app-table__avatar {
-  display: inline-grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 12px;
-  background: var(--avatar-bg);
 }
 
 .app-btn {

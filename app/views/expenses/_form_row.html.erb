@@ -24,14 +24,14 @@
     <div class="expense-modal-field">
       <label for="expenses_<%= index %>_date"><%= t("expenses.form.date") %></label>
       <div class="custom-date-wrapper">
-        <input type="text" name="expenses[<%= index %>][date]" id="expenses_<%= index %>_date" class="form-control custom-date" autocomplete="off" placeholder="Selecione a data">
+        <input type="text" name="expenses[<%= index %>][date]" id="expenses_<%= index %>_date" class="form-control custom-date" autocomplete="off" placeholder="Selecione a data" data-expense-date-input>
       </div>
     </div>
 
     <div class="expense-modal-field">
       <label for="expenses_<%= index %>_balance_month"><%= t("expenses.form.balance_month") %></label>
       <div class="custom-date-wrapper">
-        <input type="text" name="expenses[<%= index %>][balance_month]" id="expenses_<%= index %>_balance_month" class="form-control custom-date" autocomplete="off" placeholder="Selecione o mês">
+        <input type="text" name="expenses[<%= index %>][balance_month]" id="expenses_<%= index %>_balance_month" class="form-control custom-date" autocomplete="off" placeholder="Selecione o mês" data-expense-balance-input data-balance-auto-filled="true">
       </div>
     </div>
 
@@ -57,10 +57,10 @@
 
     <div class="expense-modal-field">
       <label for="expenses_<%= index %>_card_id"><%= t("expenses.form.card") %></label>
-      <select name="expenses[<%= index %>][card_id]" id="expenses_<%= index %>_card_id" class="form-select">
+      <select name="expenses[<%= index %>][card_id]" id="expenses_<%= index %>_card_id" class="form-select" data-card-select>
         <option value="">Selecione</option>
         <% cards.each do |card| %>
-          <option value="<%= card.id %>"><%= card.display_name %></option>
+          <option value="<%= card.id %>" data-due-day="<%= card.due_day %>" data-closing-day="<%= card.closing_day %>"><%= card.display_name %></option>
         <% end %>
       </select>
     </div>

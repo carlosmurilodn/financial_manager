@@ -34,12 +34,12 @@ pt-BR:
       submit: "Salvar Despesa"
       description: "Descrição"
       amount: "Valor"
-      date: "Data"
+      date: "Data da Compra"
       balance_month: "Mês do Balanço"
       category: "Categoria"
       payment_method: "Forma de Pagamento"
       card: "Cartão"
-      paid: "Pago?"
+      paid: "Foi Paga?"
 
   incomes:
     form:
@@ -49,7 +49,7 @@ pt-BR:
       amount: "Valor"
       date: "Data"
       balance_month: "Mês do Balanço"
-      paid: "Recebida?"
+      paid: "Foi Recebida?"
 
   cards:
     form:

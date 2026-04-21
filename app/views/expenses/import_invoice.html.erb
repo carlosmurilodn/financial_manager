@@ -1,5 +1,5 @@
 <turbo-frame id="modal">
-  <div data-modal-size="xl"></div>
+  <div data-modal-size="wide"></div>
 
   <div class="modal-header">
     <div>
@@ -14,7 +14,7 @@
       <div class="invoice-import-modal__loading-card">
         <div class="spinner-border" role="status" aria-hidden="true"></div>
         <strong>Analisando fatura...</strong>
-        <span>A IA local está lendo os lançamentos. Isso pode levar alguns segundos.</span>
+        <span>A IA local está lendo os lançamentos. A primeira execução pode levar mais tempo.</span>
       </div>
     </div>
 
@@ -25,8 +25,19 @@
                   class: "row g-3 mb-4" do |f| %>
       <div class="col-lg-4">
         <%= f.label :invoice_file, "Arquivo da fatura", class: "form-label" %>
-        <%= f.file_field :invoice_file, class: "form-control", accept: ".pdf,.csv,.txt,.jpg,.jpeg,.png" %>
-        <small class="text-muted">CSV/TXT geram prévia local. PDF/imagem usam IA local por padrão; informe a senha se a fatura for protegida.</small>
+        <div class="invoice-file-picker">
+          <%= f.file_field :invoice_file, class: "form-control", accept: ".pdf,.csv,.txt,.jpg,.jpeg,.png", data: { invoice_file_input: true } %>
+          <button type="button"
+                  class="btn invoice-file-picker__preview"
+                  data-invoice-file-preview
+                  data-bs-toggle="tooltip"
+                  data-bs-title="Abrir Arquivo"
+                  aria-label="Abrir Arquivo"
+                  disabled>
+            <span class="material-symbols-rounded" aria-hidden="true">visibility</span>
+          </button>
+        </div>
+        <small class="text-muted">CSV/TXT geram prévia local. PDF/imagem usam IA local; informe a senha se a fatura for protegida.</small>
       </div>
 
       <div class="col-lg-2">
@@ -47,7 +58,7 @@
         <%= f.password_field :invoice_password, class: "form-control", autocomplete: "off", placeholder: "Opcional" %>
       </div>
 
-      <div class="col-lg-2 d-flex align-items-center">
+      <div class="col-lg-2 d-flex align-items-center" style="padding-bottom: 15px;">
         <%= f.button class: "btn app-page__primary-btn w-100", style: "color: var(--nav-active-icon-color) !important; background: var(--hero-badge-icon-bg) !important; display: flex; justify-content: center; align-items: center;" do %>
           <span class="material-symbols-rounded me-1">neurology</span>
           Analisar
@@ -76,69 +87,73 @@
         </button>
       </div>
 
-      <div class="table-responsive">
-        <table class="table app-table mb-0">
-          <thead>
-            <tr>
-              <th>Importar</th>
-              <th>Descrição</th>
-              <th>Valor</th>
-              <th>Data</th>
-              <th>Vencimento</th>
-              <th>Categoria</th>
-              <th>Pagamento</th>
-              <th>Cartão</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% if @invoice_preview_items.present? %>
-              <% @invoice_preview_items.each_with_index do |item, index| %>
-                <tr>
-                  <td>
-                    <%= hidden_field_tag "invoice_items[#{index}][selected]", "0" %>
-                    <%= check_box_tag "invoice_items[#{index}][selected]", "1", item[:selected].blank? || ActiveModel::Type::Boolean.new.cast(item[:selected]), class: "form-check-input" %>
-                  </td>
-                  <td>
-                    <%= text_field_tag "invoice_items[#{index}][description]", item[:description], class: "form-control form-control-sm", required: true %>
-                  </td>
-                  <td>
-                    <%= text_field_tag "invoice_items[#{index}][amount]", item[:amount], class: "form-control form-control-sm moeda", required: true %>
-                  </td>
-                  <td>
-                    <%= text_field_tag "invoice_items[#{index}][date]", item[:date], class: "form-control form-control-sm", required: true %>
-                  </td>
-                  <td>
-                    <%= date_field_tag "invoice_items[#{index}][due_date]", item[:due_date], class: "form-control form-control-sm" %>
-                  </td>
-                  <td>
+      <% if @invoice_preview_items.present? %>
+        <div class="invoice-import-list">
+          <% @invoice_preview_items.each_with_index do |item, index| %>
+            <div class="invoice-import-item">
+              <div class="invoice-import-item__check">
+                <%= hidden_field_tag "invoice_items[#{index}][selected]", "0" %>
+                <%= check_box_tag "invoice_items[#{index}][selected]", "1", item[:selected].blank? || ActiveModel::Type::Boolean.new.cast(item[:selected]), class: "form-check-input", id: "invoice_items_#{index}_selected" %>
+                <%= label_tag "invoice_items_#{index}_selected", "Importar", class: "form-check-label" %>
+              </div>
+
+              <div class="invoice-import-item__fields">
+                <div class="invoice-import-item__row invoice-import-item__row--main">
+                  <div class="invoice-import-field invoice-import-field--description">
+                    <%= label_tag "invoice_items_#{index}_description", "Descrição" %>
+                    <%= text_field_tag "invoice_items[#{index}][description]", item[:description], class: "form-control form-control-sm", id: "invoice_items_#{index}_description", required: true %>
+                  </div>
+
+                  <div class="invoice-import-field">
+                    <%= label_tag "invoice_items_#{index}_amount", "Valor" %>
+                    <%= text_field_tag "invoice_items[#{index}][amount]", item[:amount], class: "form-control form-control-sm moeda", id: "invoice_items_#{index}_amount", required: true %>
+                  </div>
+
+                  <div class="invoice-import-field">
+                    <%= label_tag "invoice_items_#{index}_date", "Data" %>
+                    <%= text_field_tag "invoice_items[#{index}][date]", item[:date], class: "form-control form-control-sm", id: "invoice_items_#{index}_date", required: true %>
+                  </div>
+                </div>
+
+                <div class="invoice-import-item__row invoice-import-item__row--details">
+                  <div class="invoice-import-field">
+                    <%= label_tag "invoice_items_#{index}_due_date", "Vencimento" %>
+                    <%= date_field_tag "invoice_items[#{index}][due_date]", item[:due_date], class: "form-control form-control-sm", id: "invoice_items_#{index}_due_date" %>
+                  </div>
+
+                  <div class="invoice-import-field">
+                    <%= label_tag "invoice_items_#{index}_category_id", "Categoria" %>
                     <%= select_tag "invoice_items[#{index}][category_id]",
                           options_for_select([["Selecione", ""]] + @categories.map { |category| [category.display_name, category.id] }, item[:category_id]),
                           class: "form-select form-select-sm",
+                          id: "invoice_items_#{index}_category_id",
                           required: true %>
-                  </td>
-                  <td>
-                    <%= select_tag "invoice_items[#{index}][payment_method]",
-                          options_for_select(Expense.payment_method_names.map { |key, label| [label, key] }, item[:payment_method]),
-                          class: "form-select form-select-sm",
-                          required: true %>
-                  </td>
-                  <td>
-                    <%= select_tag "invoice_items[#{index}][card_id]",
-                          options_for_select([["Sem cartão", ""]] + @cards.map { |card| [card.name, card.id] }, item[:card_id]),
-                          class: "form-select form-select-sm" %>
-                  </td>
-                </tr>
-              <% end %>
-            <% else %>
-              <tr>
-                <td colspan="8" class="text-center py-4 text-muted">
-                  Envie uma fatura para gerar a prévia dos lançamentos.
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
+                  </div>
+
+                  <div class="invoice-import-field">
+                    <span class="invoice-import-field__label">Pagamento</span>
+                    <div class="invoice-import-payment">
+                      <%= select_tag "invoice_items[#{index}][payment_method]",
+                            options_for_select(Expense.payment_method_names.map { |key, label| [label, key] }, item[:payment_method]),
+                            class: "form-select form-select-sm",
+                            aria: { label: "Forma de pagamento" },
+                            required: true %>
+                      <%= select_tag "invoice_items[#{index}][card_id]",
+                            options_for_select([["Sem cartão", ""]] + @cards.map { |card| [card.name, card.id] }, item[:card_id]),
+                            class: "form-select form-select-sm",
+                            aria: { label: "Cartão" } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="invoice-import-empty">
+          Envie uma fatura para gerar a prévia dos lançamentos.
+        </div>
+      <% end %>
     <% end %>
   </div>
 </turbo-frame>

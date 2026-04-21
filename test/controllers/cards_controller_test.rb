@@ -12,7 +12,7 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
       number: "1234567812345678",
       total_limit: 5000,
       due_day: 10,
-      best_day: 5
+      closing_day: 5
     )
   end
 
@@ -24,7 +24,7 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
           number: "9999 8888 7777 6666",
           total_limit: "R$ 3.500,75",
           due_day: 15,
-          best_day: 7
+          closing_day: 7
         }
       }
     end
@@ -46,7 +46,7 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
           number: "1234 5678 1234 5678",
           total_limit: "R$ 1.000,00",
           due_day: 15,
-          best_day: 7,
+          closing_day: 7,
           icon: uploaded_icon
         }
       }
@@ -71,7 +71,7 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
         number: @card.number,
         total_limit: "R$ 5.000,00",
         due_day: @card.due_day,
-        best_day: @card.best_day,
+        closing_day: @card.closing_day,
         remove_icon: "1"
       }
     }

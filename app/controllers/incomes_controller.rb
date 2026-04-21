@@ -136,7 +136,9 @@ class IncomesController < ApplicationController
     filter_by_month
     filter_by_description
     filter_by_paid
+    @incomes = sort_collection(@incomes, sort_map: income_sort_map, default_sort: "balance_month")
     calculate_totals
+    paginate_incomes if action_name == "index"
 
     if @month && @year
       previous_month_end = Date.new(@year, @month, 1) - 1.day
@@ -185,5 +187,20 @@ class IncomesController < ApplicationController
     @total_amount = @incomes.sum(&:amount)
     @total_received = @incomes.select(&:paid?).sum(&:amount)
     @total_pending = @incomes.reject(&:paid?).sum(&:amount)
+  end
+
+  def income_sort_map
+    {
+      "description" => ->(income) { income.description.to_s },
+      "category" => ->(income) { income.category&.display_name.to_s },
+      "amount" => ->(income) { income.amount.to_d },
+      "date" => ->(income) { income.date },
+      "balance_month" => ->(income) { income.balance_month },
+      "paid" => ->(income) { income.paid? }
+    }
+  end
+
+  def paginate_incomes
+    @incomes = paginate_collection(@incomes, per_page: pagination_per_page(:incomes_per_page))
   end
 end

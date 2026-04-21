@@ -51,7 +51,7 @@ class Expense < ApplicationRecord
         card: card,
         payment_method: payment_method,
         installments_count: installments_count,
-        date: date >> month_offset,
+        date: date,
         balance_month: balance_month >> month_offset
       )
     end
@@ -108,7 +108,7 @@ class Expense < ApplicationRecord
         card: card,
         payment_method: payment_method,
         amount: amount,
-        date: date >> (i + 1),
+        date: date,
         balance_month: balance_month.to_date >> (i + 1),
         installments_count: installments_count,
         current_installment: next_installment,

@@ -12,7 +12,7 @@ class ExpenseTest < ActiveSupport::TestCase
       number: "1234567812345678",
       total_limit: 5000,
       due_day: 10,
-      best_day: 5
+      closing_day: 5
     )
   end
 
@@ -64,8 +64,7 @@ class ExpenseTest < ActiveSupport::TestCase
     assert_equal expense.id, expense.installment_group_id
     assert_equal (4..12).to_a, grouped_expenses.pluck(:current_installment)
     assert_equal [12], grouped_expenses.reorder(nil).distinct.pluck(:installments_count)
-    assert_equal Date.new(2026, 4, 16), grouped_expenses.first.date
-    assert_equal Date.new(2026, 12, 16), grouped_expenses.last.date
+    assert_equal [Date.new(2026, 4, 16)], grouped_expenses.reorder(nil).distinct.pluck(:date)
     assert_equal Date.new(2026, 12, 1), grouped_expenses.last.balance_month
   end
 

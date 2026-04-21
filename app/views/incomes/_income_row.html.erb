@@ -1,5 +1,5 @@
 <tr id="<%= dom_id(income) %>" class="<%= income.paid ? 'table-success' : 'table-warning' %>">
-  <td class="text-center"><%= income.description %></td>
+  <td class="text-start"><%= income.description %></td>
   <td class="text-center"><%= income.category&.display_name || "-" %></td>
   <td class="text-center app-record-actions">
     <%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>

@@ -34,7 +34,7 @@
         <thead>
           <tr>
             <th><%= sortable_table_header(t("cards.form.name"), "name") %></th>
-            <th><%= sortable_table_header(t("cards.form.number"), "number") %></th>
+            <th><% sortable_table_header(t("cards.form.number"), "number") %></th>
             <th><%= sortable_table_header("Limite Total", "total_limit") %></th>
             <th><%= sortable_table_header("Limite Restante", "remaining_limit") %></th>
             <th><%= sortable_table_header("Dia do Vencimento", "due_day") %></th>
@@ -49,12 +49,12 @@
                 <%= card.icon.attached? ? image_tag(card.icon, width: 20, class: "me-2") : "💳" %>
                 <%= card.name %>
               </td>
-              <td><%= card.number.present? ? "**** **** **** #{card.number[-4..-1]}" : "" %></td>
-              <td><%= number_to_currency(card.total_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
-              <td><%= number_to_currency(card.remaining_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
-              <td><%= card.due_day %></td>
-              <td><%= card.closing_day %></td>
-              <td class="app-record-actions">
+              <td class="text-center"><%= card.number.present? ? "**** **** **** #{card.number[-4..-1]}" : "" %></td>
+              <td class="text-center"><%= number_to_currency(card.total_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
+              <td class="text-center"><%= number_to_currency(card.remaining_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
+              <td class="text-center"><%= card.due_day %></td>
+              <td class="text-center"><%= card.closing_day %></td>
+              <td class="app-record-actions text-center">
                 <%= link_to t("buttons.edit"),
                     edit_card_path(card),
                     class: "btn btn-sm btn-primary app-record-actions__edit me-1",

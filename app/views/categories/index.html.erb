@@ -45,7 +45,7 @@
                 <span class="material-symbols-rounded dashboard-category-item__icon"><%= category.material_icon %></span>
               </td>
               <td><%= category.display_name %></td>
-              <td class="app-record-actions">
+              <td class="app-record-actions text-center">
                 <%= link_to t("buttons.edit"), edit_category_path(category), class: "btn btn-sm btn-primary app-record-actions__edit", data: { turbo_frame: "modal" } %>
                 <%= link_to t("buttons.delete"), category,
                             data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },

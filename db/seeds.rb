@@ -184,3 +184,43 @@ april_expenses.each do |date_text, category_name, description, amount, payment_m
 end
 
 puts "40 despesas de abril de 2026 criadas/atualizadas com sucesso!"
+
+financial_goals = [
+  ["Reserva de emergência", 30000.00, 12500.00, "2026-12-31", :in_progress, :high, "Meta para cobrir pelo menos seis meses de despesas essenciais."],
+  ["Entrada do apartamento", 85000.00, 18000.00, "2028-06-30", :planned, :high, "Compor recursos próprios e avaliar limites apenas como apoio de negociação."],
+  ["Viagem para o Chile", 12000.00, 4200.00, "2027-07-15", :in_progress, :medium, "Passagens, hospedagem, passeios e reserva para câmbio."],
+  ["Troca do carro", 45000.00, 9000.00, "2027-11-30", :planned, :medium, "Valor estimado para entrada e documentação."],
+  ["Curso de especialização", 9000.00, 3500.00, "2026-09-10", :in_progress, :high, "Mensalidades, material e taxa de certificação."],
+  ["Notebook novo", 7500.00, 1800.00, "2026-08-20", :planned, :medium, "Priorizar equipamento para trabalho e estudos."],
+  ["Reforma da cozinha", 18000.00, 2500.00, "2027-03-31", :paused, :medium, "Aguardar novos orçamentos antes de retomar."],
+  ["Quitação de financiamento", 25000.00, 6000.00, "2027-12-20", :planned, :high, "Avaliar antecipações quando houver sobra no mês."],
+  ["Fundo para impostos anuais", 8000.00, 2100.00, "2027-01-15", :in_progress, :medium, "IPVA, IPTU e taxas de início de ano."],
+  ["Seguro e manutenção do carro", 6500.00, 900.00, "2026-10-05", :planned, :medium, "Reserva para seguro, revisão e pneus."],
+  ["Reserva médica", 10000.00, 4800.00, "2026-12-15", :in_progress, :high, "Consultas, exames e eventuais procedimentos."],
+  ["Viagem em família", 20000.00, 5200.00, "2027-01-10", :planned, :medium, "Planejamento de férias com hospedagem e deslocamentos."],
+  ["Mobília da sala", 6000.00, 750.00, "2026-11-30", :planned, :low, "Sofá, rack e iluminação."],
+  ["Celular novo", 4200.00, 3200.00, "2026-06-30", :in_progress, :low, "Troca planejada caso o aparelho atual não compense manutenção."],
+  ["Plano de investimentos", 50000.00, 11000.00, "2028-12-31", :planned, :high, "Meta inicial de carteira de longo prazo."],
+  ["Aniversário especial", 3500.00, 2800.00, "2026-05-25", :in_progress, :low, "Festa pequena, presentes e jantar."],
+  ["Reserva para pets", 4000.00, 900.00, "2026-09-30", :planned, :medium, "Vacinas, consultas e emergências veterinárias."],
+  ["Home office", 5500.00, 2200.00, "2026-07-31", :in_progress, :medium, "Cadeira, mesa, monitor e acessórios."],
+  ["Intercâmbio futuro", 70000.00, 8500.00, "2029-02-28", :planned, :high, "Projeto de longo prazo para curso no exterior."],
+  ["Objetivo concluído de teste", 2500.00, 2500.00, "2026-03-31", :completed, :low, "Registro de exemplo para validar filtros e KPIs futuros."]
+]
+
+financial_goals.each do |description, target_amount, current_amount, due_date, status, priority, notes|
+  financial_goal = FinancialGoal.find_or_initialize_by(description: description)
+
+  financial_goal.assign_attributes(
+    target_amount: target_amount,
+    current_amount: current_amount,
+    due_date: Date.parse(due_date),
+    status: status,
+    priority: priority,
+    notes: notes
+  )
+
+  financial_goal.save!
+end
+
+puts "20 objetivos financeiros criados/atualizados com sucesso!"

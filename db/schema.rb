@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_20_010000) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_21_093000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -73,6 +73,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_20_010000) do
     t.index ["card_id"], name: "index_expenses_on_card_id"
     t.index ["category_id"], name: "index_expenses_on_category_id"
     t.index ["installment_group_id"], name: "index_expenses_on_installment_group_id"
+  end
+
+  create_table "financial_goals", force: :cascade do |t|
+    t.string "description", null: false
+    t.decimal "target_amount", precision: 12, scale: 2, null: false
+    t.date "due_date", null: false
+    t.integer "status", default: 0, null: false
+    t.integer "priority", default: 1, null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.decimal "current_amount", precision: 12, scale: 2, default: "0.0", null: false
+    t.index ["due_date"], name: "index_financial_goals_on_due_date"
+    t.index ["priority"], name: "index_financial_goals_on_priority"
+    t.index ["status"], name: "index_financial_goals_on_status"
   end
 
   create_table "incomes", force: :cascade do |t|

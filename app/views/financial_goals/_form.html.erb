@@ -1,0 +1,60 @@
+<%= form_with model: financial_goal, local: true do |f| %>
+  <% if financial_goal.errors.any? %>
+    <div class="alert alert-danger">
+      <strong>Revise os campos destacados.</strong>
+    </div>
+  <% end %>
+
+  <div class="row mb-3">
+    <div class="col-md-7">
+      <%= f.label :description, "Descricao" %>
+      <%= f.text_field :description, class: "form-control", autofocus: true %>
+    </div>
+
+    <div class="col-md-5">
+      <%= f.label :target_amount, "Valor alvo" %>
+      <%= f.text_field :target_amount,
+            class: "form-control moeda",
+            value: number_to_currency(financial_goal.target_amount || 0, unit: "R$", separator: ",", delimiter: ".") %>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <%= f.label :current_amount, "Valor atual" %>
+      <%= f.text_field :current_amount,
+            class: "form-control moeda",
+            value: number_to_currency(financial_goal.current_amount || 0, unit: "R$", separator: ",", delimiter: ".") %>
+    </div>
+
+    <div class="col-md-4">
+      <%= f.label :due_date, "Data prevista" %>
+      <%= f.date_field :due_date, class: "form-control" %>
+    </div>
+
+    <div class="col-md-2">
+      <%= f.label :status, "Status" %>
+      <%= f.select :status,
+            FinancialGoal.statuses.keys.map { |status| [FinancialGoal::STATUS_LABELS.fetch(status), status] },
+            {},
+            class: "form-select" %>
+    </div>
+
+    <div class="col-md-2">
+      <%= f.label :priority, "Prioridade" %>
+      <%= f.select :priority,
+            FinancialGoal.priorities.keys.map { |priority| [FinancialGoal::PRIORITY_LABELS.fetch(priority), priority] },
+            {},
+            class: "form-select" %>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :notes, "Observacoes" %>
+    <%= f.text_area :notes, class: "form-control", rows: 3 %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.submit "Salvar Objetivo", class: "btn btn-primary" %>
+  </div>
+<% end %>

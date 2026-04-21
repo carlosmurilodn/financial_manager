@@ -1,0 +1,95 @@
+<section class="app-page">
+  <div class="app-page__hero">
+    <div class="app-page__hero-top app-page__hero-top--financial-goals">
+      <div class="app-page__hero-unit app-page__hero-copy">
+        <span class="app-page__hero-icon">
+          <span class="material-symbols-rounded">flag</span>
+        </span>
+        <div>
+          <p class="app-page__eyebrow">Planejamento</p>
+          <h1 class="app-page__title">Objetivos</h1>
+        </div>
+      </div>
+
+      <div class="app-page__hero-kpis">
+        <%= render "hero_kpis" %>
+      </div>
+
+      <div class="app-page__hero-unit">
+        <%= render "shared/app_page_hero_badge" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-panel app-panel--table">
+    <div class="app-list-toolbar">
+      <%= form_with url: financial_goals_path, method: :get, local: true, class: "app-list-toolbar__form" do %>
+        <%= render "shared/per_page_select" %>
+      <% end %>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table app-table app-table--records app-table--index mb-0">
+        <thead>
+          <tr>
+            <th><%= sortable_table_header("Descricao", "description") %></th>
+            <th><%= sortable_table_header("Progresso", "progress") %></th>
+            <th><%= sortable_table_header("Valor atual", "current_amount") %></th>
+            <th><%= sortable_table_header("Valor alvo", "target_amount") %></th>
+            <th>Falta</th>
+            <th>Aporte mensal</th>
+            <th><%= sortable_table_header("Data prevista", "due_date") %></th>
+            <th><%= sortable_table_header("Status", "status") %></th>
+            <th><%= sortable_table_header("Prioridade", "priority") %></th>
+            <th><%= t("tables.expenses.actions") %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @financial_goals.each do |financial_goal| %>
+            <tr id="<%= dom_id(financial_goal) %>">
+              <td><%= financial_goal.description %></td>
+              <td class="text-center">
+                <div class="app-goal-progress" role="img" aria-label="Progresso de <%= financial_goal.description %>: <%= number_to_percentage(financial_goal.progress_percent, precision: 0) %>">
+                  <span class="app-goal-progress__bar" style="width: <%= financial_goal.progress_percent.round(1) %>%;"></span>
+                </div>
+                <small class="app-goal-progress__label"><%= number_to_percentage(financial_goal.progress_percent, precision: 0) %></small>
+              </td>
+              <td class="text-center"><%= number_to_currency(financial_goal.current_amount || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></td>
+              <td class="text-center"><%= number_to_currency(financial_goal.target_amount || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></td>
+              <td class="text-center"><%= number_to_currency(financial_goal.remaining_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></td>
+              <td class="text-center"><%= number_to_currency(financial_goal.monthly_required_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></td>
+              <td class="text-center"><%= financial_goal.due_date.strftime("%d/%m/%Y") %></td>
+              <td class="text-center"><%= financial_goal.status_label %></td>
+              <td class="text-center"><%= financial_goal.priority_label %></td>
+              <td class="app-record-actions text-center">
+                <%= link_to t("buttons.edit"),
+                    edit_financial_goal_path(financial_goal),
+                    class: "btn btn-sm btn-primary app-record-actions__edit me-1",
+                    data: { turbo_frame: "modal" } %>
+                <%= link_to t("buttons.delete"), financial_goal,
+                            data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
+                            class: "btn btn-sm btn-danger app-record-actions__delete" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <%= render "shared/pagination",
+              current_page: @current_page,
+              total_pages: @total_pages,
+              base_params: request.query_parameters.except(:page),
+              aria_label: "Paginacao de objetivos" %>
+  </div>
+</section>
+
+<turbo-frame id="modal" style="display: none;"></turbo-frame>
+
+<div class="modal fade" id="turboModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div id="modal-body" style="min-height: 430px;"></div>
+    </div>
+  </div>
+</div>

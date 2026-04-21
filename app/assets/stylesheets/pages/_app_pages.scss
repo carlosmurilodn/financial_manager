@@ -40,7 +40,8 @@
 }
 
 .app-page__hero-top--cards,
-.app-page__hero-top--categories {
+.app-page__hero-top--categories,
+.app-page__hero-top--financial-goals {
   display: flex;
   align-items: stretch;
 }
@@ -112,7 +113,8 @@
 .app-page__hero-top > .app-page__hero-kpis > .app-expenses-hero-kpis,
 .app-page__hero-top > .app-page__hero-kpis > .app-incomes-hero-kpis,
 .app-page__hero-top > .app-page__hero-kpis > .app-cards-hero-kpis,
-.app-page__hero-top > .app-page__hero-kpis > .app-categories-hero-kpis {
+.app-page__hero-top > .app-page__hero-kpis > .app-categories-hero-kpis,
+.app-page__hero-top > .app-page__hero-kpis > .app-financial-goals-hero-kpis {
   display: contents;
 }
 

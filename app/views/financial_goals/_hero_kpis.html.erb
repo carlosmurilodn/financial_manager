@@ -1,0 +1,68 @@
+<div id="financial-goals-hero-kpis" class="app-financial-goals-hero-kpis">
+  <div class="app-page__hero-unit">
+    <%= link_to new_financial_goal_path,
+                class: "app-expenses-hero-kpis__action",
+                data: { turbo_frame: "modal" } do %>
+      <span class="app-expenses-hero-kpis__action-icon">
+        <span class="material-symbols-rounded">add</span>
+      </span>
+      <span class="app-expenses-hero-kpis__action-copy">
+        <strong>Novo Objetivo</strong>
+      </span>
+    <% end %>
+  </div>
+
+  <div class="app-page__hero-unit">
+    <div class="stat-card stat-card--primary">
+      <div class="stat-card__icon">
+        <span class="material-symbols-rounded">flag</span>
+      </div>
+      <div>
+        <span class="stat-card__label">Objetivos</span>
+        <strong class="stat-card__value"><%= @financial_goals_count || 0 %></strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-page__hero-unit">
+    <div class="stat-card stat-card--success">
+      <div class="stat-card__icon">
+        <span class="material-symbols-rounded">task_alt</span>
+      </div>
+      <div>
+        <span class="stat-card__label">Valor Atual</span>
+        <strong class="stat-card__value">
+          <%= number_to_currency(@financial_goals_current_total || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+        </strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-page__hero-unit">
+    <div class="stat-card stat-card--warning">
+      <div class="stat-card__icon">
+        <span class="material-symbols-rounded">savings</span>
+      </div>
+      <div>
+        <span class="stat-card__label">Meta Total</span>
+        <strong class="stat-card__value">
+          <%= number_to_currency(@financial_goals_target_total || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+        </strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-page__hero-unit">
+    <div class="stat-card stat-card--danger">
+      <div class="stat-card__icon">
+        <span class="material-symbols-rounded">event_upcoming</span>
+      </div>
+      <div>
+        <span class="stat-card__label">Proximo Prazo</span>
+        <strong class="stat-card__value">
+          <%= @financial_goals_nearest_due_date.present? ? @financial_goals_nearest_due_date.strftime("%d/%m/%Y") : "Sem prazo" %>
+        </strong>
+      </div>
+    </div>
+  </div>
+</div>

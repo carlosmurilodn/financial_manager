@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   end
 
   resources :categories
+  resources :financial_goals
 
   resources :cards do
     member do

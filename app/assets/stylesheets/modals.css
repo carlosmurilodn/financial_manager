@@ -55,6 +55,107 @@
   display: none; /* escondido por padrão */
 }
 
+.app-confirm-modal .modal-dialog {
+  width: min(420px, calc(100vw - 32px));
+}
+
+.app-confirm-modal__content {
+  display: grid;
+  gap: 18px;
+  padding: 20px;
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.app-confirm-modal__header {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.app-confirm-modal__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--stat-danger-bg);
+  color: var(--danger);
+  font-size: 1.35rem;
+}
+
+.app-confirm-modal__title {
+  margin: 0 0 6px;
+  color: var(--white) !important;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.app-confirm-modal__message {
+  margin: 0;
+  color: var(--white) !important;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.app-confirm-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.app-confirm-modal__cancel,
+.app-confirm-modal__confirm {
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 800;
+}
+
+.app-confirm-modal__cancel {
+  border: 1px solid var(--card-border);
+  background: var(--primary) !important;
+  color: var(--white) !important;
+}
+
+.app-confirm-modal__confirm {
+  border: 1px solid transparent;
+  background: var(--danger) !important;
+  color: var(--white) !important;
+}
+
+.app-confirm-modal__confirm:hover,
+.app-confirm-modal__confirm:focus-visible {
+  color: #ff0000;
+  filter: brightness(1.03);
+}
+
+.app-goal-progress {
+  width: min(128px, 100%);
+  height: 8px;
+  margin: 0 auto 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.18);
+}
+
+.app-goal-progress__bar {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #35c4a4;
+}
+
+.app-goal-progress__label {
+  display: block;
+  color: var(--text-soft);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
 .expense-modal-rows {
   display: grid;
   gap: 12px;

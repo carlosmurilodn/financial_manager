@@ -87,6 +87,9 @@ html[data-theme="fincan"] {
   --sidebar-width-collapsed: 94px;
   --radius-lg: 10px;
   --radius-md: 10px;
+  --white: #ffffff;
+  --black: #000000;
+  --app-confirm-modal-bg: #495594
 }
 
 html[data-theme="fincan"] h1,
@@ -183,6 +186,7 @@ html[data-theme="night"] {
   --calendar-empty-bg: rgba(255, 255, 255, 0.02);
   --calendar-today-bg: rgba(255, 121, 198, 0.12);
   --calendar-event-bg: rgba(255, 121, 198, 0.9);
+  --app-confirm-modal-bg: rgba(49, 38, 77, 0.96)
 }
 
 

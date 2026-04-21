@@ -39,10 +39,12 @@
         <span class="link-text">Categorias</span>
       <% end %>
 
-      <%= link_to "#", class: "app-nav-link", id: "link-calculator" do %>
-        <span class="material-symbols-rounded app-nav-link__icon">calculate</span>
-        <span class="link-text">Calculadora</span>
+      <%= link_to financial_goals_path, class: "app-nav-link #{'active-menu' if current_page?(financial_goals_path)}", id: "link-financial-goals", data: { turbo: false } do %>
+        <span class="material-symbols-rounded app-nav-link__icon">flag</span>
+        <span class="link-text">Objetivos</span>
       <% end %>
+
+      <!-- Calculadora ocultada temporariamente. -->
 
       <%= link_to reports_path, class: "app-nav-link #{'active-menu' if current_page?(reports_path)}", id: "link-reports", data: { turbo: false } do %>
         <span class="material-symbols-rounded app-nav-link__icon">insert_chart</span>

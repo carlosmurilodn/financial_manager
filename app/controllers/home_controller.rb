@@ -231,7 +231,7 @@ class HomeController < ApplicationController
     ]
 
     goals = FinancialGoal.includes(:category, :financial_goal_resources)
-                         .where(status: active_statuses)
+                         #.where(status: active_statuses)
                          .to_a
 
     @financial_goals_summary = goals.sort_by do |goal|

@@ -1,2 +1,3 @@
 <%= turbo_stream.remove @financial_goal %>
+<%= turbo_stream.remove dom_id(@financial_goal, :details) %>
 <%= turbo_stream.replace "financial-goals-hero-kpis", partial: "hero_kpis" %>

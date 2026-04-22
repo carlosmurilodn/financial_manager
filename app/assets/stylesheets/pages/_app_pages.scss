@@ -591,23 +591,29 @@
 }
 
 .app-filter-grid--financial-goals {
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-columns: repeat(14, minmax(0, 1fr));
 }
 
 .app-filter-grid--financial-goals .app-filter-field:nth-child(1) {
-  grid-column: span 3;
+  grid-column: span 4;
 }
 
 .app-filter-grid--financial-goals .app-filter-field:nth-child(2) {
-  grid-column: span 2;
+  grid-column: span 3;
 }
 
 .app-filter-grid--financial-goals .app-filter-field:nth-child(3) {
-  grid-column: span 1;
+  grid-column: span 2;
 }
 
-.app-filter-grid--financial-goals .app-filter-field:nth-child(4),
-.app-filter-grid--financial-goals .app-filter-field:nth-child(5),
+.app-filter-grid--financial-goals .app-filter-field:nth-child(4) {
+  grid-column: span 2;
+}
+
+.app-filter-grid--financial-goals .app-filter-field:nth-child(5) {
+  grid-column: span 3;
+}
+
 .app-filter-grid--financial-goals .app-filter-field:nth-child(6),
 .app-filter-grid--financial-goals .app-filter-field:nth-child(7),
 .app-filter-grid--financial-goals .app-filter-field:nth-child(8),
@@ -631,7 +637,7 @@
   min-height: 46px;
   border-radius: 10px;
   border-color: var(--table-border-color);
-  background: var(--app-bg-soft);
+  background-color: var(--app-bg-soft);
   color: var(--text-main);
   box-shadow: none;
 }

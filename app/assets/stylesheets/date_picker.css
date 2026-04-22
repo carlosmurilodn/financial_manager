@@ -59,7 +59,7 @@
 }
 
 .datepicker-header select {
-    padding: 4px 6px;
+    padding: 4px 2rem 4px 8px;
     border-radius: 4px;
     border: 1px solid #ccc;
     font-weight: 500;

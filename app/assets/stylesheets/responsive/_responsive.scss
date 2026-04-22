@@ -350,6 +350,27 @@
     overflow: visible;
   }
 
+  .dashboard-card--calendar .dashboard-card__body--calendar,
+  .dashboard-card--calendar .app-calendar-tabs,
+  .dashboard-card--calendar .app-calendar-tabs__content,
+  .dashboard-card--calendar .app-calendar-tabs__pane,
+  .dashboard-card--calendar .app-calendar-agenda {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .dashboard-card--calendar .app-calendar-agenda__list {
+    max-height: 360px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .dashboard-card--calendar .app-calendar-agenda__item {
+    grid-template-columns: 28px 8px minmax(0, 1fr) auto;
+    gap: 7px;
+    padding: 7px 0;
+  }
+
   .app-footer {
     grid-template-columns: 1fr;
     text-align: center;

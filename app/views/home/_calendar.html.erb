@@ -6,100 +6,159 @@
     </div>
   </div>
 
-  <div class="dashboard-card__pill dashboard-card__pill--period dashboard-card__pill--period-full">
-    <%= link_to root_path(month: @month - 1 == 0 ? 12 : @month - 1,
-                  year: @month - 1 == 0 ? @year - 1 : @year),
-        class: "dashboard-card__period-button",
-        aria: { label: "Mês anterior" },
-        data: { turbo_frame: "calendar", turbo_prefetch: "false" } do %>
-      <span class="material-symbols-rounded">chevron_left</span>
-    <% end %>
-
-    <span class="dashboard-card__period-label">
-      <span class="material-symbols-rounded">calendar_month</span>
-      <span><%= I18n.l(Date.new(@year, @month, 1), format: "%B de %Y").sub(/\A./, &:upcase) %></span>
-    </span>
-
-    <%= link_to root_path(month: @month + 1 == 13 ? 1 : @month + 1,
-                  year: @month + 1 == 13 ? @year + 1 : @year),
-        class: "dashboard-card__period-button",
-        aria: { label: "Próximo mês" },
-        data: { turbo_frame: "calendar", turbo_prefetch: "false" } do %>
-      <span class="material-symbols-rounded">chevron_right</span>
-    <% end %>
-  </div>
-
   <div class="dashboard-card__body dashboard-card__body--calendar">
     <turbo-frame id="calendar">
-      <div class="table-responsive app-calendar-table-wrap">
-        <table class="table app-calendar-table align-middle">
-          <thead>
-            <tr>
-              <th>Dom</th>
-              <th>Seg</th>
-              <th>Ter</th>
-              <th>Qua</th>
-              <th>Qui</th>
-              <th>Sex</th>
-              <th>Sab</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @calendar_weeks.each do |week| %>
-              <tr>
-                <% week.each do |date| %>
-                  <% if date.nil? || date.month != @month %>
-                    <td class="app-calendar-table__empty"></td>
-                  <% else %>
-                    <% daily_items = @daily_calendar_items[date] || { incomes: [], expenses: [] } %>
-                    <% has_incomes = daily_items[:incomes].any? %>
-                    <% has_expenses = daily_items[:expenses].any? %>
-                    <% day_class = date.wday == 0 ? "text-danger" : "" %>
-                    <% td_classes = ["app-calendar-table__day"] %>
-                    <% td_classes << "app-calendar-table__day--today" if date == Date.current %>
-                    <% td_classes << "app-calendar-table__day--has-events" if has_incomes || has_expenses %>
+      <div class="dashboard-card__pill dashboard-card__pill--period dashboard-card__pill--period-full">
+        <%= link_to root_path(month: @month - 1 == 0 ? 12 : @month - 1,
+                      year: @month - 1 == 0 ? @year - 1 : @year),
+            class: "dashboard-card__period-button",
+            aria: { label: "Mês anterior" },
+            data: { turbo_frame: "calendar", turbo_prefetch: "false" } do %>
+          <span class="material-symbols-rounded">chevron_left</span>
+        <% end %>
 
-                    <td class="<%= td_classes.join(" ") %>">
-                      <div class="app-calendar-table__date <%= day_class %>"><%= date.day %></div>
+        <span class="dashboard-card__period-label">
+          <span class="material-symbols-rounded">calendar_month</span>
+          <span><%= I18n.l(Date.new(@year, @month, 1), format: "%B de %Y").sub(/\A./, &:upcase) %></span>
+        </span>
 
-                      <div class="app-calendar-table__markers">
-                        <% if has_incomes %>
-                          <span class="app-calendar-table__marker app-calendar-table__marker--income"></span>
+        <%= link_to root_path(month: @month + 1 == 13 ? 1 : @month + 1,
+                      year: @month + 1 == 13 ? @year + 1 : @year),
+            class: "dashboard-card__period-button",
+            aria: { label: "Próximo mês" },
+            data: { turbo_frame: "calendar", turbo_prefetch: "false" } do %>
+          <span class="material-symbols-rounded">chevron_right</span>
+        <% end %>
+      </div>
+
+      <div class="app-calendar-tabs" data-calendar-tabs>
+        <input class="app-calendar-tabs__radio" type="radio" name="calendar_tab_<%= @month %>_<%= @year %>" id="calendar-tab-calendar-<%= @month %>-<%= @year %>" data-calendar-tab-value="calendar" checked>
+        <input class="app-calendar-tabs__radio" type="radio" name="calendar_tab_<%= @month %>_<%= @year %>" id="calendar-tab-agenda-<%= @month %>-<%= @year %>" data-calendar-tab-value="agenda">
+
+        <div class="app-calendar-tabs__list" role="tablist" aria-label="Alternar visão do calendário">
+          <label class="app-calendar-tabs__button app-calendar-tabs__button--calendar" for="calendar-tab-calendar-<%= @month %>-<%= @year %>" role="tab">
+            <span class="material-symbols-rounded">calendar_month</span>
+            <span>Calendário</span>
+          </label>
+
+          <label class="app-calendar-tabs__button app-calendar-tabs__button--agenda" for="calendar-tab-agenda-<%= @month %>-<%= @year %>" role="tab">
+            <span class="material-symbols-rounded">event_note</span>
+            <span>Agenda</span>
+          </label>
+        </div>
+
+        <div class="app-calendar-tabs__content">
+          <section class="app-calendar-tabs__pane app-calendar-tabs__pane--calendar">
+            <div class="table-responsive app-calendar-table-wrap">
+              <table class="table app-calendar-table align-middle">
+                <thead>
+                  <tr>
+                    <th>Dom</th>
+                    <th>Seg</th>
+                    <th>Ter</th>
+                    <th>Qua</th>
+                    <th>Qui</th>
+                    <th>Sex</th>
+                    <th>Sab</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @calendar_weeks.each do |week| %>
+                    <tr>
+                      <% week.each do |date| %>
+                        <% if date.nil? || date.month != @month %>
+                          <td class="app-calendar-table__empty"></td>
+                        <% else %>
+                          <% daily_items = @daily_calendar_items[date] || { incomes: [], expenses: [] } %>
+                          <% has_incomes = daily_items[:incomes].any? %>
+                          <% has_expenses = daily_items[:expenses].any? %>
+                          <% day_class = date.wday == 0 ? "text-danger" : "" %>
+                          <% td_classes = ["app-calendar-table__day"] %>
+                          <% td_classes << "app-calendar-table__day--today" if date == Date.current %>
+                          <% td_classes << "app-calendar-table__day--has-events" if has_incomes || has_expenses %>
+
+                          <td class="<%= td_classes.join(" ") %>">
+                            <div class="app-calendar-table__date <%= day_class %>"><%= date.day %></div>
+
+                            <div class="app-calendar-table__markers">
+                              <% if has_incomes %>
+                                <span class="app-calendar-table__marker app-calendar-table__marker--income"></span>
+                              <% end %>
+
+                              <% if has_expenses %>
+                                <span class="app-calendar-table__marker app-calendar-table__marker--expense"></span>
+                              <% end %>
+                            </div>
+
+                            <% if has_incomes || has_expenses %>
+                              <div class="app-calendar-tooltip" role="tooltip">
+                                <% daily_items[:incomes].each do |item| %>
+                                  <div class="app-calendar-tooltip__item">
+                                    <span class="app-calendar-tooltip__description"><%= item[:description] %></span>
+                                    <strong class="app-calendar-tooltip__value app-calendar-tooltip__value--income">
+                                      <%= number_to_currency(item[:amount], unit: "R$ ", separator: ",", delimiter: ".") %>
+                                    </strong>
+                                  </div>
+                                <% end %>
+
+                                <% daily_items[:expenses].each do |item| %>
+                                  <div class="app-calendar-tooltip__item">
+                                    <span class="app-calendar-tooltip__description"><%= item[:description] %></span>
+                                    <strong class="app-calendar-tooltip__value app-calendar-tooltip__value--expense">
+                                      <%= number_to_currency(item[:amount], unit: "R$ ", separator: ",", delimiter: ".") %>
+                                    </strong>
+                                  </div>
+                                <% end %>
+                              </div>
+                            <% end %>
+                          </td>
                         <% end %>
+                      <% end %>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </section>
 
-                        <% if has_expenses %>
-                          <span class="app-calendar-table__marker app-calendar-table__marker--expense"></span>
-                        <% end %>
+          <section class="app-calendar-tabs__pane app-calendar-tabs__pane--agenda">
+            <div class="app-calendar-agenda">
+              <div class="app-calendar-agenda__header">
+                <strong>Agenda do Mês</strong>
+                <small>Entradas e saídas em ordem cronológica</small>
+              </div>
+
+              <div class="app-calendar-agenda__list">
+                <% if @monthly_agenda_items.any? %>
+                  <% @monthly_agenda_items.each do |item| %>
+                    <% month_abbr = I18n.t("date.month_names")[item[:date].month].to_s.first(3) %>
+                    <article class="app-calendar-agenda__item">
+                      <div class="app-calendar-agenda__date">
+                        <strong><%= item[:date].strftime("%d") %></strong>
+                        <span><%= month_abbr %></span>
                       </div>
 
-                      <% if has_incomes || has_expenses %>
-                        <div class="app-calendar-tooltip" role="tooltip">
-                          <% daily_items[:incomes].each do |item| %>
-                            <div class="app-calendar-tooltip__item">
-                              <span class="app-calendar-tooltip__description"><%= item[:description] %></span>
-                              <strong class="app-calendar-tooltip__value app-calendar-tooltip__value--income">
-                                <%= number_to_currency(item[:amount], unit: "R$ ", separator: ",", delimiter: ".") %>
-                              </strong>
-                            </div>
-                          <% end %>
+                      <span class="app-calendar-agenda__dot <%= item[:type] == :income ? 'app-calendar-agenda__dot--income' : 'app-calendar-agenda__dot--expense' %>"></span>
 
-                          <% daily_items[:expenses].each do |item| %>
-                            <div class="app-calendar-tooltip__item">
-                              <span class="app-calendar-tooltip__description"><%= item[:description] %></span>
-                              <strong class="app-calendar-tooltip__value app-calendar-tooltip__value--expense">
-                                <%= number_to_currency(item[:amount], unit: "R$ ", separator: ",", delimiter: ".") %>
-                              </strong>
-                            </div>
-                          <% end %>
-                        </div>
-                      <% end %>
-                    </td>
+                      <div class="app-calendar-agenda__content">
+                        <span class="app-calendar-agenda__type">
+                          <%= item[:type] == :income ? "Receita" : "Despesa" %>
+                        </span>
+                        <strong class="app-calendar-agenda__description"><%= item[:description] %></strong>
+                      </div>
+
+                      <strong class="app-calendar-agenda__value <%= item[:type] == :income ? 'app-calendar-agenda__value--income' : 'app-calendar-agenda__value--expense' %>">
+                        <%= number_to_currency(item[:amount], unit: "R$ ", separator: ",", delimiter: ".") %>
+                      </strong>
+                    </article>
                   <% end %>
+                <% else %>
+                  <p class="app-calendar-agenda__empty">Nenhuma movimentação registrada neste mês.</p>
                 <% end %>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
     </turbo-frame>
   </div>

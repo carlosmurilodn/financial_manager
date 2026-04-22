@@ -25,7 +25,7 @@
     <%= form_with url: financial_goals_path, method: :get, local: true, class: "app-filter-form" do |f| %>
       <div class="app-filter-grid app-filter-grid--financial-goals">
         <div class="app-filter-field">
-          <%= f.label :description, "Descrição do Objetivo" %>
+          <%= f.label :description, "Descrição" %>
           <%= f.text_field :description, value: @description_filter, class: "form-control", placeholder: "Buscar objetivo..." %>
         </div>
 
@@ -38,7 +38,7 @@
         </div>
 
         <div class="app-filter-field">
-          <%= f.label :progress_min, "Progresso Mínimo" %>
+          <%= f.label :progress_min, "Progresso" %>
           <%= f.number_field :progress_min, value: @progress_min_filter, class: "form-control", min: 0, max: 100, step: 1, placeholder: "%" %>
         </div>
 
@@ -59,37 +59,37 @@
         </div>
 
         <div class="app-filter-field">
-          <%= f.label :due_until, "Data Prevista Até" %>
+          <%= f.label :due_until, "Data Prevista" %>
           <%= f.date_field :due_until, value: @due_until_filter, class: "form-control" %>
         </div>
 
         <div class="app-filter-field">
-          <%= f.label :current_amount_min, "Valor Atual Mínimo" %>
+          <%= f.label :current_amount_min, "Valor Atual" %>
           <%= f.text_field :current_amount_min, value: @current_amount_min_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
         </div>
 
         <div class="app-filter-field">
-          <%= f.label :target_amount_min, "Valor Alvo Mínimo" %>
+          <%= f.label :target_amount_min, "Valor Alvo" %>
           <%= f.text_field :target_amount_min, value: @target_amount_min_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
         </div>
 
         <div class="app-filter-field">
-          <%= f.label :credit_amount_min, "Credito Mínimo" %>
+          <%= f.label :credit_amount_min, "Crédito" %>
           <%= f.text_field :credit_amount_min, value: @credit_amount_min_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
         </div>
 
         <div class="app-filter-field">
-          <%= f.label :potential_amount_min, "Total Potencial Mínimo" %>
+          <%= f.label :potential_amount_min, "Total" %>
           <%= f.text_field :potential_amount_min, value: @potential_amount_min_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
         </div>
 
         <div class="app-filter-field">
-          <%= f.label :remaining_amount_max, "Falta Máxima" %>
+          <%= f.label :remaining_amount_max, "Falta" %>
           <%= f.text_field :remaining_amount_max, value: @remaining_amount_max_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
         </div>
 
         <div class="app-filter-field">
-          <%= f.label :monthly_amount_max, "Aporte Mensal Máximo" %>
+          <%= f.label :monthly_amount_max, "Aporte" %>
           <%= f.text_field :monthly_amount_max, value: @monthly_amount_max_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
         </div>
 
@@ -156,7 +156,7 @@
                             class: "btn btn-sm btn-danger app-record-actions__delete" %>
               </td>
             </tr>
-            <tr class="app-financial-goal-row app-financial-goal-row--details">
+            <tr id="<%= dom_id(financial_goal, :details) %>" class="app-financial-goal-row app-financial-goal-row--details">
               <td colspan="7">
                 <div class="app-financial-goal-metrics">
                   <span>

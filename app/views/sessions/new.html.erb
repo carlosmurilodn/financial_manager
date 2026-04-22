@@ -1,0 +1,82 @@
+<% remembered_email = @remembered_passkey_email.to_s %>
+<% prefer_passkey = @prefer_passkey %>
+<% show_passkey_login = @show_passkey_login %>
+<% remembered_name = @remembered_passkey_name.presence || "Carlos Murilo Duarte Novais" %>
+
+<section class="app-page-hero">
+  <div>
+    <span class="app-page-hero__eyebrow">Acesso seguro</span>
+    <h1><%= prefer_passkey ? "Bem-vindo, #{remembered_name}" : "Entrar" %></h1>
+    <p>
+      <% if prefer_passkey %>
+        Confirme sua digital para acessar o Gerenciador Financeiro.
+      <% elsif show_passkey_login %>
+        Use sua senha no primeiro acesso. Depois, entre com biometria, rosto ou bloqueio de tela usando passkey.
+      <% else %>
+        Use sua senha para acessar pelo computador.
+      <% end %>
+    </p>
+  </div>
+</section>
+
+<section class="dashboard-grid" <%= "data-passkey-login" if show_passkey_login %>>
+  <article class="dashboard-card <%= prefer_passkey ? "dashboard-card--lavender order-2" : "dashboard-card--mint order-1" %>">
+    <div class="dashboard-card__header">
+      <div>
+        <h2 class="dashboard-card__title">Senha</h2>
+        <p class="text-muted mb-0">
+          <%= prefer_passkey ? "Use se preferir entrar sem a passkey." : "Entrada tradicional para liberar a conta." %>
+        </p>
+      </div>
+      <span class="material-symbols-rounded">password</span>
+    </div>
+
+    <div class="dashboard-card__body">
+      <%= form_with url: login_path, data: { turbo: false }, class: "d-grid gap-3" do |form| %>
+        <div>
+          <%= form.label :email, "E-mail", class: "form-label" %>
+          <%= form.email_field :email, value: remembered_email, class: "form-control", autocomplete: "email", required: true, data: { passkey_email: true } %>
+        </div>
+
+        <div>
+          <%= form.label :password, "Senha", class: "form-label" %>
+          <%= form.password_field :password, class: "form-control", autocomplete: "current-password", required: true %>
+        </div>
+
+        <button type="submit" class="btn <%= prefer_passkey ? "btn-outline-primary" : "btn-primary" %>">Entrar com senha</button>
+        <%= link_to "Criar nova conta", sign_up_path, class: "btn btn-outline-secondary", data: { turbo: false } %>
+      <% end %>
+    </div>
+  </article>
+
+  <% if show_passkey_login %>
+    <article class="dashboard-card <%= prefer_passkey ? "dashboard-card--mint order-1" : "dashboard-card--lavender order-2" %>">
+      <div class="dashboard-card__header">
+        <div>
+          <h2 class="dashboard-card__title"><%= prefer_passkey ? remembered_name : "Biometria" %></h2>
+          <p class="text-muted mb-0">
+            <%= prefer_passkey ? "Sua passkey esta pronta neste aparelho." : "Disponivel depois que uma passkey for ativada na conta." %>
+          </p>
+        </div>
+        <span class="material-symbols-rounded">fingerprint</span>
+      </div>
+
+      <div class="dashboard-card__body d-grid gap-3">
+        <input id="passkey-login-email" type="hidden" autocomplete="username webauthn" value="<%= remembered_email %>" data-passkey-login-email>
+
+        <button type="button" class="btn <%= prefer_passkey ? "btn-primary" : "btn-outline-primary" %> btn-lg py-4 fs-5 d-flex align-items-center justify-content-center gap-2" data-passkey-login-button>
+          <span class="material-symbols-rounded">fingerprint</span>
+          Entrar com a digital
+        </button>
+
+        <div class="alert alert-secondary mb-0" data-passkey-login-status>
+          <% if prefer_passkey %>
+            Toque no botao acima para confirmar sua identidade neste aparelho.
+          <% else %>
+            Depois de ativar uma passkey, a entrada por digital aparece aqui.
+          <% end %>
+        </div>
+      </div>
+    </article>
+  <% end %>
+</section>

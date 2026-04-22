@@ -66,6 +66,14 @@
             <small class="link-text app-theme-toggle__meta">Trocar tema</small>
           </span>
         </button>
+
+        <%= button_to logout_path, method: :delete, class: "app-theme-toggle", form: { data: { turbo: false } } do %>
+          <span class="material-symbols-rounded app-theme-toggle__icon">logout</span>
+          <span class="app-theme-toggle__copy">
+            <strong class="link-text">Sair</strong>
+            <small class="link-text">Encerrar sessao</small>
+          </span>
+        <% end %>
       </div>
 
       <%# <section class="app-sidebar__weather">

@@ -42,9 +42,9 @@
 
   <%= render "shared/calculator_modal" %>
 
-  <body>
-    <div id="wrapper" class="app-shell">
-      <%= render "shared/sidebar" %>
+  <body data-logged-in="<%= logged_in? ? "true" : "false" %>">
+    <div id="wrapper" class="app-shell <%= "app-shell--guest" unless show_sidebar? %>">
+      <%= render "shared/sidebar" if show_sidebar? %>
 
       <main id="page-content-wrapper" class="app-content">
         <div class="app-content__inner">

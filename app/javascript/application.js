@@ -11,6 +11,7 @@ import "./dashboard_category_items"
 import "./expense_form"
 import "./calendar_tabs"
 import "./passkey_test"
+import "./authentication"
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {

@@ -1,0 +1,41 @@
+<section class="app-page-hero">
+  <div>
+    <span class="app-page-hero__eyebrow">Entrada rapida</span>
+    <h1>Ativar biometria</h1>
+    <p>Crie uma passkey para entrar nas proximas vezes com digital, rosto ou bloqueio de tela do dispositivo.</p>
+  </div>
+</section>
+
+<section class="dashboard-grid" data-passkey-setup>
+  <article class="dashboard-card dashboard-card--mint">
+    <div class="dashboard-card__header">
+      <div>
+        <h2 class="dashboard-card__title">Passkey da conta</h2>
+        <p class="text-muted mb-0"><%= current_user.email %></p>
+      </div>
+      <span class="material-symbols-rounded">passkey</span>
+    </div>
+
+    <div class="dashboard-card__body d-grid gap-3">
+      <% if current_user.passkey_credentials.exists? %>
+        <div class="alert alert-success mb-0">
+          Esta conta ja tem passkey ativa. Voce pode criar outra para este dispositivo se quiser.
+        </div>
+      <% else %>
+        <div class="alert alert-info mb-0">
+          Depois de ativar, feche o app e abra novamente para testar o login por biometria.
+        </div>
+      <% end %>
+
+      <button type="button" class="btn btn-primary" data-passkey-register-account>
+        Ativar biometria neste dispositivo
+      </button>
+
+      <%= link_to "Agora nao", root_path, class: "btn btn-outline-secondary", data: { turbo: false } %>
+
+      <div class="alert alert-secondary mb-0" data-passkey-setup-status>
+        Aguardando ativacao.
+      </div>
+    </div>
+  </article>
+</section>

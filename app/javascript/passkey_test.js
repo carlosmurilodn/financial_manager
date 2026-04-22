@@ -137,24 +137,51 @@ const clearCredential = (root) => {
   setStatus(root, "Teste local limpo. A passkey pode continuar no gerenciador do aparelho.", "secondary")
 }
 
-const bindPasskeyTest = (root) => {
-  root.querySelector("[data-passkey-check]")?.addEventListener("click", () => {
-    checkSupport(root).catch((error) => setStatus(root, error.message, "danger"))
-  })
+const passkeyRootFor = (target) => target.closest("[data-passkey-test]")
 
-  root.querySelector("[data-passkey-register]")?.addEventListener("click", () => {
-    registerCredential(root).catch((error) => setStatus(root, error.message, "danger"))
-  })
+const markPasskeyTestAsReady = () => {
+  document.querySelectorAll("[data-passkey-test]").forEach((root) => {
+    if (root.dataset.passkeyReady === "true") return
 
-  root.querySelector("[data-passkey-authenticate]")?.addEventListener("click", () => {
-    authenticateCredential(root).catch((error) => setStatus(root, error.message, "danger"))
-  })
-
-  root.querySelector("[data-passkey-clear]")?.addEventListener("click", () => {
-    clearCredential(root)
+    root.dataset.passkeyReady = "true"
+    setStatus(root, "Teste carregado. Toque em Verificar suporte para iniciar.", "info")
   })
 }
 
-document.addEventListener("turbo:load", () => {
-  document.querySelectorAll("[data-passkey-test]").forEach(bindPasskeyTest)
-})
+const handlePasskeyClick = (event) => {
+  const button = event.target.closest(
+    "[data-passkey-check], [data-passkey-register], [data-passkey-authenticate], [data-passkey-clear]"
+  )
+
+  if (!button) return
+
+  const root = passkeyRootFor(button)
+  if (!root) return
+
+  event.preventDefault()
+
+  if (button.matches("[data-passkey-check]")) {
+    checkSupport(root).catch((error) => setStatus(root, error.message, "danger"))
+    return
+  }
+
+  if (button.matches("[data-passkey-register]")) {
+    registerCredential(root).catch((error) => setStatus(root, error.message, "danger"))
+    return
+  }
+
+  if (button.matches("[data-passkey-authenticate]")) {
+    authenticateCredential(root).catch((error) => setStatus(root, error.message, "danger"))
+    return
+  }
+
+  clearCredential(root)
+}
+
+document.addEventListener("click", handlePasskeyClick)
+document.addEventListener("turbo:load", markPasskeyTestAsReady)
+document.addEventListener("DOMContentLoaded", markPasskeyTestAsReady)
+
+if (document.readyState !== "loading") {
+  markPasskeyTestAsReady()
+}

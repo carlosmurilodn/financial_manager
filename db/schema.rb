@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_21_101500) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_22_112100) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -120,6 +120,29 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_21_101500) do
     t.index ["category_id"], name: "index_incomes_on_category_id"
   end
 
+  create_table "passkey_credentials", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "webauthn_id", null: false
+    t.text "public_key", null: false
+    t.integer "sign_count", default: 0, null: false
+    t.string "nickname"
+    t.datetime "last_used_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_passkey_credentials_on_user_id"
+    t.index ["webauthn_id"], name: "index_passkey_credentials_on_webauthn_id", unique: true
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email", null: false
+    t.string "password_digest", null: false
+    t.string "webauthn_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["webauthn_id"], name: "index_users_on_webauthn_id", unique: true
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "expenses", "cards"
@@ -127,4 +150,5 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_21_101500) do
   add_foreign_key "financial_goal_resources", "financial_goals"
   add_foreign_key "financial_goals", "categories"
   add_foreign_key "incomes", "categories"
+  add_foreign_key "passkey_credentials", "users"
 end

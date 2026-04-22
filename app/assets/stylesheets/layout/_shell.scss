@@ -291,6 +291,21 @@
   transition: margin-left 0.3s ease;
 }
 
+.app-shell--guest {
+  display: block;
+}
+
+.app-shell--guest .app-content {
+  min-height: 100vh;
+  margin-left: 0;
+}
+
+.app-shell--guest .app-content__inner {
+  width: min(100%, 980px);
+  margin: 0 auto;
+  padding: 24px 18px 28px;
+}
+
 .app-content__inner {
   padding: 18px 28px 28px;
 }

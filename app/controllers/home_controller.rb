@@ -9,6 +9,7 @@ class HomeController < ApplicationController
     set_recent_expenses
     prepare_calendar_data
     set_forecast_data
+    set_financial_goals_data
     @recent_incomes = Income.includes(:category).where(balance_month: @mes_atual).order(date: :desc)
   end
 
@@ -221,5 +222,33 @@ class HomeController < ApplicationController
   def set_forecast_data
     @months = (1..12).to_a
     @forecast_data = FinancialForecast.for_year(@year)
+  end
+
+  def set_financial_goals_data
+    active_statuses = [
+      FinancialGoal.statuses[:in_progress],
+      FinancialGoal.statuses[:planned]
+    ]
+
+    goals = FinancialGoal.includes(:category, :financial_goal_resources)
+                         .where(status: active_statuses)
+                         .to_a
+
+    @financial_goals_summary = goals.sort_by do |goal|
+      [
+        -goal.progress_percent,
+        goal.remaining_amount,
+        -goal.priority_before_type_cast.to_i,
+        goal.due_date || Date.new(9999, 12, 31),
+        goal.description.to_s
+      ]
+    end.first(4)
+
+    @financial_goals_total_remaining = goals.sum(&:remaining_amount)
+    @financial_goals_average_progress = if goals.any?
+      goals.sum(&:progress_percent) / goals.size
+    else
+      0
+    end
   end
 end

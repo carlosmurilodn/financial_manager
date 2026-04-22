@@ -590,6 +590,34 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.app-filter-grid--financial-goals {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.app-filter-grid--financial-goals .app-filter-field:nth-child(1) {
+  grid-column: span 3;
+}
+
+.app-filter-grid--financial-goals .app-filter-field:nth-child(2) {
+  grid-column: span 2;
+}
+
+.app-filter-grid--financial-goals .app-filter-field:nth-child(3) {
+  grid-column: span 1;
+}
+
+.app-filter-grid--financial-goals .app-filter-field:nth-child(4),
+.app-filter-grid--financial-goals .app-filter-field:nth-child(5),
+.app-filter-grid--financial-goals .app-filter-field:nth-child(6),
+.app-filter-grid--financial-goals .app-filter-field:nth-child(7),
+.app-filter-grid--financial-goals .app-filter-field:nth-child(8),
+.app-filter-grid--financial-goals .app-filter-field:nth-child(9),
+.app-filter-grid--financial-goals .app-filter-field:nth-child(10),
+.app-filter-grid--financial-goals .app-filter-field:nth-child(11),
+.app-filter-grid--financial-goals .app-filter-field:nth-child(12) {
+  grid-column: span 2;
+}
+
 .app-filter-field label {
   display: block;
   margin-bottom: 6px;

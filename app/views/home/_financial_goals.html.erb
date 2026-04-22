@@ -1,0 +1,79 @@
+<div class="dashboard-card dashboard-card--chart dashboard-card--goals">
+  <div class="dashboard-card__header">
+    <div>
+      <p class="dashboard-card__eyebrow">Planejamento</p>
+      <h2 class="dashboard-card__title">Objetivos</h2>
+    </div>
+
+    <%= link_to financial_goals_path, class: "dashboard-card__pill dashboard-card__pill--goals text-decoration-none" do %>
+      <span class="material-symbols-rounded">flag</span>
+      <span>Ver todos</span>
+    <% end %>
+  </div>
+
+  <div class="dashboard-card__body dashboard-card__body--goals">
+    <% if @financial_goals_summary.any? %>
+      <div class="dashboard-goals-overview">
+        <div class="dashboard-goals-overview__metric">
+          <small>Progresso medio</small>
+          <strong><%= number_to_percentage(@financial_goals_average_progress, precision: 0) %></strong>
+        </div>
+        <div class="dashboard-goals-overview__metric">
+          <small>Total faltante</small>
+          <strong><%= number_to_currency(@financial_goals_total_remaining, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong>
+        </div>
+      </div>
+
+      <div class="dashboard-goals-list">
+        <% @financial_goals_summary.each do |goal| %>
+          <% days_remaining = (goal.due_date - Date.current).to_i if goal.due_date.present? %>
+
+          <article class="dashboard-goal-item dashboard-goal-item--<%= goal.status %>">
+            <div class="dashboard-goal-item__header">
+              <div class="dashboard-goal-item__identity">
+                <span class="material-symbols-rounded dashboard-goal-item__category-icon"><%= goal.category&.material_icon || "flag" %></span>
+                <div>
+                  <strong><%= goal.description %></strong>
+                  <small>
+                    <%= goal.category&.display_name || "Sem categoria" %>
+                    · <%= goal.priority_label %>
+                    <% if days_remaining.present? %>
+                      · <%= days_remaining.negative? ? "Atrasado" : "#{days_remaining} dias" %>
+                    <% end %>
+                  </small>
+                </div>
+              </div>
+              <span><%= number_to_percentage(goal.progress_percent, precision: 0) %></span>
+            </div>
+
+            <div class="dashboard-goal-item__progress" aria-label="<%= goal.description %>: <%= number_to_percentage(goal.progress_percent, precision: 0) %> concluido">
+              <span style="width: <%= goal.progress_percent.round(1) %>%;"></span>
+            </div>
+
+            <div class="dashboard-goal-item__values">
+              <span>
+                <small>Atual</small>
+                <strong><%= number_to_currency(goal.progress_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong>
+              </span>
+              <span>
+                <small>Meta</small>
+                <strong><%= number_to_currency(goal.target_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong>
+              </span>
+              <span>
+                <small>Falta</small>
+                <strong><%= number_to_currency(goal.remaining_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong>
+              </span>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="dashboard-empty-state">
+        <span class="material-symbols-rounded">flag</span>
+        <strong>Nenhum objetivo ativo</strong>
+        <small>Cadastre objetivos para acompanhar metas e recursos no dashboard.</small>
+        <%= link_to "Ver objetivos", financial_goals_path, class: "btn btn-sm btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

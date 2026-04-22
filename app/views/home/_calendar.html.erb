@@ -1,45 +1,37 @@
 <div class="dashboard-card dashboard-card--calendar">
   <div class="dashboard-card__header">
     <div>
-      <p class="dashboard-card__eyebrow">Agenda</p>
-      <h2 class="dashboard-card__title">Calendario Financeiro</h2>
-    </div>
-
-    <div class="dashboard-card__pill">
-      <span class="material-symbols-rounded">calendar_month</span>
-      <span>Visão Mensal</span>
+      <p class="dashboard-card__eyebrow">Calendário</p>
+      <h2 class="dashboard-card__title">Calendário Financeiro</h2>
     </div>
   </div>
 
-  <div class="dashboard-card__body">
+  <div class="dashboard-card__pill dashboard-card__pill--period dashboard-card__pill--period-full">
+    <%= link_to root_path(month: @month - 1 == 0 ? 12 : @month - 1,
+                  year: @month - 1 == 0 ? @year - 1 : @year),
+        class: "dashboard-card__period-button",
+        aria: { label: "Mês anterior" },
+        data: { turbo_frame: "calendar", turbo_prefetch: "false" } do %>
+      <span class="material-symbols-rounded">chevron_left</span>
+    <% end %>
+
+    <span class="dashboard-card__period-label">
+      <span class="material-symbols-rounded">calendar_month</span>
+      <span><%= I18n.l(Date.new(@year, @month, 1), format: "%B de %Y").sub(/\A./, &:upcase) %></span>
+    </span>
+
+    <%= link_to root_path(month: @month + 1 == 13 ? 1 : @month + 1,
+                  year: @month + 1 == 13 ? @year + 1 : @year),
+        class: "dashboard-card__period-button",
+        aria: { label: "Próximo mês" },
+        data: { turbo_frame: "calendar", turbo_prefetch: "false" } do %>
+      <span class="material-symbols-rounded">chevron_right</span>
+    <% end %>
+  </div>
+
+  <div class="dashboard-card__body dashboard-card__body--calendar">
     <turbo-frame id="calendar">
-      <div class="dashboard-toolbar app-calendar__nav">
-        <div class="dashboard-toolbar__actions">
-          <%= link_to root_path(month: @month - 1 == 0 ? 12 : @month - 1,
-                        year: @month - 1 == 0 ? @year - 1 : @year),
-              class: "btn app-btn app-btn--ghost app-calendar__nav-btn",
-              aria: { label: "Mês anterior" },
-              data: { turbo_frame: "calendar", turbo_prefetch: "false" } do %>
-            <span class="material-symbols-rounded">chevron_left</span>
-          <% end %>
-        </div>
-
-        <h4 class="mb-0 fw-bold app-calendar__title">
-          <%= I18n.l(Date.new(@year, @month, 1), format: "%B de %Y").sub(/\A./, &:upcase) %>
-        </h4>
-
-        <div class="dashboard-toolbar__actions">
-          <%= link_to root_path(month: @month + 1 == 13 ? 1 : @month + 1,
-                        year: @month + 1 == 13 ? @year + 1 : @year),
-              class: "btn app-btn app-btn--ghost app-calendar__nav-btn",
-              aria: { label: "Próximo mês" },
-              data: { turbo_frame: "calendar", turbo_prefetch: "false" } do %>
-            <span class="material-symbols-rounded">chevron_right</span>
-          <% end %>
-        </div>
-      </div>
-
-      <div class="table-responsive">
+      <div class="table-responsive app-calendar-table-wrap">
         <table class="table app-calendar-table align-middle">
           <thead>
             <tr>
@@ -109,42 +101,6 @@
           </tbody>
         </table>
       </div>
-
-      <section class="app-calendar-agenda">
-        <div class="app-calendar-agenda__header">
-          <strong>Agenda do Mes</strong>
-          <small>Entradas e saidas em ordem cronologica</small>
-        </div>
-
-        <div class="app-calendar-agenda__list">
-          <% if @monthly_agenda_items.any? %>
-            <% @monthly_agenda_items.each do |item| %>
-              <% month_abbr = I18n.t("date.month_names")[item[:date].month].to_s.first(3) %>
-              <article class="app-calendar-agenda__item">
-                <div class="app-calendar-agenda__date">
-                  <strong><%= item[:date].strftime("%d") %></strong>
-                  <span><%= month_abbr %></span>
-                </div>
-
-                <span class="app-calendar-agenda__dot <%= item[:type] == :income ? 'app-calendar-agenda__dot--income' : 'app-calendar-agenda__dot--expense' %>"></span>
-
-                <div class="app-calendar-agenda__content">
-                  <span class="app-calendar-agenda__type">
-                    <%= item[:type] == :income ? "Receita" : "Despesa" %>
-                  </span>
-                  <strong class="app-calendar-agenda__description"><%= item[:description] %></strong>
-                </div>
-
-                <strong class="app-calendar-agenda__value <%= item[:type] == :income ? 'app-calendar-agenda__value--income' : 'app-calendar-agenda__value--expense' %>">
-                  <%= number_to_currency(item[:amount], unit: "R$ ", separator: ",", delimiter: ".") %>
-                </strong>
-              </article>
-            <% end %>
-          <% else %>
-            <p class="app-calendar-agenda__empty">Nenhuma movimentacao registrada neste mes.</p>
-          <% end %>
-        </div>
-      </section>
     </turbo-frame>
   </div>
 </div>

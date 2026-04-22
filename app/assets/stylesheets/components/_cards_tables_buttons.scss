@@ -68,6 +68,15 @@
   padding: 6px;
 }
 
+.dashboard-card__pill--period-full {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 34px;
+  width: 100%;
+  margin-top: 12px;
+  background: var(--pill-bg);
+  color: var(--text-main);
+}
+
 .dashboard-card__period-label,
 .dashboard-card__period-button {
   display: inline-flex;
@@ -75,9 +84,16 @@
 }
 
 .dashboard-card__period-label {
+  justify-content: center;
   gap: 8px;
   padding: 4px 6px;
   white-space: nowrap;
+  min-width: 0;
+}
+
+.dashboard-card__period-label > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .dashboard-card__period-button {
@@ -96,6 +112,14 @@
 .dashboard-card__period-button:hover {
   background: var(--hero-badge-icon-bg);
   color: var(--nav-active-icon-color);
+}
+
+.dashboard-card__pill--period-full .dashboard-card__period-label {
+  color: var(--text-main);
+}
+
+.dashboard-card__pill--period-full .dashboard-card__period-label .material-symbols-rounded {
+  color: var(--text-main);
 }
 
 .dashboard-card__period-button .material-symbols-rounded {
@@ -138,6 +162,31 @@
 
 .app-table tbody tr :first-child {
   text-align: center;
+}
+
+select,
+.form-select {
+  appearance: none;
+  padding-right: 2.55rem;
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10L12 15L17 10' stroke='%237f8da5' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.85rem center !important;
+  background-size: 1.1rem 1.1rem !important;
+}
+
+select:focus,
+.form-select:focus {
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10L12 15L17 10' stroke='%235670e4' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+}
+
+html[data-theme="night"] select,
+html[data-theme="night"] .form-select {
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10L12 15L17 10' stroke='%23988bc7' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+}
+
+html[data-theme="night"] select:focus,
+html[data-theme="night"] .form-select:focus {
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10L12 15L17 10' stroke='%23ff79c6' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
 }
 
 .app-table thead th:first-child {

@@ -69,4 +69,28 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_operator response.body.index("Large Limit Card"), :<, response.body.index("Medium Limit Card")
     assert_operator response.body.index("Medium Limit Card"), :<, response.body.index("Small Limit Card")
   end
+
+  test "shows active financial goals summary on dashboard" do
+    FinancialGoal.delete_all
+    category = Category.create!(name: "Cursos")
+
+    FinancialGoal.create!(
+      description: "Entrada do imovel",
+      target_amount: 50_000,
+      current_amount: 15_000,
+      category: category,
+      due_date: Date.current.next_year,
+      status: :in_progress,
+      priority: :high
+    )
+
+    get root_url
+
+    assert_response :success
+    assert_includes response.body, "Objetivos"
+    assert_includes response.body, "Entrada do imovel"
+    assert_includes response.body, "Progresso medio"
+    assert_includes response.body, "Cursos"
+    assert_includes response.body, "menu_book"
+  end
 end

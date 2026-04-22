@@ -5,25 +5,25 @@
       <p class="dashboard-card__eyebrow">Cartoes</p>
       <h2 class="dashboard-card__title">Saldo Acumulado por Cartão</h2>
     </div>
+  </div>
 
-    <div class="dashboard-card__pill dashboard-card__pill--period">
-      <%= link_to root_path(card_month: @previous_card_balance_date.month, card_year: @previous_card_balance_date.year),
-                  class: "dashboard-card__period-button",
-                  aria: { label: "Mês anterior" },
-                  data: { turbo_frame: "card-balance-summary", turbo_prefetch: "false" } do %>
-        <span class="material-symbols-rounded">chevron_left</span>
-      <% end %>
-      <span class="dashboard-card__period-label">
-        <span class="material-symbols-rounded">credit_card</span>
-        <span><%= I18n.l(@card_balance_date, format: "%B de %Y") %></span>
-      </span>
-      <%= link_to root_path(card_month: @next_card_balance_date.month, card_year: @next_card_balance_date.year),
-                  class: "dashboard-card__period-button",
-                  aria: { label: "Próximo mês" },
-                  data: { turbo_frame: "card-balance-summary", turbo_prefetch: "false" } do %>
-        <span class="material-symbols-rounded">chevron_right</span>
-      <% end %>
-    </div>
+  <div class="dashboard-card__pill dashboard-card__pill--period dashboard-card__pill--period-full">
+    <%= link_to root_path(card_month: @previous_card_balance_date.month, card_year: @previous_card_balance_date.year),
+                class: "dashboard-card__period-button",
+                aria: { label: "Mês anterior" },
+                data: { turbo_frame: "card-balance-summary", turbo_prefetch: "false" } do %>
+      <span class="material-symbols-rounded">chevron_left</span>
+    <% end %>
+    <span class="dashboard-card__period-label">
+      <span class="material-symbols-rounded">credit_card</span>
+      <span><%= I18n.l(@card_balance_date, format: "%B de %Y") %></span>
+    </span>
+    <%= link_to root_path(card_month: @next_card_balance_date.month, card_year: @next_card_balance_date.year),
+                class: "dashboard-card__period-button",
+                aria: { label: "Próximo mês" },
+                data: { turbo_frame: "card-balance-summary", turbo_prefetch: "false" } do %>
+      <span class="material-symbols-rounded">chevron_right</span>
+    <% end %>
   </div>
 
   <div class="dashboard-card__body dashboard-card__body--cards-summary">

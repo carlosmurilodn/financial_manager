@@ -146,7 +146,23 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: #35c4a4;
+  background: var(--stat-primary-icon-bg);
+}
+
+.app-goal-progress--planned .app-goal-progress__bar {
+  background: var(--stat-primary-icon-bg);
+}
+
+.app-goal-progress--in_progress .app-goal-progress__bar {
+  background: var(--stat-warning-icon-bg);
+}
+
+.app-goal-progress--completed .app-goal-progress__bar {
+  background: var(--stat-success-icon-bg);
+}
+
+.app-goal-progress--paused .app-goal-progress__bar {
+  background: var(--stat-danger-icon-bg);
 }
 
 .app-goal-progress__label {
@@ -154,6 +170,159 @@
   color: var(--text-soft);
   font-size: 0.7rem;
   font-weight: 800;
+}
+
+.app-goal-category-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: var(--avatar-bg);
+  color: var(--text-main);
+  font-size: 0.78rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.app-goal-category-pill .material-symbols-rounded {
+  color: var(--nav-active-icon-color);
+  font-size: 1rem;
+}
+
+.app-table--financial-goals .app-financial-goal-row--main > td {
+  border-bottom: 0;
+  vertical-align: middle;
+}
+
+.app-table--financial-goals .app-financial-goal-row--details > td {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.app-financial-goal-row__description {
+  min-width: 150px;
+  color: var(--text-main);
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.app-financial-goal-metrics {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--table-border-color);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.34);
+}
+
+.app-financial-goal-metrics span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.app-financial-goal-metrics small {
+  color: var(--text-soft);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.app-financial-goal-metrics strong {
+  color: var(--text-main);
+  font-size: 0.78rem;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html[data-theme="night"] .app-financial-goal-metrics {
+  background: rgba(149, 128, 255, 0.06);
+}
+
+.app-goal-category-pill--planned {
+  background: var(--stat-primary-bg);
+}
+
+.app-goal-category-pill--planned .material-symbols-rounded {
+  color: var(--stat-primary-icon-bg);
+}
+
+.app-goal-category-pill--in_progress {
+  background: var(--stat-warning-bg);
+}
+
+.app-goal-category-pill--in_progress .material-symbols-rounded {
+  color: var(--stat-warning-icon-bg);
+}
+
+.app-goal-category-pill--completed {
+  background: var(--stat-success-bg);
+}
+
+.app-goal-category-pill--completed .material-symbols-rounded {
+  color: var(--stat-success-icon-bg);
+}
+
+.app-goal-category-pill--paused {
+  background: var(--stat-danger-bg);
+}
+
+.app-goal-category-pill--paused .material-symbols-rounded {
+  color: var(--stat-danger-icon-bg);
+}
+
+.app-goal-resource-form__header {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+
+.app-goal-resource-form__header strong {
+  color: var(--text-main);
+  font-size: 0.9rem;
+}
+
+.app-goal-resource-form__header small {
+  color: var(--text-soft);
+  font-size: 0.75rem;
+}
+
+.app-goal-resource-form__rows {
+  display: grid;
+  gap: 10px;
+}
+
+.app-goal-resource-form__row {
+  display: grid;
+  grid-template-columns: minmax(130px, 0.8fr) minmax(180px, 1.2fr) minmax(180px, 1.2fr) minmax(120px, 0.8fr) auto auto;
+  gap: 10px;
+  align-items: end;
+  padding: 10px;
+  border: 1px solid var(--table-border-color);
+  border-radius: 10px;
+  background: var(--table-surface);
+}
+
+.app-goal-resource-form__row label {
+  margin-bottom: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.app-goal-resource-form__check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 38px;
+}
+
+@media (max-width: 991px) {
+  .app-goal-resource-form__row {
+    grid-template-columns: 1fr;
+  }
 }
 
 .expense-modal-rows {

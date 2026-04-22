@@ -20,27 +20,39 @@
   </div>
 
   <div class="row mb-3">
-    <div class="col-md-4">
+    <div class="col-md-3">
       <%= f.label :current_amount, "Valor atual" %>
       <%= f.text_field :current_amount,
             class: "form-control moeda",
             value: number_to_currency(financial_goal.current_amount || 0, unit: "R$", separator: ",", delimiter: ".") %>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
+      <%= f.label :category_id, "Categoria" %>
+      <%= f.collection_select :category_id,
+            @categories || [],
+            :id,
+            :display_name,
+            { include_blank: "Sem categoria" },
+            class: "form-select" %>
+    </div>
+
+    <div class="col-md-3">
       <%= f.label :due_date, "Data prevista" %>
       <%= f.date_field :due_date, class: "form-control" %>
     </div>
 
-    <div class="col-md-2">
+    <div class="col-md-3">
       <%= f.label :status, "Status" %>
       <%= f.select :status,
             FinancialGoal.statuses.keys.map { |status| [FinancialGoal::STATUS_LABELS.fetch(status), status] },
             {},
             class: "form-select" %>
     </div>
+  </div>
 
-    <div class="col-md-2">
+  <div class="row mb-3">
+    <div class="col-md-3">
       <%= f.label :priority, "Prioridade" %>
       <%= f.select :priority,
             FinancialGoal.priorities.keys.map { |priority| [FinancialGoal::PRIORITY_LABELS.fetch(priority), priority] },
@@ -52,6 +64,61 @@
   <div class="mb-3">
     <%= f.label :notes, "Observacoes" %>
     <%= f.text_area :notes, class: "form-control", rows: 3 %>
+  </div>
+
+  <div class="mb-3">
+    <div class="app-goal-resource-form__header">
+      <strong>Composicao dos Recursos</strong>
+      <small>Recursos proprios e externos contam no progresso. Limite de credito fica separado como potencial.</small>
+    </div>
+
+    <div class="app-goal-resource-form__rows">
+      <%= f.fields_for :financial_goal_resources do |resource_fields| %>
+        <div class="app-goal-resource-form__row">
+          <%= resource_fields.hidden_field :id %>
+
+          <div>
+            <%= resource_fields.label :resource_type, "Tipo" %>
+            <%= resource_fields.select :resource_type,
+                  FinancialGoalResource.resource_types.keys.map { |type| [FinancialGoalResource::RESOURCE_TYPE_LABELS.fetch(type), type] },
+                  {},
+                  class: "form-select" %>
+          </div>
+
+          <div>
+            <%= resource_fields.label :description, "Descricao" %>
+            <%= resource_fields.text_field :description, class: "form-control", placeholder: "Ex.: Conta investimento" %>
+          </div>
+
+          <div>
+            <%= resource_fields.label :source_id, "Cartao vinculado" %>
+            <%= resource_fields.select :source_id,
+                  options_from_collection_for_select(@resource_cards || [], :id, :display_name, resource_fields.object.source_id),
+                  { include_blank: "Sem cartao" },
+                  class: "form-select" %>
+          </div>
+
+          <div>
+            <%= resource_fields.label :amount, "Valor" %>
+            <%= resource_fields.text_field :amount,
+                  class: "form-control moeda",
+                  value: number_to_currency(resource_fields.object.amount || 0, unit: "R$", separator: ",", delimiter: ".") %>
+          </div>
+
+          <div class="app-goal-resource-form__check">
+            <%= resource_fields.check_box :include_in_total, { class: "form-check-input" }, "1", "0" %>
+            <%= resource_fields.label :include_in_total, "Incluir", class: "form-check-label" %>
+          </div>
+
+          <% if resource_fields.object.persisted? %>
+            <div class="app-goal-resource-form__check">
+              <%= resource_fields.check_box :_destroy, class: "form-check-input" %>
+              <%= resource_fields.label :_destroy, "Remover", class: "form-check-label" %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
   </div>
 
   <div class="mb-3">

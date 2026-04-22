@@ -44,149 +44,109 @@
   margin: 0;
 }
 
-.app-calendar-agenda {
-  margin-top: 18px;
-  padding-top: 18px;
-  border-top: 1px solid var(--table-border-color);
-}
-
-.app-calendar-agenda__header {
-  display: grid;
-  gap: 2px;
-  margin-bottom: 14px;
-}
-
-.app-calendar-agenda__header strong {
-  font-size: 0.92rem;
-}
-
-.app-calendar-agenda__header small,
-.app-calendar-agenda__type {
-  color: var(--text-soft);
-}
-
-.app-calendar-agenda__list {
-  display: grid;
-  gap: 10px;
-  max-height: 320px;
-  padding-right: 4px;
+.dashboard-card__body--forecast {
+  min-height: 0;
+  overflow-x: hidden;
   overflow-y: auto;
+  padding-right: 4px;
   scrollbar-color: var(--scrollbar-thumb-color) transparent;
   scrollbar-width: thin;
 }
 
-.app-calendar-agenda__list::-webkit-scrollbar {
-  width: 8px;
+.dashboard-grid--planning .dashboard-card--calendar .dashboard-card__body--calendar {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding-right: 4px;
 }
 
-.app-calendar-agenda__list::-webkit-scrollbar-button {
+.dashboard-grid--planning .dashboard-card--calendar turbo-frame {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.dashboard-card__body--calendar::-webkit-scrollbar,
+.dashboard-card__body--forecast::-webkit-scrollbar,
+.app-forecast__table-wrap::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dashboard-card__body--calendar::-webkit-scrollbar-button,
+.dashboard-card__body--forecast::-webkit-scrollbar-button,
+.app-forecast__table-wrap::-webkit-scrollbar-button {
   display: none;
   width: 0;
   height: 0;
 }
 
-.app-calendar-agenda__list::-webkit-scrollbar-track {
+.dashboard-card__body--calendar::-webkit-scrollbar-track,
+.dashboard-card__body--forecast::-webkit-scrollbar-track,
+.app-forecast__table-wrap::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.app-calendar-agenda__list::-webkit-scrollbar-thumb {
+.dashboard-card__body--calendar::-webkit-scrollbar-thumb,
+.dashboard-card__body--forecast::-webkit-scrollbar-thumb,
+.app-forecast__table-wrap::-webkit-scrollbar-thumb {
   border: 2px solid transparent;
   border-radius: 0;
   background: var(--scrollbar-thumb-color);
   background-clip: padding-box;
 }
 
-.app-calendar-agenda__list::-webkit-scrollbar-thumb:hover {
+.dashboard-card__body--calendar::-webkit-scrollbar-thumb:hover,
+.dashboard-card__body--forecast::-webkit-scrollbar-thumb:hover,
+.app-forecast__table-wrap::-webkit-scrollbar-thumb:hover {
   background: var(--scrollbar-thumb-color);
   background-clip: padding-box;
 }
 
-.app-calendar-agenda__item {
-  display: grid;
-  grid-template-columns: 52px 10px minmax(0, 1fr) auto;
-  align-items: start;
-  gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--table-border-color);
+.dashboard-grid--planning .dashboard-card__body {
+  margin-top: 12px;
 }
 
-.app-calendar-agenda__item:last-child {
-  border-bottom: 0;
+.dashboard-grid--planning .dashboard-toolbar {
+  margin-bottom: 12px;
 }
 
-.app-calendar-agenda__date {
-  display: grid;
-  justify-items: start;
-  gap: 2px;
+.dashboard-grid--planning .app-calendar__title,
+.dashboard-grid--planning .app-forecast__title {
+  font-size: 0.96rem;
 }
 
-.app-calendar-agenda__date strong {
-  font-size: 1rem;
-  line-height: 1;
+.dashboard-grid--planning .app-calendar-table th,
+.dashboard-grid--planning .app-calendar-table td {
+  padding: 0.26rem 0.16rem;
 }
 
-.app-calendar-agenda__date span {
-  color: var(--text-soft);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.dashboard-grid--planning .app-calendar-table__date {
+  font-size: 0.78rem;
 }
 
-.app-calendar-agenda__dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
+.dashboard-grid--planning .dashboard-card--calendar .table-responsive {
+  flex: 1;
+  overflow: visible;
 }
 
-.app-calendar-agenda__dot--income {
-  background: #74c398;
+.dashboard-grid--planning .app-calendar-table-wrap {
+  display: flex;
+  min-height: 0;
 }
 
-.app-calendar-agenda__dot--expense {
-  background: #ec8c97;
+.dashboard-grid--planning .app-calendar-table {
+  height: 100%;
+  margin-bottom: 0;
 }
 
-.app-calendar-agenda__content {
-  display: grid;
-  gap: 3px;
-  min-width: 0;
+.dashboard-grid--planning .app-calendar-table tbody {
+  height: 100%;
 }
 
-.app-calendar-agenda__type {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.app-calendar-agenda__description {
-  color: #6f6a74;
-  font-size: 0.9rem;
-  font-weight: 700;
-  line-height: 1.35;
-  text-wrap-mode: nowrap;
-}
-
-.app-calendar-agenda__value {
-  font-size: 0.9rem;
-  font-weight: 800;
-  white-space: nowrap;
-  align-self: start;
-}
-
-.app-calendar-agenda__value--income {
-  color: #13834b;
-}
-
-.app-calendar-agenda__value--expense {
-  color: #d83f4f;
-}
-
-.app-calendar-agenda__empty {
-  margin: 0;
-  color: var(--text-soft);
-  font-size: 0.88rem;
+.dashboard-grid--planning .app-calendar-table tbody tr {
+  height: calc(100% / 6);
 }
 
 .app-forecast__summary {
@@ -194,6 +154,82 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
   margin-bottom: 18px;
+}
+
+.dashboard-grid--planning .app-forecast__summary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.dashboard-card--forecast .dashboard-card__pill--period-full {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.dashboard-grid--planning .app-forecast__summary-card {
+  gap: 3px;
+  padding: 8px;
+}
+
+.dashboard-grid--planning .app-forecast__summary-label,
+.dashboard-grid--planning .app-forecast__summary-card small,
+.dashboard-grid--planning .app-forecast__summary-card .small {
+  font-size: 0.6rem;
+}
+
+.dashboard-grid--planning .app-forecast__summary-value {
+  font-size: 0.9rem;
+}
+
+.dashboard-grid--planning .app-forecast__summary-card small {
+  font-size: 0.68rem;
+}
+
+.dashboard-grid--planning .app-table--forecast {
+  font-size: 12px;
+}
+
+.dashboard-grid--planning .app-table--forecast > :not(caption) > * > * {
+  padding: 0.38rem 0.28rem;
+  white-space: nowrap;
+}
+
+.dashboard-grid--planning .app-table--forecast thead th {
+  font-size: 0.66rem;
+  letter-spacing: 0.03em;
+}
+
+.dashboard-grid--planning .app-forecast__month-copy {
+  gap: 4px;
+}
+
+.dashboard-grid--planning .app-forecast__month-label,
+.dashboard-grid--planning .app-forecast__saldo,
+.dashboard-grid--planning .app-table--forecast td {
+  white-space: nowrap;
+}
+
+.dashboard-grid--planning .app-forecast__month-label {
+  font-size: 12px;
+}
+
+.dashboard-grid--planning .app-forecast__month-badge {
+  padding: 2px 5px;
+  font-size: 0.58rem;
+}
+
+.dashboard-grid--planning .app-forecast__saldo {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: 12px;
+}
+
+.app-forecast__table-wrap {
+  overflow: visible;
+  scrollbar-color: var(--scrollbar-thumb-color) transparent;
+  scrollbar-width: thin;
 }
 
 .app-forecast__summary-card {

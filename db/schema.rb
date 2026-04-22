@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_21_093000) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_21_101500) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -75,6 +75,22 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_21_093000) do
     t.index ["installment_group_id"], name: "index_expenses_on_installment_group_id"
   end
 
+  create_table "financial_goal_resources", force: :cascade do |t|
+    t.integer "financial_goal_id", null: false
+    t.integer "resource_type", default: 0, null: false
+    t.string "description", null: false
+    t.decimal "amount", precision: 12, scale: 2, default: "0.0", null: false
+    t.boolean "include_in_total", default: true, null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "source_type"
+    t.bigint "source_id"
+    t.index ["financial_goal_id"], name: "index_financial_goal_resources_on_financial_goal_id"
+    t.index ["resource_type"], name: "index_financial_goal_resources_on_resource_type"
+    t.index ["source_type", "source_id"], name: "index_financial_goal_resources_on_source_type_and_source_id"
+  end
+
   create_table "financial_goals", force: :cascade do |t|
     t.string "description", null: false
     t.decimal "target_amount", precision: 12, scale: 2, null: false
@@ -85,6 +101,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_21_093000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "current_amount", precision: 12, scale: 2, default: "0.0", null: false
+    t.integer "category_id"
+    t.index ["category_id"], name: "index_financial_goals_on_category_id"
     t.index ["due_date"], name: "index_financial_goals_on_due_date"
     t.index ["priority"], name: "index_financial_goals_on_priority"
     t.index ["status"], name: "index_financial_goals_on_status"
@@ -106,5 +124,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_21_093000) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "expenses", "cards"
   add_foreign_key "expenses", "categories"
+  add_foreign_key "financial_goal_resources", "financial_goals"
+  add_foreign_key "financial_goals", "categories"
   add_foreign_key "incomes", "categories"
 end

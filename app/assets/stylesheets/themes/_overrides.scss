@@ -272,22 +272,6 @@ html[data-theme="night"] .dashboard-card--calendar .app-btn--ghost:hover {
   background: rgba(255, 121, 198, 0.2);
 }
 
-html[data-theme="night"] .app-calendar-agenda__description {
-  color: #d8d2ea;
-}
-
-html[data-theme="night"] .app-calendar-agenda__header strong {
-  color: #ffd7ec;
-}
-
-html[data-theme="night"] .app-calendar-agenda__dot--income {
-  background: #86cfa7;
-}
-
-html[data-theme="night"] .app-calendar-agenda__dot--expense {
-  background: #f29aa3;
-}
-
 html[data-theme="night"] .app-forecast__summary-card {
   background: var(--surface);
   box-shadow: 0 0 10px rgba(255, 121, 198, 0.1), 0 0 18px rgba(149, 128, 255, 0.07), var(--shadow-card);
@@ -398,7 +382,6 @@ html[data-theme="night"] .datepicker td[title]:hover::before {
   border-color: var(--table-surface) transparent transparent transparent;
 }
 
-html[data-theme="night"] .app-calendar-agenda__date strong,
 html[data-theme="night"] .app-calendar-tooltip__description {
   color: #d8d2ea;
 }

@@ -223,4 +223,49 @@ financial_goals.each do |description, target_amount, current_amount, due_date, s
   financial_goal.save!
 end
 
+goal_resources = {
+  "Reserva de emergência" => [
+    [:own_resource, "Conta investimento", 9000.00],
+    [:own_resource, "Conta corrente", 3500.00]
+  ],
+  "Entrada do apartamento" => [
+    [:own_resource, "Poupanca dedicada", 14000.00],
+    [:external_resource, "FGTS estimado", 4000.00],
+    [:credit_limit, "Credito aprovado estimado", 12000.00]
+  ],
+  "Viagem para o Chile" => [
+    [:own_resource, "Reserva viagem", 3000.00],
+    [:external_resource, "Milhas convertidas", 1200.00],
+    [:credit_limit, "Limite cartao viagem", 5000.00]
+  ],
+  "Curso de especialização" => [
+    [:own_resource, "Conta educacao", 3500.00]
+  ],
+  "Notebook novo" => [
+    [:own_resource, "Reserva tecnologia", 1800.00],
+    [:credit_limit, "Limite cartao principal", 2500.00]
+  ],
+  "Home office" => [
+    [:own_resource, "Reserva equipamentos", 2200.00],
+    [:credit_limit, "Limite cartao compras", 1800.00]
+  ],
+  "Objetivo concluído de teste" => [
+    [:own_resource, "Valor acumulado", 2500.00]
+  ]
+}
+
+goal_resources.each do |goal_description, resources|
+  financial_goal = FinancialGoal.find_by!(description: goal_description)
+
+  resources.each do |resource_type, resource_description, amount|
+    resource = financial_goal.financial_goal_resources.find_or_initialize_by(description: resource_description)
+    resource.assign_attributes(
+      resource_type: resource_type,
+      amount: amount,
+      include_in_total: true
+    )
+    resource.save!
+  end
+end
+
 puts "20 objetivos financeiros criados/atualizados com sucesso!"

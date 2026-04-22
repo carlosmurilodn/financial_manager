@@ -21,46 +21,131 @@
     </div>
   </div>
 
-  <div class="app-panel app-panel--table">
-    <div class="app-list-toolbar">
-      <%= form_with url: financial_goals_path, method: :get, local: true, class: "app-list-toolbar__form" do %>
-        <%= render "shared/per_page_select" %>
-      <% end %>
-    </div>
+  <div class="app-panel">
+    <%= form_with url: financial_goals_path, method: :get, local: true, class: "app-filter-form" do |f| %>
+      <div class="app-filter-grid app-filter-grid--financial-goals">
+        <div class="app-filter-field">
+          <%= f.label :description, "Descrição do Objetivo" %>
+          <%= f.text_field :description, value: @description_filter, class: "form-control", placeholder: "Buscar objetivo..." %>
+        </div>
 
+        <div class="app-filter-field">
+          <%= f.label :category_id, "Categoria" %>
+          <%= f.select :category_id,
+                options_for_select([["Todas", 0]] + (@categories || []).map { |category| [category.display_name, category.id] }, @category_filter || 0),
+                {},
+                class: "form-select" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= f.label :progress_min, "Progresso Mínimo" %>
+          <%= f.number_field :progress_min, value: @progress_min_filter, class: "form-control", min: 0, max: 100, step: 1, placeholder: "%" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= f.label :status, "Status" %>
+          <%= f.select :status,
+                options_for_select([["Todos", ""]] + FinancialGoal.statuses.keys.map { |status| [FinancialGoal::STATUS_LABELS.fetch(status), status] }, @status_filter || ""),
+                {},
+                class: "form-select" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= f.label :priority, "Prioridade" %>
+          <%= f.select :priority,
+                options_for_select([["Todas", ""]] + FinancialGoal.priorities.keys.map { |priority| [FinancialGoal::PRIORITY_LABELS.fetch(priority), priority] }, @priority_filter || ""),
+                {},
+                class: "form-select" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= f.label :due_until, "Data Prevista Até" %>
+          <%= f.date_field :due_until, value: @due_until_filter, class: "form-control" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= f.label :current_amount_min, "Valor Atual Mínimo" %>
+          <%= f.text_field :current_amount_min, value: @current_amount_min_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= f.label :target_amount_min, "Valor Alvo Mínimo" %>
+          <%= f.text_field :target_amount_min, value: @target_amount_min_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= f.label :credit_amount_min, "Credito Mínimo" %>
+          <%= f.text_field :credit_amount_min, value: @credit_amount_min_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= f.label :potential_amount_min, "Total Potencial Mínimo" %>
+          <%= f.text_field :potential_amount_min, value: @potential_amount_min_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= f.label :remaining_amount_max, "Falta Máxima" %>
+          <%= f.text_field :remaining_amount_max, value: @remaining_amount_max_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= f.label :monthly_amount_max, "Aporte Mensal Máximo" %>
+          <%= f.text_field :monthly_amount_max, value: @monthly_amount_max_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
+        </div>
+
+      </div>
+
+      <div class="app-filter-actions">
+        <%= f.button class: "btn app-page__primary-btn" do %>
+          <i class="bi bi-funnel me-1"></i> <%= t("buttons.filter") %>
+        <% end %>
+
+        <%= link_to financial_goals_path, class: "btn app-page__secondary-btn" do %>
+          <i class="bi bi-x-circle me-1"></i> Limpar Filtros
+        <% end %>
+
+        <%= render "shared/per_page_select" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="app-panel app-panel--table">
     <div class="table-responsive">
-      <table class="table app-table app-table--records app-table--index mb-0">
+      <table class="table app-table app-table--records app-table--index app-table--financial-goals mb-0">
         <thead>
           <tr>
-            <th><%= sortable_table_header("Descricao", "description") %></th>
+            <th><%= sortable_table_header("Objetivo", "description") %></th>
+            <th><%= sortable_table_header("Categoria", "category") %></th>
             <th><%= sortable_table_header("Progresso", "progress") %></th>
-            <th><%= sortable_table_header("Valor atual", "current_amount") %></th>
-            <th><%= sortable_table_header("Valor alvo", "target_amount") %></th>
-            <th>Falta</th>
-            <th>Aporte mensal</th>
-            <th><%= sortable_table_header("Data prevista", "due_date") %></th>
             <th><%= sortable_table_header("Status", "status") %></th>
             <th><%= sortable_table_header("Prioridade", "priority") %></th>
+            <th><%= sortable_table_header("Data Prevista", "due_date") %></th>
             <th><%= t("tables.expenses.actions") %></th>
           </tr>
         </thead>
         <tbody>
           <% @financial_goals.each do |financial_goal| %>
-            <tr id="<%= dom_id(financial_goal) %>">
-              <td><%= financial_goal.description %></td>
+            <tr id="<%= dom_id(financial_goal) %>" class="app-financial-goal-row app-financial-goal-row--main">
+              <td class="app-financial-goal-row__description"><%= financial_goal.description %></td>
               <td class="text-center">
-                <div class="app-goal-progress" role="img" aria-label="Progresso de <%= financial_goal.description %>: <%= number_to_percentage(financial_goal.progress_percent, precision: 0) %>">
+                <% if financial_goal.category.present? %>
+                  <span class="app-goal-category-pill app-goal-category-pill--<%= financial_goal.status %>">
+                    <span class="material-symbols-rounded"><%= financial_goal.category.material_icon %></span>
+                    <span><%= financial_goal.category.display_name %></span>
+                  </span>
+                <% else %>
+                  <span class="text-muted">Sem categoria</span>
+                <% end %>
+              </td>
+              <td class="text-center">
+                <div class="app-goal-progress app-goal-progress--<%= financial_goal.status %>" role="img" aria-label="Progresso de <%= financial_goal.description %>: <%= number_to_percentage(financial_goal.progress_percent, precision: 0) %>">
                   <span class="app-goal-progress__bar" style="width: <%= financial_goal.progress_percent.round(1) %>%;"></span>
                 </div>
                 <small class="app-goal-progress__label"><%= number_to_percentage(financial_goal.progress_percent, precision: 0) %></small>
               </td>
-              <td class="text-center"><%= number_to_currency(financial_goal.current_amount || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></td>
-              <td class="text-center"><%= number_to_currency(financial_goal.target_amount || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></td>
-              <td class="text-center"><%= number_to_currency(financial_goal.remaining_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></td>
-              <td class="text-center"><%= number_to_currency(financial_goal.monthly_required_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></td>
-              <td class="text-center"><%= financial_goal.due_date.strftime("%d/%m/%Y") %></td>
               <td class="text-center"><%= financial_goal.status_label %></td>
               <td class="text-center"><%= financial_goal.priority_label %></td>
+              <td class="text-center"><%= financial_goal.due_date.strftime("%d/%m/%Y") %></td>
               <td class="app-record-actions text-center">
                 <%= link_to t("buttons.edit"),
                     edit_financial_goal_path(financial_goal),
@@ -69,6 +154,36 @@
                 <%= link_to t("buttons.delete"), financial_goal,
                             data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
                             class: "btn btn-sm btn-danger app-record-actions__delete" %>
+              </td>
+            </tr>
+            <tr class="app-financial-goal-row app-financial-goal-row--details">
+              <td colspan="7">
+                <div class="app-financial-goal-metrics">
+                  <span>
+                    <small>Valor Atual</small>
+                    <strong><%= number_to_currency(financial_goal.progress_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong>
+                  </span>
+                  <span>
+                    <small>Valor Alvo</small>
+                    <strong><%= number_to_currency(financial_goal.target_amount || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong>
+                  </span>
+                  <span>
+                    <small>Crédito</small>
+                    <strong><%= number_to_currency(financial_goal.credit_limit_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong>
+                  </span>
+                  <span>
+                    <small>Total Potencial</small>
+                    <strong><%= number_to_currency(financial_goal.potential_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong>
+                  </span>
+                  <span>
+                    <small>Falta</small>
+                    <strong><%= number_to_currency(financial_goal.remaining_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong>
+                  </span>
+                  <span>
+                    <small>Aporte Mensal</small>
+                    <strong><%= number_to_currency(financial_goal.monthly_required_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong>
+                  </span>
+                </div>
               </td>
             </tr>
           <% end %>

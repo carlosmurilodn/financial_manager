@@ -7,10 +7,19 @@
     grid-template-columns: 1fr;
   }
 
+  .dashboard-grid--planning > .dashboard-grid__item {
+    height: auto;
+  }
+
   .app-filter-grid,
   .app-filter-grid--expenses,
-  .app-filter-grid--incomes {
+  .app-filter-grid--incomes,
+  .app-filter-grid--financial-goals {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-filter-grid--financial-goals .app-filter-field {
+    grid-column: auto;
   }
 
   .app-reports-grid {
@@ -26,13 +35,6 @@
     grid-template-columns: 1fr;
   }
 
-  .app-calendar-agenda__item {
-    grid-template-columns: 44px 10px minmax(0, 1fr);
-  }
-
-  .app-calendar-agenda__value {
-    grid-column: 3;
-  }
 }
 
 @media (max-width: 991px) {
@@ -264,12 +266,14 @@
 
   .app-filter-grid,
   .app-filter-grid--expenses,
-  .app-filter-grid--incomes {
+  .app-filter-grid--incomes,
+  .app-filter-grid--financial-goals {
     grid-template-columns: 1fr;
   }
 
   .app-filter-grid--expenses .app-filter-field,
-  .app-filter-grid--incomes .app-filter-field {
+  .app-filter-grid--incomes .app-filter-field,
+  .app-filter-grid--financial-goals .app-filter-field {
     grid-column: auto;
   }
 
@@ -302,6 +306,10 @@
 
   .app-panel--table {
     overflow: hidden;
+  }
+
+  .app-financial-goal-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .table-responsive {

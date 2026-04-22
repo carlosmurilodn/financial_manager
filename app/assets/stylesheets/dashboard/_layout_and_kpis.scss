@@ -5,8 +5,13 @@
 }
 
 .dashboard-grid--planning {
-  grid-template-columns: minmax(320px, 2fr) minmax(0, 2fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: stretch;
+}
+
+.dashboard-grid--planning > .dashboard-grid__item {
+  height: 680px;
+  min-height: 0;
 }
 
 .dashboard-grid--charts {

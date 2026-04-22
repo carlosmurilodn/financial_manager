@@ -1,17 +1,12 @@
-<div class="dashboard-card">
+<div class="dashboard-card dashboard-card--forecast">
   <div class="dashboard-card__header">
     <div>
       <p class="dashboard-card__eyebrow">Planejamento</p>
       <h2 class="dashboard-card__title">Previsao Financeira Anual</h2>
     </div>
-
-    <div class="dashboard-card__pill">
-      <span class="material-symbols-rounded">query_stats</span>
-      <span>Projeção</span>
-    </div>
   </div>
 
-  <div class="dashboard-card__body">
+  <div class="dashboard-card__body dashboard-card__body--forecast">
     <turbo-frame id="forecast-table">
       <% prev_year = year - 1 %>
       <% next_year = year + 1 %>
@@ -20,6 +15,27 @@
       <% highest_expense_month, highest_expense_data = @forecast_data.max_by { |_, data| data[:despesas] } %>
       <% critical_start_month = Date.current.year == year ? Date.current.month : 1 %>
       <% critical_month, critical_data = @forecast_data.find { |month, data| month >= critical_start_month && data[:saldo] < 0 } %>
+
+      <div class="dashboard-card__pill dashboard-card__pill--period dashboard-card__pill--period-full">
+        <%= link_to root_path(year: prev_year),
+            class: "dashboard-card__period-button",
+            aria: { label: "Ano anterior" },
+            data: { turbo_frame: "forecast-table", turbo_prefetch: "false" } do %>
+          <span class="material-symbols-rounded">chevron_left</span>
+        <% end %>
+
+        <span class="dashboard-card__period-label">
+          <span class="material-symbols-rounded">query_stats</span>
+          <span>Previsao Financeira - <%= year %></span>
+        </span>
+
+        <%= link_to root_path(year: next_year),
+            class: "dashboard-card__period-button",
+            aria: { label: "Próximo ano" },
+            data: { turbo_frame: "forecast-table", turbo_prefetch: "false" } do %>
+          <span class="material-symbols-rounded">chevron_right</span>
+        <% end %>
+      </div>
 
       <div class="app-forecast__summary">
         <div class="app-forecast__summary-card app-forecast__summary-card--positive">
@@ -52,29 +68,7 @@
         </div>
       </div>
 
-      <div class="dashboard-toolbar app-forecast__nav">
-        <div class="dashboard-toolbar__actions">
-          <%= link_to root_path(year: prev_year),
-              class: "btn app-btn app-btn--ghost app-forecast__nav-btn",
-              aria: { label: "Ano anterior" },
-              data: { turbo_frame: "forecast-table", turbo_prefetch: "false" } do %>
-            <span class="material-symbols-rounded">chevron_left</span>
-          <% end %>
-        </div>
-
-        <h5 class="fw-bold mb-0 app-forecast__title">Previsao Financeira - <%= year %></h5>
-
-        <div class="dashboard-toolbar__actions">
-          <%= link_to root_path(year: next_year),
-              class: "btn app-btn app-btn--ghost app-forecast__nav-btn",
-              aria: { label: "Próximo ano" },
-              data: { turbo_frame: "forecast-table", turbo_prefetch: "false" } do %>
-            <span class="material-symbols-rounded">chevron_right</span>
-          <% end %>
-        </div>
-      </div>
-
-      <div class="table-responsive">
+      <div class="table-responsive app-forecast__table-wrap">
         <table class="table app-table app-table--forecast text-center align-middle">
           <thead>
             <tr>

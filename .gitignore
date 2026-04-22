@@ -41,3 +41,12 @@
 /node_modules
 **/*.karmal
 /bin*
+
+/Gemfile.lock
+
+# Android TWA build artifacts
+/android-twa/.gradle/
+/android-twa/build/
+/android-twa/app/build/
+/android-twa/local.properties
+/android-twa/android-keystore

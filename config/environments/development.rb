@@ -71,4 +71,5 @@ Rails.application.configure do
   # config.generators.apply_rubocop_autocorrect_after_generate!
   # Permite acesso ao console do Windows e a outros PCs na rede.
   config.hosts << /[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/
+  config.hosts << /.*\.trycloudflare\.com/
 end

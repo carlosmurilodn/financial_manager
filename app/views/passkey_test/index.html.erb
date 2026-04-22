@@ -1,0 +1,53 @@
+<section class="app-page-hero">
+  <div>
+    <span class="app-page-hero__eyebrow">Teste TWA</span>
+    <h1>Passkey biometria</h1>
+    <p>Teste local para validar se o dispositivo consegue acionar biometria, rosto, PIN ou bloqueio de tela via WebAuthn.</p>
+  </div>
+</section>
+
+<section class="dashboard-grid" data-passkey-test>
+  <article class="dashboard-card dashboard-card--mint">
+    <div class="dashboard-card__header">
+      <div>
+        <h2 class="dashboard-card__title">Disponibilidade</h2>
+        <p class="text-muted mb-0">Verifica navegador, contexto seguro e autenticador da plataforma.</p>
+      </div>
+      <span class="material-symbols-rounded">fingerprint</span>
+    </div>
+
+    <div class="dashboard-card__body d-grid gap-3">
+      <button type="button" class="btn btn-primary" data-passkey-check>
+        Verificar suporte
+      </button>
+
+      <div class="alert alert-secondary mb-0" data-passkey-status>
+        Aguardando teste.
+      </div>
+    </div>
+  </article>
+
+  <article class="dashboard-card dashboard-card--lavender">
+    <div class="dashboard-card__header">
+      <div>
+        <h2 class="dashboard-card__title">Credencial teste</h2>
+        <p class="text-muted mb-0">Cria uma passkey temporaria no aparelho e depois tenta autenticar com ela.</p>
+      </div>
+      <span class="material-symbols-rounded">passkey</span>
+    </div>
+
+    <div class="dashboard-card__body d-grid gap-3">
+      <button type="button" class="btn btn-success" data-passkey-register>
+        Criar passkey de teste
+      </button>
+
+      <button type="button" class="btn btn-outline-primary" data-passkey-authenticate>
+        Testar autenticacao
+      </button>
+
+      <button type="button" class="btn btn-outline-danger" data-passkey-clear>
+        Limpar teste local
+      </button>
+    </div>
+  </article>
+</section>

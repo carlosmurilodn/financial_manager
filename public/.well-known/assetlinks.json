@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "br.com.carlos.financeiro",
+      "sha256_cert_fingerprints": [
+        "83:3B:67:CF:F0:A6:34:13:75:0D:CD:F2:E8:C2:F7:4B:BA:5A:28:41:D6:41:63:94:81:AE:3A:94:49:AA:CF:8C"
+      ]
+    }
+  }
+]

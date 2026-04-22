@@ -1,6 +1,6 @@
 {
   "packageId": "br.com.carlos.financeiro",
-  "host": "jersey-first-jeffrey-oval.trycloudflare.com",
+  "host": "sphere-patient-sometimes-copying.trycloudflare.com",
   "name": "Gerenciador Financeiro",
   "launcherName": "Financeiro",
   "display": "standalone",
@@ -13,8 +13,8 @@
   "backgroundColor": "#F8FAFC",
   "enableNotifications": true,
   "startUrl": "/",
-  "iconUrl": "https://jersey-first-jeffrey-oval.trycloudflare.com/icon.png",
-  "maskableIconUrl": "https://jersey-first-jeffrey-oval.trycloudflare.com/icon.png",
+  "iconUrl": "https://sphere-patient-sometimes-copying.trycloudflare.com/icon.png",
+  "maskableIconUrl": "https://sphere-patient-sometimes-copying.trycloudflare.com/icon.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "/home/carlos/projetos/financial_manager/android-twa/android-keystore",
@@ -24,7 +24,7 @@
   "appVersionCode": 1,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
-  "webManifestUrl": "https://jersey-first-jeffrey-oval.trycloudflare.com/manifest.json",
+  "webManifestUrl": "https://sphere-patient-sometimes-copying.trycloudflare.com/manifest.json",
   "fallbackType": "customtabs",
   "features": {},
   "alphaDependencies": {
@@ -33,7 +33,7 @@
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "fullScopeUrl": "https://jersey-first-jeffrey-oval.trycloudflare.com/",
+  "fullScopeUrl": "https://sphere-patient-sometimes-copying.trycloudflare.com/",
   "minSdkVersion": 21,
   "orientation": "default",
   "fingerprints": [],

@@ -18,7 +18,9 @@
           <%= f.label :amount, t("incomes.form.amount") %>
           <%= f.text_field :amount, 
             class: "form-control moeda", 
-            value: (income.amount.present? ? number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) : "R$ 0,00")
+            value: (income.amount.present? ? number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) : "R$ 0,00"),
+            required: true,
+            data: { required_currency: true }
           %>
         </div>
 
@@ -37,7 +39,7 @@
     <div class="col-md-4">
       <%= f.label :date, t("incomes.form.date") %>
       <div class="custom-date-wrapper">
-        <%= f.text_field :date, class: "form-control custom-date", autocomplete: "off", placeholder: "Selecione a data" %>
+        <%= f.text_field :date, class: "form-control custom-date", autocomplete: "off", placeholder: "Selecione a data", required: true %>
       </div>
     </div>
   </div>
@@ -46,7 +48,7 @@
     <div class="col-md-4">
       <%= f.label :balance_month, t("incomes.form.balance_month") %>
       <div class="custom-date-wrapper">
-        <%= f.text_field :balance_month, class: "form-control custom-date", autocomplete: "off", placeholder: "Selecione o mês" %>
+        <%= f.text_field :balance_month, class: "form-control custom-date", autocomplete: "off", placeholder: "Selecione o mês", required: true %>
       </div>
     </div>
   </div>

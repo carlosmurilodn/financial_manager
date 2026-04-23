@@ -1,6 +1,8 @@
 import { initializeFormUtils } from "./utils";
 import { initializeDatepicker } from "./date_picker";
 import { initializeExpenseForm } from "./expense_form";
+import { initializeFinancialGoalForm } from "./financial_goal_form";
+import { initializeModalRequiredFields } from "./modal_required_fields";
 
 function initializeInvoiceFilePreview(scope) {
   const fileInput = scope.querySelector("[data-invoice-file-input]");
@@ -79,8 +81,10 @@ document.addEventListener("turbo:frame-load", (event) => {
   modal.show();
 
   initializeFormUtils();
+  initializeModalRequiredFields(modalBody);
   initializeDatepicker();
   initializeExpenseForm();
+  initializeFinancialGoalForm(modalBody);
   initializeInvoiceFilePreview(modalBody);
 
   modalBody.querySelectorAll("[data-bs-toggle='tooltip']").forEach((element) => {

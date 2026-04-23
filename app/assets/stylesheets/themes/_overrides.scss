@@ -157,6 +157,18 @@ html[data-theme="night"] #modal-body .form-select:focus {
   box-shadow: 0 0 0 0.2rem rgba(255, 121, 198, 0.14) !important;
 }
 
+html[data-theme="night"] #modal-body .form-control.is-invalid,
+html[data-theme="night"] #modal-body .form-select.is-invalid {
+  background-color: rgba(255, 121, 198, 0.09) !important;
+  border-color: #ff79c6 !important;
+  box-shadow: 0 0 0 0.18rem rgba(255, 121, 198, 0.2) !important;
+}
+
+html[data-theme="night"] #modal-body .has-required-error > label,
+html[data-theme="night"] #modal-body .invalid-feedback {
+  color: #ff9fd4 !important;
+}
+
 html[data-theme="night"] #modal-body .form-select option {
   background: var(--table-surface) !important;
   color: #ffffff !important;

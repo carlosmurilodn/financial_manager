@@ -55,6 +55,24 @@
   display: none; /* escondido por padrão */
 }
 
+#modal-body .form-control.is-invalid,
+#modal-body .form-select.is-invalid {
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 0.18rem rgba(220, 53, 69, 0.16) !important;
+}
+
+#modal-body .has-required-error > label,
+#modal-body .has-required-error > .form-check-label {
+  color: var(--danger) !important;
+}
+
+#modal-body .invalid-feedback {
+  margin-top: 4px;
+  color: var(--danger);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
 .app-confirm-modal .modal-dialog {
   width: min(420px, calc(100vw - 32px));
 }
@@ -297,7 +315,7 @@ html[data-theme="night"] .app-financial-goal-metrics {
 
 .app-goal-resource-form__row {
   display: grid;
-  grid-template-columns: minmax(130px, 0.8fr) minmax(180px, 1.2fr) minmax(180px, 1.2fr) minmax(120px, 0.8fr) auto auto;
+  grid-template-columns: minmax(130px, 0.8fr) minmax(180px, 1.2fr) minmax(180px, 1.2fr) minmax(120px, 0.8fr) auto;
   gap: 10px;
   align-items: end;
   padding: 10px;
@@ -312,11 +330,25 @@ html[data-theme="night"] .app-financial-goal-metrics {
   font-weight: 700;
 }
 
-.app-goal-resource-form__check {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 38px;
+.app-goal-resource-form__remove {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(242, 141, 166, 0.14);
+  color: var(--danger);
+}
+
+.app-goal-resource-form__remove.is-hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.app-goal-resource-form__remove .material-symbols-rounded {
+  font-size: 1rem;
 }
 
 @media (max-width: 991px) {

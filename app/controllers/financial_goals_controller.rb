@@ -154,9 +154,7 @@ class FinancialGoalsController < ApplicationController
   end
 
   def build_resource_rows
-    (3 - @financial_goal.financial_goal_resources.size).times do
-      @financial_goal.financial_goal_resources.build
-    end
+    @financial_goal.financial_goal_resources.build if @financial_goal.financial_goal_resources.empty?
   end
 
   def load_resource_cards

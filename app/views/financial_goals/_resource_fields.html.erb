@@ -1,0 +1,37 @@
+<div class="app-goal-resource-form__row" data-goal-resource-row>
+  <%= resource_fields.hidden_field :id %>
+  <%= resource_fields.hidden_field :include_in_total, value: "1" %>
+  <%= resource_fields.hidden_field :_destroy, value: "0", data: { goal_resource_destroy: true } %>
+
+  <div class="app-goal-resource-form__field">
+    <%= resource_fields.label :resource_type, "Tipo" %>
+    <%= resource_fields.select :resource_type,
+          FinancialGoalResource.resource_types.keys.map { |type| [FinancialGoalResource::RESOURCE_TYPE_LABELS.fetch(type), type] },
+          {},
+          class: "form-select" %>
+  </div>
+
+  <div class="app-goal-resource-form__field">
+    <%= resource_fields.label :description, "Descricao" %>
+    <%= resource_fields.text_field :description, class: "form-control", placeholder: "Ex.: Conta investimento" %>
+  </div>
+
+  <div class="app-goal-resource-form__field">
+    <%= resource_fields.label :source_id, "Cartao vinculado" %>
+    <%= resource_fields.select :source_id,
+          options_from_collection_for_select(@resource_cards || [], :id, :display_name, resource_fields.object.source_id),
+          { include_blank: "Sem cartao" },
+          class: "form-select" %>
+  </div>
+
+  <div class="app-goal-resource-form__field">
+    <%= resource_fields.label :amount, "Valor" %>
+    <%= resource_fields.text_field :amount,
+          class: "form-control moeda",
+          value: number_to_currency(resource_fields.object.amount || 0, unit: "R$", separator: ",", delimiter: ".") %>
+  </div>
+
+  <button type="button" class="btn app-goal-resource-form__remove" data-remove-goal-resource-row aria-label="Remover recurso">
+    <span class="material-symbols-rounded">close</span>
+  </button>
+</div>

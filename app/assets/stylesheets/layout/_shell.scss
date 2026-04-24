@@ -376,11 +376,11 @@
 }
 
 html[data-theme="night"] .app-footer {
-  background: rgba(33, 27, 52, 0.94);
+  background: var(--surface);
 }
 
 html[data-theme="night"] .app-footer__chip {
-  color: #ffd7ec;
+  color: var(--white);
 }
 
 html[data-theme="night"] .app-footer__icon {

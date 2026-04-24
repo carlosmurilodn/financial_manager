@@ -111,10 +111,6 @@
   background-clip: padding-box;
 }
 
-.dashboard-grid--planning .dashboard-card__body {
-  margin-top: 12px;
-}
-
 .dashboard-grid--planning .dashboard-toolbar {
   margin-bottom: 12px;
 }
@@ -382,12 +378,12 @@
 .dashboard-grid--planning .app-forecast__summary {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .dashboard-card--forecast .dashboard-card__pill--period-full {
   margin-top: 0;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .dashboard-grid--planning .app-forecast__summary-card {

@@ -72,11 +72,16 @@ html[data-theme="night"] .dashboard-card__eyebrow {
 html[data-theme="night"] .dashboard-card__title,
 html[data-theme="night"] .dashboard-toolbar h4,
 html[data-theme="night"] .dashboard-toolbar h5 {
-  color: #ffd7ec;
+  color: var(--white);
 }
 
-html[data-theme="night"] .dashboard-hero h1 {
-  color: #fed7ec;
+html[data-theme="night"] .dashboard-hero h1,
+html[data-theme="night"] .dashboard-hero .h1 {
+  color: var(--dashboard-h1-color);
+}
+
+html[data-theme="night"] .app-page__hero {
+  background: var(--hero-bg);
 }
 
 html[data-theme="night"] .dashboard-card,
@@ -86,21 +91,68 @@ html[data-theme="night"] .app-panel,
 html[data-theme="night"] .app-panel--table,
 html[data-theme="night"] .app-sidebar__inner,
 html[data-theme="night"] .app-footer {
-  border-color: rgba(255, 121, 198, 0.14);
-  box-shadow: var(--shadow-neon);
-}
-
-html[data-theme="night"] .dashboard-hero,
-html[data-theme="night"] .app-sidebar__inner {
-  box-shadow: var(--shadow-neon-strong);
+  border: 1px solid var(--card-border);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .app-page__title {
   color: #ffffff;
 }
 
+html[data-theme="night"] .dashboard-card__title,
+html[data-theme="night"] .dashboard-description,
+html[data-theme="night"] #dashboard-current-time,
+html[data-theme="night"] .dashboard-hero__badge-item--primary strong,
+html[data-theme="night"] .app-calendar-agenda__date,
+html[data-theme="night"] .app-calendar-agenda__description,
+html[data-theme="night"] .app-calendar-tabs__button,
+html[data-theme="night"] .app-forecast__summary-value,
+html[data-theme="night"] .stat-card__meta,
+html[data-theme="night"] .app-nav-link {
+  color: var(--white) !important;
+}
+
+html[data-theme="night"] .app-nav-link:hover {
+  color: var(--nav-text);
+}
+
+html[data-theme="night"] .app-filter-field .form-control,
+html[data-theme="night"] .app-filter-field .form-select,
+html[data-theme="night"] .app-per-page-control,
+html[data-theme="night"] .app-per-page-control__select {
+  background: var(--table-surface) !important;
+  color: var(--table-row-text) !important;
+  border-color: var(--table-border-color) !important;
+}
+
+html[data-theme="night"] .app-filter-field .form-control::placeholder {
+  color: var(--text-soft) !important;
+}
+
+html[data-theme="night"] .app-filter-field .form-control:focus,
+html[data-theme="night"] .app-filter-field .form-select:focus,
+html[data-theme="night"] .app-per-page-control__select:focus {
+  background: var(--table-surface) !important;
+  color: var(--table-row-text) !important;
+  border-color: var(--nav-active-icon-color) !important;
+  box-shadow: none !important;
+}
+
 html[data-theme="night"] .app-forecast__summary-value {
-  color: #ffd7ec !important;
+  color: var(--white) !important;
+}
+
+html[data-theme="night"] .app-table.table > thead > tr > th,
+html[data-theme="night"] .app-filter-actions .btn {
+  color: var(--table-head-color) !important;
+}
+
+html[data-theme="night"] .app-page__primary-btn {
+  background: var(--nav-hover-bg) !important;
+}
+
+html[data-theme="night"] .app-expenses-hero-kpis__action {
+  background: var(--nav-hover-bg);
 }
 
 html[data-theme="night"] #turboModal .modal-title,
@@ -111,7 +163,7 @@ html[data-theme="night"] #modal-body .modal-title,
 html[data-theme="night"] #modal-body label,
 html[data-theme="night"] #modal-body h5,
 html[data-theme="night"] #modal-body h6 {
-  color: #ffd7ec !important;
+  color: var(--white) !important;
 }
 
 html[data-theme="night"] .text-muted,
@@ -131,7 +183,7 @@ html[data-theme="night"] #turboModal .modal-dialog {
 html[data-theme="night"] #turboModal .modal-content {
   background: var(--table-surface) !important;
   border: 0 !important;
-  box-shadow: var(--shadow-soft) !important;
+  box-shadow: none !important;
 }
 
 html[data-theme="night"] #modal-body .modal-header {
@@ -141,7 +193,7 @@ html[data-theme="night"] #modal-body .modal-header {
 html[data-theme="night"] #modal-body .form-control,
 html[data-theme="night"] #modal-body .form-select {
   background-color: var(--nav-active-bg) !important;
-  color: #ffffff !important;
+  color: var(--white) !important;
   border-color: var(--table-border-color) !important;
 }
 
@@ -152,16 +204,16 @@ html[data-theme="night"] #modal-body .form-control::placeholder {
 html[data-theme="night"] #modal-body .form-control:focus,
 html[data-theme="night"] #modal-body .form-select:focus {
   background-color: var(--nav-active-bg) !important;
-  color: #ffffff !important;
+  color: var(--white) !important;
   border-color: var(--nav-active-icon-color) !important;
-  box-shadow: 0 0 0 0.2rem rgba(255, 121, 198, 0.14) !important;
+  box-shadow: none !important;
 }
 
 html[data-theme="night"] #modal-body .form-control.is-invalid,
 html[data-theme="night"] #modal-body .form-select.is-invalid {
   background-color: rgba(255, 121, 198, 0.09) !important;
   border-color: #ff79c6 !important;
-  box-shadow: 0 0 0 0.18rem rgba(255, 121, 198, 0.2) !important;
+  box-shadow: none !important;
 }
 
 html[data-theme="night"] #modal-body .has-required-error > label,
@@ -171,14 +223,14 @@ html[data-theme="night"] #modal-body .invalid-feedback {
 
 html[data-theme="night"] #modal-body .form-select option {
   background: var(--table-surface) !important;
-  color: #ffffff !important;
+  color: var(--white) !important;
 }
 
 html[data-theme="night"] #turboModal .btn-primary,
 html[data-theme="night"] #modal-body .btn-primary {
   background: var(--hero-badge-icon-bg) !important;
   border-color: transparent !important;
-  color: #ffd7ec !important;
+  color: var(--white) !important;
   font-weight: 700 !important;
 }
 
@@ -188,12 +240,12 @@ html[data-theme="night"] #modal-body .btn-primary:hover,
 html[data-theme="night"] #modal-body .btn-primary:focus {
   background: var(--nav-active-bg) !important;
   border-color: transparent !important;
-  color: #ffd7ec !important;
+  color: var(--white) !important;
 }
 
 html[data-theme="night"] .app-table {
   border: 1px solid var(--table-border-color);
-  box-shadow: inset 0 0 0 1px rgba(255, 121, 198, 0.04);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .app-table.table > :not(caption) > * > * {
@@ -203,7 +255,6 @@ html[data-theme="night"] .app-table.table > :not(caption) > * > * {
 
 html[data-theme="night"] .app-table.table > thead > tr > th {
   background-color: var(--table-surface-alt) !important;
-  color: var(--table-head-color) !important;
 }
 
 html[data-theme="night"] .app-table.table > tbody > tr:nth-child(odd) > td {
@@ -219,23 +270,23 @@ html[data-theme="night"] .app-table tbody tr:hover td {
 }
 
 html[data-theme="night"] .stat-card {
-  box-shadow: var(--shadow-neon);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .stat-card--success {
-  box-shadow: 0 0 10px rgba(103, 228, 128, 0.1), 0 0 18px rgba(103, 228, 128, 0.06), var(--shadow-card);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .stat-card--primary {
-  box-shadow: 0 0 10px rgba(149, 128, 255, 0.12), 0 0 18px rgba(149, 128, 255, 0.07), var(--shadow-card);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .stat-card--danger {
-  box-shadow: 0 0 10px rgba(255, 121, 198, 0.12), 0 0 18px rgba(255, 121, 198, 0.07), var(--shadow-card);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .stat-card--warning {
-  box-shadow: 0 0 10px rgba(255, 202, 128, 0.1), 0 0 18px rgba(255, 202, 128, 0.06), var(--shadow-card);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .app-calendar-table > :not(caption) > * > * {
@@ -259,7 +310,7 @@ html[data-theme="night"] .app-calendar-table__day {
 
 html[data-theme="night"] .app-calendar-table__day--today {
   background-color: rgba(255, 121, 198, 0.18) !important;
-  box-shadow: inset 0 0 0 1px rgba(255, 121, 198, 0.34), inset 0 0 28px rgba(255, 121, 198, 0.08);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .app-calendar-table__empty {
@@ -276,8 +327,8 @@ html[data-theme="night"] .app-calendar__title {
 
 html[data-theme="night"] .dashboard-card--calendar .app-btn--ghost {
   background: rgba(255, 121, 198, 0.14);
-  color: #ffd7ec;
-  box-shadow: inset 0 0 0 1px rgba(255, 121, 198, 0.2);
+  color: var(--white);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .dashboard-card--calendar .app-btn--ghost:hover {
@@ -290,41 +341,41 @@ html[data-theme="night"] .app-calendar-tabs__list {
 
 html[data-theme="night"] .app-calendar-tabs__list::before {
   background: rgba(255, 121, 198, 0.14);
-  box-shadow: inset 0 0 0 1px rgba(255, 121, 198, 0.2);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .app-calendar-tabs__radio:nth-of-type(1):checked ~ .app-calendar-tabs__list .app-calendar-tabs__button--calendar,
 html[data-theme="night"] .app-calendar-tabs__radio:nth-of-type(2):checked ~ .app-calendar-tabs__list .app-calendar-tabs__button--agenda {
-  color: #ffd7ec;
+  color: var(--white);
 }
 
 html[data-theme="night"] .app-calendar-agenda__description,
 html[data-theme="night"] .app-calendar-agenda__date strong {
-  color: #d8d2ea;
+  color: var(--white);
 }
 
 html[data-theme="night"] .app-calendar-agenda__header strong {
-  color: #ffd7ec;
+  color: var(--white);
 }
 
 html[data-theme="night"] .app-forecast__summary-card {
   background: var(--surface);
-  box-shadow: 0 0 10px rgba(255, 121, 198, 0.1), 0 0 18px rgba(149, 128, 255, 0.07), var(--shadow-card);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .app-forecast__summary-card--positive {
   background: var(--stat-success-bg);
-  box-shadow: 0 0 10px rgba(103, 228, 128, 0.1), 0 0 18px rgba(103, 228, 128, 0.06), var(--shadow-card);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .app-forecast__summary-card--danger {
   background: var(--stat-danger-bg);
-  box-shadow: 0 0 10px rgba(255, 121, 198, 0.12), 0 0 18px rgba(255, 121, 198, 0.07), var(--shadow-card);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .app-forecast__summary-card--warning {
   background: var(--stat-warning-bg);
-  box-shadow: 0 0 10px rgba(255, 202, 128, 0.1), 0 0 18px rgba(255, 202, 128, 0.06), var(--shadow-card);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .app-table--forecast.table > tbody > tr:nth-child(odd) > td {
@@ -345,7 +396,7 @@ html[data-theme="night"] .app-forecast__row--current > td {
 
 html[data-theme="night"] .app-forecast__month-badge {
   background: rgba(255, 121, 198, 0.16);
-  color: #ffd7ec;
+  color: var(--white);
 }
 
 html[data-theme="night"] .app-table--forecast td.text-success {
@@ -368,8 +419,8 @@ html[data-theme="night"] .app-forecast__saldo--negative {
 
 html[data-theme="night"] .app-forecast__nav .app-btn--ghost {
   background: rgba(255, 121, 198, 0.14);
-  color: #ffd7ec;
-  box-shadow: inset 0 0 0 1px rgba(255, 121, 198, 0.2);
+  color: var(--white);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .app-forecast__nav .app-btn--ghost:hover {
@@ -386,7 +437,7 @@ html[data-theme="night"] .datepicker {
   background: var(--table-surface-alt);
   border-color: var(--table-border-color);
   color: var(--table-row-text);
-  box-shadow: var(--shadow-card);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .datepicker-header,
@@ -396,7 +447,7 @@ html[data-theme="night"] .datepicker td {
 
 html[data-theme="night"] .datepicker-header button,
 html[data-theme="night"] .datepicker-header button:hover {
-  color: #ffd7ec;
+  color: var(--white);
 }
 
 html[data-theme="night"] .datepicker-header select {
@@ -412,13 +463,13 @@ html[data-theme="night"] .datepicker th {
 html[data-theme="night"] .datepicker td[data-date]:hover,
 html[data-theme="night"] .datepicker .active {
   background: var(--nav-active-bg);
-  color: #ffd7ec;
+  color: var(--white);
 }
 
 html[data-theme="night"] .datepicker td[title]:hover::after {
   background: var(--table-surface);
   color: var(--table-row-text);
-  box-shadow: var(--shadow-card);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .datepicker td[title]:hover::before {
@@ -433,7 +484,7 @@ html[data-theme="night"] .app-calendar-tooltip {
   background: var(--table-surface-alt);
   border-color: var(--table-border-color);
   color: var(--table-row-text) !important;
-  box-shadow: var(--shadow-card);
+  box-shadow: none;
 }
 
 html[data-theme="night"] .app-table--records tbody tr:nth-child(odd) td,

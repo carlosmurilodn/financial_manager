@@ -589,7 +589,7 @@
 }
 
 .app-calendar-table__marker--expense {
-  background: rgba(236, 140, 151, 0.95);
+  background: var(--danger);
 }
 
 .app-calendar-tooltip {

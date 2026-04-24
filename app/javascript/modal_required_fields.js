@@ -49,31 +49,38 @@ function isInvalid(input) {
   return isEmpty(input);
 }
 
+function tooltipTargetFor(input) {
+  return closestField(input) || input;
+}
+
 function disposeRequiredTooltip(input) {
   if (input.dataset.requiredTooltipActive !== "true") return;
 
+  const target = tooltipTargetFor(input);
+  bootstrap.Tooltip.getInstance(target)?.dispose();
   bootstrap.Tooltip.getInstance(input)?.dispose();
 
   delete input.dataset.requiredTooltipActive;
-  input.removeAttribute("data-bs-toggle");
-  input.removeAttribute("data-bs-placement");
-  input.removeAttribute("data-bs-custom-class");
-  input.removeAttribute("data-bs-trigger");
-  input.removeAttribute("data-bs-original-title");
-  input.removeAttribute("title");
+  target.removeAttribute("data-bs-toggle");
+  target.removeAttribute("data-bs-placement");
+  target.removeAttribute("data-bs-custom-class");
+  target.removeAttribute("data-bs-trigger");
+  target.removeAttribute("data-bs-original-title");
+  target.removeAttribute("title");
 }
 
 function showRequiredTooltip(input) {
   const message = invalidMessage(input);
+  const target = tooltipTargetFor(input);
 
   input.dataset.requiredTooltipActive = "true";
-  input.setAttribute("data-bs-toggle", "tooltip");
-  input.setAttribute("data-bs-placement", "top");
-  input.setAttribute("data-bs-custom-class", "app-required-tooltip");
-  input.setAttribute("data-bs-trigger", "manual");
-  input.setAttribute("title", message);
+  target.setAttribute("data-bs-toggle", "tooltip");
+  target.setAttribute("data-bs-placement", "top");
+  target.setAttribute("data-bs-custom-class", "app-required-tooltip");
+  target.setAttribute("data-bs-trigger", "manual");
+  target.setAttribute("title", message);
 
-  const tooltip = bootstrap.Tooltip.getOrCreateInstance(input, {
+  const tooltip = bootstrap.Tooltip.getOrCreateInstance(target, {
     container: "#turboModal",
     customClass: "app-required-tooltip",
     placement: "top",

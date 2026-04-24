@@ -91,10 +91,10 @@
 }
 
 .app-required-tooltip {
-  --app-required-tooltip-bg: #f9d3dd;
-  --app-required-tooltip-color: #db7391;
+  --app-required-tooltip-bg: var(--pill-danger-bg);
+  --app-required-tooltip-color: var(--pill-danger-color);
   --bs-tooltip-bg: var(--app-required-tooltip-bg);
-  --bs-tooltip-color: #db7391;
+  --bs-tooltip-color: var(--app-required-tooltip-color);
   --bs-tooltip-opacity: 1;
   --bs-tooltip-max-width: 240px;
   pointer-events: none;
@@ -394,7 +394,7 @@ html[data-theme="night"] .app-financial-goal-metrics {
   padding: 0;
   border: 0;
   border-radius: 10px;
-  background: rgba(242, 141, 166, 0.14);
+  background: var(--pill-danger-bg);
   color: var(--danger);
 }
 
@@ -486,7 +486,7 @@ html[data-theme="night"] .app-financial-goal-metrics {
   padding: 0;
   border: 0;
   border-radius: 10px;
-  background: rgba(242, 141, 166, 0.14);
+  background: var(--pill-danger-bg);
   color: var(--danger);
 }
 

@@ -804,16 +804,16 @@
 }
 
 .app-record-actions__delete {
-  background: rgba(242, 141, 166, 0.3) !important;
-  color: #db7391 !important;
-  border-color: rgba(242, 141, 166, 0.12) !important;
+  background: var(--pill-danger-bg) !important;
+  color: var(--pill-danger-color) !important;
+  border-color: var(--pill-danger-bg) !important;
 }
 
 .app-record-actions__delete:hover,
 .app-record-actions__delete:focus {
-  background: rgba(242, 141, 166, 0.12) !important;
-  color: #db7391 !important;
-  border-color: rgba(242, 141, 166, 0.16) !important;
+  background: var(--pill-danger-bg) !important;
+  color: var(--pill-danger-color) !important;
+  border-color: var(--pill-danger-bg) !important;
 }
 
 .app-record-actions__pay {

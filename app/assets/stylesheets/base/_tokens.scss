@@ -89,7 +89,9 @@ html[data-theme="fincan"] {
   --radius-md: 10px;
   --white: #ffffff;
   --black: #000000;
-  --app-confirm-modal-bg: #495594
+  --modal-close-color: var(--black);
+  --modal-close-opacity: 0.5;
+  --app-confirm-modal-bg: #495594;
 }
 
 html[data-theme="fincan"] h1,
@@ -189,7 +191,9 @@ html[data-theme="night"] {
   --calendar-empty-bg: rgba(255, 255, 255, 0.02);
   --calendar-today-bg: rgba(255, 121, 198, 0.12);
   --calendar-event-bg: rgba(255, 121, 198, 0.9);
-  --app-confirm-modal-bg: rgba(36, 27, 53, 0.96)
+  --modal-close-color: #fff;
+  --modal-close-opacity: 1;
+  --app-confirm-modal-bg: rgba(36, 27, 53, 0.96);
 }
 
 

@@ -4,7 +4,9 @@
   align-items: center;
   width: min(1200px, calc(100vw - 32px));
   max-width: calc(100vw - 32px);
-  min-height: calc(100% - 1rem);
+  max-height: 80vh;
+  max-height: 80dvh;
+  min-height: 0;
   margin-right: auto;
   margin-left: auto;
 }
@@ -13,42 +15,45 @@
   border-radius: 12px;     /* cantos suaves */
   width: 100% !important;
   max-width: 100%;
-  max-height: calc(100vh - 32px);
+  max-height: 80vh;
+  max-height: 80dvh;
   overflow: hidden;
 }
 
 #turboModal .modal-dialog.modal-wide {
   width: 90vw;
-  height: 90vh;
   max-width: 90vw;
-  max-height: 90vh;
+  max-height: 80vh;
+  max-height: 80dvh;
   margin-right: auto;
   margin-left: auto;
 }
 
 #turboModal .modal-dialog.modal-wide .modal-content {
   width: 100% !important;
-  height: 100%;
+  height: auto;
+  max-height: 80vh;
+  max-height: 80dvh;
 }
 
 #turboModal .modal-dialog.modal-wide #modal-body {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
+  height: auto;
+  max-height: 80vh;
+  max-height: 80dvh;
+  overflow-y: auto;
 }
 
 #turboModal .modal-dialog.modal-wide #modal-body > .modal-body {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
+  overflow: visible;
 }
 
 #modal-body {
+  box-sizing: border-box;
   padding: 1.5rem;
   overflow-y: auto;
-  max-height: calc(100vh - 72px);
-  height: auto;
+  max-height: 80vh;
+  max-height: 80dvh;
+  height: auto !important;
 }
 
 #parcelamento_section {
@@ -71,6 +76,57 @@
   color: var(--danger);
   font-size: 0.72rem;
   font-weight: 700;
+}
+
+#turboModal .btn-close {
+  background-color: var(--modal-close-color);
+  background-image: none;
+  opacity: var(--modal-close-opacity);
+  -webkit-mask: var(--bs-btn-close-bg) center / 1em auto no-repeat;
+  mask: var(--bs-btn-close-bg) center / 1em auto no-repeat;
+}
+
+#turboModal .btn-close:hover {
+  opacity: var(--modal-close-opacity);
+}
+
+.app-required-tooltip {
+  --app-required-tooltip-bg: #f9d3dd;
+  --app-required-tooltip-color: #db7391;
+  --bs-tooltip-bg: var(--app-required-tooltip-bg);
+  --bs-tooltip-color: #db7391;
+  --bs-tooltip-opacity: 1;
+  --bs-tooltip-max-width: 240px;
+  pointer-events: none;
+}
+
+.app-required-tooltip[data-popper-placement^="top"] .tooltip-arrow::before,
+.app-required-tooltip.bs-tooltip-top .tooltip-arrow::before {
+  border-top-color: var(--app-required-tooltip-bg) !important;
+}
+
+.app-required-tooltip[data-popper-placement^="bottom"] .tooltip-arrow::before,
+.app-required-tooltip.bs-tooltip-bottom .tooltip-arrow::before {
+  border-bottom-color: var(--app-required-tooltip-bg) !important;
+}
+
+.app-required-tooltip[data-popper-placement^="left"] .tooltip-arrow::before,
+.app-required-tooltip.bs-tooltip-start .tooltip-arrow::before {
+  border-left-color: var(--app-required-tooltip-bg) !important;
+}
+
+.app-required-tooltip[data-popper-placement^="right"] .tooltip-arrow::before,
+.app-required-tooltip.bs-tooltip-end .tooltip-arrow::before {
+  border-right-color: var(--app-required-tooltip-bg) !important;
+}
+
+.app-required-tooltip .tooltip-inner {
+  background-color: var(--app-required-tooltip-bg) !important;
+  padding: 6px 9px;
+  color: var(--app-required-tooltip-color) !important;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.25;
 }
 
 .app-confirm-modal .modal-dialog {
@@ -348,6 +404,7 @@ html[data-theme="night"] .app-financial-goal-metrics {
 }
 
 .app-goal-resource-form__remove .material-symbols-rounded {
+  color: var(--modal-close-color);
   font-size: 1rem;
 }
 
@@ -439,6 +496,7 @@ html[data-theme="night"] .app-financial-goal-metrics {
 }
 
 .expense-modal-row__remove .material-symbols-rounded {
+  color: var(--modal-close-color);
   font-size: 1rem;
 }
 
@@ -486,8 +544,9 @@ html[data-theme="night"] .app-financial-goal-metrics {
     width: calc(100vw - 20px);
     max-width: calc(100vw - 20px);
     height: auto;
-    max-height: none;
-    min-height: calc(100% - 20px);
+    max-height: 80vh;
+    max-height: 80dvh;
+    min-height: 0;
     margin: 10px auto;
     align-items: center;
   }
@@ -495,14 +554,16 @@ html[data-theme="night"] .app-financial-goal-metrics {
   #turboModal .modal-content,
   #turboModal .modal-dialog.modal-wide .modal-content {
     width: 100% !important;
-    max-height: calc(100dvh - 20px);
+    max-height: 80vh;
+    max-height: 80dvh;
     border-radius: 10px;
   }
 
   #modal-body,
   #turboModal .modal-dialog.modal-wide #modal-body {
     height: auto !important;
-    max-height: calc(100dvh - 20px);
+    max-height: 80vh;
+    max-height: 80dvh;
     padding: 1rem;
     overflow-x: hidden;
     overflow-y: auto;

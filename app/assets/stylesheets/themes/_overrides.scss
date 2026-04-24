@@ -129,6 +129,10 @@ html[data-theme="night"] .app-filter-field .form-control::placeholder {
   color: var(--text-soft) !important;
 }
 
+html[data-theme="night"] .app-filter-field .form-control[name="description"]::placeholder {
+  color: #fff !important;
+}
+
 html[data-theme="night"] .app-filter-field .form-control:focus,
 html[data-theme="night"] .app-filter-field .form-select:focus,
 html[data-theme="night"] .app-per-page-control__select:focus {

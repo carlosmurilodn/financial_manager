@@ -25,6 +25,21 @@
   <div class="app-panel app-panel--table">
     <div class="app-list-toolbar">
       <%= form_with url: categories_path, method: :get, local: true, class: "app-list-toolbar__form" do %>
+        <div class="app-filter-field app-list-toolbar__search">
+          <%= label_tag :description, "Descricao" %>
+          <%= text_field_tag :description, @description_filter, class: "form-control", placeholder: "Buscar descricao..." %>
+        </div>
+
+        <%= button_tag class: "btn app-page__primary-btn app-list-toolbar__button" do %>
+          <i class="bi bi-funnel me-1"></i> <%= t("buttons.filter") %>
+        <% end %>
+
+        <% if @description_filter.present? %>
+          <%= link_to categories_path(request.query_parameters.except(:description, :page)), class: "btn app-page__secondary-btn app-list-toolbar__button" do %>
+            <i class="bi bi-x-circle me-1"></i> Limpar
+          <% end %>
+        <% end %>
+
         <%= render "shared/per_page_select" %>
       <% end %>
     </div>
@@ -72,7 +87,7 @@
 <div class="modal fade" id="turboModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div id="modal-body" style="height: 280px;"></div>
+      <div id="modal-body"></div>
     </div>
   </div>
 </div>

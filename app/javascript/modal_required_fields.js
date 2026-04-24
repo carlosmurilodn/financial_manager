@@ -22,6 +22,10 @@ function isRequired(input) {
   return input.required;
 }
 
+function isConditionallyRequired(input) {
+  return input.dataset.requiredWhenCredit === "true" || input.dataset.requiredWhenInstallments === "true";
+}
+
 function currencyValue(input) {
   return Number(input.value.replace(/\D/g, ""));
 }
@@ -45,41 +49,65 @@ function isInvalid(input) {
   return isEmpty(input);
 }
 
-function feedbackFor(input) {
-  const field = closestField(input);
-  if (!field) return null;
+function disposeRequiredTooltip(input) {
+  if (input.dataset.requiredTooltipActive !== "true") return;
 
-  let feedback = field.querySelector(":scope > .invalid-feedback");
-  if (!feedback) {
-    feedback = document.createElement("div");
-    feedback.className = "invalid-feedback";
-    field.appendChild(feedback);
-  }
+  bootstrap.Tooltip.getInstance(input)?.dispose();
 
-  return feedback;
+  delete input.dataset.requiredTooltipActive;
+  input.removeAttribute("data-bs-toggle");
+  input.removeAttribute("data-bs-placement");
+  input.removeAttribute("data-bs-custom-class");
+  input.removeAttribute("data-bs-trigger");
+  input.removeAttribute("data-bs-original-title");
+  input.removeAttribute("title");
 }
 
-function setInvalid(input, invalid) {
+function showRequiredTooltip(input) {
+  const message = invalidMessage(input);
+
+  input.dataset.requiredTooltipActive = "true";
+  input.setAttribute("data-bs-toggle", "tooltip");
+  input.setAttribute("data-bs-placement", "top");
+  input.setAttribute("data-bs-custom-class", "app-required-tooltip");
+  input.setAttribute("data-bs-trigger", "manual");
+  input.setAttribute("title", message);
+
+  const tooltip = bootstrap.Tooltip.getOrCreateInstance(input, {
+    container: "#turboModal",
+    customClass: "app-required-tooltip",
+    placement: "top",
+    trigger: "manual"
+  });
+
+  tooltip.setContent({ ".tooltip-inner": message });
+  tooltip.show();
+}
+
+function setInvalid(input, invalid, { show = true } = {}) {
   const field = closestField(input);
-  const feedback = feedbackFor(input);
+  const visibleInvalid = invalid && show;
 
-  input.classList.toggle("is-invalid", invalid);
-  input.setAttribute("aria-invalid", invalid ? "true" : "false");
-  field?.classList.toggle("has-required-error", invalid);
+  input.classList.toggle("is-invalid", visibleInvalid);
+  input.setAttribute("aria-invalid", visibleInvalid ? "true" : "false");
+  field?.classList.toggle("has-required-error", visibleInvalid);
 
-  if (feedback) {
-    feedback.textContent = invalid ? invalidMessage(input) : "";
-    feedback.classList.toggle("d-block", invalid);
+  if (visibleInvalid) {
+    showRequiredTooltip(input);
+  } else {
+    disposeRequiredTooltip(input);
   }
 }
 
-function validateInput(input) {
+function validateInput(input, options = {}) {
   const invalid = isInvalid(input);
-  setInvalid(input, invalid);
+  setInvalid(input, invalid, options);
   return !invalid;
 }
 
 function validateForm(form) {
+  form.dataset.requiredSubmitAttempted = "true";
+
   const inputs = [...form.querySelectorAll(REQUIRED_SELECTOR)];
   const invalidInputs = inputs.filter((input) => !validateInput(input));
   const firstInvalid = invalidInputs[0];
@@ -110,7 +138,13 @@ export function initializeModalRequiredFields(scope = document) {
 
 document.addEventListener("input", (event) => {
   if (!event.target.matches(REQUIRED_SELECTOR)) return;
-  validateInput(event.target);
+
+  const form = event.target.closest("form");
+  const show = !isConditionallyRequired(event.target) ||
+    form?.dataset.requiredSubmitAttempted === "true" ||
+    event.target.dataset.requiredTooltipActive === "true";
+
+  validateInput(event.target, { show });
 });
 
 document.addEventListener("change", (event) => {
@@ -122,10 +156,18 @@ document.addEventListener("change", (event) => {
     return;
   }
 
-  validateInput(event.target);
+  const show = !isConditionallyRequired(event.target) ||
+    form.dataset.requiredSubmitAttempted === "true" ||
+    event.target.dataset.requiredTooltipActive === "true";
+
+  validateInput(event.target, { show });
 
   if (event.target.matches("[data-payment-method-select], #payment_method_select, [name$='[payment_method]']")) {
-    form.querySelectorAll("[data-required-when-credit='true'], [data-required-when-installments='true']").forEach(validateInput);
+    form.querySelectorAll("[data-required-when-credit='true'], [data-required-when-installments='true']").forEach((input) => {
+      validateInput(input, {
+        show: form.dataset.requiredSubmitAttempted === "true" || input.dataset.requiredTooltipActive === "true"
+      });
+    });
   }
 });
 

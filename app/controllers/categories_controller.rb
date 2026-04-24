@@ -57,6 +57,14 @@ end
 
   def load_categories
     categories = Category.order(:name).to_a
+    @description_filter = params[:description].to_s.strip
+
+    if @description_filter.present?
+      normalized_description = normalize_category_filter(@description_filter)
+      categories = categories.select do |category|
+        category.normalized_name.include?(normalized_description)
+      end
+    end
 
     month_range = Date.current.beginning_of_month..Date.current.end_of_month
     current_expenses = Expense.where(balance_month: month_range)
@@ -76,6 +84,16 @@ end
       "icon" => ->(category) { category.material_icon.to_s },
       "name" => ->(category) { category.display_name.to_s }
     }
+  end
+
+  def normalize_category_filter(value)
+    value
+      .unicode_normalize(:nfkd)
+      .encode("ASCII", replace: "", undef: :replace)
+      .downcase
+      .gsub(/[^a-z0-9]+/, " ")
+      .squeeze(" ")
+      .strip
   end
 
   def set_category

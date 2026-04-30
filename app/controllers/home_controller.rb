@@ -242,7 +242,7 @@ class HomeController < ApplicationController
         goal.due_date || Date.new(9999, 12, 31),
         goal.description.to_s
       ]
-    end.first(4)
+    end
 
     @financial_goals_total_remaining = goals.sum(&:remaining_amount)
     @financial_goals_average_progress = if goals.any?

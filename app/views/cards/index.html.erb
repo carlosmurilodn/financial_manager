@@ -22,21 +22,58 @@
     </div>
   </div>
 
-  <div class="app-panel app-panel--table">
-    <div class="app-list-toolbar">
-      <%= form_with url: cards_path, method: :get, local: true, class: "app-list-toolbar__form" do %>
-        <%= render "shared/per_page_select" %>
-      <% end %>
-    </div>
+  <div class="app-panel">
+    <%= form_with url: cards_path, method: :get, local: true, class: "app-filter-form" do |f| %>
+      <div class="app-filter-grid app-filter-grid--cards">
+        <div class="app-filter-field">
+          <%= f.label :description, "Descrição" %>
+          <%= f.text_field :description, value: @description_filter, class: "form-control", placeholder: "Buscar dívida ou cartão..." %>
+        </div>
 
+        <div class="app-filter-field">
+          <%= f.label :month, "Mês" %>
+          <%= f.select :month,
+                options_for_select(
+                  [["Todos", 0]] + I18n.t("date.month_names")[1..12].map.with_index { |m, i| [m.capitalize, i + 1] },
+                  @month || 0
+                ),
+                {}, class: "form-select" %>
+        </div>
+
+        <div class="app-filter-field">
+          <%= f.label :year, "Ano" %>
+          <%= f.select :year,
+                options_for_select([["Todos", 0]] + (@card_debt_years || []), @year || 0),
+                {}, class: "form-select" %>
+        </div>
+      </div>
+
+      <div class="app-filter-actions">
+        <%= f.button class: "btn app-page__primary-btn" do %>
+          <i class="bi bi-funnel me-1"></i> <%= t("buttons.filter") %>
+        <% end %>
+
+        <%= link_to clear_filters_cards_path,
+                    class: "btn app-page__secondary-btn",
+                    data: { turbo_method: :delete } do %>
+          <i class="bi bi-x-circle me-1"></i> Limpar Filtros
+        <% end %>
+
+        <%= render "shared/per_page_select" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="app-panel app-panel--table">
     <div class="table-responsive">
       <table class="table app-table app-table--records app-table--index mb-0">
         <thead>
           <tr>
             <th><%= sortable_table_header(t("cards.form.name"), "name") %></th>
-            <th><% sortable_table_header(t("cards.form.number"), "number") %></th>
+            <th><%= sortable_table_header(t("cards.form.number"), "number") %></th>
             <th><%= sortable_table_header("Limite Total", "total_limit") %></th>
             <th><%= sortable_table_header("Limite Restante", "remaining_limit") %></th>
+            <th><%= sortable_table_header("Valor do Mês de Balanço", "balance_month_amount") %></th>
             <th><%= sortable_table_header("Dia do Vencimento", "due_day") %></th>
             <th><%= sortable_table_header("Dia de Fechamento", "closing_day") %></th>
             <th><%= t("tables.expenses.actions") %></th>
@@ -51,7 +88,8 @@
               </td>
               <td class="text-center"><%= card.number.present? ? "**** **** **** #{card.number[-4..-1]}" : "" %></td>
               <td class="text-center"><%= number_to_currency(card.total_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
-              <td class="text-center"><%= number_to_currency(card.remaining_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
+              <td class="text-center"><%= number_to_currency(card.total_limit.to_f - @card_debt_totals_by_card.fetch(card.id, 0).to_f, unit: "R$ ", separator: ",", delimiter: ".") %></td>
+              <td class="text-center"><%= number_to_currency(@card_debt_totals_by_card.fetch(card.id, 0), unit: "R$ ", separator: ",", delimiter: ".") %></td>
               <td class="text-center"><%= card.due_day %></td>
               <td class="text-center"><%= card.closing_day %></td>
               <td class="app-record-actions text-center">

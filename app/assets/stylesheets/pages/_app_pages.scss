@@ -590,6 +590,10 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.app-filter-grid--cards {
+  grid-template-columns: minmax(240px, 2fr) minmax(140px, 1fr) minmax(140px, 1fr);
+}
+
 .app-filter-grid--financial-goals {
   grid-template-columns: repeat(14, minmax(0, 1fr));
 }

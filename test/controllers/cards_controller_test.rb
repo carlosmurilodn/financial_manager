@@ -80,6 +80,82 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
     assert_not @card.reload.icon.attached?
   end
 
+  test "index filters cards by debt description and balance month" do
+    other_card = Card.create!(
+      name: "Cartao Viagem",
+      number: "8765432187654321",
+      total_limit: 3000,
+      due_day: 15,
+      closing_day: 10
+    )
+
+    Expense.create!(
+      amount: 300,
+      date: Date.new(2026, 3, 2),
+      balance_month: Date.new(2026, 3, 1),
+      description: "Notebook",
+      category: @category,
+      card: @card,
+      payment_method: :credito_a_vista,
+      paid: false
+    )
+
+    Expense.create!(
+      amount: 120,
+      date: Date.new(2025, 7, 10),
+      balance_month: Date.new(2025, 7, 1),
+      description: "Hotel",
+      category: @category,
+      card: other_card,
+      payment_method: :credito_a_vista,
+      paid: false
+    )
+
+    Expense.create!(
+      amount: 90,
+      date: Date.new(2024, 1, 5),
+      balance_month: Date.new(2024, 1, 1),
+      description: "Divida paga",
+      category: @category,
+      card: other_card,
+      payment_method: :credito_a_vista,
+      paid: true
+    )
+
+    get cards_url, params: { description: "note", month: 3, year: 2026 }
+
+    assert_response :success
+    assert_includes response.body, "Cartao Teste"
+    refute_includes response.body, "Cartao Viagem"
+    assert_select "select[name='year'] option", text: "2026"
+    assert_select "select[name='year'] option", text: "2025"
+    assert_select "select[name='year'] option", text: "2024", count: 0
+  end
+
+  test "index can filter by card name with balance month" do
+    Expense.create!(
+      amount: 300,
+      date: Date.new(2026, 3, 2),
+      balance_month: Date.new(2026, 3, 1),
+      description: "Compra qualquer",
+      category: @category,
+      card: @card,
+      payment_method: :credito_a_vista,
+      paid: false
+    )
+
+    get cards_url, params: { description: "teste", month: 3, year: 2026 }
+
+    assert_response :success
+    assert_includes response.body, "Cartao Teste"
+  end
+
+  test "clear filters redirects to cards index" do
+    delete clear_filters_cards_url
+
+    assert_redirected_to cards_url
+  end
+
   test "pay marks current month credit expenses as paid" do
     current_month = Date.current.beginning_of_month
     next_month = current_month.next_month

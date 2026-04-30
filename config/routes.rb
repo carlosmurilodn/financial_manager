@@ -37,6 +37,10 @@ Rails.application.routes.draw do
     member do
       post :pay
     end
+
+    collection do
+      delete :clear_filters
+    end
   end
 
   resources :reports, only: [:index] do

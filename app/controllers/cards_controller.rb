@@ -52,18 +52,21 @@ class CardsController < ApplicationController
     end
   end
 
+  def clear_filters
+    session.delete(:cards_description)
+    session.delete(:cards_month)
+    session.delete(:cards_year)
+
+    redirect_to cards_path, notice: "Filtros limpos com sucesso!"
+  end
+
   def pay
     start_of_month = Date.current.beginning_of_month
     end_of_month = Date.current.end_of_month
 
-    credit_methods = [
-      Expense.payment_methods[:credito_a_vista],
-      Expense.payment_methods[:credito_parcelado]
-    ]
-
     ActiveRecord::Base.transaction do
       updated_expenses_count = @card.expenses
-                                    .where(paid: false, payment_method: credit_methods)
+                                    .where(paid: false, payment_method: credit_payment_methods)
                                     .where(balance_month: start_of_month..end_of_month)
                                     .update_all(paid: true)
 
@@ -80,19 +83,89 @@ class CardsController < ApplicationController
   private
 
   def load_cards
-    cards = Card.order(:name).to_a
-    @cards_limit_total = cards.sum { |card| card.total_limit.to_f }
-    @cards_limit_available = cards.sum { |card| card.remaining_limit.to_f }
-    @cards_limit_used = @cards_limit_total - @cards_limit_available
+    load_card_filters
 
-    credit_methods = [
+    debt_scope = card_debt_scope
+    @card_debt_years = debt_year_options(debt_scope)
+    filtered_debt_scope = apply_card_debt_filters(debt_scope)
+    card_ids_from_debt = filtered_debt_scope.distinct.pluck(:card_id)
+    @card_debt_totals_by_card = filtered_debt_scope.group(:card_id).sum(:amount)
+
+    cards = Card.order(:name).to_a
+    cards = cards.select { |card| card_matches_filters?(card, card_ids_from_debt) } if card_filters_active?
+
+    @cards_limit_total = cards.sum { |card| card.total_limit.to_f }
+    @cards_limit_available = cards.sum { |card| remaining_limit_for(card) }
+    @cards_limit_used = @cards_limit_total - @cards_limit_available
+    @cards_open_invoices = filtered_debt_scope.sum(:amount)
+
+    cards = sort_collection(cards, sort_map: card_sort_map, default_sort: "name")
+    @cards = paginate_collection(cards, per_page: pagination_per_page(:cards_per_page))
+  end
+
+  def load_card_filters
+    session[:cards_description] = params[:description].to_s.strip if params.key?(:description)
+    @description_filter = session[:cards_description].presence
+
+    session[:cards_month] = params[:month].to_i if params[:month].present?
+    @month = session[:cards_month]
+    @month = nil if @month.blank? || @month.zero?
+
+    session[:cards_year] = params[:year].to_i if params[:year].present?
+    @year = session[:cards_year]
+    @year = nil if @year.blank? || @year.zero?
+  end
+
+  def card_debt_scope
+    Expense.where(paid: false, payment_method: credit_payment_methods)
+           .where.not(card_id: nil)
+  end
+
+  def apply_card_debt_filters(scope)
+    filtered_scope = scope
+    filtered_scope = filtered_scope.where("CAST(strftime('%m', balance_month) AS INTEGER) = ?", @month) if @month.present?
+    filtered_scope = filtered_scope.where("CAST(strftime('%Y', balance_month) AS INTEGER) = ?", @year) if @year.present?
+
+    apply_card_description_filter(filtered_scope)
+  end
+
+  def apply_card_description_filter(scope)
+    return scope if @description_filter.blank?
+
+    query = "%#{@description_filter.downcase}%"
+    matching_card_ids = Card.where("LOWER(name) LIKE ?", query).pluck(:id)
+
+    return scope.where("LOWER(description) LIKE ?", query) if matching_card_ids.blank?
+
+    scope.where("LOWER(description) LIKE :query OR card_id IN (:card_ids)", query: query, card_ids: matching_card_ids)
+  end
+
+  def debt_year_options(scope)
+    scope.pluck(:balance_month)
+         .compact
+         .map(&:year)
+         .uniq
+         .sort
+         .reverse
+  end
+
+  def card_filters_active?
+    @description_filter.present? || @month.present? || @year.present?
+  end
+
+  def card_matches_filters?(card, card_ids_from_debt)
+    card_ids_from_debt.include?(card.id)
+  end
+
+  def remaining_limit_for(card)
+    card.total_limit.to_f - @card_debt_totals_by_card.fetch(card.id, 0).to_f
+  end
+
+  def credit_payment_methods
+    [
       Expense.payment_methods[:credito_a_vista],
       Expense.payment_methods[:credito_parcelado]
     ]
-
-    @cards_open_invoices = Expense.where(paid: false, payment_method: credit_methods).sum(:amount)
-    cards = sort_collection(cards, sort_map: card_sort_map, default_sort: "name")
-    @cards = paginate_collection(cards, per_page: pagination_per_page(:cards_per_page))
   end
 
   def card_sort_map
@@ -100,7 +173,8 @@ class CardsController < ApplicationController
       "name" => ->(card) { card.name.to_s },
       "number" => ->(card) { card.number.to_s },
       "total_limit" => ->(card) { card.total_limit.to_d },
-      "remaining_limit" => ->(card) { card.remaining_limit.to_d },
+      "remaining_limit" => ->(card) { remaining_limit_for(card).to_d },
+      "balance_month_amount" => ->(card) { @card_debt_totals_by_card.fetch(card.id, 0).to_d },
       "due_day" => ->(card) { card.due_day.to_i },
       "closing_day" => ->(card) { card.closing_day.to_i }
     }

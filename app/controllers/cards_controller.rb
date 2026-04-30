@@ -61,16 +61,17 @@ class CardsController < ApplicationController
   end
 
   def pay
-    start_of_month = Date.current.beginning_of_month
-    end_of_month = Date.current.end_of_month
+    balance_month = selected_pay_balance_month
+    balance_month_range = balance_month.beginning_of_month..balance_month.end_of_month
+    now = Time.current
 
     ActiveRecord::Base.transaction do
       updated_expenses_count = @card.expenses
                                     .where(paid: false, payment_method: credit_payment_methods)
-                                    .where(balance_month: start_of_month..end_of_month)
-                                    .update_all(paid: true)
+                                    .where(balance_month: balance_month_range)
+                                    .update_all(paid: true, paid_at: now, updated_at: now)
 
-      flash[:notice] = "Pagamentos atualizados: #{updated_expenses_count} despesas marcadas como pagas."
+      flash[:notice] = "Pagamentos atualizados: #{updated_expenses_count} despesas marcadas como pagas para #{balance_month.strftime('%m/%Y')}."
     end
 
     redirect_to cards_path
@@ -84,6 +85,8 @@ class CardsController < ApplicationController
 
   def load_cards
     load_card_filters
+    @pay_balance_month = selected_pay_balance_month
+    @pay_balance_month_label = @pay_balance_month.strftime("%m/%Y")
 
     debt_scope = card_debt_scope
     @card_debt_years = debt_year_options(debt_scope)
@@ -165,6 +168,17 @@ class CardsController < ApplicationController
       Expense.payment_methods[:credito_a_vista],
       Expense.payment_methods[:credito_parcelado]
     ]
+  end
+
+  def selected_pay_balance_month
+    month = (params[:month].presence || session[:cards_month]).to_i
+    year = (params[:year].presence || session[:cards_year]).to_i
+
+    return Date.current.beginning_of_month if month.zero? || year.zero?
+
+    Date.new(year, month, 1)
+  rescue ArgumentError
+    Date.current.beginning_of_month
   end
 
   def card_sort_map

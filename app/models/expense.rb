@@ -27,6 +27,7 @@ class Expense < ApplicationRecord
 
   before_validation :set_default_repetir, unless: -> { repetir.present? }
   before_validation :set_default_installment_values
+  before_save :sync_paid_at, if: -> { has_attribute?(:paid_at) }
 
   def installment_label
     return "Unica" unless payment_method_credito_parcelado?
@@ -69,10 +70,11 @@ class Expense < ApplicationRecord
     return update!(paid: !paid) unless payment_method_credito_parcelado? && installment_group_id.present?
 
     target_paid = !paid
+    paid_at = target_paid ? Time.current : nil
 
     self.class.where(installment_group_id: installment_group_id)
               .where("current_installment >= ?", current_installment)
-              .update_all(paid: target_paid)
+              .update_all(paid: target_paid, paid_at: paid_at, updated_at: Time.current)
   end
 
   def self.payment_method_names
@@ -129,6 +131,11 @@ class Expense < ApplicationRecord
 
   def should_generate_future_installment_expenses?
     payment_method_credito_parcelado? && installment_group_id.blank?
+  end
+
+  def sync_paid_at
+    self.paid_at = Time.current if paid? && paid_at.blank?
+    self.paid_at = nil unless paid?
   end
 
   def current_installment_cannot_exceed_total_installments

@@ -22,7 +22,7 @@ test:
 production:
   primary:
     <<: *default
-    url: <%= ENV["DATABASE_URL"] %>
+    url: <%= ENV["DATABASE_URL_FINANCIAL_MANAGER"] %>
 
   cache:
     <<: *default

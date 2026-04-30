@@ -14,12 +14,12 @@
                 class: "btn btn-sm btn-secondary app-record-actions__status" %>
   </td>
   <td class="text-center app-record-actions">
-    <%= link_to t("buttons.edit"),
+    <%= link_to "✏️ #{t("buttons.edit")}",
                 edit_income_path(income),
                 class: "btn btn-sm btn-primary app-record-actions__edit",
                 data: { turbo_frame: "modal" } %>
 
-    <%= link_to t("buttons.delete"),
+    <%= link_to "🗑️ #{t("buttons.delete")}",
                 income_path(income),
                 data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
                 class: "btn btn-sm btn-danger app-record-actions__delete" %>

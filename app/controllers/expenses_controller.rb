@@ -1,5 +1,6 @@
 class ExpensesController < ApplicationController
   before_action :set_expense, only: %i[show edit update destroy toggle_paid delete_options toggle_paid_options]
+  helper_method :expenses_filter_params
 
   def index
     load_expenses
@@ -157,10 +158,11 @@ class ExpensesController < ApplicationController
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.replace("expenses-table", partial: "expenses_table"),
-          turbo_stream.replace("expenses-hero-kpis", partial: "hero_kpis")
+          turbo_stream.replace("expenses-hero-kpis", partial: "hero_kpis"),
+          turbo_stream.update("modal", "")
         ]
       end
-      format.html { redirect_to expenses_path }
+      format.html { redirect_to expenses_path(request.query_parameters.except(:paid_scope)) }
     end
   end
 
@@ -203,6 +205,22 @@ class ExpensesController < ApplicationController
   end
 
   private
+
+  def expenses_filter_params
+    {
+      description: @description_filter,
+      month: @month,
+      year: @year,
+      category_id: @category_filter,
+      payment_method: @payment_method_filter,
+      card_id: @card_filter,
+      paid: @paid_filter,
+      sort: @sort,
+      direction: @direction,
+      per_page: @per_page,
+      page: params[:page]
+    }.compact_blank
+  end
 
   def render_new_expense_with_errors
     respond_to do |format|

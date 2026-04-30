@@ -147,11 +147,11 @@
               <td class="text-center"><%= financial_goal.priority_label %></td>
               <td class="text-center"><%= financial_goal.due_date.strftime("%d/%m/%Y") %></td>
               <td class="app-record-actions text-center">
-                <%= link_to t("buttons.edit"),
+                <%= link_to "✏️ #{t("buttons.edit")}",
                     edit_financial_goal_path(financial_goal),
                     class: "btn btn-sm btn-primary app-record-actions__edit me-1",
                     data: { turbo_frame: "modal" } %>
-                <%= link_to t("buttons.delete"), financial_goal,
+                <%= link_to "🗑️ #{t("buttons.delete")}", financial_goal,
                             data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
                             class: "btn btn-sm btn-danger app-record-actions__delete" %>
               </td>

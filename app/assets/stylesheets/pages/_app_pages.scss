@@ -794,6 +794,22 @@
   border-color: rgba(148, 163, 184, 0.16) !important;
 }
 
+.app-record-actions__status--success,
+.app-record-actions__status--success:hover,
+.app-record-actions__status--success:focus {
+  background: var(--pill-success-bg) !important;
+  color: var(--pill-success-color) !important;
+  border-color: var(--pill-success-bg) !important;
+}
+
+.app-record-actions__status--danger,
+.app-record-actions__status--danger:hover,
+.app-record-actions__status--danger:focus {
+  background: var(--pill-danger-bg) !important;
+  color: var(--pill-danger-color) !important;
+  border-color: var(--pill-danger-bg) !important;
+}
+
 .app-record-actions__edit {
   background: rgba(88, 113, 231, 0.3) !important;
   color: #5670e4 !important;
@@ -872,4 +888,3 @@
   color: var(--text-soft);
   line-height: 1.5;
 }
-

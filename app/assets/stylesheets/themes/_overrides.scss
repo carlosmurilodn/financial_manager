@@ -505,9 +505,9 @@ html[data-theme="night"] .app-table--records tbody tr:hover td {
   background-color: var(--table-hover-bg) !important;
 }
 
-html[data-theme="night"] .app-record-actions__status,
-html[data-theme="night"] .app-record-actions__status:hover,
-html[data-theme="night"] .app-record-actions__status:focus {
+html[data-theme="night"] .app-record-actions__status:not(.app-record-actions__status--success):not(.app-record-actions__status--danger),
+html[data-theme="night"] .app-record-actions__status:not(.app-record-actions__status--success):not(.app-record-actions__status--danger):hover,
+html[data-theme="night"] .app-record-actions__status:not(.app-record-actions__status--success):not(.app-record-actions__status--danger):focus {
   color: #d8d2ea !important;
 }
 

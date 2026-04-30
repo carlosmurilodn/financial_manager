@@ -93,17 +93,17 @@
               <td class="text-center"><%= card.due_day %></td>
               <td class="text-center"><%= card.closing_day %></td>
               <td class="app-record-actions text-center">
-                <%= link_to t("buttons.edit"),
+                <%= link_to "✏️ #{t("buttons.edit")}",
                     edit_card_path(card),
                     class: "btn btn-sm btn-primary app-record-actions__edit me-1",
                     data: { turbo_frame: "modal" } %>
-                <%= link_to t("buttons.delete"), card,
+                <%= link_to "🗑️ #{t("buttons.delete")}", card,
                             data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
                             class: "btn btn-sm btn-danger app-record-actions__delete me-1" %>
                 <%= form_with url: pay_card_path(card), method: :post, data: { turbo_confirm: "Deseja marcar como pagas todas as despesas e parcelas NÃO pagas deste cartão para o mês de balanço #{@pay_balance_month_label}?" }, class: "d-inline" do %>
                   <%= hidden_field_tag :month, @month if @month.present? %>
                   <%= hidden_field_tag :year, @year if @year.present? %>
-                  <%= submit_tag "Pagar", class: "btn btn-sm btn-warning app-record-actions__pay" %>
+                  <%= submit_tag "💳 Pagar", class: "btn btn-sm btn-warning app-record-actions__pay" %>
                 <% end %>
               </td>
             </tr>

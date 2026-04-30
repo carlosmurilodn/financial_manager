@@ -368,6 +368,9 @@ GEM
     wkhtmltopdf-binary (0.12.6.10)
     xpath (3.2.0)
       nokogiri (~> 1.8)
+    yaml_db (0.7.0)
+      rails (>= 3.0)
+      rake (>= 0.8.7)
     zeitwerk (2.7.3)
 
 PLATFORMS
@@ -408,6 +411,7 @@ DEPENDENCIES
   tzinfo-data
   web-console
   wkhtmltopdf-binary
+  yaml_db
 
 BUNDLED WITH
    2.7.1

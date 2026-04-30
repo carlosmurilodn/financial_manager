@@ -7,10 +7,10 @@ class HomeController < ApplicationController
     set_category_expenses_data
     set_calendar_data
     set_recent_expenses
+    set_recent_incomes
     prepare_calendar_data
     set_forecast_data
     set_financial_goals_data
-    @recent_incomes = Income.includes(:category).where(balance_month: @mes_atual).order(date: :desc)
   end
 
   private
@@ -173,9 +173,15 @@ class HomeController < ApplicationController
 
   def set_recent_expenses
     @recent_expenses = Expense.includes(:category)
-                              .select(:id, :description, :amount, :date, :category_id)
-                              .where(date: @mes_atual)
-                              .order(date: :desc, id: :desc)
+                              .select(:id, :description, :amount, :date, :balance_month, :category_id)
+                              .where("date >= ?", @hoje.beginning_of_month)
+                              .order(date: :asc, id: :desc)
+  end
+
+  def set_recent_incomes
+    @recent_incomes = Income.includes(:category)
+                            .where("balance_month >= ?", @hoje.beginning_of_month)
+                            .order(balance_month: :asc, date: :desc, id: :desc)
   end
 
   def prepare_calendar_data

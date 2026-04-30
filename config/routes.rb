@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  devise_for :users, controllers: {
+    sessions: "users/sessions"
+  }
+
   root "home#index"
 
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest

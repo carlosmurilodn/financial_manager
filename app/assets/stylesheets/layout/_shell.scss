@@ -379,6 +379,19 @@ html[data-theme="night"] .app-footer {
   background: var(--surface);
 }
 
+.app-nav-form {
+  margin: 0;
+}
+
+.app-nav-form .app-nav-link {
+  text-align: left;
+}
+
+.app-nav-link--logout {
+  margin-top: 8px;
+  color: var(--danger);
+}
+
 html[data-theme="night"] .app-footer__chip {
   color: var(--white);
 }

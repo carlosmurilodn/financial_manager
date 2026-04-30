@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include BrazilianParameterParsing
+  before_action :authenticate_user!
 
   PER_PAGE_OPTIONS = [10, 25, 50, 100].freeze
   DEFAULT_PER_PAGE = 10

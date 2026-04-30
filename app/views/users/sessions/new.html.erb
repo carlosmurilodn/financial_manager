@@ -1,0 +1,51 @@
+<section class="app-auth">
+  <div class="app-auth__brand">
+    <div class="app-auth__logo" aria-hidden="true">
+      <span class="material-symbols-rounded">account_balance_wallet</span>
+    </div>
+    <div>
+      <span class="app-auth__eyebrow">Gerenciador Financeiro</span>
+      <h1>Acesse seu painel</h1>
+      <p>Entre com sua conta para acompanhar receitas, despesas, cartoes e objetivos.</p>
+    </div>
+  </div>
+
+  <div class="app-auth__panel">
+    <div class="app-auth__panel-header">
+      <span class="material-symbols-rounded">lock</span>
+      <div>
+        <h2>Login</h2>
+        <p>Email e senha agora. Passkey entra como atalho seguro na proxima etapa.</p>
+      </div>
+    </div>
+
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "app-auth__form" }) do |f| %>
+      <div class="app-auth__field">
+        <%= f.label :email, "Email" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control", required: true %>
+      </div>
+
+      <div class="app-auth__field">
+        <%= f.label :password, "Senha" %>
+        <%= f.password_field :password, autocomplete: "current-password", class: "form-control", required: true %>
+      </div>
+
+      <% if devise_mapping.rememberable? %>
+        <label class="app-auth__remember">
+          <%= f.check_box :remember_me %>
+          <span>Lembrar acesso neste dispositivo</span>
+        </label>
+      <% end %>
+
+      <%= f.button type: "submit", class: "btn app-auth__submit" do %>
+        <span class="material-symbols-rounded">login</span>
+        Entrar
+      <% end %>
+    <% end %>
+
+    <div class="app-auth__passkey">
+      <span class="material-symbols-rounded">passkey</span>
+      <span>Passkey preservada para login rapido opcional.</span>
+    </div>
+  </div>
+</section>

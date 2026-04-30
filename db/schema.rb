@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_30_090000) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_30_143000) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -78,7 +81,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_30_090000) do
   end
 
   create_table "financial_goal_resources", force: :cascade do |t|
-    t.integer "financial_goal_id", null: false
+    t.bigint "financial_goal_id", null: false
     t.integer "resource_type", default: 0, null: false
     t.string "description", null: false
     t.decimal "amount", precision: 12, scale: 2, default: "0.0", null: false
@@ -103,7 +106,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_30_090000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "current_amount", precision: 12, scale: 2, default: "0.0", null: false
-    t.integer "category_id"
+    t.bigint "category_id"
     t.index ["category_id"], name: "index_financial_goals_on_category_id"
     t.index ["due_date"], name: "index_financial_goals_on_due_date"
     t.index ["priority"], name: "index_financial_goals_on_priority"
@@ -137,10 +140,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_30_090000) do
 
   create_table "users", force: :cascade do |t|
     t.string "email", null: false
-    t.string "password_digest", null: false
+    t.string "password_digest", default: "", null: false
     t.string "webauthn_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.datetime "remember_created_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["webauthn_id"], name: "index_users_on_webauthn_id", unique: true
   end

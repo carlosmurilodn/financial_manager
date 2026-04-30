@@ -17,4 +17,4 @@ test:
 
 production:
   <<: *default
-  database: <%= ENV.fetch("FINANCIAL_MANAGER_DATABASE_PATH", "/mnt/g/Meu Drive/OUTROS/gerenciador_financeiro/financial_manager.sqlite3") %>
+  url: <%= ENV.fetch("DATABASE_URL") %>

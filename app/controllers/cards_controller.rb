@@ -146,7 +146,6 @@ class CardsController < ApplicationController
          .map(&:year)
          .uniq
          .sort
-         .reverse
   end
 
   def card_filters_active?

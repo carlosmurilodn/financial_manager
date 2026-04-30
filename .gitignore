@@ -51,3 +51,4 @@
 /android-twa/local.properties
 /android-twa/android-keystore
 .codex
+/config/master.key

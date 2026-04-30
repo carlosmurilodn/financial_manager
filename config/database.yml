@@ -1,20 +1,32 @@
-
 default: &default
-  adapter: sqlite3
+  adapter: postgresql
+  encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
-
 
 development:
   <<: *default
-  database: <%= ENV.fetch("FINANCIAL_MANAGER_DATABASE_PATH", "/mnt/g/Meu Drive/OUTROS/gerenciador_financeiro/financial_manager.sqlite3") %>
-
+  database: financial_manager_development
 
 test:
   <<: *default
-  database: tmp/test.sqlite3
-
+  database: financial_manager_test
 
 production:
-  <<: *default
-  url: <%= ENV.fetch("DATABASE_URL") %>
+  primary:
+    <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
+
+  cache:
+    <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
+    migrations_paths: db/cache_migrate
+
+  queue:
+    <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
+    migrations_paths: db/queue_migrate
+
+  cable:
+    <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
+    migrations_paths: db/cable_migrate

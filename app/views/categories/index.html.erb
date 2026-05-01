@@ -23,28 +23,34 @@
     </div>
   </div>
 
-  <div class="app-panel app-panel--table">
-    <div class="app-list-toolbar">
-      <%= form_with url: categories_path, method: :get, local: true, class: "app-list-toolbar__form" do %>
-        <div class="app-filter-field app-list-toolbar__search">
-          <%= label_tag :description, "Descricao" %>
-          <%= text_field_tag :description, @description_filter, class: "form-control", placeholder: "Buscar descricao..." %>
+  <div class="app-panel">
+    <%= form_with url: categories_path, method: :get, local: true, class: "app-filter-form" do |f| %>
+      <div class="app-filter-grid">
+        <div class="app-filter-field">
+          <%= f.label :description, "Descrição" %>
+          <%= f.text_field :description,
+                value: @description_filter,
+                class: "form-control",
+                placeholder: "Buscar descrição..." %>
         </div>
+      </div>
 
-        <%= button_tag class: "btn app-page__primary-btn app-list-toolbar__button" do %>
+      <div class="app-filter-actions">
+        <%= f.button class: "btn app-page__primary-btn" do %>
           <i class="bi bi-funnel me-1"></i> <%= t("buttons.filter") %>
         <% end %>
 
-        <% if @description_filter.present? %>
-          <%= link_to categories_path(request.query_parameters.except(:description, :page)), class: "btn app-page__secondary-btn app-list-toolbar__button" do %>
-            <i class="bi bi-x-circle me-1"></i> Limpar
-          <% end %>
+        <%= link_to categories_path,
+                    class: "btn app-page__secondary-btn" do %>
+          <i class="bi bi-x-circle me-1"></i> Limpar Filtros
         <% end %>
 
         <%= render "shared/per_page_select" %>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
+  </div>
 
+  <div class="app-panel app-panel--table">
     <div class="table-responsive">
       <table class="table app-table app-table--records app-table--index mb-0">
         <thead>
@@ -74,7 +80,7 @@
               <td class="app-record-actions text-center">
                 <%= link_to "✏️ #{t("buttons.edit")}",
                             edit_category_path(category),
-                            class: "btn btn-sm btn-primary app-record-actions__edit",
+                            class: "btn btn-sm btn-primary app-record-actions__edit me-1",
                             data: { turbo_frame: "modal" } %>
 
                 <%= link_to "🗑️ #{t("buttons.delete")}",
@@ -92,7 +98,7 @@
               current_page: @current_page,
               total_pages: @total_pages,
               base_params: request.query_parameters.except(:page),
-              aria_label: "Paginacao de categorias" %>
+              aria_label: "Paginação de categorias" %>
   </div>
 </section>
 

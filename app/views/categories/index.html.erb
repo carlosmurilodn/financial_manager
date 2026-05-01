@@ -5,6 +5,7 @@
         <span class="app-page__hero-icon">
           <span class="material-symbols-rounded">category</span>
         </span>
+
         <div>
           <p class="app-page__eyebrow">Gestão</p>
           <h1 class="app-page__title">Categorias</h1>
@@ -48,21 +49,36 @@
       <table class="table app-table app-table--records app-table--index mb-0">
         <thead>
           <tr>
+            <th class="text-center">Item</th>
             <th><%= sortable_table_header("Ícone", "icon") %></th>
             <th><%= sortable_table_header(t("categories.form.name"), "name") %></th>
             <th><%= t("tables.expenses.actions") %></th>
           </tr>
         </thead>
+
         <tbody>
-          <% @categories.each do |category| %>
+          <% @categories.each_with_index do |category, index| %>
             <tr id="<%= dom_id(category) %>">
-              <td>
-                <span class="material-symbols-rounded dashboard-category-item__icon"><%= category.material_icon %></span>
+              <td class="text-center app-record-actions">
+                <%= @item_offset + index + 1 %>
               </td>
+
+              <td>
+                <span class="material-symbols-rounded dashboard-category-item__icon">
+                  <%= category.material_icon %>
+                </span>
+              </td>
+
               <td><%= category.display_name %></td>
+
               <td class="app-record-actions text-center">
-                <%= link_to "✏️ #{t("buttons.edit")}", edit_category_path(category), class: "btn btn-sm btn-primary app-record-actions__edit", data: { turbo_frame: "modal" } %>
-                <%= link_to "🗑️ #{t("buttons.delete")}", category,
+                <%= link_to "✏️ #{t("buttons.edit")}",
+                            edit_category_path(category),
+                            class: "btn btn-sm btn-primary app-record-actions__edit",
+                            data: { turbo_frame: "modal" } %>
+
+                <%= link_to "🗑️ #{t("buttons.delete")}",
+                            category,
                             data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
                             class: "btn btn-sm btn-danger app-record-actions__delete" %>
               </td>

@@ -3,6 +3,7 @@
     <table class="table app-table app-table--records app-table--index mb-0">
       <thead>
         <tr>
+          <th class="text-center">Item</th>
           <th class="text-center"><%= sortable_table_header("Descrição", "description") %></th>
           <th class="text-center"><%= sortable_table_header("Parcela", "installment") %></th>
           <th class="text-center"><%= sortable_table_header("Valor", "amount") %></th>
@@ -15,9 +16,14 @@
           <th class="text-center">Ações</th>
         </tr>
       </thead>
+
       <tbody id="expenses-list">
-        <% @expenses.each do |expense| %>
-          <%= render partial: "expense_row", locals: { expense: expense } %>
+        <% @expenses.each_with_index do |expense, index| %>
+          <%= render partial: "expense_row",
+                     locals: {
+                       expense: expense,
+                       item_number: ((@current_page.to_i - 1) * @per_page.to_i) + index + 1
+                     } %>
         <% end %>
       </tbody>
     </table>

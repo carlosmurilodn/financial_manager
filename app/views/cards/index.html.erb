@@ -69,6 +69,7 @@
       <table class="table app-table app-table--records app-table--index mb-0">
         <thead>
           <tr>
+            <th class="text-center">Item</th>
             <th><%= sortable_table_header(t("cards.form.name"), "name") %></th>
             <th><%= sortable_table_header(t("cards.form.number"), "number") %></th>
             <th><%= sortable_table_header("Limite Total", "total_limit") %></th>
@@ -80,8 +81,12 @@
           </tr>
         </thead>
         <tbody>
-          <% @cards.each do |card| %>
+          <% @cards.each_with_index do |card, index| %>
             <tr id="<%= dom_id(card) %>">
+              <td class="text-center app-record-actions">
+                <%= @item_offset + index + 1 %>
+              </td>
+
               <td>
                 <%= card.icon.attached? ? image_tag(card.icon, width: 20, class: "me-2") : "💳" %>
                 <%= card.name %>

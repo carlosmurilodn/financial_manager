@@ -1,4 +1,8 @@
 <tr id="<%= dom_id(expense) %>" class="<%= expense.paid? ? 'table-success' : 'table-warning' %>">
+  <td class="text-center app-record-actions">
+    <%= local_assigns[:item_number] || "-" %>
+  </td>
+
   <td><%= expense.description %></td>
 
   <td class="text-center app-record-actions">

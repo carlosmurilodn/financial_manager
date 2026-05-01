@@ -61,6 +61,7 @@ class CategoriesController < ApplicationController
 
     if @description_filter.present?
       normalized_description = normalize_category_filter(@description_filter)
+
       categories = categories.select do |category|
         category.normalized_name.include?(normalized_description)
       end
@@ -72,11 +73,24 @@ class CategoriesController < ApplicationController
 
     @categories_month_expenses = current_expenses.sum(:amount)
     @categories_month_incomes = current_incomes.sum(:amount)
-    @categories_top_expense_value = current_expenses.group(:category_id).sum(:amount).values.max || 0
-    @categories_uncategorized_value = current_expenses.where(category_id: nil).sum(:amount) +
-                                      current_incomes.where(category_id: nil).sum(:amount)
-    categories = sort_collection(categories, sort_map: category_sort_map, default_sort: "name")
-    @categories = paginate_collection(categories, per_page: pagination_per_page(:categories_per_page))
+
+    @categories_top_expense_value =
+      current_expenses.group(:category_id).sum(:amount).values.max || 0
+
+    @categories_uncategorized_value =
+      current_expenses.where(category_id: nil).sum(:amount) +
+      current_incomes.where(category_id: nil).sum(:amount)
+
+    categories = sort_collection(
+      categories,
+      sort_map: category_sort_map,
+      default_sort: "name"
+    )
+
+    @per_page = pagination_per_page(:categories_per_page)
+    @categories = paginate_collection(categories, per_page: @per_page)
+
+    @item_offset = ((@current_page.to_i - 1) * @per_page.to_i)
   end
 
   def category_sort_map

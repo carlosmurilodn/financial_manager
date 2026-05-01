@@ -103,7 +103,11 @@ class CardsController < ApplicationController
     @cards_open_invoices = filtered_debt_scope.sum(:amount)
 
     cards = sort_collection(cards, sort_map: card_sort_map, default_sort: "name")
-    @cards = paginate_collection(cards, per_page: pagination_per_page(:cards_per_page))
+
+    @per_page = pagination_per_page(:cards_per_page)
+    @cards = paginate_collection(cards, per_page: @per_page)
+
+    @item_offset = ((@current_page.to_i - 1) * @per_page.to_i)
   end
 
   def load_card_filters

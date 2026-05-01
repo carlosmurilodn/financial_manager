@@ -139,6 +139,8 @@ class IncomesController < ApplicationController
     @paid_filter = session[:incomes_paid]
     @paid_filter = nil if @paid_filter.blank?
 
+    @item_offset = 0
+
     all_incomes = current_user.incomes.includes(:category).order(balance_month: :asc, date: :asc)
     all_expenses = current_user.expenses.order(balance_month: :asc)
 
@@ -211,6 +213,9 @@ class IncomesController < ApplicationController
   end
 
   def paginate_incomes
-    @incomes = paginate_collection(@incomes, per_page: pagination_per_page(:incomes_per_page))
+    @per_page = pagination_per_page(:incomes_per_page)
+    @incomes = paginate_collection(@incomes, per_page: @per_page)
+
+    @item_offset = ((@current_page.to_i - 1) * @per_page.to_i)
   end
 end

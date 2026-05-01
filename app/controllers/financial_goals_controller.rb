@@ -6,14 +6,14 @@ class FinancialGoalsController < ApplicationController
   end
 
   def new
-    @financial_goal = current_user.financial_goals.new
+    @financial_goal = current_user.financial_goal.new
     load_categories
     load_resource_cards
     build_resource_rows
   end
 
   def create
-    @financial_goal = current_user.financial_goals.new(financial_goal_params)
+    @financial_goal = current_user.financial_goal.new(financial_goal_params)
 
     if @financial_goal.save
       respond_to do |format|
@@ -101,7 +101,7 @@ class FinancialGoalsController < ApplicationController
   end
 
   def set_financial_goal
-    @financial_goal = current_user.financial_goals.find(params[:id])
+    @financial_goal = current_user.financial_goal.find(params[:id])
   end
 
   def financial_goal_params

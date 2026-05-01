@@ -67,7 +67,7 @@ class FinancialGoalsController < ApplicationController
   private
 
   def load_financial_goals
-    goals = current_user.financial_goals.includes(:category, :financial_goal_resources).to_a
+    goals = current_user.financial_goal.includes(:category, :financial_goal_resources).to_a
 
     load_categories
     load_financial_goal_filters

@@ -21,20 +21,20 @@ class LocalInvoiceAnalyzer
   end
 
   def call
-    return Result.new(items: [], errors: ["Formato de arquivo não suportado pela IA local."]) unless supported_file?
-    return Result.new(items: [], errors: ["Ollama não está respondendo em #{API_URL}. Verifique se o serviço local está ativo."]) unless ollama_available?
+    return Result.new(items: [], errors: [ "Formato de arquivo não suportado pela IA local." ]) unless supported_file?
+    return Result.new(items: [], errors: [ "Ollama não está respondendo em #{API_URL}. Verifique se o serviço local está ativo." ]) unless ollama_available?
 
     response = request_analysis
     return api_error(response) unless response.is_a?(Net::HTTPSuccess)
 
     items = normalize_items(JSON.parse(extract_message(JSON.parse(response.body))))
-    Result.new(items: items, errors: items.blank? ? ["A IA local não identificou lançamentos na fatura."] : [])
+    Result.new(items: items, errors: items.blank? ? [ "A IA local não identificou lançamentos na fatura." ] : [])
   rescue JSON::ParserError
-    Result.new(items: [], errors: ["A IA local retornou uma resposta fora do formato esperado."])
+    Result.new(items: [], errors: [ "A IA local retornou uma resposta fora do formato esperado." ])
   rescue Net::ReadTimeout
-    Result.new(items: [], errors: ["A IA local demorou demais para responder. Tente uma imagem menor, um modelo mais leve ou aumente LOCAL_INVOICE_TIMEOUT."])
+    Result.new(items: [], errors: [ "A IA local demorou demais para responder. Tente uma imagem menor, um modelo mais leve ou aumente LOCAL_INVOICE_TIMEOUT." ])
   rescue StandardError => error
-    Result.new(items: [], errors: ["Não foi possível analisar a fatura com IA local: #{error.message}"])
+    Result.new(items: [], errors: [ "Não foi possível analisar a fatura com IA local: #{error.message}" ])
   ensure
     extracted_pdf_text&.close!
     decrypted_file&.close!
@@ -65,7 +65,7 @@ class LocalInvoiceAnalyzer
         {
           role: "user",
           content: prompt,
-          images: image_file? ? [Base64.strict_encode64(file.read)] : nil
+          images: image_file? ? [ Base64.strict_encode64(file.read) ] : nil
         }.compact
       ],
       options: {
@@ -104,7 +104,7 @@ class LocalInvoiceAnalyzer
   def pdf_text
     @pdf_text ||= begin
       source_path = prepared_pdf_path
-      @extracted_pdf_text = Tempfile.new(["invoice-text", ".txt"])
+      @extracted_pdf_text = Tempfile.new([ "invoice-text", ".txt" ])
       _stdout, stderr, status = Open3.capture3("pdftotext", "-layout", source_path, extracted_pdf_text.path)
 
       raise missing_pdftotext_message if stderr.include?("No such file") || stderr.include?("not found")
@@ -120,7 +120,7 @@ class LocalInvoiceAnalyzer
     return file.tempfile.path if invoice_password.blank?
     raise missing_qpdf_message unless qpdf_available?
 
-    @decrypted_file = Tempfile.new(["invoice-decrypted", ".pdf"], binmode: true)
+    @decrypted_file = Tempfile.new([ "invoice-decrypted", ".pdf" ], binmode: true)
     decrypted_file.close
 
     _stdout, _stderr, status = Open3.capture3(
@@ -192,7 +192,7 @@ class LocalInvoiceAnalyzer
 
   def api_error(response)
     message = api_error_message(response)
-    Result.new(items: [], errors: ["Erro #{response.code} ao chamar a IA local em #{API_URL}: #{message}"])
+    Result.new(items: [], errors: [ "Erro #{response.code} ao chamar a IA local em #{API_URL}: #{message}" ])
   end
 
   def request_timeout

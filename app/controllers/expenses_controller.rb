@@ -51,7 +51,7 @@ class ExpensesController < ApplicationController
     if importable_items.blank?
       load_invoice_import_options
       @invoice_preview_items = invoice_import_items
-      @invoice_import_errors = ["Selecione ao menos um lançamento para importar."]
+      @invoice_import_errors = [ "Selecione ao menos um lançamento para importar." ]
       render :import_invoice, status: :unprocessable_entity
       return
     end
@@ -69,7 +69,7 @@ class ExpensesController < ApplicationController
   rescue ActiveRecord::RecordInvalid => error
     load_invoice_import_options
     @invoice_preview_items = invoice_import_items
-    @invoice_import_errors = ["Revise os lançamentos: #{error.record.errors.full_messages.to_sentence}"]
+    @invoice_import_errors = [ "Revise os lançamentos: #{error.record.errors.full_messages.to_sentence}" ]
     render :import_invoice, status: :unprocessable_entity
   end
 
@@ -226,7 +226,7 @@ class ExpensesController < ApplicationController
     respond_to do |format|
       format.html { render :new, status: :unprocessable_entity }
       format.turbo_stream do
-        render :new, formats: [:html], status: :unprocessable_entity
+        render :new, formats: [ :html ], status: :unprocessable_entity
       end
     end
   end

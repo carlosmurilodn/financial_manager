@@ -15,17 +15,17 @@ class InvoiceImportAnalyzer
   end
 
   def call
-    return Result.new(items: [], errors: ["Selecione uma fatura para analisar."]) if file.blank?
+    return Result.new(items: [], errors: [ "Selecione uma fatura para analisar." ]) if file.blank?
     return ai_result unless text_file?
 
     items = csv_items
     items = text_items if items.blank?
 
-    Result.new(items: items, errors: items.blank? ? ["Nenhum lançamento foi identificado no arquivo."] : [])
+    Result.new(items: items, errors: items.blank? ? [ "Nenhum lançamento foi identificado no arquivo." ] : [])
   rescue CSV::MalformedCSVError
     Result.new(items: text_items, errors: [])
   rescue StandardError => error
-    Result.new(items: [], errors: ["Não foi possível analisar o arquivo: #{error.message}"])
+    Result.new(items: [], errors: [ "Não foi possível analisar o arquivo: #{error.message}" ])
   end
 
   private

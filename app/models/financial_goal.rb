@@ -43,7 +43,7 @@ class FinancialGoal < ApplicationRecord
   end
 
   def remaining_amount
-    [target_amount.to_d - progress_amount, 0.to_d].max
+    [ target_amount.to_d - progress_amount, 0.to_d ].max
   end
 
   def progress_percent

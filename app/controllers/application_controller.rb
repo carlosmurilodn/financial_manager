@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   include BrazilianParameterParsing
   before_action :authenticate_user!
 
-  PER_PAGE_OPTIONS = [10, 25, 50, 100].freeze
+  PER_PAGE_OPTIONS = [ 10, 25, 50, 100 ].freeze
   DEFAULT_PER_PAGE = 10
 
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
 
   def paginate_collection(collection, per_page:)
     @per_page = per_page
-    @total_pages = [(collection.size.to_f / @per_page).ceil, 1].max
+    @total_pages = [ (collection.size.to_f / @per_page).ceil, 1 ].max
     @current_page = params[:page].to_i
     @current_page = 1 if @current_page < 1
     @current_page = @total_pages if @current_page > @total_pages
@@ -52,13 +52,13 @@ class ApplicationController < ActionController::Base
   def normalize_sort_value(value)
     case value
     when nil
-      [1, ""]
+      [ 1, "" ]
     when String
-      [0, value.downcase]
+      [ 0, value.downcase ]
     when TrueClass, FalseClass
-      [0, value ? 1 : 0]
+      [ 0, value ? 1 : 0 ]
     else
-      [0, value]
+      [ 0, value ]
     end
   end
 end

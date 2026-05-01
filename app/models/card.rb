@@ -67,6 +67,6 @@ class Card < ApplicationRecord
   def date_with_day(year, month, day)
     end_of_month = Date.new(year, month, -1).day
 
-    Date.new(year, month, [day.to_i, end_of_month].min)
+    Date.new(year, month, [ day.to_i, end_of_month ].min)
   end
 end

@@ -1,52 +1,565 @@
-<h1 style="text-align: center; font-family: Arial, sans-serif;">
-  📊 Relatório de Despesas
-</h1>
+<%
+  total_paid = @total_paid.to_f
+  total_unpaid = @total_unpaid.to_f
+  net_balance = @net_balance.to_f
+  total_expenses = total_paid + total_unpaid
+  report_date = Time.current.strftime("%d/%m/%Y às %H:%M")
+%>
 
-<table class="table table-bordered" style="width: 100%; border-collapse: collapse;">
-  <thead>
-    <tr>
-      <th>Descrição</th>
-      <th>Parcela</th>
-      <th>Valor</th>
-      <th>Data</th>
-      <th>Mês Referência</th>
-      <th>Categoria</th>
-      <th>Pagamento</th>
-      <th>Cartão</th>
-      <th>Paga?</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @expenses.each do |expense| %>
-      <tr style="background-color: <%= expense.paid? ? '#d4edda' : '#fff3cd' %>;">
-        <td><%= expense.description %></td>
-        <td>
-          <% if expense.payment_method_credito_parcelado? %>
-            <%= "#{expense.current_installment}/#{expense.installments_count}" %>
-          <% else %>
-            Única
-          <% end %>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: #f5f7fe;
+    color: #1f2b3d;
+    font-family: "Nunito", "Arial", sans-serif;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  .pdf-page {
+    padding: 22px;
+    background: #f5f7fe;
+  }
+
+  .pdf-hero {
+    width: 100%;
+    margin-bottom: 18px;
+    padding: 14px;
+    border-radius: 14px;
+    background: #344288;
+    color: #ffffff;
+    display: table;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pdf-hero-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    background: transparent;
+    display: table-cell;
+    vertical-align: middle;
+    
+  }
+
+  .pdf-hero-table td {
+    padding: 10px 14px;
+    border: 0px;
+    vertical-align: text-top;
+    height: 100%;
+  }
+
+  .pdf-hero-title-cell {
+    vertical-align: middle;
+    border: 0px;
+  }
+
+  .pdf-hero-period-cell {
+    width: 1%;
+    text-align: right;
+    vertical-align: middle;
+    border-left: 1px solid #26346f !important;
+    white-space: nowrap;
+  }
+
+  .pdf-hero-icon {
+    display: inline-block;
+    width: 42px;
+    height: 42px;
+    margin-right: 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+    text-align: center;
+    font-size: 23px;
+    line-height: 42px;
+    vertical-align: middle;
+  }
+
+  .pdf-hero-copy {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .pdf-eyebrow {
+    margin: 0 0 3px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .pdf-title {
+    margin: 0;
+    color: #ffffff;
+    font-size: 23px;
+    font-weight: 800;
+    line-height: 1.15;
+  }
+
+  .pdf-description {
+    margin: 6px 0 0;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 12px;
+  }
+
+  .pdf-period-badge {
+    display: inline-block;
+    padding: 9px 13px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.13);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .pdf-summary {
+    width: 100%;
+    margin-bottom: 18px;
+    border-collapse: separate;
+    border-spacing: 10px 0;
+  }
+
+  .pdf-summary-card {
+    width: 25%;
+    padding: 13px 14px;
+    border: 1px solid #e1e7f1;
+    border-radius: 14px;
+    background: #ffffff;
+    vertical-align: top;
+    text-align: center;
+  }
+
+  .pdf-summary-label {
+    margin: 0 0 6px;
+    color: #7f8da5;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+
+  .pdf-summary-value {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.15;
+  }
+
+  .pdf-summary-meta {
+    margin: 6px 0 0;
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .pdf-value-white {
+    color: #000
+  }
+
+  .pdf-value-success {
+    background: #cbe5e5;
+  }
+
+  .pdf-value-danger {
+    background: #f4eaf3;
+  }
+
+  .pdf-value-primary {
+    background: #d3daf6;
+  }
+
+  .pdf-value-warning {
+    background: #efe5d9;
+  }
+
+  .pdf-panel {
+    margin-top: 18px;
+    padding: 16px;
+    border: 1px solid #e1e7f1;
+    border-radius: 14px;
+    background: #ffffff;
+    page-break-inside: auto;
+  }
+
+  .pdf-panel-header {
+    width: 100%;
+    margin-bottom: 12px;
+    border-collapse: collapse;
+  }
+
+  .pdf-panel-header td {
+    border: 0;
+  }
+
+  .pdf-panel-title {
+    margin: 0;
+    color: #1f2b3d;
+    font-size: 17px;
+    font-weight: 800;
+  }
+
+  .pdf-panel-subtitle {
+    margin: 4px 0 0;
+    color: #7f8da5;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .pdf-panel-badge {
+    display: inline-block;
+    padding: 7px 11px;
+    border-radius: 999px;
+    background: rgba(88, 113, 231, 0.10);
+    color: #5670e4;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .pdf-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    overflow: hidden;
+    border: 1px solid #e0e6f0;
+    border-radius: 12px;
+  }
+
+  .pdf-table thead th {
+    padding: 9px 7px;
+    background: #f3f6fb;
+    color: #7f8da5;
+    border: 1px solid #e0e6f0;
+    font-size: 8.5px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .pdf-table thead th:first-child {
+    text-align: left;
+  }
+
+  .pdf-table tbody td {
+    padding: 8px 7px;
+    border: 1px solid #e0e6f0;
+    color: #5f6673;
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .pdf-table tbody td:first-child {
+    color: #1f2b3d;
+    text-align: left;
+    font-weight: 800;
+  }
+
+  .pdf-description-cell {
+    max-width: 150px;
+    overflow-wrap: anywhere;
+  }
+
+  .pdf-soft-text {
+    color: #7f8da5;
+    font-weight: 700;
+  }
+
+  .pdf-money {
+    display: inline-block;
+    min-width: 86px;
+    padding: 5px 8px;
+    border-radius: 999px;
+    font-size: 9.5px;
+    font-weight: 800;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .pdf-money--success {
+    background: rgba(53, 196, 164, 0.12);
+    color: #23a483;
+  }
+
+  .pdf-money--danger {
+    background: rgba(242, 141, 166, 0.12);
+    color: rgb(227, 98, 123);
+  }
+
+  .pdf-money--primary {
+    background: rgba(88, 113, 231, 0.12);
+    color: #4d66d9;
+  }
+
+  .pdf-pill {
+    display: inline-block;
+    padding: 5px 8px;
+    border-radius: 999px;
+    font-size: 9px;
+    font-weight: 800;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .pdf-pill--success {
+    background: rgba(53, 196, 164, 0.12);
+    color: #23a483;
+  }
+
+  .pdf-pill--warning {
+    background: rgba(246, 190, 91, 0.18);
+    color: #b77a15;
+  }
+
+  .pdf-pill--neutral {
+    background: rgba(127, 141, 165, 0.12);
+    color: #6b778d;
+  }
+
+  .pdf-totals {
+    width: 100%;
+    margin-top: 14px;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+  }
+
+  .pdf-total-row td {
+    padding: 10px 12px;
+    border: 1px solid #e0e6f0;
+    background: #f8faff;
+    font-size: 11px;
+    font-weight: 800;
+  }
+
+  .pdf-total-row td:first-child {
+    border-right: 0;
+    border-radius: 12px 0 0 12px;
+    color: #1f2b3d;
+    text-align: right;
+  }
+
+  .pdf-total-row td:last-child {
+    border-left: 0;
+    border-radius: 0 12px 12px 0;
+    text-align: center;
+  }
+
+  .pdf-footer {
+    margin-top: 18px;
+    padding-top: 10px;
+    border-top: 1px solid #e0e6f0;
+    color: #7f8da5;
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  @media print {
+    body {
+      background: #f5f7fe;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .pdf-page {
+      background: #f5f7fe;
+    }
+  }
+</style>
+
+<div class="pdf-page">
+  <div class="pdf-hero">
+    <table class="pdf-hero-table">
+      <tr>
+        <td class="pdf-hero-title-cell">
+          <span class="pdf-hero-icon">📊</span>
+
+          <div class="pdf-hero-copy">
+            <p class="pdf-eyebrow">Relatório financeiro</p>
+            <h1 class="pdf-title">Relatório de Despesas</h1>
+            <p class="pdf-description">
+              Consolidação das despesas cadastradas, status de pagamento e saldo líquido.
+            </p>
+          </div>
         </td>
-        <td>R$ <%= number_with_precision(expense.amount, precision: 2, delimiter: ".") %></td>
-        <td><%= expense.date.strftime("%d/%m/%Y") %></td>
-        <td><%= expense.balance_month.strftime("%m/%Y") if expense.balance_month.present? %></td>
-        <td><%= expense.category.display_name %></td>
-        <td><%= expense.payment_method.titleize %></td>
-        <td><%= expense.card&.name %></td>
-        <td><%= expense.paid? ? "Sim" : "Não" %></td>
+
+        <td class="pdf-hero-period-cell">
+          <span class="pdf-period-badge">
+            <%= report_date %>
+          </span>
+        </td>
       </tr>
-    <% end %>
-  </tbody>
-  <tr>
-    <th colspan="6" style="text-align: right;">Total Pago</th>
-    <th colspan="3">R$ <%= number_with_precision(@total_paid, precision: 2, delimiter: ".") %></th>
-  </tr>
-  <tr>
-    <th colspan="6" style="text-align: right;">Total a Pagar</th>
-    <th colspan="3">R$ <%= number_with_precision(@total_unpaid, precision: 2, delimiter: ".") %></th>
-  </tr>
-  <tr>
-    <th colspan="6" style="text-align: right;">Saldo Líquido</th>
-    <th colspan="3">R$ <%= number_with_precision(@net_balance, precision: 2, delimiter: ".") %></th>
-  </tr>
-</table>
+    </table>
+  </div>
+
+  <table class="pdf-summary">
+    <tr>
+      <td class="pdf-summary-card pdf-value-primary">
+        <p class="pdf-summary-label">Total geral</p>
+        <p class="pdf-summary-value pdf-value-white">
+          <%= number_to_currency(total_expenses, unit: "R$ ", separator: ",", delimiter: ".") %>
+        </p>
+        <p class="pdf-summary-meta">Pago + a pagar</p>
+      </td>
+
+      <td class="pdf-summary-card pdf-value-success">
+        <p class="pdf-summary-label">Total pago</p>
+        <p class="pdf-summary-value pdf-value-white">
+          <%= number_to_currency(total_paid, unit: "R$ ", separator: ",", delimiter: ".") %>
+        </p>
+        <p class="pdf-summary-meta ">Despesas quitadas</p>
+      </td>
+
+      <td class="pdf-summary-card pdf-value-danger">
+        <p class="pdf-summary-label ">Total a pagar</p>
+        <p class="pdf-summary-value pdf-value-white">
+          <%= number_to_currency(total_unpaid, unit: "R$ ", separator: ",", delimiter: ".") %>
+        </p>
+        <p class="pdf-summary-meta">Despesas pendentes</p>
+      </td>
+
+      <td class="pdf-summary-card pdf-value-warning">
+        <p class="pdf-summary-label">Saldo líquido</p>
+        <p class="pdf-summary-value pdf-value-white">
+          <%= number_to_currency(net_balance, unit: "R$ ", separator: ",", delimiter: ".") %>
+        </p>
+        <p class="pdf-summary-meta">Resultado consolidado</p>
+      </td>
+    </tr>
+  </table>
+
+  <section class="pdf-panel">
+    <table class="pdf-panel-header">
+      <tr>
+        <td>
+          <h2 class="pdf-panel-title">Despesas</h2>
+          <p class="pdf-panel-subtitle">
+            Lista detalhada com valor, vencimento, categoria, forma de pagamento e situação.
+          </p>
+        </td>
+
+        <td style="width: 1%; text-align: right; vertical-align: middle;">
+          <span class="pdf-panel-badge">
+            <%= pluralize(@expenses.size, "registro", "registros") %>
+          </span>
+        </td>
+      </tr>
+    </table>
+
+    <table class="pdf-table">
+      <thead>
+        <tr>
+          <th>Descrição</th>
+          <th>Parcela</th>
+          <th>Valor</th>
+          <th>Data</th>
+          <th>Mês Ref.</th>
+          <th>Categoria</th>
+          <th>Pagamento</th>
+          <th>Cartão</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @expenses.each do |expense| %>
+          <tr>
+            <td class="pdf-description-cell">
+              <%= expense.description.presence || "Sem descrição" %>
+            </td>
+
+            <td>
+              <span class="pdf-pill pdf-pill--neutral">
+                <% if expense.payment_method_credito_parcelado? %>
+                  <%= "#{expense.current_installment}/#{expense.installments_count}" %>
+                <% else %>
+                  Única
+                <% end %>
+              </span>
+            </td>
+
+            <td>
+              <span class="pdf-money <%= expense.paid? ? "pdf-money--success" : "pdf-money--danger" %>">
+                <%= number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
+              </span>
+            </td>
+
+            <td>
+              <%= expense.date.strftime("%d/%m/%Y") if expense.date.present? %>
+            </td>
+
+            <td>
+              <%= expense.balance_month.strftime("%m/%Y") if expense.balance_month.present? %>
+            </td>
+
+            <td>
+              <%= expense.category&.display_name || "-" %>
+            </td>
+
+            <td>
+              <%= expense.payment_method.to_s.humanize %>
+            </td>
+
+            <td>
+              <%= expense.card&.name.presence || "-" %>
+            </td>
+
+            <td>
+              <% if expense.paid? %>
+                <span class="pdf-pill pdf-pill--success">Pago</span>
+              <% else %>
+                <span class="pdf-pill pdf-pill--warning">Pendente</span>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <table class="pdf-totals">
+      <tr class="pdf-total-row">
+        <td>Total pago</td>
+        <td style="width: 28%;">
+          <span class="pdf-money pdf-money--success">
+            <%= number_to_currency(total_paid, unit: "R$ ", separator: ",", delimiter: ".") %>
+          </span>
+        </td>
+      </tr>
+
+      <tr class="pdf-total-row">
+        <td>Total a pagar</td>
+        <td>
+          <span class="pdf-money pdf-money--danger">
+            <%= number_to_currency(total_unpaid, unit: "R$ ", separator: ",", delimiter: ".") %>
+          </span>
+        </td>
+      </tr>
+
+      <tr class="pdf-total-row">
+        <td>Saldo líquido</td>
+        <td>
+          <span class="pdf-money <%= net_balance >= 0 ? "pdf-money--primary" : "pdf-money--danger" %>">
+            <%= number_to_currency(net_balance, unit: "R$ ", separator: ",", delimiter: ".") %>
+          </span>
+        </td>
+      </tr>
+    </table>
+  </section>
+
+  <div class="pdf-footer">
+    Gerado pelo Gerenciador Financeiro • <%= report_date %>
+  </div>
+</div>

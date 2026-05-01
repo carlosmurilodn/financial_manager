@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_30_143000) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_01_002555) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,6 +50,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_30_143000) do
     t.decimal "total_limit"
     t.integer "due_day"
     t.integer "closing_day"
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_cards_on_user_id"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -57,6 +59,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_30_143000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "icon"
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_categories_on_user_id"
   end
 
   create_table "expenses", force: :cascade do |t|
@@ -74,10 +78,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_30_143000) do
     t.integer "current_installment", default: 1, null: false
     t.bigint "installment_group_id"
     t.datetime "paid_at"
+    t.bigint "user_id"
     t.index ["card_id"], name: "index_expenses_on_card_id"
     t.index ["category_id"], name: "index_expenses_on_category_id"
     t.index ["installment_group_id"], name: "index_expenses_on_installment_group_id"
     t.index ["paid_at"], name: "index_expenses_on_paid_at"
+    t.index ["user_id"], name: "index_expenses_on_user_id"
   end
 
   create_table "financial_goal_resources", force: :cascade do |t|
@@ -107,10 +113,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_30_143000) do
     t.datetime "updated_at", null: false
     t.decimal "current_amount", precision: 12, scale: 2, default: "0.0", null: false
     t.bigint "category_id"
+    t.bigint "user_id"
     t.index ["category_id"], name: "index_financial_goals_on_category_id"
     t.index ["due_date"], name: "index_financial_goals_on_due_date"
     t.index ["priority"], name: "index_financial_goals_on_priority"
     t.index ["status"], name: "index_financial_goals_on_status"
+    t.index ["user_id"], name: "index_financial_goals_on_user_id"
   end
 
   create_table "incomes", force: :cascade do |t|
@@ -122,7 +130,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_30_143000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "category_id"
+    t.bigint "user_id"
     t.index ["category_id"], name: "index_incomes_on_category_id"
+    t.index ["user_id"], name: "index_incomes_on_user_id"
   end
 
   create_table "passkey_credentials", force: :cascade do |t|
@@ -152,10 +162,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_30_143000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "cards", "users"
+  add_foreign_key "categories", "users"
   add_foreign_key "expenses", "cards"
   add_foreign_key "expenses", "categories"
+  add_foreign_key "expenses", "users"
   add_foreign_key "financial_goal_resources", "financial_goals"
   add_foreign_key "financial_goals", "categories"
+  add_foreign_key "financial_goals", "users"
   add_foreign_key "incomes", "categories"
+  add_foreign_key "incomes", "users"
   add_foreign_key "passkey_credentials", "users"
 end

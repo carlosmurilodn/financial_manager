@@ -1,4 +1,6 @@
 class Card < ApplicationRecord
+  belongs_to :user
+
   has_many :expenses, dependent: :nullify
   has_one_attached :icon
 

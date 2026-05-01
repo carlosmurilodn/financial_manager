@@ -1,6 +1,8 @@
 class Expense < ApplicationRecord
   belongs_to :category
   belongs_to :card, optional: true
+  belongs_to :user
+
 
   enum :payment_method, {
     pix: 0,

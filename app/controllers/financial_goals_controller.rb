@@ -6,14 +6,14 @@ class FinancialGoalsController < ApplicationController
   end
 
   def new
-    @financial_goal = FinancialGoal.new
+    @financial_goal = current_user.financial_goals.new
     load_categories
     load_resource_cards
     build_resource_rows
   end
 
   def create
-    @financial_goal = FinancialGoal.new(financial_goal_params)
+    @financial_goal = current_user.financial_goals.new(financial_goal_params)
 
     if @financial_goal.save
       respond_to do |format|
@@ -67,7 +67,7 @@ class FinancialGoalsController < ApplicationController
   private
 
   def load_financial_goals
-    goals = FinancialGoal.includes(:category, :financial_goal_resources).to_a
+    goals = current_user.financial_goals.includes(:category, :financial_goal_resources).to_a
 
     load_categories
     load_financial_goal_filters
@@ -101,7 +101,7 @@ class FinancialGoalsController < ApplicationController
   end
 
   def set_financial_goal
-    @financial_goal = FinancialGoal.find(params[:id])
+    @financial_goal = current_user.financial_goals.find(params[:id])
   end
 
   def financial_goal_params
@@ -129,8 +129,15 @@ class FinancialGoalsController < ApplicationController
 
     permitted[:target_amount] = parse_brazilian_amount(permitted[:target_amount])
     permitted[:current_amount] = parse_brazilian_amount(permitted[:current_amount], blank: 0)
+    normalize_category_reference(permitted)
     normalize_resource_amounts(permitted[:financial_goal_resources_attributes])
     permitted
+  end
+
+  def normalize_category_reference(permitted)
+    return if permitted[:category_id].blank?
+
+    permitted[:category_id] = nil unless current_user.categories.exists?(id: permitted[:category_id])
   end
 
   def normalize_resource_amounts(resources_attributes)
@@ -150,6 +157,12 @@ class FinancialGoalsController < ApplicationController
       return
     end
 
+    unless current_user.cards.exists?(id: resource_attributes[:source_id])
+      resource_attributes[:source_type] = nil
+      resource_attributes[:source_id] = nil
+      return
+    end
+
     resource_attributes[:source_type] = "Card"
   end
 
@@ -158,11 +171,11 @@ class FinancialGoalsController < ApplicationController
   end
 
   def load_resource_cards
-    @resource_cards = Card.order(Arel.sql("total_limit DESC NULLS LAST, name ASC"))
+    @resource_cards = current_user.cards.order(Arel.sql("total_limit DESC NULLS LAST, name ASC"))
   end
 
   def load_categories
-    @categories = Category.all.sort_by(&:sort_name)
+    @categories = current_user.categories.to_a.sort_by(&:sort_name)
   end
 
   def load_financial_goal_filters

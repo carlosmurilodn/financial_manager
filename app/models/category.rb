@@ -1,4 +1,6 @@
 class Category < ApplicationRecord
+  belongs_to :user
+
   has_many :expenses, dependent: :nullify
   has_many :incomes, dependent: :nullify
   has_many :financial_goals, dependent: :nullify

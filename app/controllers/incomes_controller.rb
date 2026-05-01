@@ -6,10 +6,13 @@ class IncomesController < ApplicationController
   end
 
   def show; end
-  def new; @income = Income.new; end
+
+  def new
+    @income = current_user.incomes.new
+  end
 
   def create
-    @income = Income.new(income_params)
+    @income = current_user.incomes.new(income_params)
     @income.repetir ||= 0
 
     assign_income_dates
@@ -88,13 +91,20 @@ class IncomesController < ApplicationController
   private
 
   def set_income
-    @income = Income.find(params[:id])
+    @income = current_user.incomes.find(params[:id])
   end
 
   def income_params
     permitted = params.require(:income).permit(:amount, :description, :date, :balance_month, :paid, :repetir, :category_id)
     permitted[:amount] = parse_brazilian_amount(permitted[:amount])
+    normalize_category_reference(permitted)
     permitted
+  end
+
+  def normalize_category_reference(permitted)
+    return if permitted[:category_id].blank?
+
+    permitted[:category_id] = nil unless current_user.categories.exists?(id: permitted[:category_id])
   end
 
   def create_recurring_incomes(income)
@@ -102,7 +112,7 @@ class IncomesController < ApplicationController
     return if repetir <= 0
 
     repetir.times do |i|
-      Income.create!(
+      current_user.incomes.create!(
         description: income.description,
         amount: income.amount,
         date: income.date + (i + 1).month,
@@ -129,8 +139,8 @@ class IncomesController < ApplicationController
     @paid_filter = session[:incomes_paid]
     @paid_filter = nil if @paid_filter.blank?
 
-    all_incomes = Income.includes(:category).order(balance_month: :asc, date: :asc)
-    all_expenses = Expense.order(balance_month: :asc)
+    all_incomes = current_user.incomes.includes(:category).order(balance_month: :asc, date: :asc)
+    all_expenses = current_user.expenses.order(balance_month: :asc)
 
     @incomes = all_incomes.to_a
     filter_by_month

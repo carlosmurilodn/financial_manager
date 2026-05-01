@@ -6,32 +6,32 @@ class CategoriesController < ApplicationController
   end
 
   def new
-    @category = Category.new
+    @category = current_user.categories.new
   end
 
-def create
-  @category = Category.new(category_params)
+  def create
+    @category = current_user.categories.new(category_params)
 
-  if @category.save
-    respond_to do |format|
-      # Turbo: fecha o modal e recarrega a página inteira
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.append(
-          "modal",
-          "<turbo-stream action='visit' target='_top' url='#{categories_path}'></turbo-stream>".html_safe
-        )
+    if @category.save
+      respond_to do |format|
+        # Turbo: fecha o modal e recarrega a página inteira
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.append(
+            "modal",
+            "<turbo-stream action='visit' target='_top' url='#{categories_path}'></turbo-stream>".html_safe
+          )
+        end
+
+        # Fallback HTML
+        format.html { redirect_to categories_path, notice: "Categoria criada com sucesso!" }
       end
-
-      # Fallback HTML
-      format.html { redirect_to categories_path, notice: "Categoria criada com sucesso!" }
-    end
-  else
-    respond_to do |format|
-      format.turbo_stream { render :new, status: :unprocessable_entity }
-      format.html { render :new, status: :unprocessable_entity }
+    else
+      respond_to do |format|
+        format.turbo_stream { render :new, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_entity }
+      end
     end
   end
-end
 
   def edit; end
 
@@ -56,7 +56,7 @@ end
   private
 
   def load_categories
-    categories = Category.order(:name).to_a
+    categories = current_user.categories.order(:name).to_a
     @description_filter = params[:description].to_s.strip
 
     if @description_filter.present?
@@ -67,8 +67,8 @@ end
     end
 
     month_range = Date.current.beginning_of_month..Date.current.end_of_month
-    current_expenses = Expense.where(balance_month: month_range)
-    current_incomes = Income.where(balance_month: month_range)
+    current_expenses = current_user.expenses.where(balance_month: month_range)
+    current_incomes = current_user.incomes.where(balance_month: month_range)
 
     @categories_month_expenses = current_expenses.sum(:amount)
     @categories_month_incomes = current_incomes.sum(:amount)
@@ -97,7 +97,7 @@ end
   end
 
   def set_category
-    @category = Category.find(params[:id])
+    @category = current_user.categories.find(params[:id])
   end
 
   def category_params

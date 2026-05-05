@@ -82,17 +82,17 @@
 
     <div class="expense-modal-actions">
       <% if expense.payment_method_credito_parcelado? %>
-        <%= button_tag name: "update_scope", value: "single", type: "submit", class: "btn btn-primary expense-modal-action-btn" do %>
+        <%= button_tag name: "update_scope", value: "single", type: "submit", class: "app-btn app-btn--primary expense-modal-action-btn" do %>
           <span class="material-symbols-rounded">save</span>
           Atualizar só esta parcela
         <% end %>
 
-        <%= button_tag name: "update_scope", value: "group", type: "submit", class: "btn btn-outline-primary expense-modal-action-btn" do %>
+        <%= button_tag name: "update_scope", value: "group", type: "submit", class: "app-btn app-btn--outline expense-modal-action-btn" do %>
           <span class="material-symbols-rounded">done_all</span>
           Atualizar esta e próximas
         <% end %>
       <% else %>
-        <%= button_tag type: "submit", class: "btn btn-primary expense-modal-action-btn" do %>
+        <%= button_tag type: "submit", class: "app-btn app-btn--primary expense-modal-action-btn" do %>
           <span class="material-symbols-rounded">save</span>
           <%= t("expenses.form.submit") %>
         <% end %>
@@ -120,12 +120,12 @@
     </template>
 
     <div class="expense-modal-actions">
-      <button type="button" class="btn btn-primary expense-modal-action-btn" data-add-expense-row>
+      <button type="button" class="app-btn app-btn--primary expense-modal-action-btn" data-add-expense-row>
         <span class="material-symbols-rounded">add_circle</span>
         Inserir Despesa
       </button>
 
-      <button type="submit" class="btn btn-primary expense-modal-action-btn">
+      <button type="submit" class="app-btn app-btn--primary expense-modal-action-btn">
         <span class="material-symbols-rounded">save</span>
         <%= t("expenses.form.submit") %>
       </button>

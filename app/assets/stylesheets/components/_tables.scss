@@ -1,0 +1,11 @@
+// Estrutura base de tabelas do app.
+
+.app-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.app-table th,
+.app-table td {
+  padding: 0.8rem 0.6rem;
+}

@@ -1,3 +1,4 @@
+import { Modal, Tooltip } from "bootstrap";
 import { initializeFormUtils } from "./utils";
 import { initializeDatepicker } from "./date_picker";
 import { initializeExpenseForm } from "./expense_form";
@@ -45,7 +46,7 @@ function hideTurboModal() {
   const modalElement = document.getElementById("turboModal");
   if (!modalElement) return;
 
-  const existingModal = bootstrap.Modal.getInstance(modalElement);
+  const existingModal = Modal.getInstance(modalElement);
   if (existingModal) existingModal.hide();
 }
 
@@ -91,7 +92,7 @@ document.addEventListener("turbo:frame-load", (event) => {
   modalDialog.classList.toggle("modal-xl", !!modalBody.querySelector("[data-modal-size='xl']"));
   modalDialog.classList.toggle("modal-wide", !!modalBody.querySelector("[data-modal-size='wide']"));
 
-  const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+  const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
   modal.show();
 
   initializeFormUtils();
@@ -102,7 +103,7 @@ document.addEventListener("turbo:frame-load", (event) => {
   initializeInvoiceFilePreview(modalBody);
 
   modalBody.querySelectorAll("[data-bs-toggle='tooltip']").forEach((element) => {
-    bootstrap.Tooltip.getOrCreateInstance(element);
+    Tooltip.getOrCreateInstance(element);
   });
 
   const paymentSelect = modalBody.querySelector("#payment_method_select");
@@ -184,7 +185,7 @@ document.addEventListener("turbo:frame-load", (event) => {
       modalBody.dispatchEvent(new CustomEvent("invoice-file-preview:cleanup"));
 
       modalBody.querySelectorAll("[data-bs-toggle='tooltip']").forEach((element) => {
-        bootstrap.Tooltip.getInstance(element)?.dispose();
+        Tooltip.getInstance(element)?.dispose();
       });
 
       modalBody.innerHTML = "";

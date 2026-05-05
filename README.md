@@ -2,6 +2,14 @@
 
 Aplicação Rails para gerenciamento financeiro pessoal, com autenticação via Devise e recursos para controle de despesas, receitas, cartões, categorias, metas financeiras e relatórios.
 
+---
+
+## 🔗 Fontes
+
+- Repositório oficial: https://github.com/carlosmurilodn/financial_manager
+
+---
+
 ## 🚀 Tecnologias
 
 - Ruby on Rails 8

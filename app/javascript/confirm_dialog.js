@@ -1,4 +1,5 @@
 import { Turbo } from "@hotwired/turbo-rails";
+import { Modal } from "bootstrap";
 
 const CONFIRM_MODAL_ID = "appConfirmModal";
 
@@ -57,7 +58,7 @@ function buildConfirmModal(message, element) {
 function showConfirmDialog(message, element) {
   return new Promise((resolve) => {
     const modalElement = buildConfirmModal(message, element);
-    const modal = new bootstrap.Modal(modalElement, { backdrop: "static", keyboard: true });
+    const modal = new Modal(modalElement, { backdrop: "static", keyboard: true });
     let settled = false;
 
     const settle = (result) => {

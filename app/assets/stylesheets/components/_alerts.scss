@@ -1,0 +1,16 @@
+// Base de alerts customizados.
+
+.app-alert {
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+}
+
+.app-alert--success {
+  background: var(--stat-success-bg);
+  color: var(--stat-success-icon-bg);
+}
+
+.app-alert--danger {
+  background: var(--stat-danger-bg);
+  color: var(--stat-danger-icon-bg);
+}

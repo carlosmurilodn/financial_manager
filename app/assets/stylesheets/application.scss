@@ -1,8 +1,16 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap");
 
 @import "bootstrap/scss/bootstrap";
+
 @import "base/tokens";
 @import "layout/shell";
+
+@import "components/buttons";
+@import "components/forms";
+@import "components/tables";
+@import "components/modals";
+@import "components/alerts";
+
 @import "pages/app_pages";
 @import "dashboard/hero";
 @import "dashboard/layout_and_kpis";
@@ -11,5 +19,7 @@
 @import "pages/expenses";
 @import "components/cards_tables_buttons";
 @import "pages/calendar_forecast";
+
 @import "themes/overrides";
+@import "compat/bootstrap_replacements";
 @import "responsive/responsive";

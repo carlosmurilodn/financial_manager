@@ -1,14 +1,64 @@
 // Centraliza estilos de inputs e selects.
-// Objetivo: substituir gradualmente `.form-control` por `.app-form-control`.
+// Use essas classes para migrar gradualmente `.form-control` e `.form-select`.
 
-.app-form-control {
-  border-radius: 10px;
+.app-form-control,
+.app-form-select {
+  display: block;
+  width: 100%;
   min-height: 38px;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--table-border-color);
+  border-radius: 10px;
+  background-color: var(--app-bg-soft);
+  color: var(--text-main);
   font-size: 0.85rem;
+  line-height: 1.5;
+  box-shadow: none;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+.app-form-control::placeholder {
+  color: var(--text-soft);
+  opacity: 1;
+}
+
+.app-form-control:focus,
+.app-form-select:focus {
+  outline: 0;
+  border-color: var(--nav-active-icon-color);
+  background-color: var(--app-bg-soft);
+  color: var(--text-main);
+  box-shadow: 0 0 0 0.2rem rgba(88, 113, 231, 0.14);
+}
+
+.app-form-control[readonly] {
+  opacity: 1;
+}
+
+.app-form-control[type="file"] {
+  overflow: hidden;
 }
 
 .app-form-select {
-  border-radius: 10px;
-  min-height: 38px;
-  font-size: 0.85rem;
+  appearance: none;
+  padding-right: 2.55rem;
+}
+
+html[data-theme="night"] .app-form-control,
+html[data-theme="night"] .app-form-select {
+  background-color: var(--table-surface);
+  color: var(--table-row-text);
+  border-color: var(--table-border-color);
+}
+
+html[data-theme="night"] .app-form-control::placeholder {
+  color: var(--text-soft);
+}
+
+html[data-theme="night"] .app-form-control:focus,
+html[data-theme="night"] .app-form-select:focus {
+  background-color: var(--table-surface);
+  color: var(--table-row-text);
+  border-color: var(--nav-active-icon-color);
+  box-shadow: none;
 }

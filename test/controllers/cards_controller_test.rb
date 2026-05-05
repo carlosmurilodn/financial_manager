@@ -5,14 +5,29 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
     Expense.delete_all
     Card.delete_all
     Category.delete_all
+    User.delete_all
 
-    @category = Category.create!(name: "Compras")
+    @user = User.create!(
+      email: "teste@example.com",
+      password: "password123",
+      password_confirmation: "password123"
+    )
+
+    sign_in @user
+
+    @category = Category.create!(
+      name: "Compras",
+      icon: "shopping_cart",
+      user: @user
+    )
+
     @card = Card.create!(
       name: "Cartao Teste",
       number: "1234567812345678",
       total_limit: 5000,
       due_day: 10,
-      closing_day: 5
+      closing_day: 5,
+      user: @user
     )
   end
 
@@ -32,6 +47,7 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
     card = Card.order(:id).last
 
     assert_redirected_to cards_url
+    assert_equal @user, card.user
     assert_equal 3500.75, card.total_limit.to_f
     assert_equal "9999888877776666", card.number
   end
@@ -55,6 +71,7 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
     card = Card.order(:id).last
 
     assert_redirected_to cards_url
+    assert_equal @user, card.user
     assert_predicate card.icon, :attached?
   end
 
@@ -86,7 +103,8 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
       number: "8765432187654321",
       total_limit: 3000,
       due_day: 15,
-      closing_day: 10
+      closing_day: 10,
+      user: @user
     )
 
     Expense.create!(
@@ -97,7 +115,8 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
       category: @category,
       card: @card,
       payment_method: :credito_a_vista,
-      paid: false
+      paid: false,
+      user: @user
     )
 
     Expense.create!(
@@ -108,7 +127,8 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
       category: @category,
       card: other_card,
       payment_method: :credito_a_vista,
-      paid: false
+      paid: false,
+      user: @user
     )
 
     Expense.create!(
@@ -119,7 +139,8 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
       category: @category,
       card: other_card,
       payment_method: :credito_a_vista,
-      paid: true
+      paid: true,
+      user: @user
     )
 
     get cards_url, params: { description: "note", month: 3, year: 2026 }
@@ -141,7 +162,8 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
       category: @category,
       card: @card,
       payment_method: :credito_a_vista,
-      paid: false
+      paid: false,
+      user: @user
     )
 
     get cards_url, params: { description: "teste", month: 3, year: 2026 }
@@ -168,7 +190,8 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
       category: @category,
       card: @card,
       payment_method: :credito_a_vista,
-      paid: false
+      paid: false,
+      user: @user
     )
 
     parcelled_expense = Expense.create!(
@@ -181,7 +204,8 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
       payment_method: :credito_parcelado,
       installments_count: 2,
       current_installment: 1,
-      paid: false
+      paid: false,
+      user: @user
     )
 
     generated_future_expense = Expense.find_by!(
@@ -197,7 +221,8 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
       category: @category,
       card: @card,
       payment_method: :credito_a_vista,
-      paid: false
+      paid: false,
+      user: @user
     )
 
     patchless_expense = Expense.create!(
@@ -208,7 +233,8 @@ class CardsControllerTest < ActionDispatch::IntegrationTest
       category: @category,
       card: @card,
       payment_method: :debito,
-      paid: false
+      paid: false,
+      user: @user
     )
 
     post pay_card_url(@card)

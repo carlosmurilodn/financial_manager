@@ -110,6 +110,7 @@ class Expense < ApplicationRecord
         description: description,
         category: category,
         card: card,
+        user: user,
         payment_method: payment_method,
         amount: amount,
         date: date,

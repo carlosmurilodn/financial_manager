@@ -6,11 +6,11 @@ class CardsController < ApplicationController
   end
 
   def new
-    @card = Card.new
+    @card = current_user.cards.new
   end
 
   def create
-    @card = Card.new(card_params)
+    @card = current_user.cards.new(card_params)
 
     if @card.save
       respond_to do |format|
@@ -67,6 +67,7 @@ class CardsController < ApplicationController
 
     ActiveRecord::Base.transaction do
       updated_expenses_count = @card.expenses
+                                    .where(user: current_user)
                                     .where(paid: false, payment_method: credit_payment_methods)
                                     .where(balance_month: balance_month_range)
                                     .update_all(paid: true, paid_at: now, updated_at: now)
@@ -94,7 +95,7 @@ class CardsController < ApplicationController
     card_ids_from_debt = filtered_debt_scope.distinct.pluck(:card_id)
     @card_debt_totals_by_card = filtered_debt_scope.group(:card_id).sum(:amount)
 
-    cards = Card.order(:name).to_a
+    cards = current_user.cards.order(:name).to_a
     cards = cards.select { |card| card_matches_filters?(card, card_ids_from_debt) } if card_filters_active?
 
     @cards_limit_total = cards.sum { |card| card.total_limit.to_f }
@@ -124,14 +125,15 @@ class CardsController < ApplicationController
   end
 
   def card_debt_scope
-    Expense.where(paid: false, payment_method: credit_payment_methods)
-           .where.not(card_id: nil)
+    current_user.expenses
+                .where(paid: false, payment_method: credit_payment_methods)
+                .where.not(card_id: nil)
   end
 
   def apply_card_debt_filters(scope)
     filtered_scope = scope
-    filtered_scope = filtered_scope.where("CAST(strftime('%m', balance_month) AS INTEGER) = ?", @month) if @month.present?
-    filtered_scope = filtered_scope.where("CAST(strftime('%Y', balance_month) AS INTEGER) = ?", @year) if @year.present?
+    filtered_scope = filtered_scope.where("EXTRACT(MONTH FROM balance_month) = ?", @month) if @month.present?
+    filtered_scope = filtered_scope.where("EXTRACT(YEAR FROM balance_month) = ?", @year) if @year.present?
 
     apply_card_description_filter(filtered_scope)
   end
@@ -140,7 +142,7 @@ class CardsController < ApplicationController
     return scope if @description_filter.blank?
 
     query = "%#{@description_filter.downcase}%"
-    matching_card_ids = Card.where("LOWER(name) LIKE ?", query).pluck(:id)
+    matching_card_ids = current_user.cards.where("LOWER(name) LIKE ?", query).pluck(:id)
 
     return scope.where("LOWER(description) LIKE ?", query) if matching_card_ids.blank?
 
@@ -198,7 +200,7 @@ class CardsController < ApplicationController
   end
 
   def set_card
-    @card = Card.find(params[:id])
+    @card = current_user.cards.find(params[:id])
   end
 
   def card_params

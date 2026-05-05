@@ -2,16 +2,27 @@
 // Use este arquivo para migrar gradualmente regras de `.btn*` para classes `.app-btn*`.
 
 .app-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   border: 0;
   border-radius: 999px;
   padding: 0.85rem 1.2rem;
   font-weight: 700;
+  text-decoration: none;
 }
 
 .app-btn--primary {
   background: var(--primary);
   color: var(--white);
   box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
+}
+
+.app-btn--primary:hover,
+.app-btn--primary:focus {
+  color: var(--white);
+  filter: brightness(1.03);
 }
 
 .app-btn--secondary,
@@ -21,8 +32,39 @@
   box-shadow: var(--ghost-btn-shadow);
 }
 
+.app-btn--secondary:hover,
+.app-btn--secondary:focus,
+.app-btn--ghost:hover,
+.app-btn--ghost:focus {
+  color: var(--text-main);
+  filter: brightness(1.02);
+}
+
 .app-btn--danger {
   background: var(--danger);
   color: var(--white);
   box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
+}
+
+.app-btn--danger:hover,
+.app-btn--danger:focus {
+  color: var(--white);
+  filter: brightness(1.03);
+}
+
+.app-btn--outline {
+  border: 1px solid var(--primary);
+  background: transparent;
+  color: var(--primary);
+}
+
+.app-btn--outline:hover,
+.app-btn--outline:focus {
+  background: var(--hero-badge-icon-bg);
+  color: var(--nav-active-icon-color);
+}
+
+.app-btn--sm {
+  padding: 0.45rem 0.8rem;
+  font-size: 0.82rem;
 }

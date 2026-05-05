@@ -1,0 +1,19 @@
+// Camada temporária para substituir classes Bootstrap utilizadas.
+// Aqui iremos copiar apenas o necessário antes de remover o Bootstrap.
+
+.btn {
+  border-radius: 999px;
+  padding: 0.85rem 1.2rem;
+}
+
+.form-control {
+  border-radius: 10px;
+}
+
+.table {
+  width: 100%;
+}
+
+.alert {
+  border-radius: 10px;
+}

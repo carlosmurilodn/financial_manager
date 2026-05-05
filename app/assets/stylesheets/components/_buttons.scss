@@ -1,0 +1,28 @@
+// Centraliza estilos de botões próprios do app.
+// Use este arquivo para migrar gradualmente regras de `.btn*` para classes `.app-btn*`.
+
+.app-btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.85rem 1.2rem;
+  font-weight: 700;
+}
+
+.app-btn--primary {
+  background: var(--primary);
+  color: var(--white);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
+}
+
+.app-btn--secondary,
+.app-btn--ghost {
+  background: var(--ghost-btn-bg);
+  color: var(--text-main);
+  box-shadow: var(--ghost-btn-shadow);
+}
+
+.app-btn--danger {
+  background: var(--danger);
+  color: var(--white);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
+}

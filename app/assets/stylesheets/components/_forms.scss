@@ -1,0 +1,14 @@
+// Centraliza estilos de inputs e selects.
+// Objetivo: substituir gradualmente `.form-control` por `.app-form-control`.
+
+.app-form-control {
+  border-radius: 10px;
+  min-height: 38px;
+  font-size: 0.85rem;
+}
+
+.app-form-select {
+  border-radius: 10px;
+  min-height: 38px;
+  font-size: 0.85rem;
+}

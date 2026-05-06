@@ -28,7 +28,7 @@
       <div class="app-filter-grid app-filter-grid--expenses">
         <div class="app-filter-field">
           <%= f.label :description, "Descrição" %>
-          <%= f.text_field :description, value: @description_filter, class: "form-control", placeholder: "Buscar descrição..." %>
+          <%= f.text_field :description, value: @description_filter, class: "app-form-control", placeholder: "Buscar descrição..." %>
         </div>
 
         <div class="app-filter-field">
@@ -38,58 +38,58 @@
                   [["Todos", 0]] + I18n.t("date.month_names")[1..12].map.with_index { |m, i| [m.capitalize, i + 1] },
                   @month || 0
                 ),
-                {}, class: "form-select" %>
+                {}, class: "app-form-select" %>
         </div>
 
         <div class="app-filter-field">
           <%= f.label :year, "Ano" %>
           <%= f.select :year,
                 options_for_select([["Todos", 0]] + (2025..2030).to_a.reverse, @year || 0),
-                {}, class: "form-select" %>
+                {}, class: "app-form-select" %>
         </div>
 
         <div class="app-filter-field">
           <%= f.label :category_id, "Categoria" %>
           <%= select_tag :category_id,
               options_for_select([["Todas", 0]] + Category.all.sort_by(&:sort_name).map { |c| [c.display_name, c.id] }, @category_filter || 0),
-              class: "form-select" %>
+              class: "app-form-select" %>
         </div>
 
         <div class="app-filter-field">
           <%= f.label :payment_method, "Pagamento" %>
           <%= f.select :payment_method,
                 options_for_select([["Todos", ""]] + Expense.payment_methods.keys.map { |k| [k.humanize, k] }, @payment_method_filter || ""),
-                {}, class: "form-select" %>
+                {}, class: "app-form-select" %>
         </div>
 
         <div class="app-filter-field">
           <%= f.label :card_id, "Cartão" %>
           <%= f.select :card_id,
                 options_for_select([["Todos", 0]] + Card.order(:name).map { |c| [c.name, c.id] }, @card_filter || 0),
-                {}, class: "form-select" %>
+                {}, class: "app-form-select" %>
         </div>
 
         <div class="app-filter-field">
           <%= f.label :paid, "Paga?" %>
           <%= f.select :paid,
                 options_for_select([["Todas", ""], ["Sim", true], ["Não", false]], @paid_filter || ""),
-                {}, class: "form-select" %>
+                {}, class: "app-form-select" %>
         </div>
       </div>
 
       <div class="app-filter-actions">
-        <%= f.button class: "btn app-page__primary-btn" do %>
+        <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>
           <i class="bi bi-funnel me-1"></i> <%= t("buttons.filter") %>
         <% end %>
 
         <%= link_to clear_filters_expenses_path,
-                    class: "btn app-page__secondary-btn",
+                    class: "app-btn app-btn--secondary app-page__secondary-btn",
                     data: { turbo_method: :delete } do %>
           <i class="bi bi-x-circle me-1"></i> Limpar Filtros
         <% end %>
 
         <%= link_to report_pdf_expenses_path(request.query_parameters),
-                    class: "btn app-page__danger-btn",
+                    class: "app-btn app-btn--danger app-page__danger-btn",
                     target: "_blank" do %>
           <i class="bi bi-file-earmark-pdf me-1"></i> Gerar PDF
         <% end %>
@@ -97,7 +97,7 @@
         <%= render "shared/per_page_select" %>
 
         <%= link_to import_invoice_expenses_path,
-                    class: "btn app-page__secondary-btn app-filter-actions__import",
+                    class: "app-btn app-btn--secondary app-page__secondary-btn app-filter-actions__import",
                     data: { turbo_frame: "modal" } do %>
           <span class="material-symbols-rounded me-1">upload_file</span> Importar Fatura
         <% end %>

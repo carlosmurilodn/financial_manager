@@ -125,14 +125,14 @@
   </div>
 </section>
 
-<!-- Frame vazio para renderização dinâmica -->
 <turbo-frame id="modal" style="display: none;"></turbo-frame>
 
-<!-- Estrutura do modal principal -->
-<div class="modal fade" id="turboModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div id="modal-body"></div>
+<div id="appModal" class="app-modal" aria-hidden="true">
+  <div class="app-modal__backdrop" data-modal-backdrop="true"></div>
+
+  <div class="app-modal__dialog">
+    <div class="app-modal__content">
+      <div id="app-modal-body"></div>
     </div>
   </div>
 </div>

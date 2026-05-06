@@ -1,4 +1,3 @@
-import { Tooltip } from "bootstrap";
 import { initializeFormUtils } from "./utils";
 import { initializeDatepicker } from "./date_picker";
 import { initializeExpenseForm } from "./expense_form";
@@ -55,11 +54,6 @@ function initializeInvoiceFilePreview(scope) {
 
 function cleanupModalBody(modalBody) {
   modalBody.dispatchEvent(new CustomEvent("invoice-file-preview:cleanup"));
-
-  modalBody.querySelectorAll("[data-bs-toggle='tooltip']").forEach((element) => {
-    Tooltip.getInstance(element)?.dispose();
-  });
-
   modalBody.innerHTML = "";
 }
 
@@ -164,10 +158,6 @@ document.addEventListener("turbo:frame-load", (event) => {
   initializeExpenseForm();
   initializeFinancialGoalForm(modalBody);
   initializeInvoiceFilePreview(modalBody);
-
-  modalBody.querySelectorAll("[data-bs-toggle='tooltip']").forEach((element) => {
-    Tooltip.getOrCreateInstance(element);
-  });
 
   const paymentSelect = modalBody.querySelector("#payment_method_select");
   const parcelSection = modalBody.querySelector("#parcelamento_section");

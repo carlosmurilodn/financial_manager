@@ -2,12 +2,12 @@
   <div class="row mb-3">
     <div class="col-md-9">
       <%= f.label :description, t("incomes.form.description") %>
-      <%= f.text_field :description, class: "form-control" %>
+      <%= f.text_field :description, class: "app-form-control" %>
     </div>
 
     <div class="col-md-3">
       <%= f.label :repetir, "Repetir (meses)" %>
-      <%= f.number_field :repetir, value: @income.repetir || 0, min: 0, class: "form-control" %>
+      <%= f.number_field :repetir, value: @income.repetir || 0, min: 0, class: "app-form-control" %>
     </div>
   </div>
 
@@ -16,8 +16,8 @@
       <div class="d-flex align-items-center gap-3">
         <div class="flex-grow-1">
           <%= f.label :amount, t("incomes.form.amount") %>
-          <%= f.text_field :amount, 
-            class: "form-control moeda", 
+          <%= f.text_field :amount,
+            class: "app-form-control moeda",
             value: (income.amount.present? ? number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) : "R$ 0,00"),
             required: true,
             data: { required_currency: true }
@@ -33,13 +33,13 @@
 
     <div class="col-md-4">
       <%= f.label :category_id, t("incomes.form.category") %>
-      <%= f.collection_select :category_id, Category.order(:name), :id, :display_name, { prompt: "Selecione" }, { class: "form-select" } %>
+      <%= f.collection_select :category_id, Category.order(:name), :id, :display_name, { prompt: "Selecione" }, { class: "app-form-select" } %>
     </div>
 
     <div class="col-md-4">
       <%= f.label :date, t("incomes.form.date") %>
       <div class="custom-date-wrapper">
-        <%= f.text_field :date, class: "form-control custom-date", autocomplete: "off", placeholder: "Selecione a data", required: true %>
+        <%= f.text_field :date, class: "app-form-control custom-date", autocomplete: "off", placeholder: "Selecione a data", required: true %>
       </div>
     </div>
   </div>
@@ -48,7 +48,7 @@
     <div class="col-md-4">
       <%= f.label :balance_month, t("incomes.form.balance_month") %>
       <div class="custom-date-wrapper">
-        <%= f.text_field :balance_month, class: "form-control custom-date", autocomplete: "off", placeholder: "Selecione o mês", required: true %>
+        <%= f.text_field :balance_month, class: "app-form-control custom-date", autocomplete: "off", placeholder: "Selecione o mês", required: true %>
       </div>
     </div>
   </div>

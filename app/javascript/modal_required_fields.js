@@ -1,6 +1,6 @@
 import { Tooltip } from "bootstrap";
 
-const REQUIRED_SELECTOR = "input, select, textarea";
+const REQUIRED_SELECTOR = "input:not([type='hidden']):not([disabled]), select:not([disabled]), textarea:not([disabled])";
 const CREDIT_PAYMENT_METHODS = ["credito_a_vista", "credito_parcelado"];
 
 function closestField(input) {
@@ -10,6 +10,10 @@ function closestField(input) {
 function paymentMethodValue(input) {
   const scope = input.closest("[data-expense-row], form") || document;
   return scope.querySelector("[data-payment-method-select], #payment_method_select, [name$='[payment_method]']")?.value;
+}
+
+function shouldValidateInput(input) {
+  return input.matches(REQUIRED_SELECTOR) && !input.closest("template");
 }
 
 function isRequired(input) {
@@ -117,7 +121,7 @@ function validateInput(input, options = {}) {
 function validateForm(form) {
   form.dataset.requiredSubmitAttempted = "true";
 
-  const inputs = [...form.querySelectorAll(REQUIRED_SELECTOR)];
+  const inputs = [...form.querySelectorAll(REQUIRED_SELECTOR)].filter(shouldValidateInput);
   const invalidInputs = inputs.filter((input) => !validateInput(input));
   const firstInvalid = invalidInputs[0];
 
@@ -146,7 +150,7 @@ export function initializeModalRequiredFields(scope = document) {
 }
 
 document.addEventListener("input", (event) => {
-  if (!event.target.matches(REQUIRED_SELECTOR)) return;
+  if (!shouldValidateInput(event.target)) return;
 
   const form = event.target.closest("form");
   const show = !isConditionallyRequired(event.target) ||
@@ -157,7 +161,7 @@ document.addEventListener("input", (event) => {
 });
 
 document.addEventListener("change", (event) => {
-  if (!event.target.matches(REQUIRED_SELECTOR)) return;
+  if (!shouldValidateInput(event.target)) return;
 
   const form = event.target.closest("form");
   if (!form) {
@@ -173,6 +177,8 @@ document.addEventListener("change", (event) => {
 
   if (event.target.matches("[data-payment-method-select], #payment_method_select, [name$='[payment_method]']")) {
     form.querySelectorAll("[data-required-when-credit='true'], [data-required-when-installments='true']").forEach((input) => {
+      if (!shouldValidateInput(input)) return;
+
       validateInput(input, {
         show: form.dataset.requiredSubmitAttempted === "true" || input.dataset.requiredTooltipActive === "true"
       });

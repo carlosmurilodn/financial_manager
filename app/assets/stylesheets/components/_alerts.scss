@@ -1,16 +1,60 @@
 // Base de alerts customizados.
 
 .app-alert {
-  border-radius: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
   padding: 0.75rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.app-alert--dismissible {
+  padding-right: 2.75rem;
 }
 
 .app-alert--success {
+  border-color: var(--stat-success-icon-bg);
   background: var(--stat-success-bg);
   color: var(--stat-success-icon-bg);
 }
 
 .app-alert--danger {
+  border-color: var(--stat-danger-icon-bg);
   background: var(--stat-danger-bg);
   color: var(--stat-danger-icon-bg);
+}
+
+.app-alert--info {
+  border-color: var(--nav-active-icon-color);
+  background: var(--stat-primary-bg);
+  color: var(--nav-active-icon-color);
+}
+
+.app-alert__close {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: currentColor;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.app-alert__close:hover,
+.app-alert__close:focus-visible {
+  background: rgba(255, 255, 255, 0.22);
+  outline: 0;
 }

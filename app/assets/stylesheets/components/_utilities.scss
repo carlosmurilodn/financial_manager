@@ -1,0 +1,61 @@
+// Utilities próprias do app para substituir helpers simples do Bootstrap.
+
+.app-flex {
+  display: flex;
+}
+
+.app-inline-flex {
+  display: inline-flex;
+}
+
+.app-flex-grow {
+  flex-grow: 1;
+}
+
+.app-align-center {
+  align-items: center;
+}
+
+.app-align-start {
+  align-items: flex-start;
+}
+
+.app-align-end {
+  align-items: flex-end;
+}
+
+.app-justify-center {
+  justify-content: center;
+}
+
+.app-justify-end {
+  justify-content: flex-end;
+}
+
+.app-gap-1 {
+  gap: 0.25rem;
+}
+
+.app-gap-2 {
+  gap: 0.5rem;
+}
+
+.app-gap-3 {
+  gap: 1rem;
+}
+
+.app-mb-0 {
+  margin-bottom: 0;
+}
+
+.app-mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.app-mb-3 {
+  margin-bottom: 1rem;
+}
+
+.app-text-center {
+  text-align: center;
+}

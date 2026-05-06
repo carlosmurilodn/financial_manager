@@ -30,19 +30,19 @@
           <%= f.label :description, "Descrição" %>
           <%= f.text_field :description,
                 value: @description_filter,
-                class: "form-control",
+                class: "app-form-control",
                 placeholder: "Buscar descrição..." %>
         </div>
       </div>
 
       <div class="app-filter-actions">
-        <%= f.button class: "btn app-page__primary-btn" do %>
-          <i class="bi bi-funnel me-1"></i> <%= t("buttons.filter") %>
+        <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>
+          <i class="bi bi-funnel app-me-1"></i> <%= t("buttons.filter") %>
         <% end %>
 
         <%= link_to categories_path,
-                    class: "btn app-page__secondary-btn" do %>
-          <i class="bi bi-x-circle me-1"></i> Limpar Filtros
+                    class: "app-btn app-btn--secondary app-page__secondary-btn" do %>
+          <i class="bi bi-x-circle app-me-1"></i> Limpar Filtros
         <% end %>
 
         <%= render "shared/per_page_select" %>
@@ -51,11 +51,11 @@
   </div>
 
   <div class="app-panel app-panel--table">
-    <div class="table-responsive">
-      <table class="table app-table app-table--records app-table--index mb-0">
+    <div class="app-table-responsive">
+      <table class="app-table app-table--records app-table--index app-mb-0">
         <thead>
           <tr>
-            <th class="text-center">Item</th>
+            <th class="app-text-center">Item</th>
             <th><%= sortable_table_header("Ícone", "icon") %></th>
             <th><%= sortable_table_header(t("categories.form.name"), "name") %></th>
             <th><%= t("tables.expenses.actions") %></th>
@@ -65,7 +65,7 @@
         <tbody>
           <% @categories.each_with_index do |category, index| %>
             <tr id="<%= dom_id(category) %>">
-              <td class="text-center app-record-actions">
+              <td class="app-text-center app-record-actions">
                 <%= @item_offset + index + 1 %>
               </td>
 
@@ -77,16 +77,16 @@
 
               <td><%= category.display_name %></td>
 
-              <td class="app-record-actions text-center">
+              <td class="app-record-actions app-text-center">
                 <%= link_to "✏️ #{t("buttons.edit")}",
                             edit_category_path(category),
-                            class: "btn btn-sm btn-primary app-record-actions__edit me-1",
+                            class: "app-btn app-btn--sm app-btn--primary app-record-actions__edit app-me-1",
                             data: { turbo_frame: "modal" } %>
 
                 <%= link_to "🗑️ #{t("buttons.delete")}",
                             category,
                             data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
-                            class: "btn btn-sm btn-danger app-record-actions__delete" %>
+                            class: "app-btn app-btn--sm app-btn--danger app-record-actions__delete" %>
               </td>
             </tr>
           <% end %>

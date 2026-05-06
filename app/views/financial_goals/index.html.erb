@@ -26,7 +26,7 @@
       <div class="app-filter-grid app-filter-grid--financial-goals">
         <div class="app-filter-field">
           <%= f.label :description, "Descrição" %>
-          <%= f.text_field :description, value: @description_filter, class: "form-control", placeholder: "Buscar objetivo..." %>
+          <%= f.text_field :description, value: @description_filter, class: "app-form-control", placeholder: "Buscar objetivo..." %>
         </div>
 
         <div class="app-filter-field">
@@ -34,12 +34,12 @@
           <%= f.select :category_id,
                 options_for_select([["Todas", 0]] + (@categories || []).map { |category| [category.display_name, category.id] }, @category_filter || 0),
                 {},
-                class: "form-select" %>
+                class: "app-form-select" %>
         </div>
 
         <div class="app-filter-field">
           <%= f.label :progress_min, "Progresso" %>
-          <%= f.number_field :progress_min, value: @progress_min_filter, class: "form-control", min: 0, max: 100, step: 1, placeholder: "%" %>
+          <%= f.number_field :progress_min, value: @progress_min_filter, class: "app-form-control", min: 0, max: 100, step: 1, placeholder: "%" %>
         </div>
 
         <div class="app-filter-field">
@@ -47,7 +47,7 @@
           <%= f.select :status,
                 options_for_select([["Todos", ""]] + FinancialGoal.statuses.keys.map { |status| [FinancialGoal::STATUS_LABELS.fetch(status), status] }, @status_filter || ""),
                 {},
-                class: "form-select" %>
+                class: "app-form-select" %>
         </div>
 
         <div class="app-filter-field">
@@ -55,53 +55,52 @@
           <%= f.select :priority,
                 options_for_select([["Todas", ""]] + FinancialGoal.priorities.keys.map { |priority| [FinancialGoal::PRIORITY_LABELS.fetch(priority), priority] }, @priority_filter || ""),
                 {},
-                class: "form-select" %>
+                class: "app-form-select" %>
         </div>
 
         <div class="app-filter-field">
           <%= f.label :due_until, "Data Prevista" %>
-          <%= f.date_field :due_until, value: @due_until_filter, class: "form-control" %>
+          <%= f.date_field :due_until, value: @due_until_filter, class: "app-form-control" %>
         </div>
 
         <div class="app-filter-field">
           <%= f.label :current_amount_min, "Valor Atual" %>
-          <%= f.text_field :current_amount_min, value: @current_amount_min_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
+          <%= f.text_field :current_amount_min, value: @current_amount_min_filter, class: "app-form-control moeda", placeholder: "R$ 0,00" %>
         </div>
 
         <div class="app-filter-field">
           <%= f.label :target_amount_min, "Valor Alvo" %>
-          <%= f.text_field :target_amount_min, value: @target_amount_min_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
+          <%= f.text_field :target_amount_min, value: @target_amount_min_filter, class: "app-form-control moeda", placeholder: "R$ 0,00" %>
         </div>
 
         <div class="app-filter-field">
           <%= f.label :credit_amount_min, "Crédito" %>
-          <%= f.text_field :credit_amount_min, value: @credit_amount_min_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
+          <%= f.text_field :credit_amount_min, value: @credit_amount_min_filter, class: "app-form-control moeda", placeholder: "R$ 0,00" %>
         </div>
 
         <div class="app-filter-field">
           <%= f.label :potential_amount_min, "Total" %>
-          <%= f.text_field :potential_amount_min, value: @potential_amount_min_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
+          <%= f.text_field :potential_amount_min, value: @potential_amount_min_filter, class: "app-form-control moeda", placeholder: "R$ 0,00" %>
         </div>
 
         <div class="app-filter-field">
           <%= f.label :remaining_amount_max, "Falta" %>
-          <%= f.text_field :remaining_amount_max, value: @remaining_amount_max_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
+          <%= f.text_field :remaining_amount_max, value: @remaining_amount_max_filter, class: "app-form-control moeda", placeholder: "R$ 0,00" %>
         </div>
 
         <div class="app-filter-field">
           <%= f.label :monthly_amount_max, "Aporte" %>
-          <%= f.text_field :monthly_amount_max, value: @monthly_amount_max_filter, class: "form-control moeda", placeholder: "R$ 0,00" %>
+          <%= f.text_field :monthly_amount_max, value: @monthly_amount_max_filter, class: "app-form-control moeda", placeholder: "R$ 0,00" %>
         </div>
-
       </div>
 
       <div class="app-filter-actions">
-        <%= f.button class: "btn app-page__primary-btn" do %>
-          <i class="bi bi-funnel me-1"></i> <%= t("buttons.filter") %>
+        <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>
+          <i class="bi bi-funnel app-me-1"></i> <%= t("buttons.filter") %>
         <% end %>
 
-        <%= link_to financial_goals_path, class: "btn app-page__secondary-btn" do %>
-          <i class="bi bi-x-circle me-1"></i> Limpar Filtros
+        <%= link_to financial_goals_path, class: "app-btn app-btn--secondary app-page__secondary-btn" do %>
+          <i class="bi bi-x-circle app-me-1"></i> Limpar Filtros
         <% end %>
 
         <%= render "shared/per_page_select" %>
@@ -110,8 +109,8 @@
   </div>
 
   <div class="app-panel app-panel--table">
-    <div class="table-responsive">
-      <table class="table app-table app-table--records app-table--index app-table--financial-goals mb-0">
+    <div class="app-table-responsive">
+      <table class="app-table app-table--records app-table--index app-table--financial-goals app-mb-0">
         <thead>
           <tr>
             <th><%= sortable_table_header("Objetivo", "description") %></th>
@@ -127,7 +126,7 @@
           <% @financial_goals.each do |financial_goal| %>
             <tr id="<%= dom_id(financial_goal) %>" class="app-financial-goal-row app-financial-goal-row--main">
               <td class="app-financial-goal-row__description"><%= financial_goal.description %></td>
-              <td class="text-center">
+              <td class="app-text-center">
                 <% if financial_goal.category.present? %>
                   <span class="app-goal-category-pill app-goal-category-pill--<%= financial_goal.status %>">
                     <span class="material-symbols-rounded"><%= financial_goal.category.material_icon %></span>
@@ -137,23 +136,23 @@
                   <span class="text-muted">Sem categoria</span>
                 <% end %>
               </td>
-              <td class="text-center">
+              <td class="app-text-center">
                 <div class="app-goal-progress app-goal-progress--<%= financial_goal.status %>" role="img" aria-label="Progresso de <%= financial_goal.description %>: <%= number_to_percentage(financial_goal.progress_percent, precision: 0) %>">
                   <span class="app-goal-progress__bar" style="width: <%= financial_goal.progress_percent.round(1) %>%;"></span>
                 </div>
                 <small class="app-goal-progress__label"><%= number_to_percentage(financial_goal.progress_percent, precision: 0) %></small>
               </td>
-              <td class="text-center"><%= financial_goal.status_label %></td>
-              <td class="text-center"><%= financial_goal.priority_label %></td>
-              <td class="text-center"><%= financial_goal.due_date.strftime("%d/%m/%Y") %></td>
-              <td class="app-record-actions text-center">
+              <td class="app-text-center"><%= financial_goal.status_label %></td>
+              <td class="app-text-center"><%= financial_goal.priority_label %></td>
+              <td class="app-text-center"><%= financial_goal.due_date.strftime("%d/%m/%Y") %></td>
+              <td class="app-record-actions app-text-center">
                 <%= link_to "✏️ #{t("buttons.edit")}",
                     edit_financial_goal_path(financial_goal),
-                    class: "btn btn-sm btn-primary app-record-actions__edit me-1",
+                    class: "app-btn app-btn--sm app-btn--primary app-record-actions__edit app-me-1",
                     data: { turbo_frame: "modal" } %>
                 <%= link_to "🗑️ #{t("buttons.delete")}", financial_goal,
                             data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
-                            class: "btn btn-sm btn-danger app-record-actions__delete" %>
+                            class: "app-btn app-btn--sm app-btn--danger app-record-actions__delete" %>
               </td>
             </tr>
             <tr id="<%= dom_id(financial_goal, :details) %>" class="app-financial-goal-row app-financial-goal-row--details">

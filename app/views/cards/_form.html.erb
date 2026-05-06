@@ -61,9 +61,9 @@
 
     <% if card.icon.attached? %>
       <div class="col-md-4 d-flex align-items-end">
-        <div class="form-check">
-          <%= check_box_tag "card[remove_icon]", "1", false, class: "form-check-input", id: "card_remove_icon" %>
-          <%= label_tag "card_remove_icon", "Remover ícone atual", class: "form-check-label" %>
+        <div class="app-form-check">
+          <%= check_box_tag "card[remove_icon]", "1", false, class: "app-form-check-input", id: "card_remove_icon" %>
+          <%= label_tag "card_remove_icon", "Remover ícone atual", class: "app-form-check-label" %>
         </div>
       </div>
     <% end %>

@@ -1,53 +1,4 @@
-#turboModal .modal-dialog {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: min(1200px, calc(100vw - 32px));
-  max-width: calc(100vw - 32px);
-  max-height: 80vh;
-  max-height: 80dvh;
-  min-height: 0;
-  margin-right: auto;
-  margin-left: auto;
-}
-
-#turboModal .modal-content {
-  border-radius: 12px;     /* cantos suaves */
-  width: 100% !important;
-  max-width: 100%;
-  max-height: 80vh;
-  max-height: 80dvh;
-  overflow: hidden;
-}
-
-#turboModal .modal-dialog.modal-wide {
-  width: 90vw;
-  max-width: 90vw;
-  max-height: 80vh;
-  max-height: 80dvh;
-  margin-right: auto;
-  margin-left: auto;
-}
-
-#turboModal .modal-dialog.modal-wide .modal-content {
-  width: 100% !important;
-  height: auto;
-  max-height: 80vh;
-  max-height: 80dvh;
-}
-
-#turboModal .modal-dialog.modal-wide #modal-body {
-  height: auto;
-  max-height: 80vh;
-  max-height: 80dvh;
-  overflow-y: auto;
-}
-
-#turboModal .modal-dialog.modal-wide #modal-body > .modal-body {
-  overflow: visible;
-}
-
-#modal-body {
+#app-modal-body {
   box-sizing: border-box;
   padding: 1.5rem;
   overflow-y: auto;
@@ -60,76 +11,49 @@
   display: none; /* escondido por padrão */
 }
 
-#modal-body .form-control.is-invalid,
-#modal-body .form-select.is-invalid {
+#app-modal-body .is-invalid {
   border-color: var(--danger) !important;
   box-shadow: 0 0 0 0.18rem rgba(220, 53, 69, 0.16) !important;
 }
 
-#modal-body .has-required-error > label,
-#modal-body .has-required-error > .form-check-label {
+#app-modal-body .has-required-error > label,
+#app-modal-body .has-required-error > .form-check-label,
+#app-modal-body .has-required-error > .invoice-import-field__label {
   color: var(--danger) !important;
 }
 
-#modal-body .invalid-feedback {
+.app-required-feedback {
   margin-top: 4px;
   color: var(--danger);
-  font-size: 0.72rem;
-  font-weight: 700;
-}
-
-#turboModal .btn-close {
-  background-color: var(--modal-close-color);
-  background-image: none;
-  opacity: var(--modal-close-opacity);
-  -webkit-mask: var(--bs-btn-close-bg) center / 1em auto no-repeat;
-  mask: var(--bs-btn-close-bg) center / 1em auto no-repeat;
-}
-
-#turboModal .btn-close:hover {
-  opacity: var(--modal-close-opacity);
-}
-
-.app-required-tooltip {
-  --app-required-tooltip-bg: var(--pill-danger-bg);
-  --app-required-tooltip-color: var(--pill-danger-color);
-  --bs-tooltip-bg: var(--app-required-tooltip-bg);
-  --bs-tooltip-color: var(--app-required-tooltip-color);
-  --bs-tooltip-opacity: 1;
-  --bs-tooltip-max-width: 240px;
-  pointer-events: none;
-}
-
-.app-required-tooltip[data-popper-placement^="top"] .tooltip-arrow::before,
-.app-required-tooltip.bs-tooltip-top .tooltip-arrow::before {
-  border-top-color: var(--app-required-tooltip-bg) !important;
-}
-
-.app-required-tooltip[data-popper-placement^="bottom"] .tooltip-arrow::before,
-.app-required-tooltip.bs-tooltip-bottom .tooltip-arrow::before {
-  border-bottom-color: var(--app-required-tooltip-bg) !important;
-}
-
-.app-required-tooltip[data-popper-placement^="left"] .tooltip-arrow::before,
-.app-required-tooltip.bs-tooltip-start .tooltip-arrow::before {
-  border-left-color: var(--app-required-tooltip-bg) !important;
-}
-
-.app-required-tooltip[data-popper-placement^="right"] .tooltip-arrow::before,
-.app-required-tooltip.bs-tooltip-end .tooltip-arrow::before {
-  border-right-color: var(--app-required-tooltip-bg) !important;
-}
-
-.app-required-tooltip .tooltip-inner {
-  background-color: var(--app-required-tooltip-bg) !important;
-  padding: 6px 9px;
-  color: var(--app-required-tooltip-color) !important;
   font-size: 0.72rem;
   font-weight: 800;
   line-height: 1.25;
 }
 
-.app-confirm-modal .modal-dialog {
+.app-confirm-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.app-confirm-modal--open {
+  display: flex;
+}
+
+.app-confirm-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(3px);
+}
+
+.app-confirm-modal__dialog {
+  position: relative;
+  z-index: 2;
   width: min(420px, calc(100vw - 32px));
 }
 
@@ -408,12 +332,6 @@ html[data-theme="night"] .app-financial-goal-metrics {
   font-size: 1rem;
 }
 
-@media (max-width: 991px) {
-  .app-goal-resource-form__row {
-    grid-template-columns: 1fr;
-  }
-}
-
 .expense-modal-rows {
   display: grid;
   gap: 12px;
@@ -452,8 +370,8 @@ html[data-theme="night"] .app-financial-goal-metrics {
   font-weight: 700;
 }
 
-.expense-modal-field .form-control,
-.expense-modal-field .form-select {
+.expense-modal-field .app-form-control,
+.expense-modal-field .app-form-select {
   min-height: 34px;
   font-size: 0.78rem;
 }
@@ -534,33 +452,18 @@ html[data-theme="night"] .app-financial-goal-metrics {
   }
 }
 
+@media (max-width: 991px) {
+  .app-goal-resource-form__row {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 767px) {
-  #turboModal {
+  .app-modal {
     padding: 0 !important;
   }
 
-  #turboModal .modal-dialog,
-  #turboModal .modal-dialog.modal-wide {
-    width: calc(100vw - 20px);
-    max-width: calc(100vw - 20px);
-    height: auto;
-    max-height: 80vh;
-    max-height: 80dvh;
-    min-height: 0;
-    margin: 10px auto;
-    align-items: center;
-  }
-
-  #turboModal .modal-content,
-  #turboModal .modal-dialog.modal-wide .modal-content {
-    width: 100% !important;
-    max-height: 80vh;
-    max-height: 80dvh;
-    border-radius: 10px;
-  }
-
-  #modal-body,
-  #turboModal .modal-dialog.modal-wide #modal-body {
+  #app-modal-body {
     height: auto !important;
     max-height: 80vh;
     max-height: 80dvh;
@@ -569,35 +472,12 @@ html[data-theme="night"] .app-financial-goal-metrics {
     overflow-y: auto;
   }
 
-  #modal-body > .modal-body,
-  #turboModal .modal-dialog.modal-wide #modal-body > .modal-body {
-    padding: 0;
-    overflow: visible;
-  }
-
-  #modal-body .modal-header {
-    align-items: flex-start;
-    gap: 12px;
-    padding: 0 0 1rem;
-  }
-
-  #modal-body .modal-title,
-  #modal-body h1,
-  #modal-body h2,
-  #modal-body h3,
-  #modal-body h4,
-  #modal-body h5 {
+  #app-modal-body h1,
+  #app-modal-body h2,
+  #app-modal-body h3,
+  #app-modal-body h4,
+  #app-modal-body h5 {
     overflow-wrap: anywhere;
-  }
-
-  #modal-body .row {
-    --bs-gutter-x: 0.75rem;
-  }
-
-  #modal-body .form-control,
-  #modal-body .form-select,
-  #modal-body .input-group {
-    max-width: 100%;
   }
 
   .expense-modal-row__main,

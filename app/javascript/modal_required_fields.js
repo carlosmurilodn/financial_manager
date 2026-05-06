@@ -1,3 +1,5 @@
+import { Tooltip } from "bootstrap";
+
 const REQUIRED_SELECTOR = "input, select, textarea";
 const CREDIT_PAYMENT_METHODS = ["credito_a_vista", "credito_parcelado"];
 
@@ -57,8 +59,8 @@ function disposeRequiredTooltip(input) {
   if (input.dataset.requiredTooltipActive !== "true") return;
 
   const target = tooltipTargetFor(input);
-  bootstrap.Tooltip.getInstance(target)?.dispose();
-  bootstrap.Tooltip.getInstance(input)?.dispose();
+  Tooltip.getInstance(target)?.dispose();
+  Tooltip.getInstance(input)?.dispose();
 
   delete input.dataset.requiredTooltipActive;
   target.removeAttribute("data-bs-toggle");
@@ -80,7 +82,7 @@ function showRequiredTooltip(input) {
   target.setAttribute("data-bs-trigger", "manual");
   target.setAttribute("title", message);
 
-  const tooltip = bootstrap.Tooltip.getOrCreateInstance(target, {
+  const tooltip = Tooltip.getOrCreateInstance(target, {
     container: "#turboModal",
     customClass: "app-required-tooltip",
     placement: "top",

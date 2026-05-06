@@ -1,10 +1,8 @@
-import { Tooltip } from "bootstrap";
-
 const REQUIRED_SELECTOR = "input:not([type='hidden']):not([disabled]), select:not([disabled]), textarea:not([disabled])";
 const CREDIT_PAYMENT_METHODS = ["credito_a_vista", "credito_parcelado"];
 
 function closestField(input) {
-  return input.closest(".expense-modal-field, .app-goal-resource-form__field, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .mb-3");
+  return input.closest(".expense-modal-field, .app-goal-resource-form__field, .invoice-import-field, .app-form-field, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .mb-3");
 }
 
 function paymentMethodValue(input) {
@@ -55,46 +53,48 @@ function isInvalid(input) {
   return isEmpty(input);
 }
 
-function tooltipTargetFor(input) {
-  return closestField(input) || input;
+function feedbackIdFor(input) {
+  if (!input.id) {
+    input.id = `required-field-${crypto.randomUUID()}`;
+  }
+
+  return `${input.id}-required-feedback`;
 }
 
-function disposeRequiredTooltip(input) {
-  if (input.dataset.requiredTooltipActive !== "true") return;
+function removeRequiredFeedback(input) {
+  if (input.dataset.requiredFeedbackActive !== "true") return;
 
-  const target = tooltipTargetFor(input);
-  Tooltip.getInstance(target)?.dispose();
-  Tooltip.getInstance(input)?.dispose();
+  const field = closestField(input);
+  const feedbackId = input.dataset.requiredFeedbackId;
 
-  delete input.dataset.requiredTooltipActive;
-  target.removeAttribute("data-bs-toggle");
-  target.removeAttribute("data-bs-placement");
-  target.removeAttribute("data-bs-custom-class");
-  target.removeAttribute("data-bs-trigger");
-  target.removeAttribute("data-bs-original-title");
-  target.removeAttribute("title");
+  if (feedbackId) {
+    document.getElementById(feedbackId)?.remove();
+  }
+
+  delete input.dataset.requiredFeedbackActive;
+  delete input.dataset.requiredFeedbackId;
+  field?.classList.remove("has-required-error");
+  input.removeAttribute("aria-describedby");
 }
 
-function showRequiredTooltip(input) {
-  const message = invalidMessage(input);
-  const target = tooltipTargetFor(input);
+function showRequiredFeedback(input) {
+  const field = closestField(input) || input.parentElement;
+  if (!field) return;
 
-  input.dataset.requiredTooltipActive = "true";
-  target.setAttribute("data-bs-toggle", "tooltip");
-  target.setAttribute("data-bs-placement", "top");
-  target.setAttribute("data-bs-custom-class", "app-required-tooltip");
-  target.setAttribute("data-bs-trigger", "manual");
-  target.setAttribute("title", message);
+  const feedbackId = feedbackIdFor(input);
+  let feedback = document.getElementById(feedbackId);
 
-  const tooltip = Tooltip.getOrCreateInstance(target, {
-    container: "#turboModal",
-    customClass: "app-required-tooltip",
-    placement: "top",
-    trigger: "manual"
-  });
+  if (!feedback) {
+    feedback = document.createElement("div");
+    feedback.id = feedbackId;
+    feedback.className = "app-required-feedback";
+    field.appendChild(feedback);
+  }
 
-  tooltip.setContent({ ".tooltip-inner": message });
-  tooltip.show();
+  feedback.textContent = invalidMessage(input);
+  input.dataset.requiredFeedbackActive = "true";
+  input.dataset.requiredFeedbackId = feedbackId;
+  input.setAttribute("aria-describedby", feedbackId);
 }
 
 function setInvalid(input, invalid, { show = true } = {}) {
@@ -106,9 +106,9 @@ function setInvalid(input, invalid, { show = true } = {}) {
   field?.classList.toggle("has-required-error", visibleInvalid);
 
   if (visibleInvalid) {
-    showRequiredTooltip(input);
+    showRequiredFeedback(input);
   } else {
-    disposeRequiredTooltip(input);
+    removeRequiredFeedback(input);
   }
 }
 
@@ -155,7 +155,7 @@ document.addEventListener("input", (event) => {
   const form = event.target.closest("form");
   const show = !isConditionallyRequired(event.target) ||
     form?.dataset.requiredSubmitAttempted === "true" ||
-    event.target.dataset.requiredTooltipActive === "true";
+    event.target.dataset.requiredFeedbackActive === "true";
 
   validateInput(event.target, { show });
 });
@@ -171,7 +171,7 @@ document.addEventListener("change", (event) => {
 
   const show = !isConditionallyRequired(event.target) ||
     form.dataset.requiredSubmitAttempted === "true" ||
-    event.target.dataset.requiredTooltipActive === "true";
+    event.target.dataset.requiredFeedbackActive === "true";
 
   validateInput(event.target, { show });
 
@@ -180,7 +180,7 @@ document.addEventListener("change", (event) => {
       if (!shouldValidateInput(input)) return;
 
       validateInput(input, {
-        show: form.dataset.requiredSubmitAttempted === "true" || input.dataset.requiredTooltipActive === "true"
+        show: form.dataset.requiredSubmitAttempted === "true" || input.dataset.requiredFeedbackActive === "true"
       });
     });
   }

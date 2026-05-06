@@ -1,5 +1,5 @@
 <%= form_with model: card, local: true do |f| %>
-  <div class="row mb-3">
+  <div class="row app-mb-3">
     <div class="col-md-6">
       <%= f.label :name, t("cards.form.name") %>
       <%= f.text_field :name, class: "app-form-control", required: true %>
@@ -15,7 +15,7 @@
     </div>
   </div>
 
-  <div class="row mb-3">
+  <div class="row app-mb-3">
     <div class="col-md-3">
       <%= f.label :total_limit, "Limite Total" %>
       <%= f.text_field :total_limit,
@@ -48,7 +48,7 @@
     </div>
   </div>
 
-  <div class="row mb-3">
+  <div class="row app-mb-3">
     <div class="col-md-8">
       <%= f.label :icon, "Ícone do Cartão" %>
       <%= f.file_field :icon, class: "app-form-control", accept: "image/*" %>
@@ -60,7 +60,7 @@
     </div>
 
     <% if card.icon.attached? %>
-      <div class="col-md-4 d-flex align-items-end">
+      <div class="col-md-4 app-flex app-align-end">
         <div class="app-form-check">
           <%= check_box_tag "card[remove_icon]", "1", false, class: "app-form-check-input", id: "card_remove_icon" %>
           <%= label_tag "card_remove_icon", "Remover ícone atual", class: "app-form-check-label" %>
@@ -69,7 +69,7 @@
     <% end %>
   </div>
 
-  <div class="mb-3">
+  <div class="app-mb-3">
     <%= f.submit t("cards.form.submit"), class: "app-btn app-btn--primary" %>
   </div>
 <% end %>

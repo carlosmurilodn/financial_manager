@@ -1,6 +1,68 @@
-// Base de modais customizados do app.
-// Futuro: remover dependência de `.modal` do Bootstrap.
+// Modal próprio do app.
 
 .app-modal {
-  border-radius: 12px;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.app-modal--open {
+  display: flex;
+}
+
+.app-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(3px);
+}
+
+.app-modal__dialog {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 640px;
+}
+
+.app-modal--lg .app-modal__dialog {
+  max-width: 980px;
+}
+
+.app-modal__content {
+  position: relative;
+  border-radius: 24px;
+  background: var(--surface-primary, #fff);
+  box-shadow: 0 32px 64px rgba(15, 23, 42, 0.24);
+  overflow: hidden;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+}
+
+.app-modal-open {
+  overflow: hidden;
+}
+
+html[data-theme="night"] .app-modal__content {
+  background: var(--table-surface);
+}
+
+@media (max-width: 767px) {
+  .app-modal {
+    padding: 1rem;
+    align-items: flex-end;
+  }
+
+  .app-modal__dialog,
+  .app-modal--lg .app-modal__dialog {
+    max-width: 100%;
+  }
+
+  .app-modal__content {
+    border-radius: 20px 20px 0 0;
+    max-height: 92vh;
+  }
 }

@@ -27,7 +27,7 @@
       <div class="app-filter-grid app-filter-grid--cards">
         <div class="app-filter-field">
           <%= f.label :description, "Descrição" %>
-          <%= f.text_field :description, value: @description_filter, class: "form-control", placeholder: "Buscar dívida ou cartão..." %>
+          <%= f.text_field :description, value: @description_filter, class: "app-form-control", placeholder: "Buscar dívida ou cartão..." %>
         </div>
 
         <div class="app-filter-field">
@@ -37,26 +37,26 @@
                   [["Todos", 0]] + I18n.t("date.month_names")[1..12].map.with_index { |m, i| [m.capitalize, i + 1] },
                   @month || 0
                 ),
-                {}, class: "form-select" %>
+                {}, class: "app-form-select" %>
         </div>
 
         <div class="app-filter-field">
           <%= f.label :year, "Ano" %>
           <%= f.select :year,
                 options_for_select([["Todos", 0]] + (@card_debt_years || []), @year || 0),
-                {}, class: "form-select" %>
+                {}, class: "app-form-select" %>
         </div>
       </div>
 
       <div class="app-filter-actions">
-        <%= f.button class: "btn app-page__primary-btn" do %>
-          <i class="bi bi-funnel me-1"></i> <%= t("buttons.filter") %>
+        <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>
+          <i class="bi bi-funnel app-me-1"></i> <%= t("buttons.filter") %>
         <% end %>
 
         <%= link_to clear_filters_cards_path,
-                    class: "btn app-page__secondary-btn",
+                    class: "app-btn app-btn--secondary app-page__secondary-btn",
                     data: { turbo_method: :delete } do %>
-          <i class="bi bi-x-circle me-1"></i> Limpar Filtros
+          <i class="bi bi-x-circle app-me-1"></i> Limpar Filtros
         <% end %>
 
         <%= render "shared/per_page_select" %>
@@ -65,11 +65,11 @@
   </div>
 
   <div class="app-panel app-panel--table">
-    <div class="table-responsive">
-      <table class="table app-table app-table--records app-table--index mb-0">
+    <div class="app-table-responsive">
+      <table class="app-table app-table--records app-table--index app-mb-0">
         <thead>
           <tr>
-            <th class="text-center">Item</th>
+            <th class="app-text-center">Item</th>
             <th><%= sortable_table_header(t("cards.form.name"), "name") %></th>
             <th><%= sortable_table_header(t("cards.form.number"), "number") %></th>
             <th><%= sortable_table_header("Limite Total", "total_limit") %></th>
@@ -83,32 +83,32 @@
         <tbody>
           <% @cards.each_with_index do |card, index| %>
             <tr id="<%= dom_id(card) %>">
-              <td class="text-center app-record-actions">
+              <td class="app-text-center app-record-actions">
                 <%= @item_offset + index + 1 %>
               </td>
 
               <td>
-                <%= card.icon.attached? ? image_tag(card.icon, width: 20, class: "me-2") : "💳" %>
+                <%= card.icon.attached? ? image_tag(card.icon, width: 20, class: "app-me-2") : "💳" %>
                 <%= card.name %>
               </td>
-              <td class="text-center"><%= card.number.present? ? "**** **** **** #{card.number[-4..-1]}" : "" %></td>
-              <td class="text-center"><%= number_to_currency(card.total_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
-              <td class="text-center"><%= number_to_currency(card.total_limit.to_f - @card_debt_totals_by_card.fetch(card.id, 0).to_f, unit: "R$ ", separator: ",", delimiter: ".") %></td>
-              <td class="text-center"><%= number_to_currency(@card_debt_totals_by_card.fetch(card.id, 0), unit: "R$ ", separator: ",", delimiter: ".") %></td>
-              <td class="text-center"><%= card.due_day %></td>
-              <td class="text-center"><%= card.closing_day %></td>
-              <td class="app-record-actions text-center">
+              <td class="app-text-center"><%= card.number.present? ? "**** **** **** #{card.number[-4..-1]}" : "" %></td>
+              <td class="app-text-center"><%= number_to_currency(card.total_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
+              <td class="app-text-center"><%= number_to_currency(card.total_limit.to_f - @card_debt_totals_by_card.fetch(card.id, 0).to_f, unit: "R$ ", separator: ",", delimiter: ".") %></td>
+              <td class="app-text-center"><%= number_to_currency(@card_debt_totals_by_card.fetch(card.id, 0), unit: "R$ ", separator: ",", delimiter: ".") %></td>
+              <td class="app-text-center"><%= card.due_day %></td>
+              <td class="app-text-center"><%= card.closing_day %></td>
+              <td class="app-record-actions app-text-center">
                 <%= link_to "✏️ #{t("buttons.edit")}",
                     edit_card_path(card),
-                    class: "btn btn-sm btn-primary app-record-actions__edit me-1",
+                    class: "app-btn app-btn--sm app-btn--primary app-record-actions__edit app-me-1",
                     data: { turbo_frame: "modal" } %>
                 <%= link_to "🗑️ #{t("buttons.delete")}", card,
                             data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
-                            class: "btn btn-sm btn-danger app-record-actions__delete me-1" %>
-                <%= form_with url: pay_card_path(card), method: :post, data: { turbo_confirm: "Deseja marcar como pagas todas as despesas e parcelas NÃO pagas deste cartão para o mês de balanço #{@pay_balance_month_label}?" }, class: "d-inline" do %>
+                            class: "app-btn app-btn--sm app-btn--danger app-record-actions__delete app-me-1" %>
+                <%= form_with url: pay_card_path(card), method: :post, data: { turbo_confirm: "Deseja marcar como pagas todas as despesas e parcelas NÃO pagas deste cartão para o mês de balanço #{@pay_balance_month_label}?" }, class: "app-inline-flex" do %>
                   <%= hidden_field_tag :month, @month if @month.present? %>
                   <%= hidden_field_tag :year, @year if @year.present? %>
-                  <%= submit_tag "💳 Pagar", class: "btn btn-sm btn-warning app-record-actions__pay" %>
+                  <%= submit_tag "💳 Pagar", class: "app-btn app-btn--sm app-btn--warning app-record-actions__pay" %>
                 <% end %>
               </td>
             </tr>

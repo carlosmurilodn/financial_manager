@@ -44,6 +44,26 @@
   padding-right: 2.55rem;
 }
 
+.app-form-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.app-form-check-input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--nav-active-icon-color);
+}
+
+.app-form-check-label {
+  margin: 0;
+  color: var(--text-main);
+  cursor: pointer;
+}
+
 html[data-theme="night"] .app-form-control,
 html[data-theme="night"] .app-form-select {
   background-color: var(--table-surface);
@@ -61,4 +81,8 @@ html[data-theme="night"] .app-form-select:focus {
   color: var(--table-row-text);
   border-color: var(--nav-active-icon-color);
   box-shadow: none;
+}
+
+html[data-theme="night"] .app-form-check-label {
+  color: var(--table-row-text);
 }

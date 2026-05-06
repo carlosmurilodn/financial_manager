@@ -1,0 +1,48 @@
+// Grid próprio do app para substituir estruturas Bootstrap.
+
+.app-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.app-grid--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.app-grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.app-grid--4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.app-grid--responsive {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.app-col-span-2 {
+  grid-column: span 2;
+}
+
+.app-col-span-3 {
+  grid-column: span 3;
+}
+
+.app-col-span-4 {
+  grid-column: span 4;
+}
+
+@media (max-width: 991px) {
+  .app-grid--2,
+  .app-grid--3,
+  .app-grid--4 {
+    grid-template-columns: 1fr;
+  }
+
+  .app-col-span-2,
+  .app-col-span-3,
+  .app-col-span-4 {
+    grid-column: span 1;
+  }
+}

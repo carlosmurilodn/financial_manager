@@ -15,10 +15,10 @@
       <input type="text" name="expenses[<%= index %>][amount]" id="expenses_<%= index %>_amount" value="R$ 0,00" class="app-form-control moeda" required data-required-currency="true">
     </div>
 
-    <div class="expense-modal-field expense-modal-field--paid">
+    <div class="expense-modal-field expense-modal-field--paid app-form-check">
       <input type="hidden" name="expenses[<%= index %>][paid]" value="0">
-      <input type="checkbox" name="expenses[<%= index %>][paid]" id="expenses_<%= index %>_paid" value="1" class="form-check-input">
-      <label for="expenses_<%= index %>_paid" class="form-check-label"><%= t("expenses.form.paid") %></label>
+      <input type="checkbox" name="expenses[<%= index %>][paid]" id="expenses_<%= index %>_paid" value="1" class="app-form-check-input">
+      <label for="expenses_<%= index %>_paid" class="app-form-check-label"><%= t("expenses.form.paid") %></label>
     </div>
 
     <div class="expense-modal-field">

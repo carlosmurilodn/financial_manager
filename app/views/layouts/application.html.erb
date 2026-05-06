@@ -49,10 +49,17 @@
           <% if flash.any? %>
             <div class="app-flash-stack">
               <% flash.each do |key, msg| %>
-                <div class="alert alert-<%= key == 'notice' ? 'success' : 'danger' %> alert-dismissible fade show app-flash" role="alert">
+                <div class="app-alert app-alert--dismissible <%= key == 'notice' ? 'app-alert--success' : 'app-alert--danger' %> app-flash" role="alert">
                   <span class="material-symbols-rounded app-flash__icon"><%= key == "notice" ? "check_circle" : "error" %></span>
                   <span><%= msg %></span>
-                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+                  <button
+                    type="button"
+                    class="app-alert__close"
+                    aria-label="Fechar alerta"
+                    onclick="this.closest('.app-alert').remove()">
+                    <span class="material-symbols-rounded">close</span>
+                  </button>
                 </div>
               <% end %>
             </div>

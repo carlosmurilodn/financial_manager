@@ -1,22 +1,15 @@
 <div class="kpi-grid">
-  <div class="stat-card stat-card--success stat-card--balance-current">
+  <div class="stat-card stat-card--success">
     <div class="stat-card__icon">
       <span class="material-symbols-rounded">account_balance_wallet</span>
     </div>
 
-    <div class="stat-card__content stat-card__content--with-gif">
-      <div>
-        <span class="stat-card__label">Saldo Atual</span>
-        <strong class="stat-card__value">
-          <%= number_to_currency(@saldo_atual, unit: "R$ ", separator: ",", delimiter: ".") %>
-        </strong>
-        <small class="stat-card__meta">Panorama consolidado das contas</small>
-      </div>
-
-      <img
-        src="data:image/gif;base64,R0lGODdhRgBaAIMAACwsLFdXV5CQkFdXV6SkpG9vb6ampunp6cXFxTo6Ov7+/gAAABUVFefn59bW1re3tywAAAAARgBaAEAI/wAVCBxIsKDBgwgTKlyYsACAAwcWAGCoIMFDiAscUNzIUaCABSBDihxJEmSAjigTOhAgIEDJkAQODHgJEoABAQ9S6kQIgKZPkAZ2Ch3o4KfRkQKGonTA4KjTkkmVLnT5tKrIoFITfrTKFYHAAiEnEuwJMidHqlzT/jzZcSvXAG5FAhDQIKvdu3cDMBDL8UFNvCj1Eph5FEDPAQcIMADcEe0CAiAZRJQLecGAygsY1GW8UIBXv2oX1DXLmSHZ0AuilkbYFPXLBKsJOnZNkzRnsLR/Yh04O+zmxrl9Fhi4la8C0GU74hbJAEFr1zYd/I6N0MHNB9Opa99e0K9M0RtdQv9koJF7wQKILy84iUBAgQAFBBgoz+Ay4ojZzetVy2CveYNxAUDAgKeFNSBhf/031kj2lSTgYMwpqEB7CBjgmgAOtCfhQM9ZNdyGA1mI2m4KLnehgr259qF2DXQYXEgkcubiiyGpxhhyNI60WGlF5UgSWwc9cF1+G82YI18NkOSijQy16CNSHoWkGUHLrUhRijRaOVADD5i4XmBPVpVAjByJ6GMARN5lpkgBIFAejiF5BeKcdNY5EAIBlNfRAwHYpmCLimm50F4HAJCmdgJIBhmTCCHw2Hh6lnjfTH4aZOGAGB1KXQDpAdBUgXL1pBhikM3JKahOXWYcitDNuWZNVQn/qp9IBByGGUwDMABhZHMWaN+utM4ELHkgoirSAMj6ROx/GfL5E4Iv9YmApoBJd5OxTjXn2ZxeVlWphNgataqESYYGm6mtbugobeNuF65V7cb2arrcJeBjAtRm5eSTQJa275M7+mvkiwFzZm+YCXIWV5j94vUvwpHitfCTstr1bm4Fh1ggA2iiBCe/BE0s0rlnIRzZZnHlqYADaGW80LomY7Vcw1V2dDFtH/YIUqQHpwacyf1mSJADp01ZsskAvGeRpwOTOZXJTzUcnpLQYmxYAIYBAFfEKIk8sFXLltbziwBwzRiWNb1X0nDtsWTAA2bLi7VhBVTqGAOM2qn33nzXAhkQADs="
-        alt="Gato observando o saldo atual"
-        class="home-balance-cat-gif">
+    <div>
+      <span class="stat-card__label">Saldo Atual</span>
+      <strong class="stat-card__value">
+        <%= number_to_currency(@saldo_atual, unit: "R$ ", separator: ",", delimiter: ".") %>
+      </strong>
+      <small class="stat-card__meta">Panorama consolidado das contas</small>
     </div>
   </div>
 

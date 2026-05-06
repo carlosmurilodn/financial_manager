@@ -52,6 +52,18 @@
   filter: brightness(1.03);
 }
 
+.app-btn--warning {
+  background: var(--warning, #f59e0b);
+  color: var(--white);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
+}
+
+.app-btn--warning:hover,
+.app-btn--warning:focus {
+  color: var(--white);
+  filter: brightness(1.03);
+}
+
 .app-btn--outline {
   border: 1px solid var(--primary);
   background: transparent;

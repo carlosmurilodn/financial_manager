@@ -1,7 +1,8 @@
 import { Turbo } from "@hotwired/turbo-rails";
-import { Modal } from "bootstrap";
 
 const CONFIRM_MODAL_ID = "appConfirmModal";
+const CONFIRM_MODAL_OPEN_CLASS = "app-confirm-modal--open";
+const BODY_MODAL_OPEN_CLASS = "app-modal-open";
 
 function escapeHtml(value) {
   const element = document.createElement("div");
@@ -25,17 +26,18 @@ function confirmButtonLabel(element) {
     (isDeleteAction(element) ? "Excluir" : "Confirmar");
 }
 
+// Cria o modal de confirmacao sem depender do componente Modal do Bootstrap.
 function buildConfirmModal(message, element) {
   document.getElementById(CONFIRM_MODAL_ID)?.remove();
 
   const modal = document.createElement("div");
   modal.id = CONFIRM_MODAL_ID;
-  modal.className = "modal fade app-confirm-modal";
-  modal.tabIndex = -1;
+  modal.className = "app-confirm-modal";
   modal.setAttribute("aria-hidden", "true");
   modal.innerHTML = `
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content app-confirm-modal__content">
+    <div class="app-confirm-modal__backdrop" data-confirm-cancel></div>
+    <div class="app-confirm-modal__dialog" role="dialog" aria-modal="true">
+      <div class="app-confirm-modal__content">
         <div class="app-confirm-modal__header">
           <span class="app-confirm-modal__icon material-symbols-rounded">warning</span>
           <div>
@@ -44,8 +46,8 @@ function buildConfirmModal(message, element) {
           </div>
         </div>
         <div class="app-confirm-modal__actions">
-          <button type="button" class="btn app-confirm-modal__cancel" data-confirm-cancel>Cancelar</button>
-          <button type="button" class="btn app-confirm-modal__confirm" data-confirm-accept>${escapeHtml(confirmButtonLabel(element))}</button>
+          <button type="button" class="app-btn app-confirm-modal__cancel" data-confirm-cancel>Cancelar</button>
+          <button type="button" class="app-btn app-confirm-modal__confirm" data-confirm-accept>${escapeHtml(confirmButtonLabel(element))}</button>
         </div>
       </div>
     </div>
@@ -55,10 +57,22 @@ function buildConfirmModal(message, element) {
   return modal;
 }
 
+function openConfirmModal(modalElement) {
+  modalElement.classList.add(CONFIRM_MODAL_OPEN_CLASS);
+  modalElement.setAttribute("aria-hidden", "false");
+  document.body.classList.add(BODY_MODAL_OPEN_CLASS);
+}
+
+function closeConfirmModal(modalElement) {
+  modalElement.classList.remove(CONFIRM_MODAL_OPEN_CLASS);
+  modalElement.setAttribute("aria-hidden", "true");
+  document.body.classList.remove(BODY_MODAL_OPEN_CLASS);
+  modalElement.remove();
+}
+
 function showConfirmDialog(message, element) {
   return new Promise((resolve) => {
     const modalElement = buildConfirmModal(message, element);
-    const modal = new Modal(modalElement, { backdrop: "static", keyboard: true });
     let settled = false;
 
     const settle = (result) => {
@@ -66,19 +80,27 @@ function showConfirmDialog(message, element) {
 
       settled = true;
       resolve(result);
-      modal.hide();
+      closeConfirmModal(modalElement);
     };
 
-    modalElement.querySelector("[data-confirm-accept]")?.addEventListener("click", () => settle(true));
-    modalElement.querySelector("[data-confirm-cancel]")?.addEventListener("click", () => settle(false));
+    const handleKeydown = (event) => {
+      if (event.key === "Escape") {
+        settle(false);
+      }
+    };
 
-    modalElement.addEventListener("hidden.bs.modal", () => {
-      if (!settled) resolve(false);
-      modal.dispose();
-      modalElement.remove();
+    modalElement.querySelectorAll("[data-confirm-cancel]").forEach((cancelElement) => {
+      cancelElement.addEventListener("click", () => settle(false));
+    });
+
+    modalElement.querySelector("[data-confirm-accept]")?.addEventListener("click", () => settle(true));
+    document.addEventListener("keydown", handleKeydown, { once: true });
+
+    modalElement.addEventListener("app-confirm-modal:close", () => {
+      document.removeEventListener("keydown", handleKeydown);
     }, { once: true });
 
-    modal.show();
+    openConfirmModal(modalElement);
   });
 }
 

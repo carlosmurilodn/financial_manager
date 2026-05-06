@@ -25,7 +25,7 @@ class CardsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.turbo_stream { render :new, status: :unprocessable_entity }
+        format.turbo_stream { render :new, formats: [:html], status: :unprocessable_entity }
         format.html { render :new, status: :unprocessable_entity }
       end
     end

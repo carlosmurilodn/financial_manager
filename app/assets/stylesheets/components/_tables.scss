@@ -1,11 +1,33 @@
 // Estrutura base de tabelas do app.
 
+.app-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .app-table {
   width: 100%;
   border-collapse: collapse;
+  margin-bottom: 0;
+  color: var(--table-row-text);
+  vertical-align: middle;
 }
 
 .app-table th,
 .app-table td {
   padding: 0.8rem 0.6rem;
+  vertical-align: middle;
+}
+
+.app-table thead th {
+  color: var(--text-main);
+  font-size: 0.78rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.app-table tbody td {
+  color: var(--table-row-text);
+  font-size: 0.82rem;
 }

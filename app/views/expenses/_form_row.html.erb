@@ -2,17 +2,17 @@
   <div class="expense-modal-row__main">
     <div class="expense-modal-field expense-modal-field--description">
       <label for="expenses_<%= index %>_description"><%= t("expenses.form.description") %></label>
-      <input type="text" name="expenses[<%= index %>][description]" id="expenses_<%= index %>_description" class="form-control" required>
+      <input type="text" name="expenses[<%= index %>][description]" id="expenses_<%= index %>_description" class="app-form-control" required>
     </div>
 
     <div class="expense-modal-field expense-modal-field--repeat">
       <label for="expenses_<%= index %>_repetir">Repetir</label>
-      <input type="number" name="expenses[<%= index %>][repetir]" id="expenses_<%= index %>_repetir" value="0" min="0" class="form-control">
+      <input type="number" name="expenses[<%= index %>][repetir]" id="expenses_<%= index %>_repetir" value="0" min="0" class="app-form-control">
     </div>
 
     <div class="expense-modal-field expense-modal-field--amount">
       <label for="expenses_<%= index %>_amount"><%= t("expenses.form.amount") %></label>
-      <input type="text" name="expenses[<%= index %>][amount]" id="expenses_<%= index %>_amount" value="R$ 0,00" class="form-control moeda" required data-required-currency="true">
+      <input type="text" name="expenses[<%= index %>][amount]" id="expenses_<%= index %>_amount" value="R$ 0,00" class="app-form-control moeda" required data-required-currency="true">
     </div>
 
     <div class="expense-modal-field expense-modal-field--paid">
@@ -24,20 +24,20 @@
     <div class="expense-modal-field">
       <label for="expenses_<%= index %>_date"><%= t("expenses.form.date") %></label>
       <div class="custom-date-wrapper">
-        <input type="text" name="expenses[<%= index %>][date]" id="expenses_<%= index %>_date" class="form-control custom-date" autocomplete="off" placeholder="Selecione a data" data-expense-date-input required>
+        <input type="text" name="expenses[<%= index %>][date]" id="expenses_<%= index %>_date" class="app-form-control custom-date" autocomplete="off" placeholder="Selecione a data" data-expense-date-input required>
       </div>
     </div>
 
     <div class="expense-modal-field">
       <label for="expenses_<%= index %>_balance_month"><%= t("expenses.form.balance_month") %></label>
       <div class="custom-date-wrapper">
-        <input type="text" name="expenses[<%= index %>][balance_month]" id="expenses_<%= index %>_balance_month" class="form-control custom-date" autocomplete="off" placeholder="Selecione o mês" data-expense-balance-input data-balance-auto-filled="true" required>
+        <input type="text" name="expenses[<%= index %>][balance_month]" id="expenses_<%= index %>_balance_month" class="app-form-control custom-date" autocomplete="off" placeholder="Selecione o mês" data-expense-balance-input data-balance-auto-filled="true" required>
       </div>
     </div>
 
     <div class="expense-modal-field">
       <label for="expenses_<%= index %>_category_id"><%= t("expenses.form.category") %></label>
-      <select name="expenses[<%= index %>][category_id]" id="expenses_<%= index %>_category_id" class="form-select" required>
+      <select name="expenses[<%= index %>][category_id]" id="expenses_<%= index %>_category_id" class="app-form-select" required>
         <option value="">Selecione</option>
         <% categories.each do |category| %>
           <option value="<%= category.id %>"><%= category.display_name %></option>
@@ -47,7 +47,7 @@
 
     <div class="expense-modal-field">
       <label for="expenses_<%= index %>_payment_method"><%= t("expenses.form.payment_method") %></label>
-      <select name="expenses[<%= index %>][payment_method]" id="expenses_<%= index %>_payment_method" class="form-select" data-payment-method-select required>
+      <select name="expenses[<%= index %>][payment_method]" id="expenses_<%= index %>_payment_method" class="app-form-select" data-payment-method-select required>
         <option value="">Selecione</option>
         <% payment_options.each do |label, value| %>
           <option value="<%= value %>"><%= label %></option>
@@ -57,7 +57,7 @@
 
     <div class="expense-modal-field">
       <label for="expenses_<%= index %>_card_id"><%= t("expenses.form.card") %></label>
-      <select name="expenses[<%= index %>][card_id]" id="expenses_<%= index %>_card_id" class="form-select" data-card-select data-required-when-credit="true">
+      <select name="expenses[<%= index %>][card_id]" id="expenses_<%= index %>_card_id" class="app-form-select" data-card-select data-required-when-credit="true">
         <option value="">Selecione</option>
         <% cards.each do |card| %>
           <option value="<%= card.id %>" data-due-day="<%= card.due_day %>" data-closing-day="<%= card.closing_day %>"><%= card.display_name %></option>
@@ -73,12 +73,12 @@
   <div class="expense-modal-installments" data-installments-section>
     <div class="expense-modal-field">
       <label for="expenses_<%= index %>_current_installment">Parcela Atual</label>
-      <input type="number" name="expenses[<%= index %>][current_installment]" id="expenses_<%= index %>_current_installment" value="1" min="1" class="form-control" data-required-when-installments="true">
+      <input type="number" name="expenses[<%= index %>][current_installment]" id="expenses_<%= index %>_current_installment" value="1" min="1" class="app-form-control" data-required-when-installments="true">
     </div>
 
     <div class="expense-modal-field">
       <label for="expenses_<%= index %>_installments_count">Total de Parcelas</label>
-      <input type="number" name="expenses[<%= index %>][installments_count]" id="expenses_<%= index %>_installments_count" value="1" min="1" class="form-control" data-required-when-installments="true">
+      <input type="number" name="expenses[<%= index %>][installments_count]" id="expenses_<%= index %>_installments_count" value="1" min="1" class="app-form-control" data-required-when-installments="true">
     </div>
   </div>
 </div>

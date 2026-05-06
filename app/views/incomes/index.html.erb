@@ -29,34 +29,34 @@
           <%= label_tag :month, "Mês" %>
           <%= select_tag :month,
             options_for_select([["Todos", 0]] + I18n.t("date.month_names")[1..12].map.with_index { |m, i| [m.capitalize, i + 1] }, @month || 0),
-            class: "form-select" %>
+            class: "app-form-select" %>
         </div>
 
         <div class="app-filter-field">
           <%= label_tag :year, "Ano" %>
           <%= select_tag :year,
             options_for_select([["Todos", 0]] + (Date.today.year - 5..Date.today.year + 1).to_a.reverse, @year || 0),
-            class: "form-select" %>
+            class: "app-form-select" %>
         </div>
 
         <div class="app-filter-field">
           <%= label_tag :description, "Descrição" %>
-          <%= text_field_tag :description, @description_filter, class: "form-control", placeholder: "Buscar descrição..." %>
+          <%= text_field_tag :description, @description_filter, class: "app-form-control", placeholder: "Buscar descrição..." %>
         </div>
 
         <div class="app-filter-field">
           <%= label_tag :paid, "Recebida?" %>
           <%= select_tag :paid,
             options_for_select([["Todos", ""], ["Sim", true], ["Não", false]], @paid_filter || ""),
-            class: "form-select" %>
+            class: "app-form-select" %>
         </div>
       </div>
 
       <div class="app-filter-actions">
-        <%= submit_tag t("buttons.filter"), class: "btn app-page__primary-btn" %>
+        <%= submit_tag t("buttons.filter"), class: "app-btn app-btn--primary app-page__primary-btn" %>
         <%= link_to "Limpar Filtros",
                 clear_filters_incomes_path,
-                class: "btn app-page__secondary-btn",
+                class: "app-btn app-btn--secondary app-page__secondary-btn",
                 data: { turbo_method: :delete } %>
         <%= render "shared/per_page_select" %>
       </div>

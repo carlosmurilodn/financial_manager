@@ -7,18 +7,18 @@
     <div class="expense-modal-grid expense-modal-grid--edit">
       <div class="expense-modal-field expense-modal-field--wide">
         <%= f.label :description, t("expenses.form.description") %>
-        <%= f.text_field :description, class: "form-control", required: true %>
+        <%= f.text_field :description, class: "app-form-control", required: true %>
       </div>
 
       <div class="expense-modal-field">
         <%= f.label :repetir, "Repetir (meses)" %>
-        <%= f.number_field :repetir, value: @expense.repetir || 0, min: 0, class: "form-control" %>
+        <%= f.number_field :repetir, value: @expense.repetir || 0, min: 0, class: "app-form-control" %>
       </div>
 
       <div class="expense-modal-field">
         <%= f.label :amount, t("expenses.form.amount") %>
         <%= f.text_field :amount,
-          class: "form-control moeda",
+          class: "app-form-control moeda",
           value: (expense.amount.present? ? number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) : "R$ 0,00"),
           required: true,
           data: { required_currency: true }
@@ -33,44 +33,44 @@
       <div class="expense-modal-field">
         <%= f.label :date, t("expenses.form.date") %>
         <div class="custom-date-wrapper">
-          <%= f.text_field :date, class: "form-control custom-date", autocomplete: "off", placeholder: "Selecione a data", required: true %>
+          <%= f.text_field :date, class: "app-form-control custom-date", autocomplete: "off", placeholder: "Selecione a data", required: true %>
         </div>
       </div>
 
       <div class="expense-modal-field">
         <%= f.label :balance_month, t("expenses.form.balance_month") %>
         <div class="custom-date-wrapper">
-          <%= f.text_field :balance_month, class: "form-control custom-date", autocomplete: "off", placeholder: "Selecione o mês", required: true %>
+          <%= f.text_field :balance_month, class: "app-form-control custom-date", autocomplete: "off", placeholder: "Selecione o mês", required: true %>
         </div>
       </div>
 
       <div class="expense-modal-field">
         <%= f.label :category_id, t("expenses.form.category") %>
-        <%= f.collection_select :category_id, categories, :id, :display_name, { prompt: "Selecione" }, { class: "form-select", required: true } %>
+        <%= f.collection_select :category_id, categories, :id, :display_name, { prompt: "Selecione" }, { class: "app-form-select", required: true } %>
       </div>
 
       <div class="expense-modal-field">
         <%= f.label :payment_method, t("expenses.form.payment_method") %>
         <%= f.select :payment_method, payment_options,
           { prompt: "Selecione" },
-          { class: "form-select", id: "payment_method_select", required: true } %>
+          { class: "app-form-select", id: "payment_method_select", required: true } %>
       </div>
 
       <div class="expense-modal-field">
         <%= f.label :card_id, t("expenses.form.card") %>
-        <%= f.collection_select :card_id, cards, :id, :display_name, { prompt: "Selecione" }, { class: "form-select", data: { required_when_credit: true } } %>
+        <%= f.collection_select :card_id, cards, :id, :display_name, { prompt: "Selecione" }, { class: "app-form-select", data: { required_when_credit: true } } %>
       </div>
     </div>
 
     <div class="expense-modal-installments" id="parcelamento_section">
       <div class="expense-modal-field">
         <%= f.label :current_installment, "Parcela Atual" %>
-        <%= f.number_field :current_installment, class: "form-control", value: expense.current_installment || 1, min: 1, data: { required_when_installments: true } %>
+        <%= f.number_field :current_installment, class: "app-form-control", value: expense.current_installment || 1, min: 1, data: { required_when_installments: true } %>
       </div>
 
       <div class="expense-modal-field">
         <%= f.label :installments_count, "Total de Parcelas" %>
-        <%= f.number_field :installments_count, class: "form-control", value: expense.installments_count || 1, min: 1, data: { required_when_installments: true } %>
+        <%= f.number_field :installments_count, class: "app-form-control", value: expense.installments_count || 1, min: 1, data: { required_when_installments: true } %>
       </div>
     </div>
 

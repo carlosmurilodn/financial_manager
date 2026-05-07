@@ -1,30 +1,96 @@
-<tr id="<%= dom_id(income) %>" class="<%= income.paid ? 'table-success' : 'table-warning' %>">
-  <td class="text-center app-record-actions">
-    <%= local_assigns[:item_number] || "-" %>
-  </td>
-  <td class="text-start"><%= income.description %></td>
-  <td class="text-center"><%= income.category&.display_name || "-" %></td>
-  <td class="text-center app-record-actions">
-    <%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
-  </td>
-  <td class="text-center"><%= income.date.strftime("%d/%m/%Y") if income.date.present? %></td>
-  <td class="text-center"><%= income.balance_month.strftime("%m/%Y") if income.balance_month.present? %></td>
-  <td class="text-center app-record-actions">
-    <%= link_to (income.paid ? "Sim" : "Não"),
-                toggle_paid_income_path(income),
-                method: :patch,
-                data: { turbo_method: :patch, turbo_stream: true },
-                class: "btn btn-sm btn-secondary app-record-actions__status" %>
-  </td>
-  <td class="text-center app-record-actions">
-    <%= link_to "✏️ #{t("buttons.edit")}",
-                edit_income_path(income),
-                class: "btn btn-sm btn-primary app-record-actions__edit",
-                data: { turbo_frame: "modal" } %>
+<% category = income.category %>
+<% category_color = category&.display_color || "#22a889" %>
+<% category_icon = category&.material_icon || "payments" %>
 
-    <%= link_to "🗑️ #{t("buttons.delete")}",
-                income_path(income),
-                data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
-                class: "btn btn-sm btn-danger app-record-actions__delete" %>
-  </td>
-</tr>
+<div
+  id="<%= dom_id(income) %>"
+  class="expense-card income-card <%= income.paid? ? 'expense-card--paid' : 'expense-card--pending' %>"
+  style="--expense-category-color: <%= category_color %>;"
+>
+  <div class="expense-card__border"></div>
+
+  <div class="expense-card__content">
+    <div class="expense-card__category">
+      <div class="expense-card__icon-wrapper">
+        <span class="material-symbols-rounded expense-card__icon">
+          <%= category_icon %>
+        </span>
+      </div>
+
+      <div class="expense-card__details">
+        <div class="expense-card__header">
+          <h3 class="expense-card__title">
+            <%= category&.display_name || "Sem categoria" %>
+          </h3>
+
+          <div class="expense-card__badges">
+            <span class="expense-card__pill">
+              Receita
+            </span>
+
+            <span class="expense-card__pill">
+              <%= income.paid? ? "Recebida" : "Pendente" %>
+            </span>
+          </div>
+        </div>
+
+        <div class="expense-card__description-row">
+          <p class="expense-card__description">
+            <%= income.description.presence || "Sem descrição" %>
+          </p>
+
+          <div class="expense-card__meta">
+            <span class="expense-card__meta-item">
+              <span class="material-symbols-rounded">calendar_month</span>
+              <%= income.date.strftime("%d/%m/%Y") if income.date.present? %>
+            </span>
+
+            <span class="expense-card__meta-item">
+              <span class="material-symbols-rounded">event</span>
+              <%= income.balance_month.strftime("%m/%Y") if income.balance_month.present? %>
+            </span>
+
+            <span class="expense-card__meta-item">
+              <span class="material-symbols-rounded">schedule</span>
+              <%= income.created_at.strftime("%d/%m/%Y") %>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="expense-card__amount-area">
+      <strong class="expense-card__amount">
+        <%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
+      </strong>
+
+      <%= link_to(
+            income.paid? ? "Recebida" : "Pendente",
+            toggle_paid_income_path(income),
+            method: :patch,
+            data: { turbo_method: :patch, turbo_stream: true },
+            class: "expense-card__status #{income.paid? ? 'expense-card__status--paid' : 'expense-card__status--pending'}"
+          ) %>
+    </div>
+
+    <div class="expense-card__actions">
+      <%= link_to(
+            edit_income_path(income),
+            class: "expense-card__action",
+            title: "Editar receita",
+            data: { turbo_frame: "modal" }
+          ) do %>
+        <span class="material-symbols-rounded">edit</span>
+      <% end %>
+
+      <%= link_to(
+            income_path(income),
+            data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
+            class: "expense-card__action expense-card__action--danger",
+            title: "Excluir receita"
+          ) do %>
+        <span class="material-symbols-rounded">delete</span>
+      <% end %>
+    </div>
+  </div>
+</div>

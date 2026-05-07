@@ -1,0 +1,13 @@
+<div id="incomes-table">
+  <div class="expenses-cards-list" id="incomes-list">
+    <% @incomes.each do |income| %>
+      <%= render partial: "income_row", locals: { income: income } %>
+    <% end %>
+  </div>
+
+  <%= render "shared/pagination",
+             current_page: @current_page,
+             total_pages: @total_pages,
+             base_params: request.query_parameters.except(:page),
+             aria_label: "Paginacao de receitas" %>
+</div>

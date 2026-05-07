@@ -126,7 +126,7 @@
 }
 
 .app-auth__field .form-control {
-  min-height: 46px;
+  min-height: 38px;
   border-color: var(--card-border);
   border-radius: 10px;
   background: var(--app-bg-soft);
@@ -153,7 +153,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 46px;
+  min-height: 38px;
   border: 0;
   border-radius: 10px;
   background: var(--primary) !important;
@@ -183,10 +183,13 @@
 
 .app-auth-flash {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 10;
-  width: min(420px, calc(100vw - 40px));
+  top: 18px;
+  right: 18px;
+  z-index: 3000;
+  display: grid;
+  gap: 12px;
+  width: min(50vw, 640px);
+  pointer-events: none;
 }
 
 @media (max-width: 860px) {

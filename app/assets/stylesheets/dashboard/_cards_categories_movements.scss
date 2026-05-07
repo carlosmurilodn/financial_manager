@@ -633,8 +633,8 @@ html[data-theme="night"] .dashboard-goal-item {
   width: 34px;
   height: 34px;
   border-radius: 999px;
-  background: var(--avatar-bg);
-  color: var(--nav-active-icon-color);
+  background: color-mix(in srgb, var(--dashboard-category-color, var(--primary)) 14%, transparent);
+  color: var(--dashboard-category-color, var(--primary));
   font-size: 1.05rem;
   flex-shrink: 0;
 }
@@ -642,7 +642,8 @@ html[data-theme="night"] .dashboard-goal-item {
 .dashboard-category-item__copy {
   position: relative;
   display: grid;
-  /*width: 100%;*/
+  flex: 1;
+  width: 100%;
   min-width: 0;
   padding: 0 24px 0 0;
   border: 0;
@@ -678,7 +679,7 @@ html[data-theme="night"] .dashboard-goal-item {
   position: absolute;
   top: 50%;
   right: 0;
-  color: var(--nav-active-icon-color);
+  color: var(--dashboard-category-color, var(--primary));
   font-size: 1.1rem;
   transform: translateY(-50%);
   transition: transform 0.18s ease;
@@ -717,7 +718,7 @@ html[data-theme="night"] .dashboard-goal-item {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: var(--primary);
+  background: var(--dashboard-category-color, var(--primary));
 }
 
 .dashboard-category-item__details {

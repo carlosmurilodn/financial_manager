@@ -1,0 +1,13 @@
+<div id="financial-goals-list">
+  <div class="expenses-cards-list">
+    <% @financial_goals.each do |financial_goal| %>
+      <%= render partial: "financial_goal_card", locals: { financial_goal: financial_goal } %>
+    <% end %>
+  </div>
+
+  <%= render "shared/pagination",
+             current_page: @current_page,
+             total_pages: @total_pages,
+             base_params: request.query_parameters.except(:page),
+             aria_label: "Paginacao de objetivos" %>
+</div>

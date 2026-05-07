@@ -1,4 +1,6 @@
 class FinancialGoal < ApplicationRecord
+  COLOR_PALETTE = Category::COLOR_PALETTE
+
   belongs_to :category, optional: true
 
   has_many :financial_goal_resources, dependent: :destroy
@@ -33,6 +35,7 @@ class FinancialGoal < ApplicationRecord
   validates :description, :due_date, :status, :priority, presence: true
   validates :target_amount, numericality: { greater_than: 0 }
   validates :current_amount, numericality: { greater_than_or_equal_to: 0 }
+  validates :color, inclusion: { in: COLOR_PALETTE.values }, allow_blank: true
 
   def status_label
     STATUS_LABELS.fetch(status, status.to_s.humanize)
@@ -40,6 +43,14 @@ class FinancialGoal < ApplicationRecord
 
   def priority_label
     PRIORITY_LABELS.fetch(priority, priority.to_s.humanize)
+  end
+
+  def display_color
+    color.presence || category&.display_color || COLOR_PALETTE.values.first
+  end
+
+  def color_name
+    Category.color_name_for(display_color)
   end
 
   def remaining_amount

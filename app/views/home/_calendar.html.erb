@@ -66,8 +66,12 @@
                   <% @calendar_weeks.each do |week| %>
                     <tr>
                       <% week.each do |date| %>
-                        <% if date.nil? || date.month != @month %>
+                        <% if date.nil? %>
                           <td class="app-calendar-table__empty"></td>
+                        <% elsif date.month != @month %>
+                          <td class="app-calendar-table__day app-calendar-table__day--outside-month">
+                            <div class="app-calendar-table__date"><%= date.day %></div>
+                          </td>
                         <% else %>
                           <% daily_items = @daily_calendar_items[date] || { incomes: [], expenses: [] } %>
                           <% has_incomes = daily_items[:incomes].any? %>

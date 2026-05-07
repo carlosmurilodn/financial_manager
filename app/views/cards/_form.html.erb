@@ -50,12 +50,12 @@
 
   <div class="row app-mb-3">
     <div class="col-md-8">
-      <%= f.label :icon, "Ícone do Cartão" %>
+      <%= f.label :icon, "Imagem do cartão" %>
       <%= f.file_field :icon, class: "app-form-control", accept: "image/*" %>
       <% if card.icon.attached? %>
-        <div class="form-text">Ícone atual anexado: <%= card.icon.filename.to_s %></div>
+        <div class="form-text">Imagem atual anexada: <%= card.icon.filename.to_s %></div>
       <% else %>
-        <div class="form-text">Você pode anexar uma imagem para exibir no dashboard.</div>
+        <div class="form-text">Você pode anexar uma imagem para exibir no cartão.</div>
       <% end %>
     </div>
 
@@ -63,10 +63,29 @@
       <div class="col-md-4 app-flex app-align-end">
         <div class="app-form-check">
           <%= check_box_tag "card[remove_icon]", "1", false, class: "app-form-check-input", id: "card_remove_icon" %>
-          <%= label_tag "card_remove_icon", "Remover ícone atual", class: "app-form-check-label" %>
+          <%= label_tag "card_remove_icon", "Remover imagem atual", class: "app-form-check-label" %>
         </div>
       </div>
     <% end %>
+  </div>
+
+  <div class="row app-mb-3">
+    <div class="col-md-6">
+      <%= f.label :color, "Cor do cartão" %>
+      <% selected_color = card.color.presence || Card::COLOR_PALETTE.values.first %>
+
+      <div class="app-color-select-field">
+        <%= f.select :color,
+              options_for_select(Card::COLOR_PALETTE.to_a, selected_color),
+              {},
+              class: "app-form-select",
+              data: { color_select: true } %>
+
+        <span class="app-color-name-badge" style="--color-select-color: <%= selected_color %>;">
+          <%= Category.color_name_for(selected_color) %>
+        </span>
+      </div>
+    </div>
   </div>
 
   <div class="app-mb-3">

@@ -5,9 +5,11 @@
 
 .app-sidebar {
   position: fixed;
-  inset: 18px auto 18px 18px;
   width: var(--sidebar-width);
   z-index: 1000;
+  padding-left: 8px;
+  height: stretch;
+  margin-bottom: 8px;
 }
 
 .app-sidebar__inner {
@@ -15,10 +17,10 @@
   flex-direction: column;
   height: 100%;
   gap: 16px;
-  padding: 22px 18px;
+  padding: 16px 16px;
   border: 1px solid var(--sidebar-border);
   border-radius: 10px;
-  background: var(--sidebar-bg);
+  background: var(--surface);
   box-shadow: var(--shadow-soft);
   color: var(--text-main);
   backdrop-filter: blur(24px);
@@ -27,7 +29,10 @@
 .app-sidebar__brand {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 14px;
+  min-height: 56px;
+  text-align: center;
 }
 
 .app-sidebar__logo {
@@ -47,13 +52,15 @@
 
 .app-sidebar__brand-copy {
   display: flex;
-  flex: 1;
   flex-direction: column;
+  flex: 0 1 auto;
+  align-items: center;
 }
 
 .sidebar-title {
-  font-size: 0.98rem;
+  font-size: 1.12rem;
   font-weight: 800;
+  line-height: 1.15;
 }
 
 .app-sidebar__brand-copy small {
@@ -115,18 +122,6 @@
   color: var(--text-soft);
   font-size: 0.72rem;
   line-height: 1.25;
-}
-
-.app-sidebar__toggle {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border: 0;
-  border-radius: 14px;
-  background: var(--sidebar-toggle-bg);
-  color: var(--text-main);
-  box-shadow: var(--sidebar-toggle-shadow);
 }
 
 .app-sidebar__nav {
@@ -287,18 +282,23 @@
 
 .app-content {
   flex: 1;
-  margin-left: calc(var(--sidebar-width) + 18px);
+  margin-left: calc(var(--sidebar-width));
   transition: margin-left 0.3s ease;
 }
 
 .app-content__inner {
-  padding: 18px 28px 28px;
+  padding: 0 16px;
 }
 
 .app-flash-stack {
   display: grid;
   gap: 12px;
-  margin-bottom: 20px;
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 3000;
+  width: min(50vw, 640px);
+  pointer-events: none;
 }
 
 .app-footer {
@@ -407,6 +407,12 @@ html[data-theme="night"] .app-footer__icon {
   gap: 12px;
   border: 0;
   border-radius: 18px;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 18px 42px rgba(25, 31, 46, 0.18);
+  pointer-events: auto;
+  transition: opacity 0.22s ease, transform 0.22s ease;
 }
 
+.app-flash.is-hiding {
+  opacity: 0;
+  transform: translateX(18px);
+}

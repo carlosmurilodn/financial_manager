@@ -51,6 +51,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_06_223000) do
     t.integer "due_day"
     t.integer "closing_day"
     t.bigint "user_id"
+    t.string "color"
     t.index ["user_id"], name: "index_cards_on_user_id"
   end
 
@@ -115,6 +116,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_06_223000) do
     t.decimal "current_amount", precision: 12, scale: 2, default: "0.0", null: false
     t.bigint "category_id"
     t.bigint "user_id"
+    t.string "color"
     t.index ["category_id"], name: "index_financial_goals_on_category_id"
     t.index ["due_date"], name: "index_financial_goals_on_due_date"
     t.index ["priority"], name: "index_financial_goals_on_priority"

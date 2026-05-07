@@ -69,9 +69,7 @@ html[data-theme="night"] .dashboard-card__eyebrow {
   color: #ff79c6;
 }
 
-html[data-theme="night"] .dashboard-card__title,
-html[data-theme="night"] .dashboard-toolbar h4,
-html[data-theme="night"] .dashboard-toolbar h5 {
+html[data-theme="night"] .dashboard-card__title {
   color: var(--white);
 }
 
@@ -333,10 +331,6 @@ html[data-theme="night"] .app-calendar-table__date {
   color: var(--table-row-text);
 }
 
-html[data-theme="night"] .app-calendar__title {
-  color: var(--text-soft);
-}
-
 html[data-theme="night"] .dashboard-card--calendar .app-btn--ghost {
   background: rgba(255, 121, 198, 0.14);
   color: var(--white);
@@ -427,16 +421,6 @@ html[data-theme="night"] .app-forecast__saldo--positive {
 html[data-theme="night"] .app-forecast__saldo--negative {
   background: transparent;
   color: #ff7a8a;
-}
-
-html[data-theme="night"] .app-forecast__nav .app-btn--ghost {
-  background: rgba(255, 121, 198, 0.14);
-  color: var(--white);
-  box-shadow: none;
-}
-
-html[data-theme="night"] .app-forecast__nav .app-btn--ghost:hover {
-  background: rgba(255, 121, 198, 0.2);
 }
 
 html[data-theme="night"] .custom-date {

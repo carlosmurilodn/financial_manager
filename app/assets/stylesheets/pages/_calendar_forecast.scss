@@ -1,49 +1,3 @@
-.dashboard-toolbar {
-  margin-bottom: 18px;
-}
-
-.dashboard-toolbar__actions {
-  display: flex;
-  gap: 10px;
-}
-
-.app-calendar__title {
-  font-size: 1.1rem;
-  text-align: center;
-}
-
-.app-calendar__nav {
-  display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 44px;
-  align-items: center;
-}
-
-.app-calendar__nav .dashboard-toolbar__actions:first-child {
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.app-calendar__nav .dashboard-toolbar__actions:last-child {
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.app-calendar__nav-btn {
-  display: inline-grid !important;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-}
-
-.app-calendar__nav-btn .material-symbols-rounded {
-  display: inline-grid;
-  place-items: center;
-  font-size: 1.3rem;
-  line-height: 1;
-  margin: 0;
-}
-
 .dashboard-card__body--forecast {
   min-height: 0;
   overflow-x: hidden;
@@ -109,15 +63,6 @@
 .app-forecast__table-wrap::-webkit-scrollbar-thumb:hover {
   background: var(--scrollbar-thumb-color);
   background-clip: padding-box;
-}
-
-.dashboard-grid--planning .dashboard-toolbar {
-  margin-bottom: 12px;
-}
-
-.dashboard-grid--planning .app-calendar__title,
-.dashboard-grid--planning .app-forecast__title {
-  font-size: 0.96rem;
 }
 
 .dashboard-grid--planning .app-calendar-table th,
@@ -499,40 +444,6 @@
 .app-forecast__summary-value {
   font-size: 1.05rem;
   font-weight: 800;
-}
-
-.app-forecast__nav {
-  display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 44px;
-  align-items: center;
-}
-
-.app-forecast__nav .dashboard-toolbar__actions:first-child {
-  justify-content: flex-start;
-}
-
-.app-forecast__nav .dashboard-toolbar__actions:last-child {
-  justify-content: flex-end;
-}
-
-.app-forecast__nav-btn {
-  display: inline-grid !important;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-}
-
-.app-forecast__nav-btn .material-symbols-rounded {
-  display: inline-grid;
-  place-items: center;
-  font-size: 1.3rem;
-  line-height: 1;
-  margin: 0;
-}
-
-.app-forecast__title {
-  text-align: center;
 }
 
 .app-calendar-table {

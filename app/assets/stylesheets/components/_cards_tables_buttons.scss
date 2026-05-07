@@ -8,11 +8,8 @@
 
 .dashboard-card--mint { background: var(--card-mint-bg); }
 .dashboard-card--lavender { background: var(--card-lavender-bg); }
-.dashboard-card--rose { background: var(--card-rose-bg); }
-.dashboard-card--peach { background: var(--card-peach-bg); }
 
-.dashboard-card__header,
-.dashboard-toolbar {
+.dashboard-card__header {
   display: flex;
   align-items: center;
   justify-content: space-between;

@@ -657,29 +657,6 @@
   border-color: transparent !important;
 }
 
-.app-list-toolbar {
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 12px;
-}
-
-.app-list-toolbar__form {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.app-list-toolbar__search {
-  width: min(360px, 100%);
-}
-
-.app-list-toolbar__button {
-  min-height: 38px;
-  padding-right: 16px;
-  padding-left: 16px;
-}
-
 .app-per-page-control {
   display: inline-flex;
   align-items: center;

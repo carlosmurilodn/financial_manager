@@ -63,23 +63,6 @@
             class: "form-select",
             required: true %>
     </div>
-
-    <div class="col-md-3">
-      <%= f.label :color, "Cor do objetivo" %>
-      <% selected_color = financial_goal.color.presence || financial_goal.display_color %>
-
-      <div class="app-color-select-field">
-        <%= f.select :color,
-              options_for_select(FinancialGoal::COLOR_PALETTE.to_a, selected_color),
-              {},
-              class: "form-select",
-              data: { color_select: true } %>
-
-        <span class="app-color-name-badge" style="--color-select-color: <%= selected_color %>;">
-          <%= Category.color_name_for(selected_color) %>
-        </span>
-      </div>
-    </div>
   </div>
 
   <div class="mb-3">
@@ -105,16 +88,13 @@
       <% end %>
     </template>
 
-    <div class="expense-modal-actions">
-      <button type="button" class="app-btn app-btn--outline expense-modal-action-btn" data-add-goal-resource-row>
-        <span class="material-symbols-rounded">add_circle</span>
-        Inserir Recurso
-      </button>
+    <button type="button" class="btn btn-primary expense-modal-action-btn" data-add-goal-resource-row>
+      <span class="material-symbols-rounded">add_circle</span>
+      Inserir Recurso
+    </button>
+  </div>
 
-      <%= button_tag type: "submit", class: "app-btn app-btn--primary expense-modal-action-btn" do %>
-        <span class="material-symbols-rounded">save</span>
-        Salvar Objetivo
-      <% end %>
-    </div>
+  <div class="mb-3">
+    <%= f.submit "Salvar Objetivo", class: "btn btn-primary" %>
   </div>
 <% end %>

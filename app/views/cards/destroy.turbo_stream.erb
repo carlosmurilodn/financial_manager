@@ -1,5 +1,2 @@
-<%= turbo_stream.replace "cards-grid" do %>
-  <%= render partial: "cards_grid" %>
-<% end %>
-
+<%= turbo_stream.remove @card %>
 <%= turbo_stream.replace "cards-hero-kpis", partial: "hero_kpis" %>

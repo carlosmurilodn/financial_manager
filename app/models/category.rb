@@ -1,9 +1,22 @@
 class Category < ApplicationRecord
-  belongs_to :user
-
   has_many :expenses, dependent: :nullify
   has_many :incomes, dependent: :nullify
   has_many :financial_goals, dependent: :nullify
+
+  COLOR_PALETTE = {
+    "Azul" => "#2563EB",
+    "Verde" => "#16A34A",
+    "Roxo" => "#7C3AED",
+    "Laranja" => "#EA580C",
+    "Rosa" => "#DB2777",
+    "Ciano" => "#0891B2",
+    "Âmbar" => "#D97706",
+    "Vermelho" => "#DC2626",
+    "Índigo" => "#4F46E5",
+    "Verde água" => "#0F766E",
+    "Magenta" => "#C026D3",
+    "Azul petróleo" => "#155E75"
+  }.freeze
 
   MATERIAL_ICONS = {
     "acessorios" => "styler",
@@ -56,6 +69,7 @@ class Category < ApplicationRecord
   }.freeze
 
   validates :name, presence: true, uniqueness: true
+  validates :color, inclusion: { in: COLOR_PALETTE.values }, allow_blank: true
 
   def display_name
     clean_name
@@ -71,6 +85,11 @@ class Category < ApplicationRecord
 
   def material_icon
     icon.presence || MATERIAL_ICONS.fetch(normalized_name, "category")
+  end
+
+  # Retorna a cor visual da categoria para cards, ícones e badges.
+  def display_color
+    color.presence || COLOR_PALETTE.values.first
   end
 
   def normalized_name

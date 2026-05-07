@@ -1,74 +1,137 @@
-<tr id="<%= dom_id(expense) %>" class="<%= expense.paid? ? 'table-success' : 'table-warning' %>">
-  <td class="text-center app-record-actions">
-    <%= local_assigns[:item_number] || "-" %>
-  </td>
+<div
+  id="<%= dom_id(expense) %>"
+  class="expense-card <%= expense.paid? ? 'expense-card--paid' : 'expense-card--pending' %>"
+  style="--expense-category-color: <%= expense.category.display_color %>;"
+>
+  <div class="expense-card__border"></div>
 
-  <td><%= expense.description %></td>
+  <div class="expense-card__content">
+    <div class="expense-card__category">
+      <div class="expense-card__icon-wrapper">
+        <span class="material-symbols-rounded expense-card__icon">
+          <%= expense.category.material_icon %>
+        </span>
+      </div>
 
-  <td class="text-center app-record-actions">
-    <% if expense.payment_method_credito_parcelado? %>
-      <%= "#{expense.current_installment}/#{expense.installments_count}" %>
-    <% else %>
-      Única
-    <% end %>
-  </td>
+      <div class="expense-card__details">
+        <div class="expense-card__header">
+          <h3 class="expense-card__title">
+            <%= expense.category.display_name %>
+          </h3>
 
-  <td><%= number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".") %></td>
+          <div class="expense-card__badges">
+            <span class="expense-card__pill">
+              <%= Expense.payment_method_names[expense.payment_method] %>
 
-  <td class="text-center app-record-actions">
-    <%= expense.date.strftime("%d/%m/%Y") %>
-  </td>
+              <% if expense.card.present? %>
+                • <%= expense.card.name %>
+              <% end %>
+            </span>
 
-  <td class="text-center app-record-actions">
-    <%= expense.balance_month.strftime("%m/%Y") if expense.balance_month.present? %>
-  </td>
+            <% if expense.payment_method_credito_parcelado? %>
+              <span class="expense-card__pill expense-card__pill--installment">
+                <%= "#{expense.current_installment}/#{expense.installments_count}" %>
+              </span>
+            <% end %>
+          </div>
+        </div>
 
-  <td class="text-center app-record-actions">
-    <%= expense.category.display_name %>
-  </td>
+        <p class="expense-card__description">
+          <%= expense.description %>
+        </p>
 
-  <td class="text-center app-record-actions">
-    <%= expense.payment_method.titleize %>
-  </td>
+        <div class="expense-card__meta">
+          <span class="expense-card__meta-item">
+            <span class="material-symbols-rounded">calendar_month</span>
+            <%= expense.date.strftime("%d/%m/%Y") %>
+          </span>
 
-  <td class="text-center app-record-actions">
-    <%= expense.card&.name %>
-  </td>
+          <span class="expense-card__meta-item">
+            <span class="material-symbols-rounded">event</span>
+            <%= expense.balance_month.strftime("%m/%Y") if expense.balance_month.present? %>
+          </span>
 
-  <td class="text-center app-record-actions">
-    <% paid_status_label = expense.paid? ? "✅ Sim" : "❌ Não" %>
-    <% paid_status_class = expense.paid? ? "app-record-actions__status--success" : "app-record-actions__status--danger" %>
+          <span class="expense-card__meta-item">
+            <span class="material-symbols-rounded">schedule</span>
+            <%= expense.created_at.strftime("%d/%m/%Y") %>
+          </span>
+        </div>
+      </div>
+    </div>
 
-    <% if expense.payment_method_credito_parcelado? %>
-      <%= link_to paid_status_label,
-              toggle_paid_options_expense_path(expense, expenses_filter_params),
-              class: "btn btn-sm app-record-actions__status #{paid_status_class}",
-              data: { turbo_frame: "modal" } %>
-    <% else %>
-      <%= link_to paid_status_label,
-              toggle_paid_expense_path(expense, expenses_filter_params),
+    <div class="expense-card__amount-area">
+      <strong class="expense-card__amount">
+        <%= number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
+      </strong>
+
+      <% if expense.payment_method_credito_parcelado? %>
+        <%= link_to(
+              expense.paid? ? "Pago" : "Pendente",
+              toggle_paid_options_expense_path(expense, month: params[:month]),
+              class: "expense-card__status #{expense.paid? ? 'expense-card__status--paid' : 'expense-card__status--pending'}",
+              data: { turbo_frame: "modal" }
+            ) %>
+      <% else %>
+        <%= link_to(
+              expense.paid? ? "Pago" : "Pendente",
+              toggle_paid_expense_path(expense, month: params[:month]),
               method: :patch,
               data: { turbo_method: :patch, turbo_stream: true },
-              class: "btn btn-sm app-record-actions__status #{paid_status_class}" %>
-    <% end %>
-  </td>
+              class: "expense-card__status #{expense.paid? ? 'expense-card__status--paid' : 'expense-card__status--pending'}"
+            ) %>
+      <% end %>
+    </div>
 
-  <td class="text-center app-record-actions">
-    <%= link_to "✏️ #{t("buttons.edit")}",
-                edit_expense_path(expense),
-                class: "btn btn-sm btn-primary app-record-actions__edit",
-                data: { turbo_frame: "modal" } %>
+    <div class="expense-card__actions">
+      <% if expense.payment_method_credito_parcelado? %>
+        <%= link_to(
+              toggle_paid_options_expense_path(expense, month: params[:month]),
+              class: "expense-card__action",
+              title: "Alterar pagamento",
+              data: { turbo_frame: "modal" }
+            ) do %>
+          <span class="material-symbols-rounded">payments</span>
+        <% end %>
+      <% else %>
+        <%= link_to(
+              toggle_paid_expense_path(expense, month: params[:month]),
+              method: :patch,
+              data: { turbo_method: :patch, turbo_stream: true },
+              class: "expense-card__action",
+              title: "Alterar pagamento"
+            ) do %>
+          <span class="material-symbols-rounded">payments</span>
+        <% end %>
+      <% end %>
 
-    <% if expense.payment_method_credito_parcelado? %>
-      <%= link_to "🗑️ #{t("buttons.delete")}",
-                  delete_options_expense_path(expense),
-                  class: "btn btn-sm btn-danger app-record-actions__delete",
-                  data: { turbo_frame: "modal" } %>
-    <% else %>
-      <%= link_to "🗑️ #{t("buttons.delete")}",
-                  expense_path(expense),
-                  data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
-                  class: "btn btn-sm btn-danger app-record-actions__delete" %>
-    <% end %>
-  </td>
-</tr>
+      <%= link_to(
+            edit_expense_path(expense),
+            class: "expense-card__action",
+            title: "Editar despesa",
+            data: { turbo_frame: "modal" }
+          ) do %>
+        <span class="material-symbols-rounded">edit</span>
+      <% end %>
+
+      <% if expense.payment_method_credito_parcelado? %>
+        <%= link_to(
+              delete_options_expense_path(expense),
+              class: "expense-card__action expense-card__action--danger",
+              title: "Excluir despesa",
+              data: { turbo_frame: "modal" }
+            ) do %>
+          <span class="material-symbols-rounded">delete</span>
+        <% end %>
+      <% else %>
+        <%= link_to(
+              expense_path(expense),
+              data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
+              class: "expense-card__action expense-card__action--danger",
+              title: "Excluir despesa"
+            ) do %>
+          <span class="material-symbols-rounded">delete</span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

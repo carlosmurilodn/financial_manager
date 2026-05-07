@@ -114,3 +114,271 @@
 .app-financial-goals-hero-kpis .stat-card__value {
   font-size: clamp(0.82rem, 1.05vw, 1rem);
 }
+
+.expenses-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.expense-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.expense-card__border {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: var(--expense-category-color);
+}
+
+.expense-card__content {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 18px 20px 18px 24px;
+}
+
+.expense-card__category {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  min-width: 0;
+  flex: 1;
+}
+
+.expense-card__icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  min-width: 58px;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--expense-category-color) 14%, transparent);
+}
+
+.expense-card__icon {
+  font-size: 1.9rem;
+  color: var(--expense-category-color);
+}
+
+.expense-card__details {
+  min-width: 0;
+  flex: 1;
+}
+
+.expense-card__header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.expense-card__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.expense-card__badges {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.expense-card__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--expense-category-color) 14%, transparent);
+  color: var(--expense-category-color);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.expense-card__pill--installment {
+  background: var(--pill-bg);
+  color: var(--text-soft);
+}
+
+.expense-card__description {
+  margin: 0 0 12px;
+  overflow: hidden;
+  color: var(--text-soft);
+  font-size: 0.88rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.expense-card__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.expense-card__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-soft);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.expense-card__meta-item .material-symbols-rounded {
+  font-size: 1rem;
+}
+
+.expense-card__amount-area {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.expense-card__amount {
+  color: var(--text-main);
+  font-size: 1.05rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.expense-card__status {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.expense-card__status:hover {
+  text-decoration: none;
+}
+
+.expense-card__status--paid {
+  background: var(--pill-success-bg);
+  color: var(--pill-success-color);
+}
+
+.expense-card__status--pending {
+  background: var(--pill-danger-bg);
+  color: var(--pill-danger-color);
+}
+
+.expense-card__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.expense-card__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-soft);
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.expense-card__action:hover {
+  transform: scale(1.08);
+  color: var(--primary);
+}
+
+.expense-card__action--danger:hover {
+  color: var(--danger);
+}
+
+.expense-card__action .material-symbols-rounded {
+  font-size: 1.3rem;
+}
+
+.expense-card--paid {
+  opacity: 0.96;
+}
+
+.expense-card--pending {
+  opacity: 1;
+}
+
+@media (max-width: 991px) {
+  .expense-card__content {
+    align-items: flex-start;
+  }
+
+  .expense-card__amount-area {
+    min-width: 110px;
+  }
+}
+
+@media (max-width: 768px) {
+  .expense-card__content {
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .expense-card__category {
+    gap: 12px;
+  }
+
+  .expense-card__icon-wrapper {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+  }
+
+  .expense-card__icon {
+    font-size: 1.6rem;
+  }
+
+  .expense-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .expense-card__meta {
+    gap: 10px;
+  }
+
+  .expense-card__amount-area {
+    align-items: flex-end;
+  }
+}
+
+@media (max-width: 576px) {
+  .expense-card__content {
+    align-items: flex-start;
+  }
+
+  .expense-card__amount-area {
+    min-width: 92px;
+  }
+
+  .expense-card__amount {
+    font-size: 0.92rem;
+  }
+
+  .expense-card__meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .expense-card__actions {
+    gap: 14px;
+  }
+}

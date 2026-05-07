@@ -113,8 +113,8 @@ class CategoriesController < ApplicationController
   def set_category
     @category = current_user.categories.find(params[:id])
   end
-
+  
   def category_params
-    params.require(:category).permit(:name, :icon)
+    params.require(:category).permit(:name, :icon, :color)
   end
 end

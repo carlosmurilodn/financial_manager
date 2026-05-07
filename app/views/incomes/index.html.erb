@@ -68,6 +68,7 @@
       <table class="table app-table app-table--records app-table--index mb-0">
         <thead>
           <tr>
+            <th class="text-center">Item</th>
             <th><%= sortable_table_header("Descrição", "description") %></th>
             <th><%= sortable_table_header("Categoria", "category") %></th>
             <th><%= sortable_table_header("Valor", "amount") %></th>
@@ -78,8 +79,12 @@
           </tr>
         </thead>
         <tbody id="incomes-list">
-          <% @incomes.each do |income| %>
-            <%= render partial: "income_row", locals: { income: income } %>
+          <% @incomes.each_with_index do |income, index| %>
+            <%= render partial: "income_row",
+                       locals: {
+                         income: income,
+                         item_number: @item_offset + index + 1
+                       } %>
           <% end %>
         </tbody>
       </table>

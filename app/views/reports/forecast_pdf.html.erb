@@ -1,37 +1,452 @@
-<h1 style="text-align: center; margin-bottom: 30px;">
-  Previsão Financeira <%= start_year %> - <%= end_year %>
-</h1>
+<%
+  total_receitas_periodo = @forecast_data.values.sum do |months|
+    months.values.sum { |data| data[:receitas].to_f }
+  end
 
-<% @forecast_data.each do |year, months| %>
-  <h2 style="margin-top: 40px;">Ano <%= year %></h2>
+  total_despesas_periodo = @forecast_data.values.sum do |months|
+    months.values.sum { |data| data[:despesas].to_f }
+  end
 
-  <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-    <thead>
-      <tr style="background-color: #f2f2f2;">
-        <th style="text-align: center; padding: 8px; border: 1px solid #ddd;">Mês</th>
-        <th style="text-align: center; padding: 8px; border: 1px solid #ddd;">Receitas</th>
-        <th style="text-align: center; padding: 8px; border: 1px solid #ddd;">Despesas</th>
-        <th style="text-align: center; padding: 8px; border: 1px solid #ddd;">Saldo</th>
+  saldo_periodo = total_receitas_periodo - total_despesas_periodo
+
+  periodo_label =
+    if start_year == end_year
+      start_year.to_s
+    else
+      "#{start_year} - #{end_year}"
+    end
+%>
+
+<div class="pdf-page">
+  <div class="pdf-hero">
+    <table class="pdf-hero-table">
+      <tr>
+        <td class="pdf-hero-title-cell">
+          <span class="pdf-hero-icon">📊</span>
+
+          <div class="pdf-hero-copy">
+            <p class="pdf-eyebrow">Relatório financeiro</p>
+            <h1 class="pdf-title">Previsão Financeira</h1>
+            <p class="pdf-description">
+              Consolidação anual de receitas, despesas e saldo previsto.
+            </p>
+          </div>
+        </td>
+
+        <td style="width: 1%; text-align: right; vertical-align: middle;">
+          <span class="pdf-period-badge">
+            Período: <%= periodo_label %>
+          </span>
+        </td>
       </tr>
-    </thead>
-    <tbody>
-      <% months.each do |month, data| %>
+    </table>
+  </div>
+
+  <table class="pdf-summary">
+    <tr>
+      <td class="pdf-summary-card">
+        <p class="pdf-summary-label">Receitas previstas</p>
+        <p class="pdf-summary-value pdf-value-success">
+          <%= number_to_currency(total_receitas_periodo, unit: "R$ ", separator: ",", delimiter: ".") %>
+        </p>
+        <p class="pdf-summary-meta">Total consolidado do período</p>
+      </td>
+
+      <td class="pdf-summary-card">
+        <p class="pdf-summary-label">Despesas previstas</p>
+        <p class="pdf-summary-value pdf-value-danger">
+          <%= number_to_currency(total_despesas_periodo, unit: "R$ ", separator: ",", delimiter: ".") %>
+        </p>
+        <p class="pdf-summary-meta">Compromissos previstos no período</p>
+      </td>
+
+      <td class="pdf-summary-card">
+        <p class="pdf-summary-label">Saldo previsto</p>
+        <p class="pdf-summary-value <%= saldo_periodo >= 0 ? "pdf-value-primary" : "pdf-value-danger" %>">
+          <%= number_to_currency(saldo_periodo, unit: "R$ ", separator: ",", delimiter: ".") %>
+        </p>
+        <p class="pdf-summary-meta">Receitas menos despesas</p>
+      </td>
+    </tr>
+  </table>
+
+  <% @forecast_data.each do |year, months| %>
+    <%
+      total_receitas_ano = months.values.sum { |data| data[:receitas].to_f }
+      total_despesas_ano = months.values.sum { |data| data[:despesas].to_f }
+      saldo_ano = total_receitas_ano - total_despesas_ano
+    %>
+
+    <section class="pdf-year-panel">
+      <table class="pdf-year-header">
         <tr>
-          <td style="padding: 8px; border: 1px solid #ddd; ">
-            <%= I18n.l(Date.new(year, month, 1), format: "%B") %>
+          <td>
+            <h2 class="pdf-year-title">Ano <%= year %></h2>
+            <p class="pdf-year-subtitle">
+              Receitas, despesas e saldo previsto mês a mês.
+            </p>
           </td>
-          <td style="text-align: center; padding: 8px; border: 1px solid #ddd; color: green;">
-            R$ <%= number_with_precision(data[:receitas], precision: 2, delimiter: ".", separator: ",") %>
-          </td>
-          <td style="text-align: center; padding: 8px; border: 1px solid #ddd; color: red;">
-            R$ <%= number_with_precision(data[:despesas], precision: 2, delimiter: ".", separator: ",") %>
-          </td>
-          <td style="text-align: center; padding: 8px; border: 1px solid #ddd;
-                     color: <%= data[:saldo] >= 0 ? 'green' : 'red' %>;">
-            R$ <%= number_with_precision(data[:saldo], precision: 2, delimiter: ".", separator: ",") %>
+
+          <td style="width: 1%; text-align: right; vertical-align: middle;">
+            <span class="pdf-year-badge">
+              Saldo anual:
+              <%= number_to_currency(saldo_ano, unit: "R$ ", separator: ",", delimiter: ".") %>
+            </span>
           </td>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
+      </table>
+
+      <table class="pdf-table">
+        <thead>
+          <tr>
+            <th>Mês</th>
+            <th>Receitas</th>
+            <th>Despesas</th>
+            <th>Saldo</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% months.each do |month, data| %>
+            <%
+              receitas = data[:receitas].to_f
+              despesas = data[:despesas].to_f
+              saldo = data[:saldo].to_f
+            %>
+
+            <tr>
+              <td>
+                <%= I18n.l(Date.new(year, month, 1), format: "%B").capitalize %>
+              </td>
+
+              <td>
+                <span class="pdf-money pdf-money--success">
+                  <%= number_to_currency(receitas, unit: "R$ ", separator: ",", delimiter: ".") %>
+                </span>
+              </td>
+
+              <td>
+                <span class="pdf-money pdf-money--danger">
+                  <%= number_to_currency(despesas, unit: "R$ ", separator: ",", delimiter: ".") %>
+                </span>
+              </td>
+
+              <td>
+                <span class="pdf-money <%= saldo >= 0 ? "pdf-money--primary" : "pdf-money--danger" %>">
+                  <%= number_to_currency(saldo, unit: "R$ ", separator: ",", delimiter: ".") %>
+                </span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </section>
+  <% end %>
+
+  <div class="pdf-footer">
+    Gerado pelo Gerenciador Financeiro • <%= Time.current.strftime("%d/%m/%Y às %H:%M") %>
+  </div>
+</div>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: #f5f7fe;
+    color: #1f2b3d;
+    font-family: "Nunito", "Arial", sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .pdf-page {
+    padding: 22px;
+    background: #f5f7fe;
+  }
+
+  .pdf-hero {
+    width: 100%;
+    margin-bottom: 18px;
+    padding: 14px;
+    border-radius: 14px;
+    background: #344288;
+    color: #ffffff;
+    display: table;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pdf-hero-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    background: transparent;
+    display: table-cell;
+    vertical-align: middle;
+    
+  }
+
+  .pdf-hero-table td {
+    padding: 10px 14px;
+    border: 0px;
+    vertical-align: text-top;
+    height: 100%;
+  }
+
+  .pdf-hero-title-cell {
+    vertical-align: middle;
+  }
+
+  .pdf-hero-period-cell {
+    width: 1%;
+    text-align: right;
+    vertical-align: middle;
+    border-left: 1px solid #26346f !important;
+    white-space: nowrap;
+  }
+
+  .pdf-hero-icon {
+    display: inline-block;
+    width: 42px;
+    height: 42px;
+    margin-right: 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+    text-align: center;
+    font-size: 23px;
+    line-height: 42px;
+    vertical-align: middle;
+  }
+
+  .pdf-hero-copy {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .pdf-eyebrow {
+    margin: 0 0 3px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .pdf-title {
+    margin: 0;
+    color: #ffffff;
+    font-size: 23px;
+    font-weight: 800;
+    line-height: 1.15;
+  }
+
+  .pdf-description {
+    margin: 6px 0 0;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 12px;
+  }
+
+  .pdf-period-badge {
+    display: inline-block;
+    padding: 9px 13px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.13);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .pdf-summary {
+    width: 100%;
+    margin-bottom: 18px;
+    border-collapse: separate;
+    border-spacing: 10px 0;
+  }
+
+  .pdf-summary-card {
+    width: 33.333%;
+    padding: 14px 16px;
+    border: 1px solid #e1e7f1;
+    border-radius: 14px;
+    background: #ffffff;
+    vertical-align: top;
+  }
+
+  .pdf-summary-label {
+    margin: 0 0 6px;
+    color: #7f8da5;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.9px;
+    text-transform: uppercase;
+  }
+
+  .pdf-summary-value {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1.15;
+  }
+
+  .pdf-summary-meta {
+    margin: 6px 0 0;
+    color: #7f8da5;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .pdf-value-success {
+    color: #279f83;
+  }
+
+  .pdf-value-danger {
+    color: rgb(227, 98, 123);
+  }
+
+  .pdf-value-primary {
+    color: #4d66d9;
+  }
+
+  .pdf-year-panel {
+    margin-top: 18px;
+    padding: 16px;
+    border: 1px solid #e1e7f1;
+    border-radius: 14px;
+    background: #ffffff;
+    page-break-inside: avoid;
+  }
+
+  .pdf-year-header {
+    width: 100%;
+    margin-bottom: 12px;
+    border-collapse: collapse;
+  }
+
+  .pdf-year-header td {
+    border: 0;
+  }
+
+  .pdf-year-title {
+    margin: 0;
+    color: #1f2b3d;
+    font-size: 17px;
+    font-weight: 800;
+  }
+
+  .pdf-year-subtitle {
+    margin: 4px 0 0;
+    color: #7f8da5;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .pdf-year-badge {
+    display: inline-block;
+    padding: 7px 11px;
+    border-radius: 999px;
+    background: rgba(88, 113, 231, 0.10);
+    color: #5670e4;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .pdf-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    overflow: hidden;
+    border: 1px solid #e0e6f0;
+    border-radius: 12px;
+  }
+
+  .pdf-table thead th {
+    padding: 11px 10px;
+    background: #f3f6fb;
+    color: #7f8da5;
+    border: 1px solid #e0e6f0;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.9px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .pdf-table thead th:first-child {
+    text-align: left;
+  }
+
+  .pdf-table tbody td {
+    padding: 11px 10px;
+    border: 1px solid #e0e6f0;
+    color: #5f6673;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .pdf-table tbody td:first-child {
+    color: #1f2b3d;
+    text-align: left;
+    font-weight: 800;
+  }
+
+  .pdf-money {
+    display: inline-block;
+    min-width: 112px;
+    padding: 6px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .pdf-money--success {
+    background: rgba(53, 196, 164, 0.12);
+    color: #23a483;
+  }
+
+  .pdf-money--danger {
+    background: rgba(242, 141, 166, 0.12);
+    color: rgb(227, 98, 123);
+  }
+
+  .pdf-money--primary {
+    background: rgba(88, 113, 231, 0.12);
+    color: #4d66d9;
+  }
+
+  .pdf-footer {
+    margin-top: 18px;
+    padding-top: 10px;
+    border-top: 1px solid #e0e6f0;
+    color: #7f8da5;
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  @media print {
+    body {
+      background: #f5f7fe;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .pdf-page {
+      background: #f5f7fe;
+    }
+
+    .pdf-year-panel {
+      page-break-inside: avoid;
+    }
+  }
+</style>

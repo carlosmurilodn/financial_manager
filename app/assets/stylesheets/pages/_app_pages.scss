@@ -590,6 +590,10 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.app-filter-grid--cards {
+  grid-template-columns: minmax(240px, 2fr) minmax(140px, 1fr) minmax(140px, 1fr);
+}
+
 .app-filter-grid--financial-goals {
   grid-template-columns: repeat(14, minmax(0, 1fr));
 }
@@ -666,13 +670,25 @@
 
 .app-list-toolbar {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   margin-bottom: 12px;
 }
 
 .app-list-toolbar__form {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.app-list-toolbar__search {
+  width: min(360px, 100%);
+}
+
+.app-list-toolbar__button {
+  min-height: 46px;
+  padding-right: 16px;
+  padding-left: 16px;
 }
 
 .app-per-page-control {
@@ -778,6 +794,22 @@
   border-color: rgba(148, 163, 184, 0.16) !important;
 }
 
+.app-record-actions__status--success,
+.app-record-actions__status--success:hover,
+.app-record-actions__status--success:focus {
+  background: var(--pill-success-bg) !important;
+  color: var(--pill-success-color) !important;
+  border-color: var(--pill-success-bg) !important;
+}
+
+.app-record-actions__status--danger,
+.app-record-actions__status--danger:hover,
+.app-record-actions__status--danger:focus {
+  background: var(--pill-danger-bg) !important;
+  color: var(--pill-danger-color) !important;
+  border-color: var(--pill-danger-bg) !important;
+}
+
 .app-record-actions__edit {
   background: rgba(88, 113, 231, 0.3) !important;
   color: #5670e4 !important;
@@ -792,16 +824,16 @@
 }
 
 .app-record-actions__delete {
-  background: rgba(242, 141, 166, 0.3) !important;
-  color: #db7391 !important;
-  border-color: rgba(242, 141, 166, 0.12) !important;
+  background: var(--pill-danger-bg) !important;
+  color: var(--pill-danger-color) !important;
+  border-color: var(--pill-danger-bg) !important;
 }
 
 .app-record-actions__delete:hover,
 .app-record-actions__delete:focus {
-  background: rgba(242, 141, 166, 0.12) !important;
-  color: #db7391 !important;
-  border-color: rgba(242, 141, 166, 0.16) !important;
+  background: var(--pill-danger-bg) !important;
+  color: var(--pill-danger-color) !important;
+  border-color: var(--pill-danger-bg) !important;
 }
 
 .app-record-actions__pay {
@@ -856,4 +888,3 @@
   color: var(--text-soft);
   line-height: 1.5;
 }
-

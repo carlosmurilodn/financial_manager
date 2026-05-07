@@ -40,7 +40,7 @@
 .dashboard-card__body--goals,
 .dashboard-card-balance__details-list {
   scrollbar-color: var(--scrollbar-thumb-color) transparent;
-  scrollbar-width: thin;
+  scrollbar-width: thin !important;
 }
 
 .dashboard-card__body--category-summary::-webkit-scrollbar,
@@ -153,6 +153,9 @@
 .dashboard-goals-list {
   display: grid;
   gap: 10px;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
 }
 
 .dashboard-goal-item {
@@ -293,6 +296,7 @@
   flex: 1;
   gap: 8px;
   min-height: 0;
+  margin-top: 10px;
 }
 
 .dashboard-card-balance {
@@ -415,6 +419,7 @@
 .dashboard-card-balance__metrics > div {
   flex: 1;
   min-width: 0;
+  line-height: 15px;
 }
 
 .dashboard-card-balance__metrics strong {
@@ -571,7 +576,7 @@
 }
 
 .dashboard-card-balance__metrics .is-negative {
-  color: #e3627b;
+  color: var(--pill-danger-color);
 }
 
 .dashboard-card__body--category-summary {
@@ -604,8 +609,11 @@
 
 html[data-theme="night"] .dashboard-movement-item--expense,
 html[data-theme="night"] .dashboard-card-balance,
-html[data-theme="night"] .dashboard-category-item {
-  border-color: rgba(255, 121, 198, 0.22);
+html[data-theme="night"] .dashboard-category-item,
+html[data-theme="night"] .dashboard-movement-item,
+html[data-theme="night"] .dashboard-goal-item {
+  border-color: var(--dashboard-item-border);
+  background: var(--dashboard-item-surface);
 }
 
 .dashboard-category-item__main,
@@ -724,7 +732,8 @@ html[data-theme="night"] .dashboard-category-item {
   background: var(--surface);
   box-shadow: var(--shadow-card);
   opacity: 0;
-  overflow: hidden;
+  overflow: auto;
+  scrollbar-width: thin;
   pointer-events: none;
   transform: translateY(-4px);
   transition: max-height 0.22s ease, margin 0.18s ease, opacity 0.18s ease, padding 0.18s ease, transform 0.18s ease;

@@ -14,6 +14,7 @@
   .app-filter-grid,
   .app-filter-grid--expenses,
   .app-filter-grid--incomes,
+  .app-filter-grid--cards,
   .app-filter-grid--financial-goals {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -267,6 +268,7 @@
   .app-filter-grid,
   .app-filter-grid--expenses,
   .app-filter-grid--incomes,
+  .app-filter-grid--cards,
   .app-filter-grid--financial-goals {
     grid-template-columns: 1fr;
   }

@@ -55,6 +55,11 @@
         <span class="material-symbols-rounded app-nav-link__icon app-theme-toggle-mobile__icon">devices</span>
         <span class="link-text app-theme-toggle-mobile__label">Sistema</span>
       </button>
+
+      <%= button_to destroy_user_session_path, method: :delete, class: "app-nav-link app-nav-link--logout", form: { class: "app-nav-form" } do %>
+        <span class="material-symbols-rounded app-nav-link__icon">logout</span>
+        <span class="link-text">Sair</span>
+      <% end %>
     </nav>
 
     <div class="app-sidebar__footer">

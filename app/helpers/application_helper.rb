@@ -5,7 +5,7 @@ module ApplicationHelper
     current_page = current_page.to_i
     total_pages = total_pages.to_i
 
-    pages = [1, total_pages]
+    pages = [ 1, total_pages ]
     pages.concat((current_page - window..current_page + window).to_a)
     pages = pages.select { |page| page.between?(1, total_pages) }.uniq.sort
 
@@ -32,7 +32,7 @@ module ApplicationHelper
     end
 
     link_to url_for(request.query_parameters.merge(sort: sort_key, direction: next_direction, page: 1)),
-            class: ["app-table-sort", ("is-active" if active), ("is-desc" if active && current_direction == "desc")].compact.join(" "),
+            class: [ "app-table-sort", ("is-active" if active), ("is-desc" if active && current_direction == "desc") ].compact.join(" "),
             aria: { label: "Ordenar por #{label}" },
             data: { turbo_prefetch: "false" } do
       safe_join([

@@ -21,7 +21,6 @@
 
 .dashboard-card__body {
   flex: 1;
-  margin-top: 10px;
 }
 
 .dashboard-card--calendar {
@@ -65,14 +64,15 @@
 
 .dashboard-card__pill--period {
   gap: 6px;
-  padding: 6px;
+  padding: 4px;
 }
 
 .dashboard-card__pill--period-full {
   display: grid;
   grid-template-columns: 34px minmax(0, 1fr) 34px;
   width: 100%;
-  /*margin-top: 12px;*/
+  margin-top: 10px !important;
+  border-radius: 999px;
   background: var(--pill-bg);
   color: var(--text-main);
 }

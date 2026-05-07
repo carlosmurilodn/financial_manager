@@ -21,12 +21,12 @@
 
     <div class="d-flex gap-2 flex-wrap">
       <%= link_to "#{@expense.paid? ? 'Desmarcar' : 'Marcar'} só esta parcela",
-                  toggle_paid_expense_path(@expense, paid_scope: "single"),
+                  toggle_paid_expense_path(@expense, request.query_parameters.except(:paid_scope).merge(paid_scope: "single")),
                   class: "btn btn-secondary",
                   data: { turbo_method: :patch, turbo_stream: true } %>
 
       <%= link_to "#{@expense.paid? ? 'Desmarcar' : 'Marcar'} esta e próximas",
-                  toggle_paid_expense_path(@expense, paid_scope: "group"),
+                  toggle_paid_expense_path(@expense, request.query_parameters.except(:paid_scope).merge(paid_scope: "group")),
                   class: "btn btn-outline-secondary",
                   data: { turbo_method: :patch, turbo_stream: true } %>
     </div>

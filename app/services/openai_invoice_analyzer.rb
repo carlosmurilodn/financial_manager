@@ -22,8 +22,8 @@ class OpenaiInvoiceAnalyzer
   end
 
   def call
-    return Result.new(items: [], errors: ["Configure a variável OPENAI_API_KEY para analisar PDF ou imagem com IA."]) if api_key.blank?
-    return Result.new(items: [], errors: ["Formato de arquivo não suportado pela análise com IA."]) unless supported_file?
+    return Result.new(items: [], errors: [ "Configure a variável OPENAI_API_KEY para analisar PDF ou imagem com IA." ]) if api_key.blank?
+    return Result.new(items: [], errors: [ "Formato de arquivo não suportado pela análise com IA." ]) unless supported_file?
 
     prepared_file = prepare_file
     return prepared_file if prepared_file.is_a?(Result)
@@ -33,11 +33,11 @@ class OpenaiInvoiceAnalyzer
     return api_error(response) unless response.is_a?(Net::HTTPSuccess)
 
     items = normalize_items(JSON.parse(extract_output_text(JSON.parse(response.body))))
-    Result.new(items: items, errors: items.blank? ? ["A IA não identificou lançamentos na fatura."] : [])
+    Result.new(items: items, errors: items.blank? ? [ "A IA não identificou lançamentos na fatura." ] : [])
   rescue JSON::ParserError
-    Result.new(items: [], errors: ["A IA retornou uma resposta fora do formato esperado."])
+    Result.new(items: [], errors: [ "A IA retornou uma resposta fora do formato esperado." ])
   rescue StandardError => error
-    Result.new(items: [], errors: ["Não foi possível analisar a fatura com IA: #{error.message}"])
+    Result.new(items: [], errors: [ "Não foi possível analisar a fatura com IA: #{error.message}" ])
   ensure
     close_analysis_file
     decrypted_file&.close!
@@ -122,7 +122,7 @@ class OpenaiInvoiceAnalyzer
   end
 
   def unlock_pdf
-    @decrypted_file = Tempfile.new(["invoice-decrypted", ".pdf"], binmode: true)
+    @decrypted_file = Tempfile.new([ "invoice-decrypted", ".pdf" ], binmode: true)
     decrypted_file.close
 
     _stdout, stderr, status = Open3.capture3(
@@ -230,9 +230,9 @@ class OpenaiInvoiceAnalyzer
   def api_error(response)
     body = JSON.parse(response.body)
     message = body.dig("error", "message") || "Erro #{response.code} na API da OpenAI."
-    Result.new(items: [], errors: [message])
+    Result.new(items: [], errors: [ message ])
   rescue JSON::ParserError
-    Result.new(items: [], errors: ["Erro #{response.code} na API da OpenAI."])
+    Result.new(items: [], errors: [ "Erro #{response.code} na API da OpenAI." ])
   end
 
   def api_key
@@ -246,14 +246,14 @@ class OpenaiInvoiceAnalyzer
   def missing_qpdf_result
     Result.new(
       items: [],
-      errors: ["Esta fatura parece exigir senha, mas o qpdf não está instalado no servidor para desbloquear PDFs protegidos."]
+      errors: [ "Esta fatura parece exigir senha, mas o qpdf não está instalado no servidor para desbloquear PDFs protegidos." ]
     )
   end
 
   def invalid_password_result
     Result.new(
       items: [],
-      errors: ["Não foi possível abrir a fatura. Verifique a senha informada."]
+      errors: [ "Não foi possível abrir a fatura. Verifique a senha informada." ]
     )
   end
 

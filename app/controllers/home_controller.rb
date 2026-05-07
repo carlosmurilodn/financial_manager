@@ -1,5 +1,4 @@
 class HomeController < ApplicationController
-
   def index
     set_current_dates
     calculate_kpis
@@ -7,10 +6,10 @@ class HomeController < ApplicationController
     set_category_expenses_data
     set_calendar_data
     set_recent_expenses
+    set_recent_incomes
     prepare_calendar_data
     set_forecast_data
     set_financial_goals_data
-    @recent_incomes = Income.includes(:category).where(balance_month: @mes_atual).order(date: :desc)
   end
 
   private
@@ -115,7 +114,7 @@ class HomeController < ApplicationController
       {
         card: card,
         total: committed_amount,
-        remaining_limit: [card.total_limit.to_f - committed_amount.to_f, 0].max,
+        remaining_limit: [ card.total_limit.to_f - committed_amount.to_f, 0 ].max,
         month_total: selected_month_total,
         month_paid: selected_month_paid,
         items: selected_month_expenses.map do |expense|
@@ -173,9 +172,15 @@ class HomeController < ApplicationController
 
   def set_recent_expenses
     @recent_expenses = Expense.includes(:category)
-                              .select(:id, :description, :amount, :date, :category_id)
-                              .where(date: @mes_atual)
-                              .order(date: :desc, id: :desc)
+                              .select(:id, :description, :amount, :date, :balance_month, :category_id)
+                              .where("date >= ?", @hoje.beginning_of_month)
+                              .order(date: :asc, id: :desc)
+  end
+
+  def set_recent_incomes
+    @recent_incomes = Income.includes(:category)
+                            .where("balance_month >= ?", @hoje.beginning_of_month)
+                            .order(balance_month: :asc, date: :desc, id: :desc)
   end
 
   def prepare_calendar_data
@@ -190,13 +195,13 @@ class HomeController < ApplicationController
       @daily_calendar_items[income.date] ||= { incomes: [], expenses: [] }
       @daily_calendar_items[income.date][:incomes] << {
         amount: income.amount,
-        description: [income.category&.clean_name, income.description.presence || "Receita"].compact.join(" - ")
+        description: [ income.category&.clean_name, income.description.presence || "Receita" ].compact.join(" - ")
       }
 
       @monthly_agenda_items << {
         date: income.date,
         type: :income,
-        description: [income.category&.clean_name, income.description.presence || "Receita"].compact.join(" - "),
+        description: [ income.category&.clean_name, income.description.presence || "Receita" ].compact.join(" - "),
         amount: income.amount
       }
     end
@@ -205,18 +210,18 @@ class HomeController < ApplicationController
       @daily_calendar_items[expense.date] ||= { incomes: [], expenses: [] }
       @daily_calendar_items[expense.date][:expenses] << {
         amount: expense.amount,
-        description: [expense.category&.clean_name, expense.description.presence || "Despesa"].compact.join(" - ")
+        description: [ expense.category&.clean_name, expense.description.presence || "Despesa" ].compact.join(" - ")
       }
 
       @monthly_agenda_items << {
         date: expense.date,
         type: :expense,
-        description: [expense.category&.clean_name, expense.description.presence || "Despesa"].compact.join(" - "),
+        description: [ expense.category&.clean_name, expense.description.presence || "Despesa" ].compact.join(" - "),
         amount: expense.amount
       }
     end
 
-    @monthly_agenda_items.sort_by! { |item| [item[:date], item[:type] == :expense ? 0 : 1, item[:description]] }
+    @monthly_agenda_items.sort_by! { |item| [ item[:date], item[:type] == :expense ? 0 : 1, item[:description] ] }
   end
 
   def set_forecast_data
@@ -231,7 +236,7 @@ class HomeController < ApplicationController
     ]
 
     goals = FinancialGoal.includes(:category, :financial_goal_resources)
-                         #.where(status: active_statuses)
+                         # .where(status: active_statuses)
                          .to_a
 
     @financial_goals_summary = goals.sort_by do |goal|
@@ -242,7 +247,7 @@ class HomeController < ApplicationController
         goal.due_date || Date.new(9999, 12, 31),
         goal.description.to_s
       ]
-    end.first(4)
+    end
 
     @financial_goals_total_remaining = goals.sum(&:remaining_amount)
     @financial_goals_average_progress = if goals.any?

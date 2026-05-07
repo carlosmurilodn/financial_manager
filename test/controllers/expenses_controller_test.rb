@@ -90,7 +90,7 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to expenses_url
     assert_equal (4..12).to_a, grouped_expenses.pluck(:current_installment)
-    assert_equal [Date.new(2026, 4, 16)], grouped_expenses.reorder(nil).distinct.pluck(:date)
+    assert_equal [ Date.new(2026, 4, 16) ], grouped_expenses.reorder(nil).distinct.pluck(:date)
     assert_equal Date.new(2026, 4, 1), grouped_expenses.first.balance_month
     assert_equal Date.new(2026, 12, 1), grouped_expenses.last.balance_month
   end
@@ -155,8 +155,8 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
     repeated_expenses = Expense.order(:balance_month, :date)
 
     assert_redirected_to expenses_url
-    assert_equal [Date.new(2026, 4, 1), Date.new(2026, 5, 1), Date.new(2026, 6, 1)], repeated_expenses.pluck(:balance_month)
-    assert_equal [false, false, false], repeated_expenses.pluck(:paid)
+    assert_equal [ Date.new(2026, 4, 1), Date.new(2026, 5, 1), Date.new(2026, 6, 1) ], repeated_expenses.pluck(:balance_month)
+    assert_equal [ false, false, false ], repeated_expenses.pluck(:paid)
   end
 
   test "updating a generated parcel uses the expense flow" do
@@ -323,7 +323,7 @@ class ExpensesControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to expenses_url
     assert_predicate root.reload, :persisted?
-    assert_equal [1], Expense.where(installment_group_id: root.id).pluck(:current_installment)
+    assert_equal [ 1 ], Expense.where(installment_group_id: root.id).pluck(:current_installment)
   end
 
   test "toggling paid with single scope updates only the selected parcel" do

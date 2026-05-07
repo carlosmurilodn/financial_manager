@@ -1,0 +1,10 @@
+pt-BR:
+  devise:
+    failure:
+      already_authenticated: "Voce ja esta autenticado."
+      invalid: "Email ou senha invalidos."
+      not_found_in_database: "Email ou senha invalidos."
+      unauthenticated: "Entre para continuar."
+    sessions:
+      signed_in: "Login realizado com sucesso."
+      signed_out: "Logout realizado com sucesso."

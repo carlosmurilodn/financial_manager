@@ -1,5 +1,6 @@
 class ExpensesController < ApplicationController
   before_action :set_expense, only: %i[show edit update destroy toggle_paid delete_options toggle_paid_options]
+  helper_method :expenses_filter_params
 
   def index
     load_expenses
@@ -12,7 +13,7 @@ class ExpensesController < ApplicationController
   def show; end
 
   def new
-    @expense = Expense.new
+    @expense = current_user.expenses.new
   end
 
   def edit; end
@@ -50,7 +51,7 @@ class ExpensesController < ApplicationController
     if importable_items.blank?
       load_invoice_import_options
       @invoice_preview_items = invoice_import_items
-      @invoice_import_errors = ["Selecione ao menos um lançamento para importar."]
+      @invoice_import_errors = [ "Selecione ao menos um lançamento para importar." ]
       render :import_invoice, status: :unprocessable_entity
       return
     end
@@ -68,7 +69,7 @@ class ExpensesController < ApplicationController
   rescue ActiveRecord::RecordInvalid => error
     load_invoice_import_options
     @invoice_preview_items = invoice_import_items
-    @invoice_import_errors = ["Revise os lançamentos: #{error.record.errors.full_messages.to_sentence}"]
+    @invoice_import_errors = [ "Revise os lançamentos: #{error.record.errors.full_messages.to_sentence}" ]
     render :import_invoice, status: :unprocessable_entity
   end
 
@@ -79,7 +80,7 @@ class ExpensesController < ApplicationController
   def create
     if params[:expenses].present?
       expense_rows = multiple_expenses_params
-      @expense = Expense.new
+      @expense = current_user.expenses.new
 
       if expense_rows.blank?
         @expense.errors.add(:base, "Informe ao menos uma despesa.")
@@ -112,7 +113,7 @@ class ExpensesController < ApplicationController
       end
     end
   rescue ActiveRecord::RecordInvalid => error
-    @expense = error.record.is_a?(Expense) ? error.record : Expense.new
+    @expense = error.record.is_a?(Expense) ? error.record : current_user.expenses.new
 
     render_new_expense_with_errors
   end
@@ -157,10 +158,11 @@ class ExpensesController < ApplicationController
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.replace("expenses-table", partial: "expenses_table"),
-          turbo_stream.replace("expenses-hero-kpis", partial: "hero_kpis")
+          turbo_stream.replace("expenses-hero-kpis", partial: "hero_kpis"),
+          turbo_stream.update("modal", "")
         ]
       end
-      format.html { redirect_to expenses_path }
+      format.html { redirect_to expenses_path(request.query_parameters.except(:paid_scope)) }
     end
   end
 
@@ -204,22 +206,38 @@ class ExpensesController < ApplicationController
 
   private
 
+  def expenses_filter_params
+    {
+      description: @description_filter,
+      month: @month,
+      year: @year,
+      category_id: @category_filter,
+      payment_method: @payment_method_filter,
+      card_id: @card_filter,
+      paid: @paid_filter,
+      sort: @sort,
+      direction: @direction,
+      per_page: @per_page,
+      page: params[:page]
+    }.compact_blank
+  end
+
   def render_new_expense_with_errors
     respond_to do |format|
       format.html { render :new, status: :unprocessable_entity }
       format.turbo_stream do
-        render :new, formats: [:html], status: :unprocessable_entity
+        render :new, formats: [ :html ], status: :unprocessable_entity
       end
     end
   end
 
   def set_expense
-    @expense = Expense.find(params[:id])
+    @expense = current_user.expenses.find(params[:id])
   end
 
   def load_invoice_import_options
-    @cards = Card.order(:name)
-    @categories = Category.all.sort_by(&:sort_name)
+    @cards = current_user.cards.order(:name)
+    @categories = current_user.categories.to_a.sort_by(&:sort_name)
   end
 
   def invoice_import_items
@@ -231,7 +249,7 @@ class ExpensesController < ApplicationController
   def create_invoice_expenses(items)
     Expense.transaction do
       items.each do |item|
-        Expense.create!(
+        current_user.expenses.create!(
           description: item[:description],
           amount: parse_brazilian_amount(item[:amount], blank: 0),
           date: parse_invoice_date(item[:date]),
@@ -300,7 +318,7 @@ class ExpensesController < ApplicationController
   end
 
   def build_expense(attributes, raw_attributes)
-    expense = Expense.new(attributes.except(:amount, :date, :balance_month))
+    expense = current_user.expenses.new(attributes.except(:amount, :date, :balance_month))
     expense.amount = parse_brazilian_amount(raw_attributes[:amount], blank: 0)
     expense.date = parse_brazilian_date(raw_attributes[:date])
     expense.balance_month = parse_brazilian_date(raw_attributes[:balance_month]) || default_balance_month_for(expense)
@@ -454,12 +472,12 @@ class ExpensesController < ApplicationController
     previous_month_end = current_month_start - 1.day
     current_month_end = current_month_start.end_of_month
 
-    receitas_anteriores = Income.where("balance_month <= ?", previous_month_end).sum(:amount)
-    despesas_anteriores = Expense.where("balance_month <= ?", previous_month_end).sum(:amount)
+    receitas_anteriores = current_user.incomes.where("balance_month <= ?", previous_month_end).sum(:amount)
+    despesas_anteriores = current_user.expenses.where("balance_month <= ?", previous_month_end).sum(:amount)
     @previous_balance = receitas_anteriores - despesas_anteriores
 
-    receitas_pag = Income.where("balance_month <= ? AND paid = ?", current_month_end, true).sum(:amount)
-    despesas_pag = Expense.where("balance_month <= ? AND paid = ?", current_month_end, true).sum(:amount)
+    receitas_pag = current_user.incomes.where("balance_month <= ? AND paid = ?", current_month_end, true).sum(:amount)
+    despesas_pag = current_user.expenses.where("balance_month <= ? AND paid = ?", current_month_end, true).sum(:amount)
 
     @net_balance = receitas_pag - despesas_pag
   end
@@ -469,7 +487,7 @@ class ExpensesController < ApplicationController
     return if repetir <= 0
 
     repetir.times do |i|
-      Expense.create!(
+      current_user.expenses.create!(
         description: expense.description,
         amount: expense.amount,
         category_id: expense.category_id,
@@ -492,9 +510,10 @@ class ExpensesController < ApplicationController
   end
 
   def expanded_expenses
-    Expense.includes(:category, :card)
-           .order(balance_month: :desc, date: :asc, current_installment: :asc)
-           .to_a
+    current_user.expenses
+                .includes(:category, :card)
+                .order(balance_month: :desc, date: :asc, current_installment: :asc)
+                .to_a
   end
 
   def expense_sort_map

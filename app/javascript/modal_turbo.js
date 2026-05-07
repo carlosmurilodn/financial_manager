@@ -1,6 +1,8 @@
 import { initializeFormUtils } from "./utils";
 import { initializeDatepicker } from "./date_picker";
 import { initializeExpenseForm } from "./expense_form";
+import { initializeFinancialGoalForm } from "./financial_goal_form";
+import { initializeModalRequiredFields } from "./modal_required_fields";
 
 function initializeInvoiceFilePreview(scope) {
   const fileInput = scope.querySelector("[data-invoice-file-input]");
@@ -39,6 +41,23 @@ function initializeInvoiceFilePreview(scope) {
   scope.addEventListener("invoice-file-preview:cleanup", revokeFileUrl, { once: true });
 }
 
+function hideTurboModal() {
+  const modalElement = document.getElementById("turboModal");
+  if (!modalElement) return;
+
+  const existingModal = bootstrap.Modal.getInstance(modalElement);
+  if (existingModal) existingModal.hide();
+}
+
+document.addEventListener("turbo:before-stream-render", (event) => {
+  const stream = event.target;
+  if (stream?.target !== "modal") return;
+  if (!["update", "replace"].includes(stream.action)) return;
+  if (stream.templateContent?.textContent.trim() !== "") return;
+
+  hideTurboModal();
+});
+
 document.addEventListener("turbo:frame-load", (event) => {
   if (event.target.id !== "modal") return;
 
@@ -53,10 +72,7 @@ document.addEventListener("turbo:frame-load", (event) => {
   // Se o backend retornou turbo_stream.replace("modal", ""),
   // o frame vem vazio. Aí sim a modal deve fechar.
   if (frameContent === "") {
-    const existingModal = bootstrap.Modal.getInstance(modalElement);
-    if (existingModal) {
-      existingModal.hide();
-    }
+    hideTurboModal();
 
     window.location.reload();
     return;
@@ -79,8 +95,10 @@ document.addEventListener("turbo:frame-load", (event) => {
   modal.show();
 
   initializeFormUtils();
+  initializeModalRequiredFields(modalBody);
   initializeDatepicker();
   initializeExpenseForm();
+  initializeFinancialGoalForm(modalBody);
   initializeInvoiceFilePreview(modalBody);
 
   modalBody.querySelectorAll("[data-bs-toggle='tooltip']").forEach((element) => {

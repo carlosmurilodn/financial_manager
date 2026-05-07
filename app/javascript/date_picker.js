@@ -31,15 +31,48 @@ export function initializeDatepicker() {
     "25/12": "Natal"
   };
 
+  function removeExistingPicker() {
+    const existingPicker = document.querySelector(".datepicker");
+    if (!existingPicker) return;
+
+    existingPicker.dispatchEvent(new CustomEvent("datepicker:close"));
+    existingPicker.remove();
+  }
+
+  function positionPicker(picker, input) {
+    const rect = input.getBoundingClientRect();
+    const margin = 8;
+    const pickerWidth = Math.min(270, window.innerWidth - margin * 2);
+
+    picker.style.width = `${pickerWidth}px`;
+
+    const pickerHeight = picker.offsetHeight || 320;
+    const centeredLeft = rect.left + rect.width / 2 - pickerWidth / 2;
+    const left = Math.min(
+      Math.max(centeredLeft, margin),
+      window.innerWidth - pickerWidth - margin
+    );
+
+    const belowTop = rect.bottom + margin;
+    const aboveTop = rect.top - pickerHeight - margin;
+    const hasSpaceBelow = belowTop + pickerHeight <= window.innerHeight - margin;
+    const top = hasSpaceBelow ? belowTop : Math.max(aboveTop, margin);
+
+    picker.style.left = `${left}px`;
+    picker.style.top = `${top}px`;
+  }
+
   allInputs.forEach((input) => {
     if (input.value && input.value.match(/^\d{4}-\d{2}-\d{2}$/)) {
       const [y, m, d] = input.value.split("-");
       input.value = `${d}/${m}/${y}`;
     }
 
+    if (input.dataset.datepickerBound === "true") return;
+    input.dataset.datepickerBound = "true";
+
     input.addEventListener("focus", function () {
-      const existingPicker = document.querySelector(".datepicker");
-      if (existingPicker) existingPicker.remove();
+      removeExistingPicker();
 
       const picker = document.createElement("div");
       picker.classList.add("datepicker");
@@ -50,20 +83,43 @@ export function initializeDatepicker() {
           : new Date();
 
       renderCalendar(picker, current, input);
-      input.parentNode.appendChild(picker);
+      document.body.appendChild(picker);
+      positionPicker(picker, input);
+
+      function closePicker() {
+        picker.remove();
+        picker.removeEventListener("datepicker:close", closePicker);
+        document.removeEventListener("click", handleClickOutside);
+        document.removeEventListener("keydown", handleEscape);
+        window.removeEventListener("resize", handlePositionUpdate);
+        window.removeEventListener("scroll", handlePositionUpdate, true);
+      }
+
+      function handlePositionUpdate() {
+        if (!document.body.contains(picker)) return;
+        positionPicker(picker, input);
+      }
 
       function handleClickOutside(e) {
         if (
-          !e.target.closest(".custom-date-wrapper") &&
-          !e.target.closest(".datepicker")
+          e.target !== input &&
+          !picker.contains(e.target)
         ) {
-          picker.remove();
-          document.removeEventListener("click", handleClickOutside);
+          closePicker();
         }
       }
 
+      function handleEscape(e) {
+        if (e.key === "Escape") closePicker();
+      }
+
+      picker.addEventListener("datepicker:close", closePicker);
+
       setTimeout(() => {
         document.addEventListener("click", handleClickOutside);
+        document.addEventListener("keydown", handleEscape);
+        window.addEventListener("resize", handlePositionUpdate);
+        window.addEventListener("scroll", handlePositionUpdate, true);
       }, 0);
     });
 
@@ -141,30 +197,34 @@ export function initializeDatepicker() {
         td.addEventListener("click", () => {
           input.value = td.dataset.date;
           input.dispatchEvent(new Event("change", { bubbles: true }));
-          picker.remove();
+          picker.dispatchEvent(new CustomEvent("datepicker:close"));
         });
       });
 
       picker.querySelector(".prev-month").addEventListener("click", (e) => {
         e.stopPropagation();
         renderCalendar(picker, new Date(year, month - 1, 1), input);
+        positionPicker(picker, input);
       });
 
       picker.querySelector(".next-month").addEventListener("click", (e) => {
         e.stopPropagation();
         renderCalendar(picker, new Date(year, month + 1, 1), input);
+        positionPicker(picker, input);
       });
 
       picker.querySelector(".select-month").addEventListener("change", function (e) {
         e.stopPropagation();
         const newMonth = parseInt(this.value);
         renderCalendar(picker, new Date(year, newMonth, 1), input);
+        positionPicker(picker, input);
       });
 
       picker.querySelector(".select-year").addEventListener("change", function (e) {
         e.stopPropagation();
         const newYear = parseInt(this.value);
         renderCalendar(picker, new Date(newYear, month, 1), input);
+        positionPicker(picker, input);
       });
     }
 
@@ -182,3 +242,6 @@ export function initializeDatepicker() {
 // Executa no load inicial e em cada render do Turbo
 document.addEventListener("turbo:load", initializeDatepicker);
 document.addEventListener("turbo:render", initializeDatepicker);
+document.addEventListener("hidden.bs.modal", () => {
+  removeExistingPicker();
+});

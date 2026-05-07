@@ -1,22 +1,72 @@
-<div class="container mt-4">
-  <h1 class="fw-bold mb-4">📊 Relatório de Previsão Financeira</h1>
+<section class="app-page">
+  <div class="app-page__hero">
+    <div class="app-page__hero-top">
+      <div class="app-page__hero-unit app-page__hero-copy">
+        <span class="app-page__hero-icon">
+          <span class="material-symbols-rounded">monitoring</span>
+        </span>
 
-  <div class="card shadow p-4 mb-4">
-    <%= form_with url: forecast_pdf_reports_path, method: :get, local: true, html: { target: "_blank" } do |f| %>
-      <div class="row align-items-end">
-        <div class="col-md-4">
-          <%= f.label :start_year, "Ano inicial", class: "form-label fw-semibold" %>
-          <%= f.number_field :start_year, value: @start_year, class: "form-control" %>
+        <div>
+          <p class="app-page__eyebrow">Relatórios</p>
+          <h1 class="app-page__title">Previsão Financeira</h1>
+          <p class="app-page__description">
+            Gere um relatório em PDF com a previsão anual de receitas, despesas e saldo.
+          </p>
         </div>
-        <div class="col-md-4">
-          <%= f.label :end_year, "Ano final", class: "form-label fw-semibold" %>
-          <%= f.number_field :end_year, value: @end_year, class: "form-control" %>
+      </div>
+
+      <div class="app-page__hero-unit">
+        <%= render "shared/app_page_hero_badge" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-panel">
+    <div class="app-panel__header">
+      <div>
+        <p class="app-panel__eyebrow">Filtro do relatório</p>
+        <h2 class="app-panel__title">Período da previsão</h2>
+        <p class="app-panel__description">
+          Informe o intervalo de anos que deseja consolidar no PDF.
+        </p>
+      </div>
+    </div>
+
+    <%= form_with url: forecast_pdf_reports_path,
+                  method: :get,
+                  local: true,
+                  html: {
+                    target: "_blank",
+                    class: "app-filter-form"
+                  } do |f| %>
+
+      <div class="app-filter-grid app-filter-grid--forecast">
+        <div class="app-filter-field">
+          <%= f.label :start_year, "Ano inicial", class: "form-label" %>
+          <%= f.number_field :start_year,
+                value: @start_year,
+                class: "form-control",
+                min: 1900,
+                max: 2100,
+                step: 1 %>
         </div>
-        <div class="col-md-4">
-          <%= f.submit "Gerar PDF", class: "btn btn-success btn-lg w-100" %>
+
+        <div class="app-filter-field">
+          <%= f.label :end_year, "Ano final", class: "form-label" %>
+          <%= f.number_field :end_year,
+                value: @end_year,
+                class: "form-control",
+                min: 1900,
+                max: 2100,
+                step: 1 %>
+        </div>
+
+        <div class="app-filter-actions">
+          <%= f.submit "Gerar PDF",
+                class: "btn btn-primary app-filter-submit" %>
         </div>
       </div>
     <% end %>
   </div>
+</section>
 
-</div>

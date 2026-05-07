@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  devise_for :users, controllers: {
+    sessions: "users/sessions"
+  }
+
   root "home#index"
 
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
@@ -37,9 +41,13 @@ Rails.application.routes.draw do
     member do
       post :pay
     end
+
+    collection do
+      delete :clear_filters
+    end
   end
 
-  resources :reports, only: [:index] do
+  resources :reports, only: [ :index ] do
     collection do
       get :forecast
       get :forecast_pdf

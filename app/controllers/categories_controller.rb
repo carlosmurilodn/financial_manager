@@ -6,32 +6,32 @@ class CategoriesController < ApplicationController
   end
 
   def new
-    @category = Category.new
+    @category = current_user.categories.new
   end
 
-def create
-  @category = Category.new(category_params)
+  def create
+    @category = current_user.categories.new(category_params)
 
-  if @category.save
-    respond_to do |format|
-      # Turbo: fecha o modal e recarrega a página inteira
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.append(
-          "modal",
-          "<turbo-stream action='visit' target='_top' url='#{categories_path}'></turbo-stream>".html_safe
-        )
+    if @category.save
+      respond_to do |format|
+        # Turbo: fecha o modal e recarrega a página inteira
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.append(
+            "modal",
+            "<turbo-stream action='visit' target='_top' url='#{categories_path}'></turbo-stream>".html_safe
+          )
+        end
+
+        # Fallback HTML
+        format.html { redirect_to categories_path, notice: "Categoria criada com sucesso!" }
       end
-
-      # Fallback HTML
-      format.html { redirect_to categories_path, notice: "Categoria criada com sucesso!" }
-    end
-  else
-    respond_to do |format|
-      format.turbo_stream { render :new, status: :unprocessable_entity }
-      format.html { render :new, status: :unprocessable_entity }
+    else
+      respond_to do |format|
+        format.turbo_stream { render :new, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_entity }
+      end
     end
   end
-end
 
   def edit; end
 
@@ -56,19 +56,41 @@ end
   private
 
   def load_categories
-    categories = Category.order(:name).to_a
+    categories = current_user.categories.order(:name).to_a
+    @description_filter = params[:description].to_s.strip
+
+    if @description_filter.present?
+      normalized_description = normalize_category_filter(@description_filter)
+
+      categories = categories.select do |category|
+        category.normalized_name.include?(normalized_description)
+      end
+    end
 
     month_range = Date.current.beginning_of_month..Date.current.end_of_month
-    current_expenses = Expense.where(balance_month: month_range)
-    current_incomes = Income.where(balance_month: month_range)
+    current_expenses = current_user.expenses.where(balance_month: month_range)
+    current_incomes = current_user.incomes.where(balance_month: month_range)
 
     @categories_month_expenses = current_expenses.sum(:amount)
     @categories_month_incomes = current_incomes.sum(:amount)
-    @categories_top_expense_value = current_expenses.group(:category_id).sum(:amount).values.max || 0
-    @categories_uncategorized_value = current_expenses.where(category_id: nil).sum(:amount) +
-                                      current_incomes.where(category_id: nil).sum(:amount)
-    categories = sort_collection(categories, sort_map: category_sort_map, default_sort: "name")
-    @categories = paginate_collection(categories, per_page: pagination_per_page(:categories_per_page))
+
+    @categories_top_expense_value =
+      current_expenses.group(:category_id).sum(:amount).values.max || 0
+
+    @categories_uncategorized_value =
+      current_expenses.where(category_id: nil).sum(:amount) +
+      current_incomes.where(category_id: nil).sum(:amount)
+
+    categories = sort_collection(
+      categories,
+      sort_map: category_sort_map,
+      default_sort: "name"
+    )
+
+    @per_page = pagination_per_page(:categories_per_page)
+    @categories = paginate_collection(categories, per_page: @per_page)
+
+    @item_offset = ((@current_page.to_i - 1) * @per_page.to_i)
   end
 
   def category_sort_map
@@ -78,8 +100,18 @@ end
     }
   end
 
+  def normalize_category_filter(value)
+    value
+      .unicode_normalize(:nfkd)
+      .encode("ASCII", replace: "", undef: :replace)
+      .downcase
+      .gsub(/[^a-z0-9]+/, " ")
+      .squeeze(" ")
+      .strip
+  end
+
   def set_category
-    @category = Category.find(params[:id])
+    @category = current_user.categories.find(params[:id])
   end
   
   def category_params

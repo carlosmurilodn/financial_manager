@@ -4,12 +4,24 @@
       <%= f.label :icon, "Ícone Google" %>
       <%= f.text_field :icon, class: "form-control", placeholder: "receipt_long" %>
     </div>
-    <div class="col-md-9">
+
+    <div class="col-md-5">
       <%= f.label :name, t("categories.form.name") %>
       <%= f.text_field :name, class: "form-control" %>
+    </div>
+
+    <div class="col-md-4">
+      <%= f.label :color, "Cor da categoria" %>
+
+      <%= f.select :color,
+            options_for_select(
+              Category::COLOR_PALETTE.map { |name, hex| ["#{name} • #{hex}", hex] },
+              category.color.presence || Category::COLOR_PALETTE.values.first
+            ),
+            {},
+            class: "form-control" %>
     </div>
   </div>
 
   <%= f.submit t("categories.form.submit"), class: "btn btn-primary" %>
 <% end %>
-

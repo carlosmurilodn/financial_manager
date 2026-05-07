@@ -1,26 +1,8 @@
 <div id="expenses-table">
-  <div class="table-responsive">
-    <table class="table app-table app-table--records app-table--index mb-0">
-      <thead>
-        <tr>
-          <th class="text-center"><%= sortable_table_header("Descrição", "description") %></th>
-          <th class="text-center"><%= sortable_table_header("Parcela", "installment") %></th>
-          <th class="text-center"><%= sortable_table_header("Valor", "amount") %></th>
-          <th class="text-center"><%= sortable_table_header("Data da Compra", "date") %></th>
-          <th class="text-center"><%= sortable_table_header("Mês de Referência", "balance_month") %></th>
-          <th class="text-center"><%= sortable_table_header("Categoria", "category") %></th>
-          <th class="text-center"><%= sortable_table_header("Forma de Pagamento", "payment_method") %></th>
-          <th class="text-center"><%= sortable_table_header("Cartão", "card") %></th>
-          <th class="text-center"><%= sortable_table_header("Foi Paga?", "paid") %></th>
-          <th class="text-center">Ações</th>
-        </tr>
-      </thead>
-      <tbody id="expenses-list">
-        <% @expenses.each do |expense| %>
-          <%= render partial: "expense_row", locals: { expense: expense } %>
-        <% end %>
-      </tbody>
-    </table>
+  <div class="expenses-cards-list" id="expenses-list">
+    <% @expenses.each do |expense| %>
+      <%= render partial: "expense_row", locals: { expense: expense } %>
+    <% end %>
   </div>
 
   <%= render "shared/pagination",

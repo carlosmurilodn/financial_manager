@@ -3,6 +3,21 @@ class Category < ApplicationRecord
   has_many :incomes, dependent: :nullify
   has_many :financial_goals, dependent: :nullify
 
+  COLOR_PALETTE = {
+    "Azul" => "#2563EB",
+    "Verde" => "#16A34A",
+    "Roxo" => "#7C3AED",
+    "Laranja" => "#EA580C",
+    "Rosa" => "#DB2777",
+    "Ciano" => "#0891B2",
+    "Âmbar" => "#D97706",
+    "Vermelho" => "#DC2626",
+    "Índigo" => "#4F46E5",
+    "Verde água" => "#0F766E",
+    "Magenta" => "#C026D3",
+    "Azul petróleo" => "#155E75"
+  }.freeze
+
   MATERIAL_ICONS = {
     "acessorios" => "styler",
     "acessorios pets" => "pets",

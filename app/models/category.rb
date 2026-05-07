@@ -18,10 +18,6 @@ class Category < ApplicationRecord
     "Azul petróleo" => "#155E75"
   }.freeze
 
-  def self.color_name_for(color)
-    COLOR_PALETTE.key(color.to_s.upcase) || "Personalizada"
-  end
-
   MATERIAL_ICONS = {
     "acessorios" => "styler",
     "acessorios pets" => "pets",
@@ -94,10 +90,6 @@ class Category < ApplicationRecord
   # Retorna a cor visual da categoria para cards, ícones e badges.
   def display_color
     color.presence || COLOR_PALETTE.values.first
-  end
-
-  def color_name
-    self.class.color_name_for(display_color)
   end
 
   def normalized_name

@@ -29,34 +29,34 @@
           <%= label_tag :month, "Mês" %>
           <%= select_tag :month,
             options_for_select([["Todos", 0]] + I18n.t("date.month_names")[1..12].map.with_index { |m, i| [m.capitalize, i + 1] }, @month || 0),
-            class: "form-select" %>
+            class: "app-form-select" %>
         </div>
 
         <div class="app-filter-field">
           <%= label_tag :year, "Ano" %>
           <%= select_tag :year,
             options_for_select([["Todos", 0]] + (Date.today.year - 5..Date.today.year + 1).to_a.reverse, @year || 0),
-            class: "form-select" %>
+            class: "app-form-select" %>
         </div>
 
         <div class="app-filter-field">
           <%= label_tag :description, "Descrição" %>
-          <%= text_field_tag :description, @description_filter, class: "form-control", placeholder: "Buscar descrição..." %>
+          <%= text_field_tag :description, @description_filter, class: "app-form-control", placeholder: "Buscar descrição..." %>
         </div>
 
         <div class="app-filter-field">
           <%= label_tag :paid, "Recebida?" %>
           <%= select_tag :paid,
             options_for_select([["Todos", ""], ["Sim", true], ["Não", false]], @paid_filter || ""),
-            class: "form-select" %>
+            class: "app-form-select" %>
         </div>
       </div>
 
       <div class="app-filter-actions">
-        <%= submit_tag t("buttons.filter"), class: "btn app-page__primary-btn" %>
+        <%= submit_tag t("buttons.filter"), class: "app-btn app-btn--primary app-page__primary-btn" %>
         <%= link_to "Limpar Filtros",
                 clear_filters_incomes_path,
-                class: "btn app-page__secondary-btn",
+                class: "app-btn app-btn--secondary app-page__secondary-btn",
                 data: { turbo_method: :delete } %>
         <%= render "shared/per_page_select" %>
       </div>
@@ -64,11 +64,11 @@
   </div>
 
   <div class="app-panel app-panel--table">
-    <div class="table-responsive">
-      <table class="table app-table app-table--records app-table--index mb-0">
+    <div class="app-table-responsive">
+      <table class="app-table app-table--records app-table--index app-mb-0">
         <thead>
           <tr>
-            <th class="text-center">Item</th>
+            <th class="app-text-center">Item</th>
             <th><%= sortable_table_header("Descrição", "description") %></th>
             <th><%= sortable_table_header("Categoria", "category") %></th>
             <th><%= sortable_table_header("Valor", "amount") %></th>
@@ -98,14 +98,14 @@
   </div>
 </section>
 
-<!-- Frame vazio para renderização dinâmica -->
 <turbo-frame id="modal" style="display: none;"></turbo-frame>
 
-<!-- Estrutura do modal principal -->
-<div class="modal fade" id="turboModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div id="modal-body"></div>
+<div id="appModal" class="app-modal" aria-hidden="true">
+  <div class="app-modal__backdrop" data-modal-backdrop="true"></div>
+
+  <div class="app-modal__dialog">
+    <div class="app-modal__content">
+      <div id="app-modal-body"></div>
     </div>
   </div>
 </div>

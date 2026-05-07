@@ -1,25 +1,25 @@
 <%= form_with model: card, local: true do |f| %>
-  <div class="row mb-3">
+  <div class="row app-mb-3">
     <div class="col-md-6">
       <%= f.label :name, t("cards.form.name") %>
-      <%= f.text_field :name, class: "form-control", required: true %>
+      <%= f.text_field :name, class: "app-form-control", required: true %>
     </div>
 
     <div class="col-md-6">
       <%= f.label :number, t("cards.form.number") %>
       <%= f.text_field :number,
-            class: "form-control card-number", # Classe 'cartao' ou '.card-number' para o utils.js
+            class: "app-form-control card-number",
             placeholder: "1234 5678 1234 5678",
             maxlength: 19
       %>
     </div>
   </div>
 
-  <div class="row mb-3">
+  <div class="row app-mb-3">
     <div class="col-md-3">
       <%= f.label :total_limit, "Limite Total" %>
       <%= f.text_field :total_limit,
-            class: "form-control moeda",
+            class: "app-form-control moeda",
             value: number_to_currency(card.total_limit || 0, unit: "R$", separator: ",", delimiter: ".")
       %>
     </div>
@@ -28,7 +28,7 @@
       <%= f.label :remaining_limit, "Limite Restante" %>
       <%= text_field_tag :remaining_limit_display,
             number_to_currency(card.remaining_limit || 0, unit: "R$", separator: ",", delimiter: "."),
-            class: "form-control",
+            class: "app-form-control",
             readonly: true
       %>
     </div>
@@ -36,22 +36,22 @@
     <div class="col-md-3">
       <%= f.label :due_day, "Dia do Vencimento" %>
       <div class="custom-date-wrapper">
-        <%= f.text_field :due_day, class: "form-control custom-date-day", autocomplete: "off", placeholder: "Selecione o dia" %>
+        <%= f.text_field :due_day, class: "app-form-control custom-date-day", autocomplete: "off", placeholder: "Selecione o dia" %>
       </div>
     </div>
 
     <div class="col-md-3">
       <%= f.label :closing_day, "Dia de Fechamento" %>
       <div class="custom-date-wrapper">
-        <%= f.text_field :closing_day, class: "form-control custom-date-day", autocomplete: "off", placeholder: "Selecione o dia" %>
+        <%= f.text_field :closing_day, class: "app-form-control custom-date-day", autocomplete: "off", placeholder: "Selecione o dia" %>
       </div>
     </div>
   </div>
 
-  <div class="row mb-3">
+  <div class="row app-mb-3">
     <div class="col-md-8">
       <%= f.label :icon, "Ícone do Cartão" %>
-      <%= f.file_field :icon, class: "form-control", accept: "image/*" %>
+      <%= f.file_field :icon, class: "app-form-control", accept: "image/*" %>
       <% if card.icon.attached? %>
         <div class="form-text">Ícone atual anexado: <%= card.icon.filename.to_s %></div>
       <% else %>
@@ -60,16 +60,16 @@
     </div>
 
     <% if card.icon.attached? %>
-      <div class="col-md-4 d-flex align-items-end">
-        <div class="form-check">
-          <%= check_box_tag "card[remove_icon]", "1", false, class: "form-check-input", id: "card_remove_icon" %>
-          <%= label_tag "card_remove_icon", "Remover ícone atual", class: "form-check-label" %>
+      <div class="col-md-4 app-flex app-align-end">
+        <div class="app-form-check">
+          <%= check_box_tag "card[remove_icon]", "1", false, class: "app-form-check-input", id: "card_remove_icon" %>
+          <%= label_tag "card_remove_icon", "Remover ícone atual", class: "app-form-check-label" %>
         </div>
       </div>
     <% end %>
   </div>
 
-  <div class="mb-3">
-    <%= f.submit t("cards.form.submit"), class: "btn btn-primary" %>
+  <div class="app-mb-3">
+    <%= f.submit t("cards.form.submit"), class: "app-btn app-btn--primary" %>
   </div>
 <% end %>

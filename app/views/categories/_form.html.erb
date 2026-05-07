@@ -2,7 +2,7 @@
   <div class="row mb-3">
     <div class="col-md-3">
       <%= f.label :icon, "Ícone Google" %>
-      <%= f.text_field :icon, class: "form-control", placeholder: "receipt_long" %>
+      <%= f.text_field :icon, class: "app-form-control", placeholder: "receipt_long" %>
     </div>
 
     <div class="col-md-5">
@@ -23,5 +23,6 @@
     </div>
   </div>
 
-  <%= f.submit t("categories.form.submit"), class: "btn btn-primary" %>
+  <%= f.submit t("categories.form.submit"), class: "app-btn app-btn--primary" %>
 <% end %>
+

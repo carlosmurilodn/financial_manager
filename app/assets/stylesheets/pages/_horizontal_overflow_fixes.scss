@@ -1,0 +1,190 @@
+// Corrige estouros horizontais causados por filtros e tabelas largas.
+// Deve ser usado como camada final, sem alterar a estrutura das views.
+
+.app-content,
+.app-content__inner,
+.app-page,
+.app-page__hero,
+.app-panel {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.app-content,
+.app-panel--table,
+.app-table-responsive {
+  overflow-x: hidden;
+}
+
+.app-table-responsive {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-y: hidden;
+}
+
+.app-table-responsive .app-table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+
+.app-table--records th,
+.app-table--records td {
+  min-width: 0;
+  overflow: hidden;
+  padding-right: 0.55rem;
+  padding-left: 0.55rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-table--records th {
+  font-size: clamp(0.62rem, 0.62vw, 0.72rem);
+  letter-spacing: 0.04em;
+}
+
+.app-table--records td {
+  font-size: clamp(0.72rem, 0.72vw, 0.84rem);
+}
+
+.app-table--records td:nth-child(2),
+.app-table--records th:nth-child(2) {
+  white-space: normal;
+}
+
+.app-table--records td:nth-child(2) {
+  line-height: 1.25;
+}
+
+.app-table--records .app-record-actions {
+  white-space: normal;
+}
+
+.app-record-actions .app-btn,
+.app-record-actions .btn {
+  min-width: 0;
+  padding: 0.34rem 0.54rem;
+  font-size: 0.72rem;
+}
+
+.app-record-actions form {
+  display: inline-flex;
+}
+
+.app-page__hero-top--expenses,
+.app-page__hero-top--cards {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.app-page__hero-top--expenses > *,
+.app-page__hero-top--cards > * {
+  min-width: 0;
+}
+
+.app-filter-form,
+.app-filter-grid,
+.app-filter-actions {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.app-filter-grid--expenses {
+  grid-template-columns: minmax(220px, 3fr) minmax(120px, 1fr) minmax(100px, 0.8fr) minmax(180px, 1.5fr) minmax(180px, 1.5fr) minmax(180px, 1.5fr) minmax(110px, 0.8fr);
+}
+
+.app-filter-grid--expenses .app-filter-field:nth-child(n) {
+  grid-column: auto;
+}
+
+.app-filter-grid--cards {
+  grid-template-columns: minmax(220px, 2fr) minmax(120px, 1fr) minmax(120px, 1fr);
+}
+
+.app-filter-field,
+.app-filter-field .app-form-control,
+.app-filter-field .app-form-select,
+.app-filter-field .form-control,
+.app-filter-field .form-select {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.app-filter-actions {
+  overflow: hidden;
+}
+
+.app-filter-actions .app-filter-actions__import {
+  margin-left: 0;
+}
+
+.app-table--records th:nth-child(1),
+.app-table--records td:nth-child(1) {
+  width: 4.5%;
+}
+
+.app-table--records th:nth-child(2),
+.app-table--records td:nth-child(2) {
+  width: 13%;
+}
+
+.app-table--records th:last-child,
+.app-table--records td:last-child {
+  width: 9%;
+}
+
+@media (min-width: 1200px) {
+  .app-table--records th,
+  .app-table--records td {
+    padding-right: 0.45rem;
+    padding-left: 0.45rem;
+  }
+}
+
+@media (max-width: 1399px) {
+  .app-page__hero-top--expenses,
+  .app-page__hero-top--cards {
+    flex-wrap: wrap;
+  }
+
+  .app-page__hero-top--expenses > .app-page__hero-unit,
+  .app-page__hero-top--cards > .app-page__hero-unit,
+  .app-page__hero-top--expenses > .app-page__hero-kpis,
+  .app-page__hero-top--cards > .app-page__hero-kpis {
+    flex: 1 1 220px;
+  }
+
+  .app-filter-grid--expenses {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .app-filter-grid--cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 991px) {
+  .app-filter-grid--expenses,
+  .app-filter-grid--cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .app-filter-grid--expenses,
+  .app-filter-grid--cards {
+    grid-template-columns: 1fr;
+  }
+
+  .app-filter-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .app-filter-actions .app-btn,
+  .app-filter-actions .btn,
+  .app-per-page-control {
+    width: 100%;
+  }
+}

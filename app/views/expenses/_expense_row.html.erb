@@ -24,11 +24,11 @@
               <%= Expense.payment_method_names[expense.payment_method] %>
             </span>
 
-            <span class="expense-card__pill">
               <% if expense.card.present? %>
-              <%= expense.card.name %>
+                <span class="expense-card__pill">
+                  <%= expense.card.name %>
+                </span>
               <% end %>
-            </span>
 
             <% if expense.payment_method_credito_parcelado? %>
               <span class="expense-card__pill">

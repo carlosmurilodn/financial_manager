@@ -104,9 +104,10 @@ document.addEventListener("keydown", (event) => {
 });
 
 document.addEventListener("click", (event) => {
-  const closeTrigger = event.target.closest("[data-close-modal]");
+  const closeTrigger = event.target.closest("[data-close-modal], [data-bs-dismiss='modal']");
 
   if (closeTrigger) {
+    event.preventDefault();
     hideTurboModal();
   }
 });

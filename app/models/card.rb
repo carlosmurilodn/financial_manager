@@ -36,6 +36,10 @@ class Card < ApplicationRecord
     color.presence || COLOR_PALETTE.values.first
   end
 
+  def color_name
+    Category.color_name_for(display_color)
+  end
+
   def billing_due_date_for(purchase_date)
     return if purchase_date.blank? || due_day.blank? || closing_day.blank?
 

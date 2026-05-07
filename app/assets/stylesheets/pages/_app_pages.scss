@@ -772,7 +772,6 @@
 .app-category-card__header,
 .app-category-card__preview,
 .app-category-card__swatch,
-.app-category-card__details,
 .app-category-card__actions {
   display: flex;
   align-items: center;
@@ -836,63 +835,11 @@
   box-shadow: inset 0 -8px 14px rgba(0, 0, 0, 0.12);
 }
 
-.app-category-card__swatch code {
+.app-category-card__swatch strong {
   color: var(--text-main);
   font-family: inherit;
   font-size: 0.86rem;
   font-weight: 800;
-}
-
-.app-category-card__details {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  padding: 10px 14px 12px 24px;
-  border-top: 1px solid var(--table-border-color);
-}
-
-.app-category-card__sample {
-  display: grid;
-  justify-items: center;
-  gap: 8px;
-  min-width: 0;
-}
-
-.app-category-card__sample span {
-  color: var(--text-main);
-  font-size: 0.72rem;
-  font-weight: 700;
-  line-height: 1.1;
-  text-align: center;
-}
-
-.app-category-card__line {
-  display: block;
-  width: 52px;
-  height: 4px;
-  border-radius: 999px;
-  background: var(--category-color);
-}
-
-.app-category-card__dot {
-  display: block;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--category-color) 18%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--category-color) 15%, transparent);
-}
-
-.app-category-card__sample strong {
-  max-width: 100%;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--category-color) 12%, transparent);
-  color: var(--category-color);
-  font-size: 0.76rem;
-  font-weight: 800;
-  line-height: 1;
-  overflow-wrap: anywhere;
 }
 
 .app-category-card__actions {

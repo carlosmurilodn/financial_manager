@@ -331,6 +331,53 @@
   opacity: 1;
 }
 
+.financial-goal-card__progress {
+  height: 7px;
+  margin-top: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--expense-category-color) 12%, transparent);
+}
+
+.financial-goal-card__progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--expense-category-color);
+}
+
+.financial-goal-card__metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  padding: 0 20px 18px 24px;
+}
+
+.financial-goal-card__metrics span {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 10px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--expense-category-color) 8%, transparent);
+}
+
+.financial-goal-card__metrics small {
+  color: var(--text-soft);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.financial-goal-card__metrics strong {
+  color: var(--text-main);
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
 @media (max-width: 991px) {
   .expense-card__content {
     align-items: flex-start;
@@ -338,6 +385,10 @@
 
   .expense-card__amount-area {
     min-width: 110px;
+  }
+
+  .financial-goal-card__metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -403,5 +454,9 @@
 
   .expense-card__actions {
     gap: 10px;
+  }
+
+  .financial-goal-card__metrics {
+    grid-template-columns: 1fr;
   }
 }

@@ -13,6 +13,7 @@ import "./financial_goal_form"
 import "./calendar_tabs"
 import "./passkey_test"
 import "./flash_messages"
+import "./color_select_preview"
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {

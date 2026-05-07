@@ -1,0 +1,60 @@
+<% category_color = category.display_color %>
+
+<article
+  id="<%= dom_id(category) %>"
+  class="app-category-card"
+  style="--category-color: <%= category_color %>;"
+>
+  <div class="app-category-card__main">
+    <div class="app-category-card__header">
+      <span class="app-category-card__number"><%= format("%02d", position) %></span>
+      <h3><%= category.display_name %></h3>
+
+      <div class="app-category-card__actions">
+        <%= link_to edit_category_path(category),
+                    class: "app-category-card__action",
+                    title: "Editar categoria",
+                    data: { turbo_frame: "modal" } do %>
+          <span class="material-symbols-rounded">edit</span>
+        <% end %>
+
+        <%= link_to category,
+                    data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
+                    class: "app-category-card__action app-category-card__action--danger",
+                    title: "Excluir categoria" do %>
+          <span class="material-symbols-rounded">delete</span>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="app-category-card__preview">
+      <span class="app-category-card__icon-wrap">
+        <span class="material-symbols-rounded app-category-card__icon">
+          <%= category.material_icon %>
+        </span>
+      </span>
+
+      <div class="app-category-card__swatch">
+        <span aria-hidden="true"></span>
+        <code><%= category_color.upcase %></code>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-category-card__details">
+    <div class="app-category-card__sample">
+      <span>Borda</span>
+      <i class="app-category-card__line"></i>
+    </div>
+
+    <div class="app-category-card__sample">
+      <span>Fundo do ícone</span>
+      <i class="app-category-card__dot"></i>
+    </div>
+
+    <div class="app-category-card__sample">
+      <span>Badge</span>
+      <strong>Exemplo</strong>
+    </div>
+  </div>
+</article>

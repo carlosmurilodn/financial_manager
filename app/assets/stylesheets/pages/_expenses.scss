@@ -159,7 +159,7 @@
   width: 58px;
   height: 58px;
   min-width: 58px;
-  border-radius: 18px;
+  border-radius: 50%;
   background: color-mix(in srgb, var(--expense-category-color) 14%, transparent);
 }
 
@@ -253,14 +253,17 @@
 .expense-card__amount-area {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 10px;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+  min-width: 132px;
 }
 
 .expense-card__amount {
   color: var(--text-main);
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   font-weight: 800;
+  line-height: 1.15;
   white-space: nowrap;
 }
 
@@ -282,29 +285,37 @@
 }
 
 .expense-card__status--pending {
-  background: var(--pill-danger-bg);
-  color: var(--pill-danger-color);
+  background: var(--stat-warning-bg);
+  color: var(--stat-warning-icon-bg);
 }
 
 .expense-card__actions {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
 }
 
 .expense-card__action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-soft);
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--primary);
   text-decoration: none;
-  transition: 0.2s ease;
+  transition: none;
 }
 
 .expense-card__action:hover {
-  transform: scale(1.08);
   color: var(--primary);
+}
+
+.expense-card__action--danger {
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  color: var(--danger);
 }
 
 .expense-card__action--danger:hover {
@@ -370,7 +381,7 @@
   }
 
   .expense-card__amount-area {
-    align-items: flex-end;
+    align-items: flex-start;
   }
 }
 
@@ -394,6 +405,6 @@
   }
 
   .expense-card__actions {
-    gap: 14px;
+    gap: 10px;
   }
 }

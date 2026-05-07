@@ -87,6 +87,7 @@ class CategoriesController < ApplicationController
       default_sort: "name"
     )
 
+    @categories_total_count = categories.size
     @per_page = pagination_per_page(:categories_per_page)
     @categories = paginate_collection(categories, per_page: @per_page)
 

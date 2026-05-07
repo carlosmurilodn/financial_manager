@@ -50,49 +50,27 @@
     <% end %>
   </div>
 
-  <div class="app-panel app-panel--table">
-    <div class="app-table-responsive">
-      <table class="app-table app-table--records app-table--index app-mb-0">
-        <thead>
-          <tr>
-            <th class="app-text-center">Item</th>
-            <th><%= sortable_table_header("Ícone", "icon") %></th>
-            <th><%= sortable_table_header(t("categories.form.name"), "name") %></th>
-            <th><%= t("tables.expenses.actions") %></th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <% @categories.each_with_index do |category, index| %>
-            <tr id="<%= dom_id(category) %>">
-              <td class="app-text-center app-record-actions">
-                <%= @item_offset + index + 1 %>
-              </td>
-
-              <td>
-                <span class="material-symbols-rounded dashboard-category-item__icon">
-                  <%= category.material_icon %>
-                </span>
-              </td>
-
-              <td><%= category.display_name %></td>
-
-              <td class="app-record-actions app-text-center">
-                <%= link_to "✏️ #{t("buttons.edit")}",
-                            edit_category_path(category),
-                            class: "app-btn app-btn--sm app-btn--primary app-record-actions__edit app-me-1",
-                            data: { turbo_frame: "modal" } %>
-
-                <%= link_to "🗑️ #{t("buttons.delete")}",
-                            category,
-                            data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
-                            class: "app-btn app-btn--sm app-btn--danger app-record-actions__delete" %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+  <div class="app-panel app-category-palette-panel">
+    <div class="app-category-palette-heading">
+      <div>
+        <h2>Paleta de Cores - <%= @categories_total_count || @categories.size %> opções</h2>
+        <p>Cores sugeridas para categorias</p>
+      </div>
     </div>
+
+    <% if @categories.any? %>
+      <div class="app-category-palette">
+        <% @categories.each_with_index do |category, index| %>
+          <%= render "category_card", category: category, position: @item_offset + index + 1 %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="app-category-palette-empty">
+        <span class="material-symbols-rounded">category_search</span>
+        <strong>Nenhuma categoria encontrada</strong>
+        <p>Ajuste os filtros ou cadastre uma nova categoria.</p>
+      </div>
+    <% end %>
 
     <%= render "shared/pagination",
               current_page: @current_page,

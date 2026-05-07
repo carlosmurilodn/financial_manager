@@ -21,23 +21,6 @@
             {},
             class: "form-control" %>
     </div>
-
-    <div class="col-md-4">
-      <%= f.label :color, "Cor da categoria" %>
-      <% selected_color = category.color.presence || Category::COLOR_PALETTE.values.first %>
-
-      <div class="app-color-select-field">
-        <%= f.select :color,
-              options_for_select(Category::COLOR_PALETTE.to_a, selected_color),
-              {},
-              class: "form-control",
-              data: { color_select: true } %>
-
-        <span class="app-color-name-badge" style="--color-select-color: <%= selected_color %>;">
-          <%= Category.color_name_for(selected_color) %>
-        </span>
-      </div>
-    </div>
   </div>
 
   <%= f.submit t("categories.form.submit"), class: "app-btn app-btn--primary" %>

@@ -113,7 +113,6 @@ class FinancialGoalsController < ApplicationController
       :due_date,
       :status,
       :priority,
-      :color,
       :notes,
       financial_goal_resources_attributes: [
         :id,

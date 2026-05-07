@@ -5,13 +5,11 @@ default: &default
 
 development:
   <<: *default
- #username: <%= ENV["DEV_USERNAME"] %>
- #host: <%= ENV["DEV_HOST"] %>
- #password: <%= ENV["DEV_PASSWORD"] %>
- #port: <%= ENV["DEV_PORT"] %>
- #database: financial_manager_development
-  url: <%= ENV["DATABASE_URL_FINANCIAL_MANAGER"] %>
-
+  username: <%= ENV["DEV_USERNAME"] %>
+  host: <%= ENV["DEV_HOST"] %>
+  password: <%= ENV["DEV_PASSWORD"] %>
+  port: <%= ENV["DEV_PORT"] %>
+  database: financial_manager_development
 
 test:
   <<: *default

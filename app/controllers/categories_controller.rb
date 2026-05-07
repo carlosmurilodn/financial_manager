@@ -56,7 +56,7 @@ class CategoriesController < ApplicationController
   private
 
   def load_categories
-    categories = current_user.categories.to_a
+    categories = current_user.categories.order(:name).to_a
     @description_filter = params[:description].to_s.strip
 
     if @description_filter.present?
@@ -81,7 +81,23 @@ class CategoriesController < ApplicationController
       current_expenses.where(category_id: nil).sum(:amount) +
       current_incomes.where(category_id: nil).sum(:amount)
 
-    @categories = categories.sort_by(&:sort_name)
+    categories = sort_collection(
+      categories,
+      sort_map: category_sort_map,
+      default_sort: "name"
+    )
+
+    @per_page = pagination_per_page(:categories_per_page)
+    @categories = paginate_collection(categories, per_page: @per_page)
+
+    @item_offset = ((@current_page.to_i - 1) * @per_page.to_i)
+  end
+
+  def category_sort_map
+    {
+      "icon" => ->(category) { category.material_icon.to_s },
+      "name" => ->(category) { category.display_name.to_s }
+    }
   end
 
   def normalize_category_filter(value)

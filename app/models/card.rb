@@ -1,6 +1,4 @@
 class Card < ApplicationRecord
-  COLOR_PALETTE = Category::COLOR_PALETTE
-
   belongs_to :user
 
   has_many :expenses, dependent: :nullify
@@ -16,7 +14,6 @@ class Card < ApplicationRecord
 
   validates :total_limit, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :due_day, :closing_day, inclusion: { in: 1..31 }, allow_nil: true
-  validates :color, inclusion: { in: COLOR_PALETTE.values }, allow_blank: true
 
   def remaining_limit
     total_limit.to_f - unpaid_total
@@ -30,14 +27,6 @@ class Card < ApplicationRecord
     end
 
     "#{base} - Restante: #{ActionController::Base.helpers.number_to_currency(remaining_limit, unit: 'R$ ', separator: ',', delimiter: '.')}"
-  end
-
-  def display_color
-    color.presence || COLOR_PALETTE.values.first
-  end
-
-  def color_name
-    Category.color_name_for(display_color)
   end
 
   def billing_due_date_for(purchase_date)

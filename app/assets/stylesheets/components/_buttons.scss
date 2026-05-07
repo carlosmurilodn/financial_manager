@@ -11,16 +11,12 @@
   padding: 0.425rem 0.6rem;
   font-weight: 700;
   text-decoration: none;
-  min-width: 10%;
-  height: 36px;
-  font-size: 14px;
 }
-
-
 
 .app-btn--primary {
   background: var(--primary);
   color: var(--white);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
 }
 
 .app-btn--primary:hover,
@@ -33,7 +29,7 @@
 .app-btn--ghost {
   background: var(--ghost-btn-bg);
   color: var(--text-main);
-  border: 1px solid var(--table-border-color);
+  box-shadow: var(--ghost-btn-shadow);
 }
 
 .app-btn--secondary:hover,
@@ -47,6 +43,7 @@
 .app-btn--danger {
   background: var(--danger);
   color: var(--white);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
 }
 
 .app-btn--danger:hover,
@@ -58,6 +55,7 @@
 .app-btn--warning {
   background: var(--warning, #f59e0b);
   color: var(--white);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
 }
 
 .app-btn--warning:hover,

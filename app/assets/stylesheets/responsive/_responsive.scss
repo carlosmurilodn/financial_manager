@@ -69,7 +69,12 @@
   }
 
   .app-sidebar__inner {
-
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    height: auto;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
   }
 
   .app-content,
@@ -87,7 +92,7 @@
 
   .app-sidebar__brand {
     grid-column: 1 / -1;
-    justify-content: center;
+    justify-content: space-between;
     gap: 10px;
     min-width: 0;
   }
@@ -108,7 +113,7 @@
     grid-column: 1 / -1;
     display: flex;
     flex: none;
-    gap: 4px;
+    gap: 8px;
     min-width: 0;
     margin-top: 0;
     padding: 0 0 2px;
@@ -127,19 +132,6 @@
     justify-content: center;
     gap: 0;
     padding: 0;
-  }
-
-  .app-nav-form {
-    display: flex;
-    flex: 0 0 48px;
-    width: 48px;
-    height: 48px;
-  }
-
-  .app-nav-form .app-nav-link,
-  .app-nav-link--logout {
-    height: 48px;
-    margin-top: 0;
   }
 
   .app-nav-link::after {
@@ -167,7 +159,8 @@
   }
 
   .dashboard-hero,
-  .dashboard-card__header {
+  .dashboard-card__header,
+  .dashboard-toolbar {
     flex-direction: column;
     align-items: stretch;
   }
@@ -304,6 +297,15 @@
     justify-content: center;
   }
 
+  .app-list-toolbar {
+    justify-content: stretch;
+  }
+
+  .app-list-toolbar__form,
+  .app-list-toolbar .app-per-page-control {
+    width: 100%;
+  }
+
   .app-panel--table {
     overflow: hidden;
   }
@@ -322,6 +324,15 @@
   .app-table--records {
     width: max-content;
     min-width: 720px;
+  }
+
+  .app-calendar__nav {
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    align-items: center;
+  }
+
+  .app-forecast__nav {
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
   }
 
   .dashboard-card--calendar {

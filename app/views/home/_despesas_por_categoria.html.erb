@@ -30,7 +30,7 @@
     <% if @category_expense_summaries.any? %>
       <div class="dashboard-category-summary">
         <% @category_expense_summaries.each do |summary| %>
-          <article class="dashboard-category-item" style="--dashboard-category-color: <%= summary[:color] %>;">
+          <article class="dashboard-category-item">
             <div class="dashboard-category-item__main">
               <span class="material-symbols-rounded dashboard-category-item__icon"><%= summary[:icon] %></span>
               <button type="button" class="dashboard-category-item__copy" aria-expanded="false">

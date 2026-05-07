@@ -423,6 +423,13 @@
 }
 
 @media (max-width: 991px) {
+  body {
+    margin: 0;
+  }
+  .app-sidebar, .app-content__inner {
+    padding: 0;
+  }
+
   .invoice-import-item,
   .invoice-import-item__row,
   .invoice-import-payment {

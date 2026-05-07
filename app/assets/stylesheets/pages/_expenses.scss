@@ -146,7 +146,7 @@
 
 .expense-card__category {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
   min-width: 0;
   flex: 1;
@@ -214,19 +214,27 @@
 }
 
 .expense-card__description {
-  margin: 0 0 12px;
+  margin: 0px;
   overflow: hidden;
   color: var(--text-soft);
   font-size: 0.88rem;
   text-overflow: ellipsis;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  min-height: 24px;
+}
+.expense-card__description-row {
+  display: flex;
+  align-items: center;
+  gap: 28px;
 }
 
 .expense-card__meta {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 22px;
 }
 
 .expense-card__meta-item {
@@ -348,6 +356,13 @@
   .expense-card__header {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .expense-card__description-row {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    min-height: 24px;
   }
 
   .expense-card__meta {

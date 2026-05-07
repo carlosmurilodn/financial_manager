@@ -279,31 +279,20 @@
   font-size: 0.54rem;
 }
 
-.app-page__primary-btn,
-.app-page__secondary-btn,
-.app-page__danger-btn {
-  border: 0;
-  border-radius: 999px;
-  padding: 0.8rem 1.15rem;
-  font-weight: 700;
-}
-
 .app-page__primary-btn {
   background: var(--primary);
   color: #fff;
-  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
 }
 
 .app-page__secondary-btn {
   background: var(--ghost-btn-bg);
   color: var(--text-main);
-  box-shadow: var(--ghost-btn-shadow);
+  border: 1px solid var(--table-border-color);
 }
 
 .app-page__danger-btn {
   background: var(--danger);
   color: #fff;
-  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
 }
 
 .app-panel {
@@ -638,7 +627,7 @@
 
 .app-filter-field .form-control,
 .app-filter-field .form-select {
-  min-height: 46px;
+  min-height: 38px;
   border-radius: 10px;
   border-color: var(--table-border-color);
   background-color: var(--app-bg-soft);
@@ -686,7 +675,7 @@
 }
 
 .app-list-toolbar__button {
-  min-height: 46px;
+  min-height: 38px;
   padding-right: 16px;
   padding-left: 16px;
 }
@@ -695,12 +684,13 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 46px;
+  height: 38px;
   padding: 0 12px;
   border: 1px solid var(--table-border-color);
   border-radius: 10px;
   background: var(--app-bg-soft);
   color: var(--text-main);
+  width: 210px;
 }
 
 .app-per-page-control__label,

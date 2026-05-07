@@ -6,7 +6,11 @@
       </div>
       <div class="app-sidebar__brand-copy">
         <span class="sidebar-title">Gerenciador Financeiro</span>
+        <small>Visao geral do sistema</small>
       </div>
+      <button id="sidebarToggle" class="app-sidebar__toggle" type="button" aria-label="Alternar menu">
+        <span class="material-symbols-rounded">menu</span>
+      </button>
     </div>
 
     <nav class="app-sidebar__nav">
@@ -270,6 +274,19 @@
     updateSidebar();
     updateThemeToggle();
     loadWeather();
+
+    const toggleButton = document.getElementById("sidebarToggle");
+    if (toggleButton && toggleButton.dataset.bound !== "true") {
+      toggleButton.dataset.bound = "true";
+      toggleButton.addEventListener("click", () => {
+        const wrapper = document.getElementById("wrapper");
+        if (!wrapper) return;
+
+        wrapper.classList.toggle("collapsed");
+        localStorage.setItem("sidebar-collapsed", wrapper.classList.contains("collapsed"));
+        updateSidebar();
+      });
+    }
 
     [document.getElementById("themeToggle"), document.getElementById("themeToggleMobile")].filter(Boolean).forEach((themeToggle) => {
       if (themeToggle.dataset.bound === "true") return;

@@ -57,7 +57,7 @@ class IncomesController < ApplicationController
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: [
-          turbo_stream.replace("incomes-table", partial: "incomes_table"),
+          turbo_stream.remove("income_#{@income.id}"),
           turbo_stream.replace("incomes-hero-kpis", partial: "hero_kpis")
         ]
       end

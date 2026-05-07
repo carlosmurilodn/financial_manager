@@ -1,3 +1,49 @@
+.dashboard-toolbar {
+  margin-bottom: 18px;
+}
+
+.dashboard-toolbar__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.app-calendar__title {
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.app-calendar__nav {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
+}
+
+.app-calendar__nav .dashboard-toolbar__actions:first-child {
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.app-calendar__nav .dashboard-toolbar__actions:last-child {
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.app-calendar__nav-btn {
+  display: inline-grid !important;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+
+.app-calendar__nav-btn .material-symbols-rounded {
+  display: inline-grid;
+  place-items: center;
+  font-size: 1.3rem;
+  line-height: 1;
+  margin: 0;
+}
+
 .dashboard-card__body--forecast {
   min-height: 0;
   overflow-x: hidden;
@@ -63,6 +109,15 @@
 .app-forecast__table-wrap::-webkit-scrollbar-thumb:hover {
   background: var(--scrollbar-thumb-color);
   background-clip: padding-box;
+}
+
+.dashboard-grid--planning .dashboard-toolbar {
+  margin-bottom: 12px;
+}
+
+.dashboard-grid--planning .app-calendar__title,
+.dashboard-grid--planning .app-forecast__title {
+  font-size: 0.96rem;
 }
 
 .dashboard-grid--planning .app-calendar-table th,
@@ -355,18 +410,8 @@
 }
 
 .dashboard-grid--planning .app-table--forecast > :not(caption) > * > * {
-  padding: 0.46rem;
+  padding: 0.25rem 0.28rem;
   white-space: nowrap;
-}
-
-.dashboard-grid--planning .app-table--forecast td,
-.dashboard-grid--planning .app-table--forecast td > span {
-  font-size: 12px;
-  line-height: 1.25;
-}
-
-.dashboard-grid--planning .app-table--forecast tbody td {
-  font-weight: 650;
 }
 
 .dashboard-grid--planning .app-table--forecast thead th {
@@ -385,8 +430,7 @@
 }
 
 .dashboard-grid--planning .app-forecast__month-label {
-  font-size: inherit;
-  font-weight: inherit;
+  font-size: 12px;
 }
 
 .dashboard-grid--planning .app-forecast__month-badge {
@@ -398,8 +442,7 @@
   min-width: 100px;
   padding: 2px 8px;
   border-radius: 0;
-  font-size: inherit;
-  font-weight: inherit;
+  font-size: 12px;
 }
 
 .app-forecast__table-wrap {
@@ -446,10 +489,43 @@
   font-weight: 800;
 }
 
+.app-forecast__nav {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
+}
+
+.app-forecast__nav .dashboard-toolbar__actions:first-child {
+  justify-content: flex-start;
+}
+
+.app-forecast__nav .dashboard-toolbar__actions:last-child {
+  justify-content: flex-end;
+}
+
+.app-forecast__nav-btn {
+  display: inline-grid !important;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+
+.app-forecast__nav-btn .material-symbols-rounded {
+  display: inline-grid;
+  place-items: center;
+  font-size: 1.3rem;
+  line-height: 1;
+  margin: 0;
+}
+
+.app-forecast__title {
+  text-align: center;
+}
+
 .app-calendar-table {
   --bs-table-bg: transparent;
   width: 100%;
-  border-collapse: collapse;
   margin-bottom: 0;
   table-layout: fixed;
 }
@@ -468,13 +544,8 @@
 .app-calendar-table td {
   min-width: 0;
   padding: 10px 8px;
-  border: 0;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+  border-color: rgba(148, 163, 184, 0.16);
   vertical-align: top;
-}
-
-.app-calendar-table tbody tr:last-child td {
-  border-bottom: 0;
 }
 
 .app-calendar-table tr > :first-child {
@@ -482,7 +553,7 @@
 }
 
 .app-calendar-table__empty {
-  background: transparent;
+  background: var(--calendar-empty-bg);
 }
 
 .app-calendar-table__day {
@@ -493,16 +564,6 @@
 .app-calendar-table__day--today,
 .app-calendar-table > :not(caption) > * > .app-calendar-table__day--today {
   background-color: var(--calendar-today-bg);
-}
-
-.app-calendar-table__day--outside-month,
-.app-calendar-table > :not(caption) > * > .app-calendar-table__day--outside-month {
-  background-color: transparent;
-}
-
-.app-calendar-table__day--outside-month .app-calendar-table__date {
-  color: color-mix(in srgb, var(--text-soft) 58%, transparent);
-  font-weight: 700;
 }
 
 .app-calendar-table__date {
@@ -643,3 +704,4 @@
   /*background: rgba(242, 154, 163, 0.16);*/
   color: #d9535d;
 }
+

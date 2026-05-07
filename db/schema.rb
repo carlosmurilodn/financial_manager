@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_07_100000) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_06_223000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -51,7 +51,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_07_100000) do
     t.integer "due_day"
     t.integer "closing_day"
     t.bigint "user_id"
-    t.string "color"
     t.index ["user_id"], name: "index_cards_on_user_id"
   end
 
@@ -116,7 +115,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_07_100000) do
     t.decimal "current_amount", precision: 12, scale: 2, default: "0.0", null: false
     t.bigint "category_id"
     t.bigint "user_id"
-    t.string "color"
     t.index ["category_id"], name: "index_financial_goals_on_category_id"
     t.index ["due_date"], name: "index_financial_goals_on_due_date"
     t.index ["priority"], name: "index_financial_goals_on_priority"

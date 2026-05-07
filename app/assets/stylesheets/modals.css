@@ -1,73 +1,10 @@
 #app-modal-body {
   box-sizing: border-box;
   padding: 1.5rem;
-  width: 100%;
-  overflow: visible;
-  max-height: none;
-  height: auto !important;
-}
-
-#app-modal-body * {
-  min-width: 0;
-}
-
-#app-modal-body .modal-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 18px;
-}
-
-#app-modal-body .modal-title {
-  margin: 0;
-  color: var(--text-main);
-  font-size: 0.95rem;
-  font-weight: 800;
-}
-
-#app-modal-body .modal-body {
-  padding: 0 !important;
-}
-
-#app-modal-body .btn-close {
-  display: inline-grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  flex: 0 0 auto;
-  border: 0;
-  border-radius: 10px;
-  background: var(--ghost-btn-bg);
-  color: var(--text-soft);
-  font-size: 0;
-  cursor: pointer;
-}
-
-#app-modal-body .btn-close::before {
-  content: "close";
-  font-family: "Material Symbols Rounded";
-  font-size: 1.15rem;
-  line-height: 1;
-}
-
-#app-modal-body .row {
-  row-gap: 14px;
-}
-
-#app-modal-body .form-control,
-#app-modal-body .form-select,
-#app-modal-body .app-form-control,
-#app-modal-body .app-form-select {
-  min-width: 0;
-}
-
-#app-modal-body:has(.expense-modal-rows),
-#app-modal-body:has(.expense-modal-grid),
-#app-modal-body:has([data-financial-goal-form]) {
-  overflow-x: hidden;
   overflow-y: auto;
-  max-height: calc(85dvh - 3rem);
+  max-height: 80vh;
+  max-height: 80dvh;
+  height: auto !important;
 }
 
 #parcelamento_section {
@@ -358,7 +295,7 @@ html[data-theme="night"] .app-financial-goal-metrics {
 
 .app-goal-resource-form__row {
   display: grid;
-  grid-template-columns: minmax(120px, 0.8fr) minmax(160px, 1.2fr) minmax(160px, 1.2fr) minmax(110px, 0.8fr) auto;
+  grid-template-columns: minmax(130px, 0.8fr) minmax(180px, 1.2fr) minmax(180px, 1.2fr) minmax(120px, 0.8fr) auto;
   gap: 10px;
   align-items: end;
   padding: 10px;
@@ -412,13 +349,13 @@ html[data-theme="night"] .app-financial-goal-metrics {
 .expense-modal-row__main,
 .expense-modal-grid {
   display: grid;
-  grid-template-columns: minmax(180px, 1.5fr) 82px minmax(112px, 0.8fr) 76px repeat(5, minmax(118px, 1fr)) 36px;
+  grid-template-columns: minmax(190px, 1.5fr) 82px minmax(112px, 0.8fr) 76px repeat(5, minmax(126px, 1fr)) 36px;
   gap: 10px;
   align-items: end;
 }
 
 .expense-modal-grid--edit {
-  grid-template-columns: minmax(220px, 2fr) 110px 130px 90px repeat(5, minmax(124px, 1fr));
+  grid-template-columns: minmax(240px, 2fr) 120px 140px 90px repeat(5, minmax(140px, 1fr));
 }
 
 .expense-modal-field {
@@ -503,7 +440,7 @@ html[data-theme="night"] .app-financial-goal-metrics {
   font-size: 1.05rem;
 }
 
-@media (max-width: 1360px) {
+@media (max-width: 1280px) {
   .expense-modal-row__main,
   .expense-modal-grid,
   .expense-modal-grid--edit {
@@ -517,11 +454,7 @@ html[data-theme="night"] .app-financial-goal-metrics {
 
 @media (max-width: 991px) {
   .app-goal-resource-form__row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .app-goal-resource-form__remove {
-    width: 100%;
+    grid-template-columns: 1fr;
   }
 }
 
@@ -532,8 +465,8 @@ html[data-theme="night"] .app-financial-goal-metrics {
 
   #app-modal-body {
     height: auto !important;
-    max-height: 86vh;
-    max-height: 86dvh;
+    max-height: 80vh;
+    max-height: 80dvh;
     padding: 1rem;
     overflow-x: hidden;
     overflow-y: auto;
@@ -550,8 +483,7 @@ html[data-theme="night"] .app-financial-goal-metrics {
   .expense-modal-row__main,
   .expense-modal-grid,
   .expense-modal-grid--edit,
-  .expense-modal-installments,
-  .app-goal-resource-form__row {
+  .expense-modal-installments {
     grid-template-columns: 1fr;
   }
 

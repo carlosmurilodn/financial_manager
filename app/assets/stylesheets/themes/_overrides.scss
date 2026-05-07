@@ -69,7 +69,9 @@ html[data-theme="night"] .dashboard-card__eyebrow {
   color: #ff79c6;
 }
 
-html[data-theme="night"] .dashboard-card__title {
+html[data-theme="night"] .dashboard-card__title,
+html[data-theme="night"] .dashboard-toolbar h4,
+html[data-theme="night"] .dashboard-toolbar h5 {
   color: var(--white);
 }
 
@@ -298,7 +300,7 @@ html[data-theme="night"] .app-calendar-table > :not(caption) > * > * {
 }
 
 html[data-theme="night"] .app-calendar-table.table > :not(caption) > * > td {
-  border-bottom-color: var(--table-border-color) !important;
+  border-bottom-color: #ff79c6 !important;
 }
 
 html[data-theme="night"] .app-calendar-table thead th {
@@ -316,19 +318,15 @@ html[data-theme="night"] .app-calendar-table__day--today {
 }
 
 html[data-theme="night"] .app-calendar-table__empty {
-  background-color: transparent;
-}
-
-html[data-theme="night"] .app-calendar-table__day--outside-month {
-  background-color: transparent;
-}
-
-html[data-theme="night"] .app-calendar-table__day--outside-month .app-calendar-table__date {
-  color: color-mix(in srgb, var(--table-row-text) 42%, transparent);
+  background-color: var(--calendar-empty-bg);
 }
 
 html[data-theme="night"] .app-calendar-table__date {
   color: var(--table-row-text);
+}
+
+html[data-theme="night"] .app-calendar__title {
+  color: var(--text-soft);
 }
 
 html[data-theme="night"] .dashboard-card--calendar .app-btn--ghost {
@@ -421,6 +419,16 @@ html[data-theme="night"] .app-forecast__saldo--positive {
 html[data-theme="night"] .app-forecast__saldo--negative {
   background: transparent;
   color: #ff7a8a;
+}
+
+html[data-theme="night"] .app-forecast__nav .app-btn--ghost {
+  background: rgba(255, 121, 198, 0.14);
+  color: var(--white);
+  box-shadow: none;
+}
+
+html[data-theme="night"] .app-forecast__nav .app-btn--ghost:hover {
+  background: rgba(255, 121, 198, 0.2);
 }
 
 html[data-theme="night"] .custom-date {

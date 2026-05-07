@@ -1,20 +1,6 @@
 class ExpensesController < ApplicationController
-  EXPENSE_SORT_OPTIONS = {
-    "description_asc" => { label: "Descrição Crescente", sort: "description", direction: "asc" },
-    "description_desc" => { label: "Descrição Decrescente", sort: "description", direction: "desc" },
-    "amount_desc" => { label: "Maior Valor", sort: "amount", direction: "desc" },
-    "amount_asc" => { label: "Menor Valor", sort: "amount", direction: "asc" },
-    "date_desc" => { label: "Vencimento Recente", sort: "date", direction: "desc" },
-    "date_asc" => { label: "Vencimento Futuro", sort: "date", direction: "asc" },
-    "created_at_desc" => { label: "Criação Recente", sort: "created_at", direction: "desc" },
-    "created_at_asc" => { label: "Criação Remota", sort: "created_at", direction: "asc" },
-    "category_asc" => { label: "Categoria Crescente", sort: "category", direction: "asc" },
-    "category_desc" => { label: "Categoria Descrescente", sort: "category", direction: "desc" }
-  }.freeze
-  DEFAULT_EXPENSE_SORT_OPTION = "date_desc"
-
   before_action :set_expense, only: %i[show edit update destroy toggle_paid delete_options toggle_paid_options]
-  helper_method :expenses_filter_params, :expense_sort_options
+  helper_method :expenses_filter_params
 
   def index
     load_expenses
@@ -231,7 +217,6 @@ class ExpensesController < ApplicationController
       paid: @paid_filter,
       sort: @sort,
       direction: @direction,
-      sort_option: @sort_option,
       per_page: @per_page,
       page: params[:page]
     }.compact_blank
@@ -420,15 +405,7 @@ class ExpensesController < ApplicationController
     filter_by_paid
     filter_by_description
 
-    sort_config = selected_expense_sort_config
-    @expenses = sort_collection(
-      @expenses,
-      sort_map: expense_sort_map,
-      default_sort: sort_config[:sort],
-      default_direction: sort_config[:direction],
-      sort: sort_config[:sort],
-      direction: sort_config[:direction]
-    )
+    @expenses = sort_collection(@expenses, sort_map: expense_sort_map, default_sort: "balance_month", default_direction: "desc")
 
     calculate_totals
     calculate_net_balance
@@ -546,25 +523,11 @@ class ExpensesController < ApplicationController
       "amount" => ->(expense) { expense.amount.to_d },
       "date" => ->(expense) { expense.date },
       "balance_month" => ->(expense) { expense.balance_month },
-      "created_at" => ->(expense) { expense.created_at },
       "category" => ->(expense) { expense.category&.display_name.to_s },
       "payment_method" => ->(expense) { expense.payment_method.to_s },
       "card" => ->(expense) { expense.card&.name.to_s },
       "paid" => ->(expense) { expense.paid? }
     }
-  end
-
-  def expense_sort_options
-    EXPENSE_SORT_OPTIONS.map { |value, config| [ config[:label], value ] }
-  end
-
-  def selected_expense_sort_config
-    session[:expenses_sort_option] = params[:sort_option] if params[:sort_option].present?
-    @sort_option = session[:expenses_sort_option].presence || DEFAULT_EXPENSE_SORT_OPTION
-    @sort_option = DEFAULT_EXPENSE_SORT_OPTION unless EXPENSE_SORT_OPTIONS.key?(@sort_option)
-    session[:expenses_sort_option] = @sort_option
-
-    EXPENSE_SORT_OPTIONS.fetch(@sort_option)
   end
 
   def paginate_expenses

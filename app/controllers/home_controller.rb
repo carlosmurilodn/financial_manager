@@ -151,7 +151,6 @@ class HomeController < ApplicationController
       {
         name: category&.clean_name || "Sem categoria",
         icon: category&.material_icon || "category",
-        color: category&.display_color || Category::COLOR_PALETTE.values.first,
         total: total,
         count: category_expenses.size,
         percent: total_month.positive? ? (total / total_month) * 100 : 0,

@@ -1,9 +1,7 @@
-<%= turbo_stream.remove @income %>
+<%= turbo_stream.replace "incomes-table" do %>
+  <%= render partial: "incomes_table" %>
+<% end %>
 
-<%= turbo_stream.replace "incomes-totals" do %>
-  <%= render partial: "incomes_totals", locals: { 
-        total_received: @total_received, 
-        total_pending: @total_pending, 
-        total_amount: @total_amount 
-      } %>
+<%= turbo_stream.replace "incomes-hero-kpis" do %>
+  <%= render partial: "hero_kpis" %>
 <% end %>

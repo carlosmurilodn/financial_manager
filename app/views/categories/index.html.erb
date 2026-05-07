@@ -44,24 +44,15 @@
                     class: "app-btn app-btn--secondary app-page__secondary-btn" do %>
           <i class="bi bi-x-circle app-me-1"></i> Limpar Filtros
         <% end %>
-
-        <%= render "shared/per_page_select" %>
       </div>
     <% end %>
   </div>
 
   <div class="app-panel app-category-palette-panel">
-    <div class="app-category-palette-heading">
-      <div>
-        <h2>Paleta de Cores - <%= @categories_total_count || @categories.size %> opções</h2>
-        <p>Cores sugeridas para categorias</p>
-      </div>
-    </div>
-
     <% if @categories.any? %>
       <div class="app-category-palette">
         <% @categories.each_with_index do |category, index| %>
-          <%= render "category_card", category: category, position: @item_offset + index + 1 %>
+          <%= render "category_card", category: category, position: index + 1 %>
         <% end %>
       </div>
     <% else %>
@@ -71,12 +62,6 @@
         <p>Ajuste os filtros ou cadastre uma nova categoria.</p>
       </div>
     <% end %>
-
-    <%= render "shared/pagination",
-              current_page: @current_page,
-              total_pages: @total_pages,
-              base_params: request.query_parameters.except(:page),
-              aria_label: "Paginação de categorias" %>
   </div>
 </section>
 

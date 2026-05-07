@@ -87,7 +87,7 @@
 
   .app-sidebar__brand {
     grid-column: 1 / -1;
-    justify-content: space-between;
+    justify-content: center;
     gap: 10px;
     min-width: 0;
   }
@@ -127,10 +127,6 @@
     justify-content: center;
     gap: 0;
     padding: 0;
-  }
-
-  .app-sidebar__toggle {
-    display: none;
   }
 
   .app-nav-form {

@@ -53,48 +53,23 @@
       </div>
 
       <div class="app-filter-actions">
-        <%= submit_tag t("buttons.filter"), class: "app-btn app-btn--primary app-page__primary-btn" %>
-        <%= link_to "Limpar Filtros",
-                clear_filters_incomes_path,
+        <%= button_tag type: "submit", class: "app-btn app-btn--primary app-page__primary-btn" do %>
+          <i class="bi bi-funnel me-1"></i> <%= t("buttons.filter") %>
+        <% end %>
+
+        <%= link_to clear_filters_incomes_path,
                 class: "app-btn app-btn--secondary app-page__secondary-btn",
-                data: { turbo_method: :delete } %>
+                data: { turbo_method: :delete } do %>
+          <i class="bi bi-x-circle me-1"></i> Limpar Filtros
+        <% end %>
+
         <%= render "shared/per_page_select" %>
       </div>
     <% end %>
   </div>
 
   <div class="app-panel app-panel--table">
-    <div class="app-table-responsive">
-      <table class="app-table app-table--records app-table--index app-mb-0">
-        <thead>
-          <tr>
-            <th class="app-text-center">Item</th>
-            <th><%= sortable_table_header("Descrição", "description") %></th>
-            <th><%= sortable_table_header("Categoria", "category") %></th>
-            <th><%= sortable_table_header("Valor", "amount") %></th>
-            <th><%= sortable_table_header("Data", "date") %></th>
-            <th><%= sortable_table_header("Mês Referência", "balance_month") %></th>
-            <th><%= sortable_table_header("Recebida?", "paid") %></th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody id="incomes-list">
-          <% @incomes.each_with_index do |income, index| %>
-            <%= render partial: "income_row",
-                       locals: {
-                         income: income,
-                         item_number: @item_offset + index + 1
-                       } %>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-
-    <%= render "shared/pagination",
-              current_page: @current_page,
-              total_pages: @total_pages,
-              base_params: request.query_parameters.except(:page),
-              aria_label: "Paginacao de receitas" %>
+    <%= render "incomes_table" %>
   </div>
 </section>
 

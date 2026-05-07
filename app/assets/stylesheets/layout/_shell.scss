@@ -29,7 +29,10 @@
 .app-sidebar__brand {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 14px;
+  min-height: 56px;
+  text-align: center;
 }
 
 .app-sidebar__logo {
@@ -49,13 +52,15 @@
 
 .app-sidebar__brand-copy {
   display: flex;
-  flex: 1;
   flex-direction: column;
+  flex: 0 1 auto;
+  align-items: center;
 }
 
 .sidebar-title {
-  font-size: 0.98rem;
+  font-size: 1.12rem;
   font-weight: 800;
+  line-height: 1.15;
 }
 
 .app-sidebar__brand-copy small {
@@ -117,18 +122,6 @@
   color: var(--text-soft);
   font-size: 0.72rem;
   line-height: 1.25;
-}
-
-.app-sidebar__toggle {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border: 0;
-  border-radius: 14px;
-  background: var(--sidebar-toggle-bg);
-  color: var(--text-main);
-  box-shadow: var(--sidebar-toggle-shadow);
 }
 
 .app-sidebar__nav {

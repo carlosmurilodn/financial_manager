@@ -208,6 +208,7 @@ class CardsController < ApplicationController
       :name,
       :number,
       :total_limit,
+      :color,
       :icon,
       :due_day,
       :closing_day

@@ -76,7 +76,7 @@ class Category < ApplicationRecord
   end
 
   def sort_name
-    clean_name.downcase
+    normalized_name
   end
 
   def clean_name

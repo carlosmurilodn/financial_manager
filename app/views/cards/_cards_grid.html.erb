@@ -1,0 +1,13 @@
+<div id="cards-grid">
+  <div class="app-card-palette">
+    <% @cards.each do |card| %>
+      <%= render partial: "card_card", locals: { card: card } %>
+    <% end %>
+  </div>
+
+  <%= render "shared/pagination",
+             current_page: @current_page,
+             total_pages: @total_pages,
+             base_params: request.query_parameters.except(:page),
+             aria_label: "Paginacao de cartoes" %>
+</div>

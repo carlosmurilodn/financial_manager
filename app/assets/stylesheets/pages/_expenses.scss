@@ -140,7 +140,7 @@
 .expense-card__content {
   display: flex;
   align-items: center;
-  gap: 22px;
+  /*gap: 22px;*/
   padding: 18px 20px 18px 24px;
 }
 
@@ -148,8 +148,8 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  min-width: 0;
-  flex: 1;
+  min-width: 60%;
+  /*flex: 1;*/
 }
 
 .expense-card__icon-wrapper {
@@ -178,7 +178,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 }
 
 .expense-card__title {
@@ -227,14 +227,14 @@
 .expense-card__description-row {
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 40px;
 }
 
 .expense-card__meta {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 22px;
+  gap: 40px;
 }
 
 .expense-card__meta-item {
@@ -253,10 +253,10 @@
 .expense-card__amount-area {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   gap: 8px;
-  min-width: 132px;
+  min-width: 20%;
 }
 
 .expense-card__amount {
@@ -294,6 +294,8 @@
   flex-direction: row;
   align-items: center;
   gap: 14px;
+  min-width: 20%;
+  justify-content: right;
 }
 
 .expense-card__action {

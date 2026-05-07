@@ -22,15 +22,17 @@
           <div class="expense-card__badges">
             <span class="expense-card__pill">
               <%= Expense.payment_method_names[expense.payment_method] %>
+            </span>
 
+            <span class="expense-card__pill">
               <% if expense.card.present? %>
-                • <%= expense.card.name %>
+              <%= expense.card.name %>
               <% end %>
             </span>
 
             <% if expense.payment_method_credito_parcelado? %>
-              <span class="expense-card__pill expense-card__pill--installment">
-                <%= "#{expense.current_installment}/#{expense.installments_count}" %>
+              <span class="expense-card__pill">
+                <%= "Parcela #{expense.current_installment} de #{expense.installments_count}" %>
               </span>
             <% end %>
           </div>

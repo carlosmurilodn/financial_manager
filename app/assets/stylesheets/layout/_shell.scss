@@ -300,7 +300,12 @@
 .app-flash-stack {
   display: grid;
   gap: 12px;
-  margin-bottom: 20px;
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 3000;
+  width: min(50vw, 640px);
+  pointer-events: none;
 }
 
 .app-footer {
@@ -409,6 +414,13 @@ html[data-theme="night"] .app-footer__icon {
   gap: 12px;
   border: 0;
   border-radius: 18px;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 18px 42px rgba(25, 31, 46, 0.18);
+  opacity: 0.88;
+  pointer-events: auto;
+  transition: opacity 0.22s ease, transform 0.22s ease;
 }
 
+.app-flash.is-hiding {
+  opacity: 0;
+  transform: translateX(18px);
+}

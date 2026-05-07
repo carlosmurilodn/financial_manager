@@ -300,7 +300,7 @@ html[data-theme="night"] .app-calendar-table > :not(caption) > * > * {
 }
 
 html[data-theme="night"] .app-calendar-table.table > :not(caption) > * > td {
-  border-bottom-color: #ff79c6 !important;
+  border-bottom-color: var(--table-border-color) !important;
 }
 
 html[data-theme="night"] .app-calendar-table thead th {
@@ -318,7 +318,15 @@ html[data-theme="night"] .app-calendar-table__day--today {
 }
 
 html[data-theme="night"] .app-calendar-table__empty {
-  background-color: var(--calendar-empty-bg);
+  background-color: transparent;
+}
+
+html[data-theme="night"] .app-calendar-table__day--outside-month {
+  background-color: transparent;
+}
+
+html[data-theme="night"] .app-calendar-table__day--outside-month .app-calendar-table__date {
+  color: color-mix(in srgb, var(--table-row-text) 42%, transparent);
 }
 
 html[data-theme="night"] .app-calendar-table__date {

@@ -25,10 +25,13 @@ class ApplicationController < ActionController::Base
     collection.slice(offset, @per_page) || []
   end
 
-  def sort_collection(collection, sort_map:, default_sort:, default_direction: "asc")
-    @sort = sort_map.key?(params[:sort].to_s) ? params[:sort].to_s : default_sort.to_s
+  def sort_collection(collection, sort_map:, default_sort:, default_direction: "asc", sort: nil, direction: nil)
+    requested_sort = sort.presence || params[:sort].to_s
+    requested_direction = direction.presence || params[:direction]
+
+    @sort = sort_map.key?(requested_sort.to_s) ? requested_sort.to_s : default_sort.to_s
     fallback_direction = default_direction == "desc" ? "desc" : "asc"
-    @direction = params.key?(:direction) ? (params[:direction] == "desc" ? "desc" : "asc") : fallback_direction
+    @direction = requested_direction.present? ? (requested_direction == "desc" ? "desc" : "asc") : fallback_direction
 
     sorter = sort_map.fetch(@sort)
     sorted_collection = collection.sort_by do |record|

@@ -69,12 +69,7 @@
   }
 
   .app-sidebar__inner {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    height: auto;
-    gap: 10px;
-    padding: 10px;
-    border-radius: 10px;
+
   }
 
   .app-content,

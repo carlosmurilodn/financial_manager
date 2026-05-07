@@ -5,9 +5,11 @@
 
 .app-sidebar {
   position: fixed;
-  inset: 18px auto 18px 18px;
   width: var(--sidebar-width);
   z-index: 1000;
+  padding-left: 8px;
+  height: stretch;
+  margin-bottom: 8px;
 }
 
 .app-sidebar__inner {
@@ -15,10 +17,10 @@
   flex-direction: column;
   height: 100%;
   gap: 16px;
-  padding: 22px 18px;
+  padding: 16px 16px;
   border: 1px solid var(--sidebar-border);
   border-radius: 10px;
-  background: var(--sidebar-bg);
+  background: var(--surface);
   box-shadow: var(--shadow-soft);
   color: var(--text-main);
   backdrop-filter: blur(24px);
@@ -287,7 +289,7 @@
 
 .app-content {
   flex: 1;
-  margin-left: calc(var(--sidebar-width) + 18px);
+  margin-left: calc(var(--sidebar-width));
   transition: margin-left 0.3s ease;
 }
 

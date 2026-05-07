@@ -713,6 +713,16 @@
   box-shadow: none;
 }
 
+.app-sort-control {
+  width: 280px;
+  padding-right: 0;
+}
+
+.app-sort-control__select {
+  flex: 1;
+  width: 100%;
+}
+
 .app-filter-actions__import .material-symbols-rounded {
   font-size: 1rem;
 }

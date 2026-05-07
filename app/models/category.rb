@@ -1,6 +1,4 @@
 class Category < ApplicationRecord
-  belongs_to :user
-
   has_many :expenses, dependent: :nullify
   has_many :incomes, dependent: :nullify
   has_many :financial_goals, dependent: :nullify
@@ -71,6 +69,7 @@ class Category < ApplicationRecord
   }.freeze
 
   validates :name, presence: true, uniqueness: true
+  validates :color, inclusion: { in: COLOR_PALETTE.values }, allow_blank: true
 
   def display_name
     clean_name
@@ -86,6 +85,11 @@ class Category < ApplicationRecord
 
   def material_icon
     icon.presence || MATERIAL_ICONS.fetch(normalized_name, "category")
+  end
+
+  # Retorna a cor visual da categoria para cards, ícones e badges.
+  def display_color
+    color.presence || COLOR_PALETTE.values.first
   end
 
   def normalized_name

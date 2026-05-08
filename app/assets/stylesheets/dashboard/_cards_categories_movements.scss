@@ -211,10 +211,14 @@
   width: 30px;
   height: 30px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--dashboard-goal-color, var(--primary)) 18%, #ffffff);
-  color: color-mix(in srgb, var(--dashboard-goal-color, var(--primary)) 78%, #111827);
+  background: color-mix(in srgb, var(--dashboard-goal-color, var(--primary)) 13%, transparent);
+  color: var(--dashboard-goal-color, var(--primary));
   font-size: 0.96rem;
   flex-shrink: 0;
+}
+
+.dashboard-goal-item__header .dashboard-goal-item__category-icon {
+  color: var(--dashboard-goal-color, var(--primary));
 }
 
 .dashboard-goal-item__identity strong {
@@ -292,10 +296,24 @@
   display: grid;
   gap: 2px;
   min-width: 0;
+  justify-items: center;
+  text-align: center;
+}
+
+.dashboard-goal-item__values span:nth-child(1) {
+  color: var(--pill-success-color);
+}
+
+.dashboard-goal-item__values span:nth-child(2) {
+  color: var(--stat-warning-icon-bg);
+}
+
+.dashboard-goal-item__values span:nth-child(3) {
+  color: var(--pill-danger-color);
 }
 
 .dashboard-goal-item__values strong {
-  color: var(--text-main);
+  color: currentColor;
   font-size: 0.72rem;
   font-weight: 800;
   overflow: hidden;

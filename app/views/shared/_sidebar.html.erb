@@ -217,6 +217,26 @@
     if (title) title.style.display = collapsed ? "none" : "flex";
   }
 
+  let lastSidebarScrollY = window.scrollY;
+
+  function updateMobileSidebarCompact() {
+    const sidebar = document.getElementById("sidebar-wrapper");
+    if (!sidebar) return;
+
+    if (!APP_MOBILE_MEDIA.matches) {
+      sidebar.classList.remove("app-sidebar--compact");
+      lastSidebarScrollY = window.scrollY;
+      return;
+    }
+
+    const currentScrollY = window.scrollY;
+    const scrollingDown = currentScrollY > lastSidebarScrollY;
+    const nearTop = currentScrollY < 24;
+
+    sidebar.classList.toggle("app-sidebar--compact", scrollingDown && !nearTop);
+    lastSidebarScrollY = currentScrollY;
+  }
+
   function getCurrentTheme() {
     const savedPreference = localStorage.getItem("app-theme-preference");
     if (APP_THEMES.some((theme) => theme.id === savedPreference)) return savedPreference;
@@ -268,6 +288,7 @@
   document.addEventListener("turbo:load", () => {
     updateClock();
     updateSidebar();
+    updateMobileSidebarCompact();
     updateThemeToggle();
     loadWeather();
 
@@ -285,6 +306,8 @@
   });
 
   APP_THEME_MEDIA.addEventListener("change", refreshSystemTheme);
+  APP_MOBILE_MEDIA.addEventListener("change", updateMobileSidebarCompact);
+  window.addEventListener("scroll", updateMobileSidebarCompact, { passive: true });
 
   setInterval(updateClock, 1000);
 </script>

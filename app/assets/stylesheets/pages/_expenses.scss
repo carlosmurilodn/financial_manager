@@ -434,26 +434,108 @@
 }
 
 @media (max-width: 576px) {
-  .expense-card__content {
-    align-items: flex-start;
+  .expense-card:not(.financial-goal-card) .expense-card__content {
+    display: grid;
+    position: relative;
+    grid-template-columns: minmax(0, 1fr) 38px;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px 10px 14px 16px;
   }
 
-  .expense-card__amount-area {
-    min-width: 92px;
+  .expense-card:not(.financial-goal-card) .expense-card__category {
+    min-width: 0;
+    gap: 10px;
   }
 
-  .expense-card__amount {
+  .expense-card:not(.financial-goal-card) .expense-card__icon-wrapper {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+  }
+
+  .expense-card:not(.financial-goal-card) .expense-card__details {
+    min-width: 0;
+  }
+
+  .expense-card:not(.financial-goal-card) .expense-card__header {
+    gap: 6px;
+    margin-bottom: 6px;
+    padding-right: 88px;
+  }
+
+  .expense-card:not(.financial-goal-card) .expense-card__title {
+    font-size: 0.84rem;
+  }
+
+  .expense-card:not(.financial-goal-card) .expense-card__badges {
+    gap: 5px;
+  }
+
+  .expense-card:not(.financial-goal-card) .expense-card__pill {
+    padding: 4px 8px;
+    font-size: 0.64rem;
+  }
+
+  .expense-card:not(.financial-goal-card) .expense-card__description-row {
+    display: grid;
+    gap: 6px;
+    min-height: 0;
+  }
+
+  .expense-card:not(.financial-goal-card) .expense-card__description {
+    width: 100%;
+    min-height: 20px;
+    font-size: 0.78rem;
+  }
+
+  .expense-card:not(.financial-goal-card) .expense-card__amount-area {
+    position: absolute;
+    top: 14px;
+    right: 58px;
+    width: 82px;
+    min-width: 0;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .expense-card:not(.financial-goal-card) .expense-card__amount {
     font-size: 0.92rem;
   }
 
-  .expense-card__meta {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
+  .expense-card:not(.financial-goal-card) .expense-card__status {
+    padding: 5px 8px;
+    font-size: 0.62rem;
   }
 
-  .expense-card__actions {
-    gap: 10px;
+  .expense-card:not(.financial-goal-card) .expense-card__meta {
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    padding-right: 2px;
+  }
+
+  .expense-card:not(.financial-goal-card) .expense-card__meta-item {
+    gap: 3px;
+    font-size: 0.64rem;
+    white-space: nowrap;
+  }
+
+  .expense-card:not(.financial-goal-card) .expense-card__meta-item .material-symbols-rounded {
+    font-size: 0.86rem;
+  }
+
+  .expense-card:not(.financial-goal-card) .expense-card__actions {
+    flex-direction: column;
+    align-self: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .expense-card:not(.financial-goal-card) .expense-card__action {
+    width: 32px;
+    height: 32px;
   }
 
   .financial-goal-card__metrics {

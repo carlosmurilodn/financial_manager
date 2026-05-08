@@ -15,6 +15,11 @@
   backdrop-filter: blur(22px);
 }
 
+.dashboard-hero > div:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .dashboard-card__eyebrow {
   margin: 0 0 8px;
   color: var(--text-soft);
@@ -36,10 +41,11 @@
 }
 
 .dashboard-description {
-  max-width: 640px;
+  max-width: none;
   margin: 10px 0 0;
   color: var(--dashboard-description-color);
-  text-align: justify;
+  text-align: left;
+  white-space: nowrap;
 }
 
 .dashboard-hero__badge,

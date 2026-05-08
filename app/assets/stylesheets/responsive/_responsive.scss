@@ -524,8 +524,158 @@
     font-size: 0.82rem;
   }
 
+  .dashboard-hero__badge,
+  .app-page__hero-top--expenses > .app-page__hero-unit:last-child,
+  .app-page__hero-top--incomes > .app-page__hero-unit:last-child,
+  .app-page__hero-top--cards > .app-page__hero-unit:last-child,
+  .app-page__hero-top--categories > .app-page__hero-unit:last-child,
+  .app-page__hero-top--financial-goals > .app-page__hero-unit:last-child {
+    display: none;
+  }
+
+  .app-page__hero-top--expenses {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-page__hero-top--expenses > .app-page__hero-copy,
+  .app-page__hero-top--expenses .app-expenses-hero-kpis > .app-page__hero-unit {
+    min-width: 0;
+  }
+
+  .app-page__hero-top--expenses > .app-page__hero-kpis,
+  .app-page__hero-top--expenses > .app-page__hero-kpis > .app-expenses-hero-kpis {
+    display: contents;
+  }
+
+  .app-page__hero-top--expenses .app-expenses-hero-kpis > .app-page__hero-unit:nth-child(4),
+  .app-page__hero-top--expenses > .app-page__hero-unit:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .app-page__hero-top--expenses .app-expenses-hero-kpis__action {
+    min-height: 100%;
+  }
+
+  .app-page__hero-top--incomes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-page__hero-top--incomes > .app-page__hero-copy,
+  .app-page__hero-top--incomes .app-incomes-hero-kpis > .app-page__hero-unit {
+    min-width: 0;
+  }
+
+  .app-page__hero-top--incomes > .app-page__hero-kpis,
+  .app-page__hero-top--incomes > .app-page__hero-kpis > .app-incomes-hero-kpis {
+    display: contents;
+  }
+
+  .app-page__hero-top--incomes .app-expenses-hero-kpis__action {
+    min-height: 100%;
+  }
+
+  .app-page__hero-top--cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-page__hero-top--cards > .app-page__hero-copy,
+  .app-page__hero-top--cards .app-cards-hero-kpis > .app-page__hero-unit {
+    min-width: 0;
+  }
+
+  .app-page__hero-top--cards > .app-page__hero-kpis,
+  .app-page__hero-top--cards > .app-page__hero-kpis > .app-cards-hero-kpis {
+    display: contents;
+  }
+
+  .app-page__hero-top--cards .app-expenses-hero-kpis__action {
+    min-height: 100%;
+  }
+
+  .app-page__hero-top--categories {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-page__hero-top--categories > .app-page__hero-copy,
+  .app-page__hero-top--categories .app-categories-hero-kpis > .app-page__hero-unit {
+    min-width: 0;
+  }
+
+  .app-page__hero-top--categories > .app-page__hero-kpis,
+  .app-page__hero-top--categories > .app-page__hero-kpis > .app-categories-hero-kpis {
+    display: contents;
+  }
+
+  .app-page__hero-top--categories .app-expenses-hero-kpis__action {
+    min-height: 100%;
+  }
+
+  .app-page__hero-top--financial-goals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-page__hero-top--financial-goals > .app-page__hero-copy,
+  .app-page__hero-top--financial-goals .app-financial-goals-hero-kpis > .app-page__hero-unit {
+    min-width: 0;
+  }
+
+  .app-page__hero-top--financial-goals > .app-page__hero-kpis,
+  .app-page__hero-top--financial-goals > .app-page__hero-kpis > .app-financial-goals-hero-kpis {
+    display: contents;
+  }
+
+  .app-page__hero-top--financial-goals .app-expenses-hero-kpis__action {
+    min-height: 100%;
+  }
+
   .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .kpi-grid .stat-card {
     grid-template-columns: 1fr;
+  }
+
+  .kpi-grid .stat-card__main {
+    grid-column: 1 / -1;
+    gap: 10px;
+  }
+
+  .stat-card {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    column-gap: 10px;
+    row-gap: 6px;
+    padding: 14px;
+  }
+
+  .stat-card__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+  }
+
+  .stat-card__icon .material-symbols-rounded {
+    font-size: 1.15rem;
+  }
+
+  .stat-card__label {
+    margin-bottom: 4px;
+    font-size: 0.72rem;
+  }
+
+  .stat-card__value {
+    font-size: 0.92rem;
+    line-height: 1.2;
+  }
+
+  .stat-card__meta {
+    grid-column: 1 / -1;
+    margin-top: 0;
+    padding-left: 0;
+    font-size: 0.68rem;
+    line-height: 1.25;
   }
 
   .app-pagination {

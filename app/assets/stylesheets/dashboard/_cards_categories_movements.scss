@@ -167,9 +167,9 @@
   display: grid;
   gap: 8px;
   padding: 9px 10px;
-  border: 1px solid color-mix(in srgb, var(--dashboard-goal-color, var(--primary)) 18%, var(--card-border));
+  border: 1px solid var(--card-border);
   border-radius: 10px;
-  background: color-mix(in srgb, var(--dashboard-goal-color, var(--primary)) 5%, rgba(255, 255, 255, 0.1));
+  background: var(--surface);
 }
 
 .dashboard-goal-item__header {
@@ -211,8 +211,8 @@
   width: 30px;
   height: 30px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--dashboard-goal-color, var(--primary)) 16%, transparent);
-  color: var(--dashboard-goal-color, var(--primary));
+  background: color-mix(in srgb, var(--dashboard-goal-color, var(--primary)) 18%, #ffffff);
+  color: color-mix(in srgb, var(--dashboard-goal-color, var(--primary)) 78%, #111827);
   font-size: 0.96rem;
   flex-shrink: 0;
 }
@@ -279,7 +279,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: var(--dashboard-goal-color, var(--primary));
+  background: color-mix(in srgb, var(--dashboard-goal-color, var(--primary)) 78%, #111827);
 }
 
 .dashboard-goal-item__values {

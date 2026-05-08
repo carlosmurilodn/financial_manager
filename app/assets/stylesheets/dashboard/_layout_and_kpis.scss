@@ -79,6 +79,18 @@
   color: var(--text-main);
 }
 
+.kpi-grid .stat-card {
+  display: grid;
+  gap: 8px;
+}
+
+.stat-card__main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
 .stat-card__icon {
   display: grid;
   place-items: center;

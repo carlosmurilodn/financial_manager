@@ -7,6 +7,15 @@
       <div class="app-sidebar__brand-copy">
         <span class="sidebar-title">Gerenciador Financeiro</span>
       </div>
+
+      <%= button_to destroy_user_session_path,
+                    method: :delete,
+                    class: "app-sidebar__brand-logout",
+                    form: { class: "app-sidebar__brand-logout-form" },
+                    title: "Sair",
+                    aria: { label: "Sair" } do %>
+        <span class="material-symbols-rounded">logout</span>
+      <% end %>
     </div>
 
     <nav class="app-sidebar__nav">
@@ -217,39 +226,6 @@
     if (title) title.style.display = collapsed ? "none" : "flex";
   }
 
-  let lastSidebarScrollY = window.scrollY;
-  let lastSidebarTouchY = null;
-  let sidebarScrollDirection = null;
-
-  function setMobileSidebarDirection(direction) {
-    sidebarScrollDirection = direction;
-  }
-
-  function updateMobileSidebarCompact() {
-    const sidebar = document.getElementById("sidebar-wrapper");
-    if (!sidebar) return;
-
-    if (!APP_MOBILE_MEDIA.matches) {
-      sidebar.classList.remove("app-sidebar--compact");
-      lastSidebarScrollY = window.scrollY;
-      return;
-    }
-
-    const currentScrollY = window.scrollY;
-    const scrollDelta = currentScrollY - lastSidebarScrollY;
-    const scrollDirection = sidebarScrollDirection || (Math.abs(scrollDelta) > 8 ? (scrollDelta > 0 ? "down" : "up") : null);
-    const nearTop = currentScrollY < 24;
-
-    if (nearTop || scrollDirection === "up") {
-      sidebar.classList.remove("app-sidebar--compact");
-    } else if (scrollDirection === "down") {
-      sidebar.classList.add("app-sidebar--compact");
-    }
-
-    lastSidebarScrollY = currentScrollY;
-    sidebarScrollDirection = null;
-  }
-
   function getCurrentTheme() {
     const savedPreference = localStorage.getItem("app-theme-preference");
     if (APP_THEMES.some((theme) => theme.id === savedPreference)) return savedPreference;
@@ -301,7 +277,6 @@
   document.addEventListener("turbo:load", () => {
     updateClock();
     updateSidebar();
-    updateMobileSidebarCompact();
     updateThemeToggle();
     loadWeather();
 
@@ -319,29 +294,6 @@
   });
 
   APP_THEME_MEDIA.addEventListener("change", refreshSystemTheme);
-  APP_MOBILE_MEDIA.addEventListener("change", updateMobileSidebarCompact);
-  window.addEventListener("wheel", (event) => {
-    if (Math.abs(event.deltaY) < 4) return;
-
-    setMobileSidebarDirection(event.deltaY > 0 ? "down" : "up");
-  }, { passive: true });
-  window.addEventListener("touchstart", (event) => {
-    lastSidebarTouchY = event.touches[0]?.clientY || null;
-  }, { passive: true });
-  window.addEventListener("touchmove", (event) => {
-    if (lastSidebarTouchY === null) return;
-
-    const currentTouchY = event.touches[0]?.clientY;
-    if (typeof currentTouchY !== "number") return;
-
-    const touchDelta = lastSidebarTouchY - currentTouchY;
-    if (Math.abs(touchDelta) >= 4) {
-      setMobileSidebarDirection(touchDelta > 0 ? "down" : "up");
-    }
-
-    lastSidebarTouchY = currentTouchY;
-  }, { passive: true });
-  window.addEventListener("scroll", updateMobileSidebarCompact, { passive: true });
 
   setInterval(updateClock, 1000);
 </script>

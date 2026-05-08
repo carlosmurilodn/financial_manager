@@ -16,7 +16,6 @@
   border: 1px solid transparent;
   border-radius: 10px;
   background: var(--nav-active-bar);
-  box-shadow: 0 18px 30px rgba(35, 55, 94, 0.18);
   color: #fff;
   text-decoration: none;
   overflow: hidden;
@@ -127,7 +126,6 @@
   border: 1px solid var(--card-border);
   border-radius: 18px;
   background: var(--surface);
-  box-shadow: var(--shadow-card);
 }
 
 .expense-card__border {

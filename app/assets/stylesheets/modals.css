@@ -127,7 +127,6 @@
   border: 1px solid var(--card-border);
   border-radius: 14px;
   background: var(--surface);
-  box-shadow: var(--shadow-card);
 }
 
 .app-confirm-modal__header {

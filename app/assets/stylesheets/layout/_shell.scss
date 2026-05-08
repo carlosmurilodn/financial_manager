@@ -43,7 +43,6 @@
   border-radius: 10px;
   background: var(--sidebar-logo-bg);
   color: var(--sidebar-logo-color);
-  box-shadow: var(--sidebar-logo-shadow);
 }
 
 .app-sidebar__logo .material-symbols-rounded {
@@ -65,6 +64,10 @@
 
 .app-sidebar__brand-copy small {
   color: var(--text-soft);
+}
+
+.app-sidebar__brand-logout-form {
+  display: none;
 }
 
 .app-sidebar__footer {
@@ -92,7 +95,6 @@
 
 .app-theme-toggle:hover {
   transform: translateY(-1px);
-  box-shadow: var(--shadow-card);
 }
 
 .app-theme-toggle__icon {
@@ -311,7 +313,6 @@
   border: 1px solid var(--card-border);
   border-radius: 10px;
   background: var(--surface);
-  box-shadow: var(--shadow-card);
   color: var(--text-soft);
 }
 

@@ -23,48 +23,50 @@
   </div>
 
   <div class="app-panel">
-    <%= form_with url: incomes_path, method: :get, local: true, class: "app-filter-form" do %>
-      <div class="app-filter-grid app-filter-grid--incomes">
-        <div class="app-filter-field">
-          <%= label_tag :month, "Mês" %>
-          <%= select_tag :month,
-            options_for_select([["Todos", 0]] + I18n.t("date.month_names")[1..12].map.with_index { |m, i| [m.capitalize, i + 1] }, @month || 0),
-            class: "app-form-select" %>
+    <%= render "shared/filter_accordion" do %>
+      <%= form_with url: incomes_path, method: :get, local: true, class: "app-filter-form" do %>
+        <div class="app-filter-grid app-filter-grid--incomes">
+          <div class="app-filter-field">
+            <%= label_tag :month, "Mês" %>
+            <%= select_tag :month,
+              options_for_select([["Todos", 0]] + I18n.t("date.month_names")[1..12].map.with_index { |m, i| [m.capitalize, i + 1] }, @month || 0),
+              class: "app-form-select" %>
+          </div>
+
+          <div class="app-filter-field">
+            <%= label_tag :year, "Ano" %>
+            <%= select_tag :year,
+              options_for_select([["Todos", 0]] + (Date.today.year - 5..Date.today.year + 1).to_a.reverse, @year || 0),
+              class: "app-form-select" %>
+          </div>
+
+          <div class="app-filter-field">
+            <%= label_tag :description, "Descrição" %>
+            <%= text_field_tag :description, @description_filter, class: "app-form-control", placeholder: "Buscar descrição..." %>
+          </div>
+
+          <div class="app-filter-field">
+            <%= label_tag :paid, "Recebida?" %>
+            <%= select_tag :paid,
+              options_for_select([["Todos", ""], ["Sim", true], ["Não", false]], @paid_filter || ""),
+              class: "app-form-select" %>
+          </div>
         </div>
 
-        <div class="app-filter-field">
-          <%= label_tag :year, "Ano" %>
-          <%= select_tag :year,
-            options_for_select([["Todos", 0]] + (Date.today.year - 5..Date.today.year + 1).to_a.reverse, @year || 0),
-            class: "app-form-select" %>
+        <div class="app-filter-actions">
+          <%= button_tag type: "submit", class: "app-btn app-btn--primary app-page__primary-btn" do %>
+            <i class="bi bi-funnel me-1"></i> <%= t("buttons.filter") %>
+          <% end %>
+
+          <%= link_to clear_filters_incomes_path,
+                  class: "app-btn app-btn--secondary app-page__secondary-btn",
+                  data: { turbo_method: :delete } do %>
+            <i class="bi bi-x-circle me-1"></i> Limpar Filtros
+          <% end %>
+
+          <%= render "shared/per_page_select" %>
         </div>
-
-        <div class="app-filter-field">
-          <%= label_tag :description, "Descrição" %>
-          <%= text_field_tag :description, @description_filter, class: "app-form-control", placeholder: "Buscar descrição..." %>
-        </div>
-
-        <div class="app-filter-field">
-          <%= label_tag :paid, "Recebida?" %>
-          <%= select_tag :paid,
-            options_for_select([["Todos", ""], ["Sim", true], ["Não", false]], @paid_filter || ""),
-            class: "app-form-select" %>
-        </div>
-      </div>
-
-      <div class="app-filter-actions">
-        <%= button_tag type: "submit", class: "app-btn app-btn--primary app-page__primary-btn" do %>
-          <i class="bi bi-funnel me-1"></i> <%= t("buttons.filter") %>
-        <% end %>
-
-        <%= link_to clear_filters_incomes_path,
-                class: "app-btn app-btn--secondary app-page__secondary-btn",
-                data: { turbo_method: :delete } do %>
-          <i class="bi bi-x-circle me-1"></i> Limpar Filtros
-        <% end %>
-
-        <%= render "shared/per_page_select" %>
-      </div>
+      <% end %>
     <% end %>
   </div>
 

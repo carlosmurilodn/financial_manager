@@ -1,9 +1,12 @@
 #app-modal-body {
   box-sizing: border-box;
+  flex: 1 1 auto;
   padding: 1.5rem;
   width: 100%;
-  overflow: visible;
-  max-height: none;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: 100%;
   height: auto !important;
 }
 
@@ -12,11 +15,20 @@
 }
 
 #app-modal-body .modal-header {
+  position: sticky;
+  top: 0;
+  z-index: 3;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
+  padding-bottom: 12px;
   margin-bottom: 18px;
+  background: var(--surface-primary, #fff);
+}
+
+html[data-theme="night"] #app-modal-body .modal-header {
+  background: var(--table-surface);
 }
 
 #app-modal-body .modal-title {
@@ -65,9 +77,7 @@
 #app-modal-body:has(.expense-modal-rows),
 #app-modal-body:has(.expense-modal-grid),
 #app-modal-body:has([data-financial-goal-form]) {
-  overflow-x: hidden;
-  overflow-y: auto;
-  max-height: calc(85dvh - 3rem);
+  max-height: 100%;
 }
 
 #parcelamento_section {
@@ -526,13 +536,30 @@ html[data-theme="night"] .app-financial-goal-metrics {
 
 @media (max-width: 767px) {
   .app-modal {
-    padding: 0 !important;
+    align-items: center !important;
+    padding: 8px !important;
+  }
+
+  .app-modal__dialog,
+  .app-modal--lg .app-modal__dialog {
+    width: calc(100vw - 16px) !important;
+    max-width: 100% !important;
+  }
+
+  .app-modal__content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: calc(100vh - 16px) !important;
+    max-height: calc(100dvh - 16px) !important;
+    border-radius: 18px !important;
   }
 
   #app-modal-body {
+    flex: 1 1 auto;
     height: auto !important;
-    max-height: 86vh;
-    max-height: 86dvh;
+    max-height: none;
+    min-height: 0;
     padding: 1rem;
     overflow-x: hidden;
     overflow-y: auto;

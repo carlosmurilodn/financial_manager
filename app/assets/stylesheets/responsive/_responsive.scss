@@ -335,6 +335,44 @@
     grid-template-columns: 1fr;
   }
 
+  .app-filter-accordion__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 42px;
+    padding: 10px 12px;
+    border: 1px solid var(--table-border-color);
+    border-radius: 12px;
+    background: var(--app-bg-soft);
+    color: var(--text-main);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .app-filter-accordion__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .app-filter-accordion__title {
+    font-size: 0.88rem;
+    font-weight: 800;
+  }
+
+  .app-filter-accordion__icon {
+    color: var(--nav-active-icon-color);
+    font-size: 1.25rem;
+    transition: transform 0.2s ease;
+  }
+
+  .app-filter-accordion[open] .app-filter-accordion__icon {
+    transform: rotate(180deg);
+  }
+
+  .app-filter-accordion__content {
+    margin-top: 14px;
+  }
+
   .app-filter-grid--expenses .app-filter-field,
   .app-filter-grid--incomes .app-filter-field,
   .app-filter-grid--financial-goals .app-filter-field {

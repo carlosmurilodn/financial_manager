@@ -14,6 +14,7 @@ import "./calendar_tabs"
 import "./passkey_test"
 import "./flash_messages"
 import "./color_select_preview"
+import "./mobile_filter_accordion"
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {

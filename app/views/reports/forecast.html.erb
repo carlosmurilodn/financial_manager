@@ -32,40 +32,42 @@
       </div>
     </div>
 
-    <%= form_with url: forecast_pdf_reports_path,
-                  method: :get,
-                  local: true,
-                  html: {
-                    target: "_blank",
-                    class: "app-filter-form"
-                  } do |f| %>
+    <%= render "shared/filter_accordion" do %>
+      <%= form_with url: forecast_pdf_reports_path,
+                    method: :get,
+                    local: true,
+                    html: {
+                      target: "_blank",
+                      class: "app-filter-form"
+                    } do |f| %>
 
-      <div class="app-filter-grid app-filter-grid--forecast">
-        <div class="app-filter-field">
-          <%= f.label :start_year, "Ano inicial", class: "form-label" %>
-          <%= f.number_field :start_year,
-                value: @start_year,
-                class: "form-control",
-                min: 1900,
-                max: 2100,
-                step: 1 %>
-        </div>
+        <div class="app-filter-grid app-filter-grid--forecast">
+          <div class="app-filter-field">
+            <%= f.label :start_year, "Ano inicial", class: "form-label" %>
+            <%= f.number_field :start_year,
+                  value: @start_year,
+                  class: "form-control",
+                  min: 1900,
+                  max: 2100,
+                  step: 1 %>
+          </div>
 
-        <div class="app-filter-field">
-          <%= f.label :end_year, "Ano final", class: "form-label" %>
-          <%= f.number_field :end_year,
-                value: @end_year,
-                class: "form-control",
-                min: 1900,
-                max: 2100,
-                step: 1 %>
-        </div>
+          <div class="app-filter-field">
+            <%= f.label :end_year, "Ano final", class: "form-label" %>
+            <%= f.number_field :end_year,
+                  value: @end_year,
+                  class: "form-control",
+                  min: 1900,
+                  max: 2100,
+                  step: 1 %>
+          </div>
 
-        <div class="app-filter-actions">
-          <%= f.submit "Gerar PDF",
-                class: "btn btn-primary app-filter-submit" %>
+          <div class="app-filter-actions">
+            <%= f.submit "Gerar PDF",
+                  class: "btn btn-primary app-filter-submit" %>
+          </div>
         </div>
-      </div>
+      <% end %>
     <% end %>
   </div>
 </section>

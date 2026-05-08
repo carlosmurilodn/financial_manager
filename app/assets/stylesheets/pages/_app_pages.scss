@@ -542,6 +542,19 @@
   gap: 18px;
 }
 
+.app-filter-accordion {
+  display: block;
+}
+
+.app-filter-accordion__summary {
+  display: none;
+}
+
+.app-filter-accordion__content {
+  display: grid;
+  gap: 18px;
+}
+
 .app-filter-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

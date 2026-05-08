@@ -218,6 +218,12 @@
   }
 
   let lastSidebarScrollY = window.scrollY;
+  let lastSidebarTouchY = null;
+  let sidebarScrollDirection = null;
+
+  function setMobileSidebarDirection(direction) {
+    sidebarScrollDirection = direction;
+  }
 
   function updateMobileSidebarCompact() {
     const sidebar = document.getElementById("sidebar-wrapper");
@@ -230,11 +236,18 @@
     }
 
     const currentScrollY = window.scrollY;
-    const scrollingDown = currentScrollY > lastSidebarScrollY;
+    const scrollDelta = currentScrollY - lastSidebarScrollY;
+    const scrollDirection = sidebarScrollDirection || (Math.abs(scrollDelta) > 8 ? (scrollDelta > 0 ? "down" : "up") : null);
     const nearTop = currentScrollY < 24;
 
-    sidebar.classList.toggle("app-sidebar--compact", scrollingDown && !nearTop);
+    if (nearTop || scrollDirection === "up") {
+      sidebar.classList.remove("app-sidebar--compact");
+    } else if (scrollDirection === "down") {
+      sidebar.classList.add("app-sidebar--compact");
+    }
+
     lastSidebarScrollY = currentScrollY;
+    sidebarScrollDirection = null;
   }
 
   function getCurrentTheme() {
@@ -307,6 +320,27 @@
 
   APP_THEME_MEDIA.addEventListener("change", refreshSystemTheme);
   APP_MOBILE_MEDIA.addEventListener("change", updateMobileSidebarCompact);
+  window.addEventListener("wheel", (event) => {
+    if (Math.abs(event.deltaY) < 4) return;
+
+    setMobileSidebarDirection(event.deltaY > 0 ? "down" : "up");
+  }, { passive: true });
+  window.addEventListener("touchstart", (event) => {
+    lastSidebarTouchY = event.touches[0]?.clientY || null;
+  }, { passive: true });
+  window.addEventListener("touchmove", (event) => {
+    if (lastSidebarTouchY === null) return;
+
+    const currentTouchY = event.touches[0]?.clientY;
+    if (typeof currentTouchY !== "number") return;
+
+    const touchDelta = lastSidebarTouchY - currentTouchY;
+    if (Math.abs(touchDelta) >= 4) {
+      setMobileSidebarDirection(touchDelta > 0 ? "down" : "up");
+    }
+
+    lastSidebarTouchY = currentTouchY;
+  }, { passive: true });
   window.addEventListener("scroll", updateMobileSidebarCompact, { passive: true });
 
   setInterval(updateClock, 1000);

@@ -69,7 +69,6 @@
   }
 
   .app-sidebar__inner {
-    transition: gap 0.2s ease, padding 0.2s ease;
   }
 
   .app-content,
@@ -91,7 +90,7 @@
     gap: 10px;
     min-width: 0;
     overflow: hidden;
-    transition: min-height 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.16s ease, transform 0.16s ease;
   }
 
   .app-sidebar__brand-copy {

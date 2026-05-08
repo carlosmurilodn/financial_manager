@@ -169,6 +169,11 @@
     padding: 0;
   }
 
+  .app-nav-link.active-menu {
+    flex-basis: 44px;
+    width: 44px;
+  }
+
   .app-nav-form {
     display: none;
   }

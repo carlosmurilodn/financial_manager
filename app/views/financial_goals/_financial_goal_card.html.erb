@@ -105,4 +105,95 @@
       <strong><%= number_to_currency(financial_goal.remaining_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong>
     </span>
   </div>
+
+  <div class="financial-goal-card__mobile-layout">
+    <div class="financial-goal-card__mobile-icon">
+      <div class="expense-card__icon-wrapper">
+        <span class="material-symbols-rounded expense-card__icon">
+          <%= category&.material_icon || "flag" %>
+        </span>
+      </div>
+    </div>
+
+    <h3 class="expense-card__title financial-goal-card__mobile-title"><%= financial_goal.description %></h3>
+
+    <strong class="expense-card__amount financial-goal-card__mobile-amount">
+      <%= number_to_currency(financial_goal.progress_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+    </strong>
+
+    <div class="expense-card__actions financial-goal-card__mobile-edit">
+      <%= link_to(
+            edit_financial_goal_path(financial_goal),
+            class: "expense-card__action",
+            title: "Editar objetivo",
+            data: { turbo_frame: "modal" }
+          ) do %>
+        <span class="material-symbols-rounded">edit</span>
+      <% end %>
+    </div>
+
+    <div class="expense-card__badges financial-goal-card__mobile-status">
+      <span class="expense-card__pill"><%= financial_goal.status_label %></span>
+      <span class="expense-card__pill"><%= financial_goal.priority_label %></span>
+    </div>
+
+    <span class="expense-card__status expense-card__status--pending financial-goal-card__mobile-target">
+      Meta <%= number_to_currency(financial_goal.target_amount || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+    </span>
+
+    <div class="expense-card__actions financial-goal-card__mobile-delete">
+      <%= link_to(
+            financial_goal,
+            data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
+            class: "expense-card__action expense-card__action--danger",
+            title: "Excluir objetivo"
+          ) do %>
+        <span class="material-symbols-rounded">delete</span>
+      <% end %>
+    </div>
+
+    <div class="financial-goal-card__mobile-info">
+      <div class="expense-card__pill financial-goal-card__mobile-category">
+        <%= category&.display_name || "Sem categoria" %>
+      </div>
+
+      <span class="expense-card__meta-item">
+        <span class="material-symbols-rounded">event</span>
+        <%= financial_goal.due_date.strftime("%d/%m/%Y") %>
+      </span>
+
+      <span class="expense-card__meta-item">
+        <span class="material-symbols-rounded">trending_up</span>
+        <%= number_to_percentage(financial_goal.progress_percent, precision: 0) %>
+      </span>
+
+      <span class="expense-card__meta-item">
+        <span class="material-symbols-rounded">payments</span>
+        <%= number_to_currency(financial_goal.monthly_required_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>/mês
+      </span>
+    </div>
+
+    <div class="financial-goal-card__progress financial-goal-card__mobile-progress" role="img" aria-label="Progresso de <%= financial_goal.description %>: <%= number_to_percentage(financial_goal.progress_percent, precision: 0) %>">
+      <span style="width: <%= financial_goal.progress_percent.round(1) %>%;"></span>
+    </div>
+
+    <div class="financial-goal-card__mobile-metrics">
+      <span>
+        <small>Valor alvo</small>
+        <strong><%= number_to_currency(financial_goal.target_amount || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong>
+      </span>
+      <span>
+        <small>Crédito</small>
+        <strong><%= number_to_currency(financial_goal.credit_limit_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong>
+      </span>
+      <span>
+        <small>Total potencial</small>
+        <strong><%= number_to_currency(financial_goal.potential_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong>
+      </span>
+      <span>
+        <small>Falta</small>
+        <strong><%= number_to_currency(financial_goal.remaining_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %></strong>
+      </span>
+    </div>
+  </div>
 </div>

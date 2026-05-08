@@ -376,6 +376,10 @@
   white-space: nowrap;
 }
 
+.financial-goal-card__mobile-layout {
+  display: none;
+}
+
 @media (max-width: 991px) {
   .expense-card__content {
     align-items: flex-start;
@@ -428,6 +432,165 @@
 
   .expense-card__amount-area {
     align-items: flex-start;
+  }
+
+  .financial-goal-card > .expense-card__content,
+  .financial-goal-card > .financial-goal-card__metrics {
+    display: none;
+  }
+
+  .financial-goal-card__mobile-layout {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr) auto 34px;
+    grid-template-areas:
+      "icon title amount edit"
+      "icon status target delete"
+      "info info info info"
+      "progress progress progress progress"
+      "metrics metrics metrics metrics";
+    align-items: center;
+    column-gap: 20px;
+    row-gap: 10px;
+    padding: 14px 12px 16px 18px;
+  }
+
+  .financial-goal-card__mobile-icon {
+    grid-area: icon;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+  }
+
+  .financial-goal-card__mobile-icon .expense-card__icon-wrapper {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+  }
+
+  .financial-goal-card__mobile-icon .expense-card__icon {
+    font-size: 1.35rem;
+  }
+
+  .financial-goal-card__mobile-title {
+    grid-area: title;
+    min-width: 0;
+    font-size: 0.86rem;
+    line-height: 1.25;
+  }
+
+  .financial-goal-card__mobile-amount {
+    grid-area: amount;
+    font-size: 0.88rem;
+    justify-self: end;
+  }
+
+  .financial-goal-card__mobile-edit {
+    grid-area: edit;
+  }
+
+  .financial-goal-card__mobile-status {
+    grid-area: status;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .financial-goal-card__mobile-status .expense-card__pill,
+  .financial-goal-card__mobile-category {
+    padding: 4px 8px;
+    font-size: 0.62rem;
+  }
+
+  .financial-goal-card__mobile-target {
+    grid-area: target;
+    justify-self: end;
+    padding: 5px 8px;
+    font-size: 0.62rem;
+    white-space: nowrap;
+  }
+
+  .financial-goal-card__mobile-delete {
+    grid-area: delete;
+  }
+
+  .financial-goal-card__mobile-edit,
+  .financial-goal-card__mobile-delete {
+    min-width: 0;
+    justify-content: end;
+  }
+
+  .financial-goal-card__mobile-edit .expense-card__action,
+  .financial-goal-card__mobile-delete .expense-card__action {
+    width: 30px;
+    height: 30px;
+  }
+
+  .financial-goal-card__mobile-edit .material-symbols-rounded,
+  .financial-goal-card__mobile-delete .material-symbols-rounded {
+    font-size: 1rem;
+  }
+
+  .financial-goal-card__mobile-info {
+    grid-area: info;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .financial-goal-card__mobile-category {
+    flex: 0 1 auto;
+  }
+
+  .financial-goal-card__mobile-info .expense-card__meta-item {
+    flex: 0 1 auto;
+    gap: 3px;
+    min-width: 0;
+    font-size: 0.62rem;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+
+  .financial-goal-card__mobile-info .material-symbols-rounded {
+    font-size: 0.82rem;
+  }
+
+  .financial-goal-card__mobile-progress {
+    grid-area: progress;
+    margin-top: 0;
+  }
+
+  .financial-goal-card__mobile-metrics {
+    grid-area: metrics;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .financial-goal-card__mobile-metrics span {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+    padding: 8px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--expense-category-color) 8%, transparent);
+  }
+
+  .financial-goal-card__mobile-metrics small {
+    color: var(--text-soft);
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .financial-goal-card__mobile-metrics strong {
+    color: var(--text-main);
+    font-size: 0.7rem;
+    font-weight: 800;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -536,7 +699,22 @@
     height: 32px;
   }
 
-  .financial-goal-card__metrics {
-    grid-template-columns: 1fr;
+  .financial-goal-card__mobile-layout {
+    grid-template-columns: 46px minmax(0, 1fr) auto 32px;
+    column-gap: 16px;
+    row-gap: 8px;
+    padding: 14px 10px 14px 16px;
+  }
+
+  .financial-goal-card__mobile-status {
+    flex-wrap: wrap;
+  }
+
+  .financial-goal-card__mobile-info {
+    gap: 6px;
+  }
+
+  .financial-goal-card__mobile-metrics {
+    gap: 6px;
   }
 }

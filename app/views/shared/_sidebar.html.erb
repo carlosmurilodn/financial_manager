@@ -133,7 +133,7 @@
     if (!weatherNodes.length) return;
 
     const apiKey = "d56b203c35ee12ffb7de5bf2aaf5eccd";
-    const city = "Goiânia,BR";
+    const city = "Aparecida de Goiânia,BR";
     const url = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=metric&lang=pt_br&appid=${apiKey}`;
 
     try {
@@ -188,8 +188,7 @@
             </div>
           </div>
           <div class="today-weather__range">
-            <small>Min ${tempMin}°C</small>
-            <small>Max ${tempMax}°C</small>
+            <small>Min ${tempMin}°C e Max ${tempMax}°C</small>
           </div>
         </div>
       `;

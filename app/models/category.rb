@@ -15,7 +15,7 @@ class Category < ApplicationRecord
     "Índigo" => "#4F46E5",
     "Verde água" => "#0F766E",
     "Magenta" => "#C026D3",
-    "Azul petróleo" => "#155E75"
+    "Bege" => "#A68A64"
   }.freeze
 
   def self.color_name_for(color)

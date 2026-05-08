@@ -81,14 +81,13 @@
   }
 
   .app-sidebar__brand {
-    display: flex;
-    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 38px;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
+    gap: 12px;
     min-width: 0;
     margin: 10px 12px 0;
-    padding: 16px;
+    padding: 16px 12px;
     border: 1px solid var(--sidebar-border);
     border-radius: 10px 10px 0 0;
     border-bottom: 0;
@@ -98,18 +97,21 @@
     backdrop-filter: blur(24px);
   }
 
+  .app-sidebar__brand-main {
+    justify-content: flex-start;
+    gap: 12px;
+    min-width: 0;
+  }
+
   .app-sidebar__brand-copy {
     display: flex !important;
+    align-items: center;
     min-width: 0;
-    padding-inline: 42px;
   }
 
   .app-sidebar__brand-logout-form {
-    position: absolute;
-    top: 50%;
-    right: 12px;
     display: flex;
-    transform: translateY(-50%);
+    justify-self: end;
   }
 
   .app-sidebar__brand-logout {
@@ -127,7 +129,12 @@
     font-size: 1.3rem;
   }
 
-  .sidebar-title,
+  .sidebar-title {
+    font-size: 1.22rem;
+    line-height: 1.1;
+    text-align: center;
+  }
+
   .app-sidebar__brand-copy small {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -170,8 +177,8 @@
   }
 
   .app-nav-link.active-menu {
-    flex-basis: 44px;
-    width: 44px;
+    flex-basis: 46px;
+    width: 46px;
   }
 
   .app-nav-form {
@@ -212,6 +219,12 @@
   .dashboard-card__header {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .dashboard-hero h1 {
+    font-size: 1.5rem;
+    line-height: 1.18;
+    white-space: nowrap;
   }
 
   .app-page__hero {
@@ -428,18 +441,20 @@
   }
 
   .app-page__hero-badge-item {
-    min-height: 74px;
+    min-height: 60px;
   }
 
   .app-page__hero-badge-item--primary {
     gap: 6px;
-    padding: 6px;
+    padding: 5px 6px;
   }
 
   .app-page__hero-badge-item--primary > .material-symbols-rounded {
-    width: 30px;
-    height: 30px;
-    flex: 0 0 30px;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    background: rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.7);
   }
 
   .app-page__hero-badge-item--primary strong {

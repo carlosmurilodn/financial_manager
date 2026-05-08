@@ -32,12 +32,14 @@
 
 .dashboard-hero h1 {
   font-size: clamp(1.8rem, 3vw, 2.8rem);
+  text-align: justify;
 }
 
 .dashboard-description {
   max-width: 640px;
   margin: 10px 0 0;
   color: var(--dashboard-description-color);
+  text-align: justify;
 }
 
 .dashboard-hero__badge,
@@ -95,14 +97,16 @@
   width: 48px;
   height: 48px;
   border-radius: 16px;
-  background: var(--hero-badge-icon-bg);
-  color: var(--hero-badge-icon-color);
+  background: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.74);
 }
 
 .dashboard-hero__badge-item--primary strong {
   display: block;
   color: var(--dashboard-date-color);
+  font-size: 0.78rem;
   line-height: 1.35;
+  white-space: nowrap;
 }
 
 .dashboard-hero__badge-item--primary .app-sidebar__time {
@@ -110,12 +114,13 @@
 }
 
 .dashboard-hero__badge-item--weather .today-weather {
-  display: flex;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
   width: 100%;
   min-height: 100%;
-  padding: 10px 14px;
+  padding: 8px 14px;
   background: rgba(66, 150, 241, 0.96);
 }
 
@@ -127,13 +132,14 @@
 .dashboard-hero__badge-item--weather .today-weather__details {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   justify-content: center;
 }
 
 .dashboard-hero__badge-item--weather .today-weather__current {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-shrink: 0;
   gap: 8px;
 }
@@ -214,6 +220,21 @@
 .dashboard-hero__badge-item--weather .today-weather__details span {
   font-size: 0.82rem;
   font-weight: 700;
+}
+
+.dashboard-hero__badge-item--weather .today-weather__description {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: right;
+}
+
+.dashboard-hero__badge-item--weather .today-weather__range {
+  display: grid;
+  gap: 0;
+  color: rgba(255, 255, 255, 0.88);
+  text-align: right;
 }
 
 .dashboard-hero__badge-item--weather .today-weather__details small {

@@ -35,6 +35,14 @@
   text-align: center;
 }
 
+.app-sidebar__brand-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-width: 0;
+}
+
 .app-sidebar__logo {
   display: grid;
   place-items: center;

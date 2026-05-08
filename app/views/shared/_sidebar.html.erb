@@ -1,11 +1,13 @@
 <aside id="sidebar-wrapper" class="app-sidebar">
   <div class="app-sidebar__inner">
     <div class="app-sidebar__brand">
-      <div class="app-sidebar__logo" aria-hidden="true">
-        <span class="material-symbols-rounded">account_balance_wallet</span>
-      </div>
-      <div class="app-sidebar__brand-copy">
-        <span class="sidebar-title">Gerenciador Financeiro</span>
+      <div class="app-sidebar__brand-main">
+        <div class="app-sidebar__logo" aria-hidden="true">
+          <span class="material-symbols-rounded">account_balance_wallet</span>
+        </div>
+        <div class="app-sidebar__brand-copy">
+          <span class="sidebar-title">Gerenciador Financeiro</span>
+        </div>
       </div>
 
       <%= button_to destroy_user_session_path,
@@ -116,6 +118,13 @@
     });
   }
 
+  function formatWeatherDescription(description) {
+    return description
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
+
   async function loadWeather() {
     const weatherNodes = ["weather-info", "dashboard-weather-info", "app-page-weather-info"]
       .map((id) => document.getElementById(id))
@@ -138,6 +147,7 @@
       const tempMax = Math.max(...todayForecasts.map((forecast) => forecast.main.temp_max)).toFixed(0);
       const todayIcon = data.list[0].weather[0].icon;
       const todayDesc = data.list[0].weather[0].description;
+      const formattedTodayDesc = formatWeatherDescription(todayDesc);
       const todayWeatherId = data.list[0].weather[0].id;
 
       const dashboardWeatherClass = (() => {
@@ -161,7 +171,7 @@
             <strong>${tempNow}°C</strong>
           </div>
           <div class="today-weather__details">
-            <span class="text-capitalize">${todayDesc}</span>
+            <span>${formattedTodayDesc}</span>
             <small>Min ${tempMin}°C · Max ${tempMax}°C</small>
           </div>
         </div>
@@ -169,6 +179,7 @@
 
       const dashboardWeatherMarkup = `
         <div class="today-weather today-weather--dashboard ${dashboardWeatherClass}">
+          <span class="today-weather__description">${formattedTodayDesc}</span>
           <div class="today-weather__current">
             <img src="https://openweathermap.org/img/wn/${todayIcon}@2x.png" alt="${todayDesc}" width="68" height="68">
             <div class="today-weather__current-copy">
@@ -176,9 +187,9 @@
               <span class="today-weather__city">Goiania</span>
             </div>
           </div>
-          <div class="today-weather__details">
-            <span class="text-capitalize">${todayDesc}</span>
-            <small>Min ${tempMin}°C · Max ${tempMax}°C</small>
+          <div class="today-weather__range">
+            <small>Min ${tempMin}°C</small>
+            <small>Max ${tempMax}°C</small>
           </div>
         </div>
       `;
@@ -190,7 +201,7 @@
             <strong>${tempNow}°C</strong>
           </div>
           <div class="today-weather__details">
-            <span class="text-capitalize">${todayDesc}</span>
+            <span>${formattedTodayDesc}</span>
           </div>
         </div>
       `;

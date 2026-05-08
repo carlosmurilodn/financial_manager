@@ -10,7 +10,7 @@ class FinancialGoal < ApplicationRecord
     "planned" => "Planejado",
     "in_progress" => "Em andamento",
     "completed" => "Concluido",
-    "paused" => "Pausado"
+    "paused" => "Cancelado"
   }.freeze
 
   PRIORITY_LABELS = {

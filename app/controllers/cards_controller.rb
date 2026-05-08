@@ -90,10 +90,16 @@ class CardsController < ApplicationController
     @pay_balance_month_label = @pay_balance_month.strftime("%m/%Y")
 
     debt_scope = card_debt_scope
+    expense_scope = card_expense_scope
     @card_debt_years = debt_year_options(debt_scope)
     filtered_debt_scope = apply_card_debt_filters(debt_scope)
-    card_ids_from_debt = filtered_debt_scope.distinct.pluck(:card_id)
-    @card_debt_totals_by_card = filtered_debt_scope.group(:card_id).sum(:amount)
+    accumulated_debt_scope = apply_card_accumulated_debt_period(debt_scope)
+    month_expense_scope = apply_card_month_expense_period(expense_scope, accumulated_debt_scope)
+    card_ids_from_debt = card_filter_match_scope(filtered_debt_scope, accumulated_debt_scope)
+                         .distinct
+                         .pluck(:card_id)
+    @card_debt_totals_by_card = accumulated_debt_scope.group(:card_id).sum(:amount)
+    @card_month_totals_by_card = month_expense_scope.group(:card_id).sum(:amount)
 
     cards = current_user.cards.order(:name).to_a
     cards = cards.select { |card| card_matches_filters?(card, card_ids_from_debt) } if card_filters_active?
@@ -101,7 +107,7 @@ class CardsController < ApplicationController
     @cards_limit_total = cards.sum { |card| card.total_limit.to_f }
     @cards_limit_available = cards.sum { |card| remaining_limit_for(card) }
     @cards_limit_used = @cards_limit_total - @cards_limit_available
-    @cards_open_invoices = filtered_debt_scope.sum(:amount)
+    @cards_open_invoices = cards.sum { |card| @card_debt_totals_by_card.fetch(card.id, 0).to_f }
 
     cards = sort_collection(cards, sort_map: card_sort_map, default_sort: "name")
 
@@ -130,12 +136,35 @@ class CardsController < ApplicationController
                 .where.not(card_id: nil)
   end
 
+  def card_expense_scope
+    current_user.expenses
+                .where(payment_method: credit_payment_methods)
+                .where.not(card_id: nil)
+  end
+
   def apply_card_debt_filters(scope)
     filtered_scope = scope
     filtered_scope = filtered_scope.where("EXTRACT(MONTH FROM balance_month) = ?", @month) if @month.present?
     filtered_scope = filtered_scope.where("EXTRACT(YEAR FROM balance_month) = ?", @year) if @year.present?
 
     apply_card_description_filter(filtered_scope)
+  end
+
+  def apply_card_accumulated_debt_period(scope)
+    return apply_card_description_filter(scope) unless complete_period_filter?
+
+    apply_card_description_filter(scope.where("balance_month >= ?", Date.new(@year, @month, 1)))
+  rescue ArgumentError
+    apply_card_description_filter(scope)
+  end
+
+  def apply_card_month_expense_period(scope, fallback_scope)
+    return fallback_scope unless complete_period_filter?
+
+    balance_month = Date.new(@year, @month, 1)
+    apply_card_description_filter(scope.where(balance_month: balance_month.all_month))
+  rescue ArgumentError
+    fallback_scope
   end
 
   def apply_card_description_filter(scope)
@@ -159,6 +188,14 @@ class CardsController < ApplicationController
 
   def card_filters_active?
     @description_filter.present? || @month.present? || @year.present?
+  end
+
+  def complete_period_filter?
+    @month.present? && @year.present?
+  end
+
+  def card_filter_match_scope(filtered_debt_scope, accumulated_debt_scope)
+    complete_period_filter? ? accumulated_debt_scope : filtered_debt_scope
   end
 
   def card_matches_filters?(card, card_ids_from_debt)

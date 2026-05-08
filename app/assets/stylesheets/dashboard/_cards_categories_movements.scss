@@ -167,9 +167,9 @@
   display: grid;
   gap: 8px;
   padding: 9px 10px;
-  border: 1px solid var(--card-border);
+  border: 1px solid color-mix(in srgb, var(--dashboard-goal-color, var(--primary)) 18%, var(--card-border));
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
+  background: color-mix(in srgb, var(--dashboard-goal-color, var(--primary)) 5%, rgba(255, 255, 255, 0.1));
 }
 
 .dashboard-goal-item__header {
@@ -211,36 +211,60 @@
   width: 30px;
   height: 30px;
   border-radius: 999px;
-  background: var(--avatar-bg);
-  color: var(--nav-active-icon-color);
+  background: color-mix(in srgb, var(--dashboard-goal-color, var(--primary)) 16%, transparent);
+  color: var(--dashboard-goal-color, var(--primary));
   font-size: 0.96rem;
   flex-shrink: 0;
-}
-
-.dashboard-goal-item--planned .dashboard-goal-item__category-icon {
-  background: var(--stat-primary-bg);
-  color: var(--stat-primary-icon-bg);
-}
-
-.dashboard-goal-item--in_progress .dashboard-goal-item__category-icon {
-  background: var(--stat-warning-bg);
-  color: var(--stat-warning-icon-bg);
-}
-
-.dashboard-goal-item--completed .dashboard-goal-item__category-icon {
-  background: var(--stat-success-bg);
-  color: var(--stat-success-icon-bg);
-}
-
-.dashboard-goal-item--paused .dashboard-goal-item__category-icon {
-  background: var(--stat-danger-bg);
-  color: var(--stat-danger-icon-bg);
 }
 
 .dashboard-goal-item__identity strong {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.dashboard-goal-item__title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.dashboard-goal-item__title-row strong {
+  min-width: 0;
+}
+
+.dashboard-goal-item__status {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  min-height: 18px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  font-size: 0.62rem !important;
+  font-weight: 800 !important;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.dashboard-goal-item__status--planned {
+  background: var(--stat-primary-bg);
+  color: var(--stat-primary-icon-bg) !important;
+}
+
+.dashboard-goal-item__status--in_progress {
+  background: var(--stat-warning-bg);
+  color: var(--stat-warning-icon-bg) !important;
+}
+
+.dashboard-goal-item__status--completed {
+  background: var(--stat-success-bg);
+  color: var(--stat-success-icon-bg) !important;
+}
+
+.dashboard-goal-item__status--paused {
+  background: var(--stat-danger-bg);
+  color: var(--stat-danger-icon-bg) !important;
 }
 
 .dashboard-goal-item__progress {
@@ -255,23 +279,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: var(--stat-primary-icon-bg);
-}
-
-.dashboard-goal-item--planned .dashboard-goal-item__progress span {
-  background: var(--stat-primary-icon-bg);
-}
-
-.dashboard-goal-item--in_progress .dashboard-goal-item__progress span {
-  background: var(--stat-warning-icon-bg);
-}
-
-.dashboard-goal-item--completed .dashboard-goal-item__progress span {
-  background: var(--stat-success-icon-bg);
-}
-
-.dashboard-goal-item--paused .dashboard-goal-item__progress span {
-  background: var(--stat-danger-icon-bg);
+  background: var(--dashboard-goal-color, var(--primary));
 }
 
 .dashboard-goal-item__values {

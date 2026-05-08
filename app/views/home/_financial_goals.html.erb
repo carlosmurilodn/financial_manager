@@ -27,13 +27,17 @@
       <div class="dashboard-goals-list">
         <% @financial_goals_summary.each do |goal| %>
           <% days_remaining = (goal.due_date - Date.current).to_i if goal.due_date.present? %>
+          <% goal_color = goal.display_color %>
 
-          <article class="dashboard-goal-item dashboard-goal-item--<%= goal.status %>">
+          <article class="dashboard-goal-item dashboard-goal-item--<%= goal.status %>" style="--dashboard-goal-color: <%= goal_color %>;">
             <div class="dashboard-goal-item__header">
               <div class="dashboard-goal-item__identity">
                 <span class="material-symbols-rounded dashboard-goal-item__category-icon"><%= goal.category&.material_icon || "flag" %></span>
                 <div>
-                  <strong><%= goal.description %></strong>
+                  <div class="dashboard-goal-item__title-row">
+                    <strong><%= goal.description %></strong>
+                    <span class="dashboard-goal-item__status dashboard-goal-item__status--<%= goal.status %>"><%= goal.status_label %></span>
+                  </div>
                   <small>
                     <%= goal.category&.display_name || "Sem categoria" %>
                     · <%= goal.priority_label %>

@@ -925,7 +925,7 @@
 
 .app-card-palette {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
 }
 
@@ -1026,21 +1026,21 @@
 
 .app-card-card__metrics {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
 }
 
 .app-card-card__metrics div {
   display: grid;
   gap: 4px;
   min-width: 0;
-  padding: 9px 8px;
+  padding: 8px 6px;
   border-radius: 10px;
   background: color-mix(in srgb, var(--card-color) 8%, transparent);
 }
 
 .app-card-card__metrics span {
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1048,7 +1048,7 @@
 
 .app-card-card__metrics strong {
   color: var(--text-main);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 800;
   line-height: 1.15;
   white-space: nowrap;
@@ -1097,7 +1097,17 @@
   font-size: 1rem;
 }
 
+@media (max-width: 1199px) {
+  .app-card-palette {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 576px) {
+  .app-card-palette {
+    grid-template-columns: 1fr;
+  }
+
   .app-card-card__metrics {
     grid-template-columns: 1fr;
   }

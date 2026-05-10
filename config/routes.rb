@@ -35,7 +35,11 @@ Rails.application.routes.draw do
   end
 
   resources :categories
-  resources :financial_goals
+  resources :financial_goals do
+    collection do
+      delete :clear_filters
+    end
+  end
 
   resources :cards do
     member do

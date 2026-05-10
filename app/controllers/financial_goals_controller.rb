@@ -6,14 +6,14 @@ class FinancialGoalsController < ApplicationController
   end
 
   def new
-    @financial_goal = current_user.financial_goal.new
+    @financial_goal = current_user.financial_goals.new
     load_categories
     load_resource_cards
     build_resource_rows
   end
 
   def create
-    @financial_goal = current_user.financial_goal.new(financial_goal_params)
+    @financial_goal = current_user.financial_goals.new(financial_goal_params)
 
     if @financial_goal.save
       respond_to do |format|
@@ -64,10 +64,27 @@ class FinancialGoalsController < ApplicationController
     end
   end
 
+  def clear_filters
+    session.delete(:financial_goals_description)
+    session.delete(:financial_goals_category_id)
+    session.delete(:financial_goals_progress_min)
+    session.delete(:financial_goals_current_amount_min)
+    session.delete(:financial_goals_target_amount_min)
+    session.delete(:financial_goals_credit_amount_min)
+    session.delete(:financial_goals_potential_amount_min)
+    session.delete(:financial_goals_remaining_amount_max)
+    session.delete(:financial_goals_monthly_amount_max)
+    session.delete(:financial_goals_due_until)
+    session.delete(:financial_goals_status)
+    session.delete(:financial_goals_priority)
+
+    redirect_to financial_goals_path, notice: "Filtros limpos com sucesso!"
+  end
+
   private
 
   def load_financial_goals
-    goals = current_user.financial_goal.includes(:category, :financial_goal_resources).to_a
+    goals = current_user.financial_goals.includes(:category, :financial_goal_resources).to_a
 
     load_categories
     load_financial_goal_filters
@@ -101,7 +118,7 @@ class FinancialGoalsController < ApplicationController
   end
 
   def set_financial_goal
-    @financial_goal = current_user.financial_goal.find(params[:id])
+    @financial_goal = current_user.financial_goals.find(params[:id])
   end
 
   def financial_goal_params
@@ -180,19 +197,64 @@ class FinancialGoalsController < ApplicationController
   end
 
   def load_financial_goal_filters
-    @description_filter = params[:description].to_s.strip.presence
-    @category_filter = params[:category_id].presence
+    session[:financial_goals_description] = params[:description].to_s.strip if params.key?(:description)
+    @description_filter = session[:financial_goals_description].presence
+
+    session[:financial_goals_category_id] = params[:category_id] if params.key?(:category_id)
+    @category_filter = session[:financial_goals_category_id]
     @category_filter = nil if @category_filter.to_i.zero?
-    @progress_min_filter = params[:progress_min].presence
-    @current_amount_min_filter = params[:current_amount_min].presence
-    @target_amount_min_filter = params[:target_amount_min].presence
-    @credit_amount_min_filter = params[:credit_amount_min].presence
-    @potential_amount_min_filter = params[:potential_amount_min].presence
-    @remaining_amount_max_filter = params[:remaining_amount_max].presence
-    @monthly_amount_max_filter = params[:monthly_amount_max].presence
-    @due_until_filter = params[:due_until].presence
-    @status_filter = params[:status].presence
-    @priority_filter = params[:priority].presence
+
+    session[:financial_goals_progress_min] = params[:progress_min].to_s.strip if params.key?(:progress_min)
+    @progress_min_filter = session[:financial_goals_progress_min].presence
+
+    store_financial_goal_currency_filter(:financial_goals_current_amount_min, :current_amount_min)
+    @current_amount_min_filter = session[:financial_goals_current_amount_min].presence
+
+    store_financial_goal_currency_filter(:financial_goals_target_amount_min, :target_amount_min)
+    @target_amount_min_filter = session[:financial_goals_target_amount_min].presence
+
+    store_financial_goal_currency_filter(:financial_goals_credit_amount_min, :credit_amount_min)
+    @credit_amount_min_filter = session[:financial_goals_credit_amount_min].presence
+
+    store_financial_goal_currency_filter(:financial_goals_potential_amount_min, :potential_amount_min)
+    @potential_amount_min_filter = session[:financial_goals_potential_amount_min].presence
+
+    store_financial_goal_currency_filter(:financial_goals_remaining_amount_max, :remaining_amount_max)
+    @remaining_amount_max_filter = session[:financial_goals_remaining_amount_max].presence
+
+    store_financial_goal_currency_filter(:financial_goals_monthly_amount_max, :monthly_amount_max)
+    @monthly_amount_max_filter = session[:financial_goals_monthly_amount_max].presence
+
+    session[:financial_goals_due_until] = params[:due_until].presence if params.key?(:due_until)
+    @due_until_filter = session[:financial_goals_due_until].presence
+
+    session[:financial_goals_status] = params[:status].presence if params.key?(:status)
+    @status_filter = session[:financial_goals_status].presence
+
+    session[:financial_goals_priority] = params[:priority].presence if params.key?(:priority)
+    @priority_filter = session[:financial_goals_priority].presence
+  end
+
+  def store_financial_goal_currency_filter(session_key, param_key)
+    return unless params.key?(param_key)
+
+    normalized_value = normalized_financial_goal_currency_filter(params[param_key])
+
+    if normalized_value.present?
+      session[session_key] = normalized_value
+    else
+      session.delete(session_key)
+    end
+  end
+
+  def normalized_financial_goal_currency_filter(value)
+    value = value.to_s.strip
+    return nil if value.blank?
+
+    amount = parse_brazilian_amount(value, blank: 0)
+    return nil if amount.zero?
+
+    value
   end
 
   def apply_financial_goal_filters(goals)

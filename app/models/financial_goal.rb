@@ -1,6 +1,7 @@
 class FinancialGoal < ApplicationRecord
   COLOR_PALETTE = Category::COLOR_PALETTE
 
+  belongs_to :user
   belongs_to :category, optional: true
 
   has_many :financial_goal_resources, dependent: :destroy

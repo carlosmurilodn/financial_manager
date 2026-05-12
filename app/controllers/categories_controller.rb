@@ -71,14 +71,14 @@ class CategoriesController < ApplicationController
     current_expenses = current_user.expenses.where(balance_month: month_range)
     current_incomes = current_user.incomes.where(balance_month: month_range)
 
-    @categories_month_expenses = current_expenses.sum(:amount)
+    @categories_month_expenses = Expense.effective_sum(current_expenses)
     @categories_month_incomes = current_incomes.sum(:amount)
 
     @categories_top_expense_value =
-      current_expenses.group(:category_id).sum(:amount).values.max || 0
+      current_expenses.group_by(&:category_id).values.map { |expenses| expenses.sum(&:effective_amount).abs }.max || 0
 
     @categories_uncategorized_value =
-      current_expenses.where(category_id: nil).sum(:amount) +
+      Expense.effective_sum(current_expenses.where(category_id: nil)) +
       current_incomes.where(category_id: nil).sum(:amount)
 
     @categories = categories.sort_by(&:sort_name)

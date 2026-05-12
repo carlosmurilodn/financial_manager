@@ -9,12 +9,13 @@ class Expense < ApplicationRecord
     debito: 1,
     credito_a_vista: 2,
     credito_parcelado: 3,
-    dinheiro: 4
+    dinheiro: 4,
+    estorno_cartao: 5
   }, prefix: true
 
   validates :amount, presence: true, numericality: { greater_than: 0 }
   validates :date, :balance_month, :category_id, :payment_method, presence: true
-  validates :card_id, presence: true, if: -> { payment_method_credito_a_vista? || payment_method_credito_parcelado? }
+  validates :card_id, presence: true, if: :card_payment_method?
   validates :description, presence: true
   validates :installments_count,
             :current_installment,
@@ -35,6 +36,14 @@ class Expense < ApplicationRecord
     return "Unica" unless payment_method_credito_parcelado?
 
     "#{current_installment}/#{installments_count}"
+  end
+
+  def card_payment_method?
+    payment_method_credito_a_vista? || payment_method_credito_parcelado? || payment_method_estorno_cartao?
+  end
+
+  def effective_amount
+    payment_method_estorno_cartao? ? -amount.to_d : amount.to_d
   end
 
   def parcelled_group_root?
@@ -83,13 +92,39 @@ class Expense < ApplicationRecord
     {
       "credito_a_vista" => "Crédito à Vista",
       "credito_parcelado" => "Crédito Parcelado",
+      "estorno_cartao" => "Estorno no Cartão",
       "pix" => "PIX",
       "debito" => "Débito",
       "dinheiro" => "Dinheiro"
     }
   end
 
+  def self.card_payment_method_values
+    [
+      payment_methods[:credito_a_vista],
+      payment_methods[:credito_parcelado],
+      payment_methods[:estorno_cartao]
+    ]
+  end
+
+  def self.effective_sum(scope = all)
+    scope.unscope(:order).pick(Arel.sql("COALESCE(SUM(#{effective_amount_sql}), 0)")) || 0
+  end
+
+  def self.effective_sum_by_card(scope = all)
+    scope.unscope(:order)
+         .group(:card_id)
+         .pluck(:card_id, Arel.sql("COALESCE(SUM(#{effective_amount_sql}), 0)"))
+         .to_h
+  end
+
   private
+
+  def self.effective_amount_sql
+    refund_method = payment_methods[:estorno_cartao]
+
+    "CASE WHEN #{table_name}.payment_method = #{refund_method} THEN -#{table_name}.amount ELSE #{table_name}.amount END"
+  end
 
   def future_group_expenses
     self.class.where(installment_group_id: installment_group_id)

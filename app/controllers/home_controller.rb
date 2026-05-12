@@ -62,21 +62,23 @@ class HomeController < ApplicationController
   end
 
   def total_balance_before(model, date)
-    model.where("balance_month <= ?", date.end_of_month).where(paid: true).sum(:amount)
+    scope = model.where("balance_month <= ?", date.end_of_month).where(paid: true)
+
+    model == Expense ? Expense.effective_sum(scope) : scope.sum(:amount)
   end
 
   def total_expenses(month_range, category_id = nil, card_id = nil)
     expenses = Expense.where(balance_month: month_range)
     expenses = expenses.where(category_id: category_id) if category_id.present?
     expenses = expenses.where(card_id: card_id) if card_id.present?
-    expenses.sum(:amount)
+    Expense.effective_sum(expenses)
   end
 
   def calculate_kpis
     @saldo_atual = total_balance_before(Income, @hoje) - total_balance_before(Expense, @hoje)
     @receitas_mes = data_in_month(Income, @mes_atual).sum(:amount)
     @despesas_mes = total_expenses(@mes_atual)
-    @saldo_liquido = Income.sum(:amount) - Expense.sum(:amount)
+    @saldo_liquido = Income.sum(:amount) - Expense.effective_sum
   end
 
   # def set_card_balances
@@ -108,7 +110,7 @@ class HomeController < ApplicationController
     @cards_info = Card.order(Arel.sql("total_limit DESC NULLS LAST, name ASC")).map do |card|
       committed_amount = unpaid_expenses_from_selected_month(card)
       selected_month_expenses = card_expenses_from_selected_month(card).to_a
-      selected_month_total = selected_month_expenses.sum(&:amount)
+      selected_month_total = selected_month_expenses.sum(&:effective_amount)
       selected_month_paid = selected_month_expenses.empty? || selected_month_expenses.all?(&:paid?)
 
       {
@@ -121,7 +123,7 @@ class HomeController < ApplicationController
           {
             date: expense.date,
             description: expense.description.presence || "Despesa",
-            amount: expense.amount,
+            amount: expense.effective_amount,
             paid: expense.paid?,
             installment_label: expense.payment_method_credito_parcelado? ? expense.installment_label : nil
           }
@@ -133,7 +135,7 @@ class HomeController < ApplicationController
   def unpaid_expenses_from_selected_month(card)
     Expense.where(card: card, paid: false)
           .where("balance_month >= ?", @card_balance_date.beginning_of_month)
-          .sum(:amount)
+          .then { |scope| Expense.effective_sum(scope) }
   end
 
   def card_expenses_from_selected_month(card)
@@ -143,10 +145,10 @@ class HomeController < ApplicationController
 
   def set_category_expenses_data
     expenses = Expense.includes(:category).where(balance_month: @category_expense_range)
-    total_month = expenses.sum(:amount).to_f
+    total_month = expenses.to_a.sum { |expense| expense.effective_amount.abs }.to_f
 
     @category_expense_summaries = expenses.group_by(&:category).map do |category, category_expenses|
-      total = category_expenses.sum(&:amount).to_f
+      total = category_expenses.sum(&:effective_amount).to_f
 
       {
         name: category&.clean_name || "Sem categoria",
@@ -154,16 +156,16 @@ class HomeController < ApplicationController
         color: category&.display_color || Category::COLOR_PALETTE.values.first,
         total: total,
         count: category_expenses.size,
-        percent: total_month.positive? ? (total / total_month) * 100 : 0,
+        percent: total_month.positive? ? (total.abs / total_month) * 100 : 0,
         items: category_expenses.sort_by(&:date).map do |expense|
           {
             date: expense.date,
             description: expense.description.presence || "Despesa",
-            amount: expense.amount
+            amount: expense.effective_amount
           }
         end
       }
-    end.sort_by { |summary| -summary[:total] }
+    end.sort_by { |summary| -summary[:total].abs }
   end
 
   def set_calendar_data
@@ -173,7 +175,7 @@ class HomeController < ApplicationController
 
   def set_recent_expenses
     @recent_expenses = Expense.includes(:category)
-                              .select(:id, :description, :amount, :date, :balance_month, :category_id)
+                              .select(:id, :description, :amount, :date, :balance_month, :category_id, :payment_method)
                               .where("date >= ?", @hoje.beginning_of_month)
                               .order(date: :asc, id: :desc)
   end
@@ -210,7 +212,7 @@ class HomeController < ApplicationController
     @calendar_expenses.each do |expense|
       @daily_calendar_items[expense.date] ||= { incomes: [], expenses: [] }
       @daily_calendar_items[expense.date][:expenses] << {
-        amount: expense.amount,
+        amount: expense.effective_amount,
         description: [ expense.category&.clean_name, expense.description.presence || "Despesa" ].compact.join(" - ")
       }
 
@@ -218,7 +220,7 @@ class HomeController < ApplicationController
         date: expense.date,
         type: :expense,
         description: [ expense.category&.clean_name, expense.description.presence || "Despesa" ].compact.join(" - "),
-        amount: expense.amount
+        amount: expense.effective_amount
       }
     end
 

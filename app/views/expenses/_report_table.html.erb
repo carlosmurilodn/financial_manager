@@ -493,7 +493,7 @@
 
             <td>
               <span class="pdf-money <%= expense.paid? ? "pdf-money--success" : "pdf-money--danger" %>">
-                <%= number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
+                <%= number_to_currency(expense.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %>
               </span>
             </td>
 

@@ -45,7 +45,7 @@ function defaultBalanceDate(row) {
 
   const paymentMethod = row.querySelector("[data-payment-method-select]")?.value;
 
-  if (paymentMethod === "credito_a_vista" || paymentMethod === "credito_parcelado") {
+  if (paymentMethod === "credito_a_vista" || paymentMethod === "credito_parcelado" || paymentMethod === "estorno_cartao") {
     const cardSelect = row.querySelector("[data-card-select]");
     return cardBalanceDate(purchaseDate, cardSelect?.selectedOptions[0]);
   }

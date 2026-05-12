@@ -156,13 +156,13 @@ class IncomesController < ApplicationController
       previous_month_end = Date.new(@year, @month, 1) - 1.day
 
       receitas_anteriores = all_incomes.where("balance_month <= ?", previous_month_end).sum(:amount)
-      despesas_anteriores = all_expenses.where("balance_month <= ?", previous_month_end).sum(:amount)
+      despesas_anteriores = Expense.effective_sum(all_expenses.where("balance_month <= ?", previous_month_end))
 
       @previous_balance = receitas_anteriores - despesas_anteriores
 
       current_month_end = Date.new(@year, @month, 1).end_of_month
       receitas_ate_mes = all_incomes.where("balance_month <= ? AND paid = ?", current_month_end, true).sum(:amount)
-      despesas_ate_mes = all_expenses.where("balance_month <= ? AND paid = ?", current_month_end, true).sum(:amount)
+      despesas_ate_mes = Expense.effective_sum(all_expenses.where("balance_month <= ? AND paid = ?", current_month_end, true))
 
       @current_balance = receitas_ate_mes - despesas_ate_mes
     else

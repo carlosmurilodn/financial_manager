@@ -483,9 +483,9 @@ class ExpensesController < ApplicationController
   end
 
   def calculate_totals
-    @total_amount = @expenses.sum(&:amount)
-    @total_paid = @expenses.select(&:paid?).sum(&:amount)
-    @total_unpaid = @expenses.reject(&:paid?).sum(&:amount)
+    @total_amount = @expenses.sum(&:effective_amount)
+    @total_paid = @expenses.select(&:paid?).sum(&:effective_amount)
+    @total_unpaid = @expenses.reject(&:paid?).sum(&:effective_amount)
   end
 
   def calculate_net_balance
@@ -496,11 +496,11 @@ class ExpensesController < ApplicationController
     current_month_end = current_month_start.end_of_month
 
     receitas_anteriores = current_user.incomes.where("balance_month <= ?", previous_month_end).sum(:amount)
-    despesas_anteriores = current_user.expenses.where("balance_month <= ?", previous_month_end).sum(:amount)
+    despesas_anteriores = Expense.effective_sum(current_user.expenses.where("balance_month <= ?", previous_month_end))
     @previous_balance = receitas_anteriores - despesas_anteriores
 
     receitas_pag = current_user.incomes.where("balance_month <= ? AND paid = ?", current_month_end, true).sum(:amount)
-    despesas_pag = current_user.expenses.where("balance_month <= ? AND paid = ?", current_month_end, true).sum(:amount)
+    despesas_pag = Expense.effective_sum(current_user.expenses.where("balance_month <= ? AND paid = ?", current_month_end, true))
 
     @net_balance = receitas_pag - despesas_pag
   end
@@ -527,7 +527,7 @@ class ExpensesController < ApplicationController
 
   def default_balance_month_for(expense)
     return if expense.date.blank?
-    return expense.date unless expense.payment_method_credito_a_vista? || expense.payment_method_credito_parcelado?
+    return expense.date unless expense.card_payment_method?
 
     expense.card&.billing_due_date_for(expense.date) || expense.date
   end
@@ -543,7 +543,7 @@ class ExpensesController < ApplicationController
     {
       "description" => ->(expense) { expense.description.to_s },
       "installment" => ->(expense) { expense.current_installment.to_i },
-      "amount" => ->(expense) { expense.amount.to_d },
+      "amount" => ->(expense) { expense.effective_amount.to_d },
       "date" => ->(expense) { expense.date },
       "balance_month" => ->(expense) { expense.balance_month },
       "created_at" => ->(expense) { expense.created_at },

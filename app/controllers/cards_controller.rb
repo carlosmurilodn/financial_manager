@@ -68,11 +68,11 @@ class CardsController < ApplicationController
     ActiveRecord::Base.transaction do
       updated_expenses_count = @card.expenses
                                     .where(user: current_user)
-                                    .where(paid: false, payment_method: credit_payment_methods)
+                                    .where(paid: false, payment_method: Expense.card_payment_method_values)
                                     .where(balance_month: balance_month_range)
                                     .update_all(paid: true, paid_at: now, updated_at: now)
 
-      flash[:notice] = "Pagamentos atualizados: #{updated_expenses_count} despesas marcadas como pagas para #{balance_month.strftime('%m/%Y')}."
+      flash[:notice] = "Pagamentos atualizados: #{updated_expenses_count} lançamentos marcados como pagos para #{balance_month.strftime('%m/%Y')}."
     end
 
     redirect_to cards_path
@@ -98,8 +98,8 @@ class CardsController < ApplicationController
     card_ids_from_debt = card_filter_match_scope(filtered_debt_scope, accumulated_debt_scope)
                          .distinct
                          .pluck(:card_id)
-    @card_debt_totals_by_card = accumulated_debt_scope.group(:card_id).sum(:amount)
-    @card_month_totals_by_card = month_expense_scope.group(:card_id).sum(:amount)
+    @card_debt_totals_by_card = Expense.effective_sum_by_card(accumulated_debt_scope)
+    @card_month_totals_by_card = Expense.effective_sum_by_card(month_expense_scope)
 
     cards = current_user.cards.order(:name).to_a
     cards = cards.select { |card| card_matches_filters?(card, card_ids_from_debt) } if card_filters_active?
@@ -132,13 +132,13 @@ class CardsController < ApplicationController
 
   def card_debt_scope
     current_user.expenses
-                .where(paid: false, payment_method: credit_payment_methods)
+                .where(paid: false, payment_method: Expense.card_payment_method_values)
                 .where.not(card_id: nil)
   end
 
   def card_expense_scope
     current_user.expenses
-                .where(payment_method: credit_payment_methods)
+                .where(payment_method: Expense.card_payment_method_values)
                 .where.not(card_id: nil)
   end
 
@@ -204,13 +204,6 @@ class CardsController < ApplicationController
 
   def remaining_limit_for(card)
     card.total_limit.to_f - @card_debt_totals_by_card.fetch(card.id, 0).to_f
-  end
-
-  def credit_payment_methods
-    [
-      Expense.payment_methods[:credito_a_vista],
-      Expense.payment_methods[:credito_parcelado]
-    ]
   end
 
   def selected_pay_balance_month

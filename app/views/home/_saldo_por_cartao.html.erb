@@ -38,8 +38,8 @@
         <% month_total = info[:month_total].to_f %>
         <% month_paid = info[:month_paid] %>
         <% month_status_class = month_paid ? "is-positive" : "is-negative" %>
-        <% usage_percent = total_limit.positive? ? [(total / total_limit) * 100, 100].min : 0 %>
-        <% remaining_percent = total_limit.positive? ? [(remaining_limit / total_limit) * 100, 0].max : 0 %>
+        <% usage_percent = total_limit.positive? ? [[(total / total_limit) * 100, 0].max, 100].min : 0 %>
+        <% remaining_percent = total_limit.positive? ? [[(remaining_limit / total_limit) * 100, 0].max, 100].min : 0 %>
 
         <article class="dashboard-card-balance <%= "dashboard-card-balance--clickable" if card_expenses.any? %>">
           <div class="dashboard-card-balance__usage">
@@ -103,7 +103,7 @@
             <div class="dashboard-card-balance__details-header">
               <strong><%= card.name %></strong>
               <span>
-                <%= pluralize(card_expenses.size, "despesa", "despesas") %>
+              <%= pluralize(card_expenses.size, "lançamento", "lançamentos") %>
                 · <%= number_to_currency(card_expenses_total, unit: "R$ ", separator: ",", delimiter: ".") %>
               </span>
             </div>

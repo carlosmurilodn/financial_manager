@@ -13,7 +13,7 @@ class FinancialForecast
     (1..12).each_with_object({}) do |month, forecast_data|
       month_range = Date.new(@year, month, 1).all_month
       monthly_incomes = Income.where(balance_month: month_range).sum(:amount)
-      monthly_expenses = Expense.where(balance_month: month_range).sum(:amount)
+      monthly_expenses = Expense.effective_sum(Expense.where(balance_month: month_range))
 
       accumulated_balance += monthly_incomes - monthly_expenses
 
@@ -31,6 +31,6 @@ class FinancialForecast
     start_of_year = Date.new(@year, 1, 1)
 
     Income.where("balance_month < ?", start_of_year).sum(:amount) -
-      Expense.where("balance_month < ?", start_of_year).sum(:amount)
+      Expense.effective_sum(Expense.where("balance_month < ?", start_of_year))
   end
 end

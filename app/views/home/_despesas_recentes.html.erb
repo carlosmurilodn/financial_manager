@@ -30,7 +30,7 @@
           </div>
 
           <strong class="dashboard-movement-item__amount">
-            <%= number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
+            <%= number_to_currency(expense.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %>
           </strong>
         </article>
       <% end %>

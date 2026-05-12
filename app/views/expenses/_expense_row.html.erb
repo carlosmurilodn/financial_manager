@@ -65,7 +65,7 @@
 
     <div class="expense-card__amount-area">
       <strong class="expense-card__amount">
-        <%= number_to_currency(expense.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
+        <%= number_to_currency(expense.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %>
       </strong>
 
       <% if expense.payment_method_credito_parcelado? %>

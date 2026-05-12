@@ -53,7 +53,7 @@ class Card < ApplicationRecord
   private
 
   def unpaid_total
-    expenses.where(paid: false).sum(:amount)
+    Expense.effective_sum(expenses.where(paid: false))
   end
 
   def normalize_number

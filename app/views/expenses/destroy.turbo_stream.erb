@@ -5,3 +5,4 @@
 <%= turbo_stream.replace "expenses-hero-kpis" do %>
   <%= render partial: "hero_kpis" %>
 <% end %>
+<%= turbo_stream.update "app-flash-container", partial: "shared/flash_messages" %>

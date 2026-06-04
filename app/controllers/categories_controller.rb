@@ -13,17 +13,17 @@ class CategoriesController < ApplicationController
     @category = current_user.categories.new(category_params)
 
     if @category.save
+      success_message = "Categoria criada com sucesso!"
+
       respond_to do |format|
-        # Turbo: fecha o modal e recarrega a página inteira
+        # Turbo: fecha o modal e recarrega a página inteira.
         format.turbo_stream do
-          render turbo_stream: turbo_stream.append(
-            "modal",
-            "<turbo-stream action='visit' target='_top' url='#{categories_path}'></turbo-stream>".html_safe
-          )
+          flash[:notice] = success_message
+          render turbo_stream: turbo_visit_stream(categories_path)
         end
 
-        # Fallback HTML
-        format.html { redirect_to categories_path, notice: "Categoria criada com sucesso!" }
+        # Fallback HTML.
+        format.html { redirect_to categories_path, notice: success_message }
       end
     else
       respond_to do |format|
@@ -37,19 +37,34 @@ class CategoriesController < ApplicationController
 
   def update
     if @category.update(category_params)
-      redirect_to categories_path, notice: "Categoria atualizada com sucesso!"
+      success_message = "Categoria atualizada com sucesso!"
+
+      respond_to do |format|
+        format.turbo_stream do
+          flash[:notice] = success_message
+          render turbo_stream: turbo_visit_stream(categories_path)
+        end
+        format.html { redirect_to categories_path, notice: success_message }
+      end
     else
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream { render :edit, formats: [ :html ], status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
 
   def destroy
     @category.destroy
     load_categories
+    success_message = "Categoria removida com sucesso!"
 
     respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_to categories_path, notice: "Categoria removida com sucesso!" }
+      format.turbo_stream do
+        flash.now[:notice] = success_message
+        render :destroy
+      end
+      format.html { redirect_to categories_path, notice: success_message }
     end
   end
 

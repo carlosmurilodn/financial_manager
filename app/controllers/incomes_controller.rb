@@ -19,16 +19,15 @@ class IncomesController < ApplicationController
 
     if @income.save
       create_recurring_incomes(@income)
+      success_message = "Receita criada com sucesso!"
 
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: turbo_stream.append(
-            "modal",
-            "<turbo-stream action='visit' target='_top' url='#{incomes_path}'></turbo-stream>".html_safe
-          )
+          flash[:notice] = success_message
+          render turbo_stream: turbo_visit_stream(incomes_path)
         end
 
-        format.html { redirect_to incomes_path, notice: "Receita criada com sucesso!" }
+        format.html { redirect_to incomes_path, notice: success_message }
       end
     else
       respond_to do |format|
@@ -44,39 +43,54 @@ class IncomesController < ApplicationController
     assign_income_dates
 
     if @income.update(income_params.except(:date, :balance_month))
-      redirect_to incomes_path, notice: "Receita atualizada com sucesso!"
+      success_message = "Receita atualizada com sucesso!"
+
+      respond_to do |format|
+        format.turbo_stream do
+          flash[:notice] = success_message
+          render turbo_stream: turbo_visit_stream(incomes_path)
+        end
+        format.html { redirect_to incomes_path, notice: success_message }
+      end
     else
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream { render :edit, formats: [ :html ], status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
 
   def destroy
     @income.destroy
     load_incomes
+    success_message = "Receita removida com sucesso!"
 
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.replace("incomes-table", partial: "incomes_table"),
-          turbo_stream.replace("incomes-hero-kpis", partial: "hero_kpis")
+          turbo_stream.replace("incomes-hero-kpis", partial: "hero_kpis"),
+          turbo_flash_stream(success_message)
         ]
       end
-      format.html { redirect_to incomes_path, notice: "Receita removida com sucesso!" }
+      format.html { redirect_to incomes_path, notice: success_message }
     end
   end
 
   def toggle_paid
     @income.update(paid: !@income.paid)
     load_incomes
+    success_message = "Status da receita atualizado com sucesso!"
 
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.replace("income_#{@income.id}", partial: "income_row", locals: { income: @income }),
-          turbo_stream.replace("incomes-hero-kpis", partial: "hero_kpis")
+          turbo_stream.replace("incomes-hero-kpis", partial: "hero_kpis"),
+          turbo_flash_stream(success_message)
         ]
       end
-      format.html { redirect_to incomes_path }
+      format.html { redirect_to incomes_path, notice: success_message }
     end
   end
 

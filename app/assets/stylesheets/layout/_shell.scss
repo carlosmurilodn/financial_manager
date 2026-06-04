@@ -418,6 +418,26 @@ html[data-theme="night"] .app-footer__icon {
   transition: opacity 0.22s ease, transform 0.22s ease;
 }
 
+.app-flash.app-alert--success {
+  background: #e7f7f0;
+  color: #166f59;
+}
+
+.app-flash.app-alert--danger {
+  background: #fde8ee;
+  color: #b4234d;
+}
+
+html[data-theme="night"] .app-flash.app-alert--success {
+  background: #17382f;
+  color: #a7f3d0;
+}
+
+html[data-theme="night"] .app-flash.app-alert--danger {
+  background: #43202d;
+  color: #fecdd3;
+}
+
 .app-flash.is-hiding {
   opacity: 0;
   transform: translateX(18px);

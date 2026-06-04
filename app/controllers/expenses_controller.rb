@@ -72,12 +72,14 @@ class ExpensesController < ApplicationController
 
     created_count = create_invoice_expenses(importable_items)
     success_message = "#{created_count} lançamentos importados com sucesso!"
-    flash[:notice] = success_message
 
     respond_to do |format|
       format.html { redirect_to expenses_path, notice: success_message }
       format.turbo_stream do
-        render turbo_stream: turbo_stream.replace("modal", "")
+        render turbo_stream: [
+          turbo_stream.update("modal", ""),
+          turbo_flash_stream(success_message)
+        ]
       end
     end
   rescue ActiveRecord::RecordInvalid => error
@@ -103,11 +105,15 @@ class ExpensesController < ApplicationController
       end
 
       create_multiple_expenses!(expense_rows)
+      success_message = "Despesas criadas com sucesso!"
 
       respond_to do |format|
-        format.html { redirect_to expenses_path, notice: "Despesas criadas com sucesso!" }
+        format.html { redirect_to expenses_path, notice: success_message }
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("modal", "")
+          render turbo_stream: [
+            turbo_stream.update("modal", ""),
+            turbo_flash_stream(success_message)
+          ]
         end
       end
     else
@@ -116,10 +122,15 @@ class ExpensesController < ApplicationController
       if @expense.save
         create_recurring_expenses(@expense)
 
+        success_message = "Despesa criada com sucesso!"
+
         respond_to do |format|
-          format.html { redirect_to expenses_path, notice: "Despesa criada com sucesso!" }
+          format.html { redirect_to expenses_path, notice: success_message }
           format.turbo_stream do
-            render turbo_stream: turbo_stream.replace("modal", "")
+            render turbo_stream: [
+              turbo_stream.update("modal", ""),
+              turbo_flash_stream(success_message)
+            ]
           end
         end
       else
@@ -138,17 +149,22 @@ class ExpensesController < ApplicationController
 
     if update_expense_and_group
       respond_to do |format|
+        success_message = "Despesa atualizada com sucesso!"
+
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("modal", "")
+          render turbo_stream: [
+            turbo_stream.update("modal", ""),
+            turbo_flash_stream(success_message)
+          ]
         end
 
         format.html do
-          redirect_to expenses_path, notice: "Despesa atualizada com sucesso!"
+          redirect_to expenses_path, notice: success_message
         end
       end
     else
       respond_to do |format|
-        format.turbo_stream { render :edit, status: :unprocessable_entity }
+        format.turbo_stream { render :edit, formats: [ :html ], status: :unprocessable_entity }
         format.html { render :edit, status: :unprocessable_entity }
       end
     end
@@ -157,10 +173,14 @@ class ExpensesController < ApplicationController
   def destroy
     destroy_expense_with_scope
     load_expenses
+    success_message = "Despesa removida com sucesso!"
 
     respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_to expenses_path, notice: "Despesa removida com sucesso!" }
+      format.turbo_stream do
+        flash.now[:notice] = success_message
+        render :destroy
+      end
+      format.html { redirect_to expenses_path, notice: success_message }
     end
   end
 
@@ -168,15 +188,18 @@ class ExpensesController < ApplicationController
     toggle_paid_with_scope
     load_expenses
 
+    success_message = "Status da despesa atualizado com sucesso!"
+
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.replace("expenses-table", partial: "expenses_table"),
           turbo_stream.replace("expenses-hero-kpis", partial: "hero_kpis"),
-          turbo_stream.update("modal", "")
+          turbo_stream.update("modal", ""),
+          turbo_flash_stream(success_message)
         ]
       end
-      format.html { redirect_to expenses_path(request.query_parameters.except(:paid_scope)) }
+      format.html { redirect_to expenses_path(request.query_parameters.except(:paid_scope)), notice: success_message }
     end
   end
 

@@ -10,6 +10,20 @@ class ApplicationController < ActionController::Base
 
   private
 
+  # Prepara uma notificação flash para respostas Turbo Stream sem recarregar a página.
+  def turbo_flash_stream(message, type: :notice)
+    flash.now[type] = message
+    turbo_stream.update("app-flash-container", partial: "shared/flash_messages")
+  end
+
+  # Redireciona o topo da página em respostas feitas dentro de turbo-frame.
+  def turbo_visit_stream(url)
+    turbo_stream.append(
+      "modal",
+      "<turbo-stream action='visit' target='_top' url='#{url}'></turbo-stream>".html_safe
+    )
+  end
+
   def pagination_per_page(_session_key = nil)
     sanitized_per_page(params[:per_page])
   end

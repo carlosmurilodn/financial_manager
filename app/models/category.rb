@@ -4,18 +4,19 @@ class Category < ApplicationRecord
   has_many :financial_goals, dependent: :nullify
 
   COLOR_PALETTE = {
+    "Amarelo" => "#F0C510",
     "Azul" => "#2563EB",
-    "Verde" => "#16A34A",
-    "Roxo" => "#7C3AED",
-    "Laranja" => "#EA580C",
-    "Rosa" => "#DB2777",
+    "Bege" => "#AB7743",
     "Ciano" => "#0891B2",
-    "Âmbar" => "#D97706",
-    "Vermelho" => "#DC2626",
-    "Índigo" => "#4F46E5",
-    "Verde água" => "#0F766E",
-    "Magenta" => "#C026D3",
-    "Bege" => "#A68A64"
+    "Cinza" => "#6B7280",
+    #"Índigo" => "#4F46E5",
+    "Laranja" => "#EA580C",
+    #"Magenta" => "#C026D3",
+    "Rosa" => "#DB2777",
+    "Roxo" => "#7C3AED",
+    "Turquesa" => "#0F766E",
+    "Verde" => "#16A34A",
+    "Vermelho" => "#DC2626"
   }.freeze
 
   def self.color_name_for(color)

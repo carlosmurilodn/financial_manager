@@ -3,3 +3,4 @@
 <% end %>
 
 <%= turbo_stream.replace "cards-hero-kpis", partial: "hero_kpis" %>
+<%= turbo_stream.update "app-flash-container", partial: "shared/flash_messages" %>

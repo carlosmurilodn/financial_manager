@@ -13,15 +13,15 @@ class CardsController < ApplicationController
     @card = current_user.cards.new(card_params)
 
     if @card.save
+      success_message = "Cartão criado com sucesso!"
+
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: turbo_stream.append(
-            "modal",
-            "<turbo-stream action='visit' target='_top' url='#{cards_path}'></turbo-stream>".html_safe
-          )
+          flash[:notice] = success_message
+          render turbo_stream: turbo_visit_stream(cards_path)
         end
 
-        format.html { redirect_to cards_path, notice: "Cartão criado com sucesso!" }
+        format.html { redirect_to cards_path, notice: success_message }
       end
     else
       respond_to do |format|
@@ -36,19 +36,34 @@ class CardsController < ApplicationController
   def update
     if @card.update(card_params)
       remove_icon_attachment_if_requested
-      redirect_to cards_path, notice: "Cartão atualizado com sucesso!"
+      success_message = "Cartão atualizado com sucesso!"
+
+      respond_to do |format|
+        format.turbo_stream do
+          flash[:notice] = success_message
+          render turbo_stream: turbo_visit_stream(cards_path)
+        end
+        format.html { redirect_to cards_path, notice: success_message }
+      end
     else
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream { render :edit, formats: [ :html ], status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
 
   def destroy
     @card.destroy
     load_cards
+    success_message = "Cartão removido com sucesso!"
 
     respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_to cards_path, notice: "Cartão removido com sucesso!" }
+      format.turbo_stream do
+        flash.now[:notice] = success_message
+        render :destroy
+      end
+      format.html { redirect_to cards_path, notice: success_message }
     end
   end
 

@@ -16,15 +16,15 @@ class FinancialGoalsController < ApplicationController
     @financial_goal = current_user.financial_goals.new(financial_goal_params)
 
     if @financial_goal.save
+      success_message = "Objetivo criado com sucesso!"
+
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: turbo_stream.append(
-            "modal",
-            "<turbo-stream action='visit' target='_top' url='#{financial_goals_path}'></turbo-stream>".html_safe
-          )
+          flash[:notice] = success_message
+          render turbo_stream: turbo_visit_stream(financial_goals_path)
         end
 
-        format.html { redirect_to financial_goals_path, notice: "Objetivo criado com sucesso!" }
+        format.html { redirect_to financial_goals_path, notice: success_message }
       end
     else
       load_categories
@@ -45,22 +45,37 @@ class FinancialGoalsController < ApplicationController
 
   def update
     if @financial_goal.update(financial_goal_params)
-      redirect_to financial_goals_path, notice: "Objetivo atualizado com sucesso!"
+      success_message = "Objetivo atualizado com sucesso!"
+
+      respond_to do |format|
+        format.turbo_stream do
+          flash[:notice] = success_message
+          render turbo_stream: turbo_visit_stream(financial_goals_path)
+        end
+        format.html { redirect_to financial_goals_path, notice: success_message }
+      end
     else
       load_categories
       load_resource_cards
       build_resource_rows
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream { render :edit, formats: [ :html ], status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
 
   def destroy
     @financial_goal.destroy
     load_financial_goals
+    success_message = "Objetivo removido com sucesso!"
 
     respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_to financial_goals_path, notice: "Objetivo removido com sucesso!" }
+      format.turbo_stream do
+        flash.now[:notice] = success_message
+        render :destroy
+      end
+      format.html { redirect_to financial_goals_path, notice: success_message }
     end
   end
 

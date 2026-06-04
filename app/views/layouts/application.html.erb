@@ -7,7 +7,7 @@
     <%= csp_meta_tag %>
     <%= favicon_link_tag "/icon.png", type: "image/png" %>
     <link rel="manifest" href="<%= pwa_manifest_path(format: :json) %>">
-    <meta name="theme-color" content="#0f766e">
+    <meta name="theme-color" content="#828282">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -46,24 +46,9 @@
 
       <main id="page-content-wrapper" class="app-content">
         <div class="app-content__inner">
-          <% if flash.any? %>
-            <div class="app-flash-stack">
-              <% flash.each do |key, msg| %>
-                <div class="app-alert app-alert--dismissible <%= key == 'notice' ? 'app-alert--success' : 'app-alert--danger' %> app-flash" role="alert">
-                  <span class="material-symbols-rounded app-flash__icon"><%= key == "notice" ? "check_circle" : "error" %></span>
-                  <span><%= msg %></span>
-
-                  <button
-                    type="button"
-                    class="app-alert__close"
-                    aria-label="Fechar alerta"
-                    onclick="this.closest('.app-alert').remove()">
-                    <span class="material-symbols-rounded">close</span>
-                  </button>
-                </div>
-              <% end %>
-            </div>
-          <% end %>
+          <div id="app-flash-container">
+            <%= render "shared/flash_messages" %>
+          </div>
 
           <%= yield %>
 

@@ -61,7 +61,11 @@
 
           <div class="app-filter-field">
             <%= f.label :due_until, "Data Prevista" %>
-            <%= f.date_field :due_until, value: @due_until_filter, class: "app-form-control" %>
+            <%= f.text_field :due_until,
+                  value: @due_until_filter,
+                  class: "app-form-control custom-date",
+                  autocomplete: "off",
+                  placeholder: "dd/mm/aaaa" %>
           </div>
 
           <div class="app-filter-field">

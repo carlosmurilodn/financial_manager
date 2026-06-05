@@ -1,3 +1,39 @@
+function removeExistingPicker() {
+  const existingPicker = document.querySelector(".datepicker");
+  if (!existingPicker) return;
+
+  existingPicker.dispatchEvent(new CustomEvent("datepicker:close"));
+  existingPicker.remove();
+}
+
+function formatDateInput(value) {
+  const digits = value.replace(/\D/g, "").slice(0, 8);
+
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+
+  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+}
+
+function normalizeInitialDateValue(input) {
+  if (!input.value?.match(/^\d{4}-\d{2}-\d{2}$/)) return;
+
+  const [y, m, d] = input.value.split("-");
+  input.value = `${d}/${m}/${y}`;
+}
+
+function bindDateMask(input) {
+  if (input.dataset.dateMaskBound === "true") return;
+
+  input.dataset.dateMaskBound = "true";
+  input.setAttribute("inputmode", "numeric");
+  input.setAttribute("maxlength", "10");
+
+  input.addEventListener("input", () => {
+    input.value = formatDateInput(input.value);
+  });
+}
+
 export function initializeDatepicker() {
   // Toggle parcelamento (mantido)
   const paymentSelect = document.getElementById("payment_method_select");
@@ -31,14 +67,6 @@ export function initializeDatepicker() {
     "25/12": "Natal"
   };
 
-  function removeExistingPicker() {
-    const existingPicker = document.querySelector(".datepicker");
-    if (!existingPicker) return;
-
-    existingPicker.dispatchEvent(new CustomEvent("datepicker:close"));
-    existingPicker.remove();
-  }
-
   function positionPicker(picker, input) {
     const rect = input.getBoundingClientRect();
     const margin = 8;
@@ -63,10 +91,8 @@ export function initializeDatepicker() {
   }
 
   allInputs.forEach((input) => {
-    if (input.value && input.value.match(/^\d{4}-\d{2}-\d{2}$/)) {
-      const [y, m, d] = input.value.split("-");
-      input.value = `${d}/${m}/${y}`;
-    }
+    normalizeInitialDateValue(input);
+    bindDateMask(input);
 
     if (input.dataset.datepickerBound === "true") return;
     input.dataset.datepickerBound = "true";

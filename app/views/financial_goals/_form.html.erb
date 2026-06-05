@@ -41,7 +41,12 @@
 
     <div class="col-md-3">
       <%= f.label :due_date, "Data prevista" %>
-      <%= f.date_field :due_date, class: "form-control", required: true %>
+      <%= f.text_field :due_date,
+            value: financial_goal.due_date&.strftime("%d/%m/%Y"),
+            class: "form-control custom-date",
+            autocomplete: "off",
+            placeholder: "dd/mm/aaaa",
+            required: true %>
     </div>
 
     <div class="col-md-3">

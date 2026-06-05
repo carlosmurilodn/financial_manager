@@ -162,9 +162,18 @@ class FinancialGoalsController < ApplicationController
 
     permitted[:target_amount] = parse_brazilian_amount(permitted[:target_amount])
     permitted[:current_amount] = parse_brazilian_amount(permitted[:current_amount], blank: 0)
+    permitted[:due_date] = parse_financial_goal_date(permitted[:due_date])
     normalize_category_reference(permitted)
     normalize_resource_amounts(permitted[:financial_goal_resources_attributes])
     permitted
+  end
+
+  def parse_financial_goal_date(value)
+    return if value.blank?
+
+    Date.iso8601(value)
+  rescue ArgumentError, TypeError
+    parse_brazilian_date(value)
   end
 
   def normalize_category_reference(permitted)
@@ -241,7 +250,7 @@ class FinancialGoalsController < ApplicationController
     @monthly_amount_max_filter = session[:financial_goals_monthly_amount_max].presence
 
     session[:financial_goals_due_until] = params[:due_until].presence if params.key?(:due_until)
-    @due_until_filter = session[:financial_goals_due_until].presence
+    @due_until_filter = formatted_financial_goal_date_filter(session[:financial_goals_due_until])
 
     session[:financial_goals_status] = params[:status].presence if params.key?(:status)
     @status_filter = session[:financial_goals_status].presence
@@ -274,11 +283,7 @@ class FinancialGoalsController < ApplicationController
 
   def apply_financial_goal_filters(goals)
     filtered_goals = goals
-    due_until_date = begin
-      Date.parse(@due_until_filter) if @due_until_filter.present?
-    rescue Date::Error
-      nil
-    end
+    due_until_date = parse_financial_goal_date(@due_until_filter)
 
     filtered_goals = filtered_goals.select { |goal| goal.description.to_s.downcase.include?(@description_filter.downcase) } if @description_filter.present?
     filtered_goals = filtered_goals.select { |goal| goal.category_id.to_s == @category_filter.to_s } if @category_filter.present?
@@ -293,5 +298,12 @@ class FinancialGoalsController < ApplicationController
     filtered_goals = filtered_goals.select { |goal| goal.status == @status_filter } if @status_filter.present?
     filtered_goals = filtered_goals.select { |goal| goal.priority == @priority_filter } if @priority_filter.present?
     filtered_goals
+  end
+
+  def formatted_financial_goal_date_filter(value)
+    date = parse_financial_goal_date(value)
+    return value.presence if date.blank?
+
+    date.strftime("%d/%m/%Y")
   end
 end

@@ -110,11 +110,13 @@ class CardsController < ApplicationController
     filtered_debt_scope = apply_card_debt_filters(debt_scope)
     accumulated_debt_scope = apply_card_accumulated_debt_period(debt_scope)
     month_expense_scope = apply_card_month_expense_period(expense_scope, accumulated_debt_scope)
+    limit_usage_scope = card_limit_usage_scope(accumulated_debt_scope, month_expense_scope)
     card_ids_from_debt = card_filter_match_scope(filtered_debt_scope, accumulated_debt_scope)
                          .distinct
                          .pluck(:card_id)
     @card_debt_totals_by_card = Expense.effective_sum_by_card(accumulated_debt_scope)
     @card_month_totals_by_card = Expense.effective_sum_by_card(month_expense_scope)
+    @card_limit_usage_totals_by_card = Expense.effective_sum_by_card(limit_usage_scope)
 
     cards = current_user.cards.order(:name).to_a
     cards = cards.select { |card| card_matches_filters?(card, card_ids_from_debt) } if card_filters_active?
@@ -213,12 +215,16 @@ class CardsController < ApplicationController
     complete_period_filter? ? accumulated_debt_scope : filtered_debt_scope
   end
 
+  def card_limit_usage_scope(accumulated_debt_scope, month_expense_scope)
+    complete_period_filter? ? month_expense_scope : accumulated_debt_scope
+  end
+
   def card_matches_filters?(card, card_ids_from_debt)
     card_ids_from_debt.include?(card.id)
   end
 
   def remaining_limit_for(card)
-    card.total_limit.to_f - @card_debt_totals_by_card.fetch(card.id, 0).to_f
+    card.total_limit.to_f - @card_limit_usage_totals_by_card.fetch(card.id, 0).to_f
   end
 
   def selected_pay_balance_month

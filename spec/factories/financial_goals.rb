@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :financial_goal do
     association :user
-    category { association(:category, user: user) }
+    association :category
     description { "Reserva de emergencia" }
     target_amount { 10_000 }
     current_amount { 1_000 }

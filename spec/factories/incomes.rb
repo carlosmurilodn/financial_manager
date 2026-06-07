@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :income do
     association :user
-    category { association(:category, user: user) }
+    association :category
     description { "Salario" }
     amount { 3_000 }
     date { Date.current }

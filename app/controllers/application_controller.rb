@@ -1,81 +1,11 @@
 class ApplicationController < ActionController::Base
   include BrazilianParameterParsing
-  before_action :authenticate_user!
-
-  PER_PAGE_OPTIONS = [ 10, 25, 50, 100 ].freeze
-  DEFAULT_PER_PAGE = 10
+  include ControllerPagination
+  include SortableCollection
+  include TurboStreamResponses
 
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
-  private
-
-  # Prepara uma notificação flash para respostas Turbo Stream sem recarregar a página.
-  def turbo_flash_stream(message, type: :notice)
-    flash.now[type] = message
-    turbo_stream.update("app-flash-container", partial: "shared/flash_messages")
-  end
-
-  # Redireciona o topo da página em respostas feitas dentro de turbo-frame.
-  def turbo_visit_stream(url)
-    turbo_stream.append(
-      "modal",
-      "<turbo-stream action='visit' target='_top' url='#{url}'></turbo-stream>".html_safe
-    )
-  end
-
-  def pagination_per_page(_session_key = nil)
-    sanitized_per_page(params[:per_page])
-  end
-
-  def paginate_collection(collection, per_page:)
-    @per_page = per_page
-    @total_pages = [ (collection.size.to_f / @per_page).ceil, 1 ].max
-    @current_page = params[:page].to_i
-    @current_page = 1 if @current_page < 1
-    @current_page = @total_pages if @current_page > @total_pages
-
-    offset = (@current_page - 1) * @per_page
-    collection.slice(offset, @per_page) || []
-  end
-
-  def sort_collection(collection, sort_map:, default_sort:, default_direction: "asc", sort: nil, direction: nil)
-    requested_sort = sort.presence || params[:sort].to_s
-    requested_direction = direction.presence || params[:direction]
-
-    @sort = sort_map.key?(requested_sort.to_s) ? requested_sort.to_s : default_sort.to_s
-    fallback_direction = default_direction == "desc" ? "desc" : "asc"
-    @direction = requested_direction.present? ? (requested_direction == "desc" ? "desc" : "asc") : fallback_direction
-
-    sorter = sort_map.fetch(@sort)
-    sorted_collection = collection.sort_by do |record|
-      normalize_sort_value(sorter.call(record))
-    end
-
-    @direction == "desc" ? sorted_collection.reverse : sorted_collection
-  end
-
-  def per_page_options
-    PER_PAGE_OPTIONS
-  end
-  helper_method :per_page_options
-
-  def sanitized_per_page(value)
-    per_page = value.to_i
-
-    PER_PAGE_OPTIONS.include?(per_page) ? per_page : DEFAULT_PER_PAGE
-  end
-
-  def normalize_sort_value(value)
-    case value
-    when nil
-      [ 1, "" ]
-    when String
-      [ 0, value.downcase ]
-    when TrueClass, FalseClass
-      [ 0, value ? 1 : 0 ]
-    else
-      [ 0, value ]
-    end
-  end
+  before_action :authenticate_user!
 end

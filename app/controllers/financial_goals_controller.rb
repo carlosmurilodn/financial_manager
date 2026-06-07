@@ -99,20 +99,24 @@ class FinancialGoalsController < ApplicationController
   private
 
   def load_financial_goals
-    goals = current_user.financial_goals.includes(:category, :financial_goal_resources).to_a
-
     load_categories
     load_financial_goal_filters
-    goals = apply_financial_goal_filters(goals)
+    result = FinancialGoals::IndexQuery.new(
+      user: current_user,
+      filters: financial_goal_filters
+    ).call
+    assign_financial_goal_result(result)
 
-    @financial_goals_count = goals.size
-    @financial_goals_active_count = goals.count { |goal| goal.status_planned? || goal.status_in_progress? }
-    @financial_goals_target_total = goals.sum { |goal| goal.target_amount.to_d }
-    @financial_goals_current_total = goals.sum(&:progress_amount)
-    @financial_goals_nearest_due_date = goals.reject(&:status_completed?).map(&:due_date).compact.min
-
-    goals = sort_collection(goals, sort_map: financial_goal_sort_map, default_sort: "due_date")
+    goals = sort_collection(result.goals, sort_map: financial_goal_sort_map, default_sort: "due_date")
     @financial_goals = paginate_collection(goals, per_page: pagination_per_page(:financial_goals_per_page))
+  end
+
+  def assign_financial_goal_result(result)
+    @financial_goals_count = result.count
+    @financial_goals_active_count = result.active_count
+    @financial_goals_target_total = result.target_total
+    @financial_goals_current_total = result.current_total
+    @financial_goals_nearest_due_date = result.nearest_due_date
   end
 
   def financial_goal_sort_map
@@ -281,23 +285,21 @@ class FinancialGoalsController < ApplicationController
     value
   end
 
-  def apply_financial_goal_filters(goals)
-    filtered_goals = goals
-    due_until_date = parse_financial_goal_date(@due_until_filter)
-
-    filtered_goals = filtered_goals.select { |goal| goal.description.to_s.downcase.include?(@description_filter.downcase) } if @description_filter.present?
-    filtered_goals = filtered_goals.select { |goal| goal.category_id.to_s == @category_filter.to_s } if @category_filter.present?
-    filtered_goals = filtered_goals.select { |goal| goal.progress_percent >= @progress_min_filter.to_f } if @progress_min_filter.present?
-    filtered_goals = filtered_goals.select { |goal| goal.progress_amount >= parse_brazilian_amount(@current_amount_min_filter, blank: 0) } if @current_amount_min_filter.present?
-    filtered_goals = filtered_goals.select { |goal| goal.target_amount.to_d >= parse_brazilian_amount(@target_amount_min_filter, blank: 0) } if @target_amount_min_filter.present?
-    filtered_goals = filtered_goals.select { |goal| goal.credit_limit_amount >= parse_brazilian_amount(@credit_amount_min_filter, blank: 0) } if @credit_amount_min_filter.present?
-    filtered_goals = filtered_goals.select { |goal| goal.potential_amount >= parse_brazilian_amount(@potential_amount_min_filter, blank: 0) } if @potential_amount_min_filter.present?
-    filtered_goals = filtered_goals.select { |goal| goal.remaining_amount <= parse_brazilian_amount(@remaining_amount_max_filter, blank: 0) } if @remaining_amount_max_filter.present?
-    filtered_goals = filtered_goals.select { |goal| goal.monthly_required_amount <= parse_brazilian_amount(@monthly_amount_max_filter, blank: 0) } if @monthly_amount_max_filter.present?
-    filtered_goals = filtered_goals.select { |goal| goal.due_date.present? && goal.due_date <= due_until_date } if due_until_date.present?
-    filtered_goals = filtered_goals.select { |goal| goal.status == @status_filter } if @status_filter.present?
-    filtered_goals = filtered_goals.select { |goal| goal.priority == @priority_filter } if @priority_filter.present?
-    filtered_goals
+  def financial_goal_filters
+    {
+      description: @description_filter,
+      category_id: @category_filter,
+      progress_min: @progress_min_filter,
+      current_amount_min: @current_amount_min_filter,
+      target_amount_min: @target_amount_min_filter,
+      credit_amount_min: @credit_amount_min_filter,
+      potential_amount_min: @potential_amount_min_filter,
+      remaining_amount_max: @remaining_amount_max_filter,
+      monthly_amount_max: @monthly_amount_max_filter,
+      due_until: @due_until_filter,
+      status: @status_filter,
+      priority: @priority_filter
+    }
   end
 
   def formatted_financial_goal_date_filter(value)

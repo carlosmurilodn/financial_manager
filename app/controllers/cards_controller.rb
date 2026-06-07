@@ -109,11 +109,13 @@ class CardsController < ApplicationController
     @card_debt_years = debt_year_options(debt_scope)
     filtered_debt_scope = apply_card_debt_filters(debt_scope)
     accumulated_debt_scope = apply_card_accumulated_debt_period(debt_scope)
+    projected_limit_scope = apply_card_projected_limit_period(debt_scope)
     month_expense_scope = apply_card_month_expense_period(expense_scope, accumulated_debt_scope)
     card_ids_from_debt = card_filter_match_scope(filtered_debt_scope, accumulated_debt_scope)
                          .distinct
                          .pluck(:card_id)
     @card_debt_totals_by_card = Expense.effective_sum_by_card(accumulated_debt_scope)
+    @card_projected_limit_totals_by_card = Expense.effective_sum_by_card(projected_limit_scope)
     @card_month_totals_by_card = Expense.effective_sum_by_card(month_expense_scope)
 
     cards = current_user.cards.order(:name).to_a
@@ -173,6 +175,14 @@ class CardsController < ApplicationController
     apply_card_description_filter(scope)
   end
 
+  def apply_card_projected_limit_period(scope)
+    return apply_card_description_filter(scope) unless complete_period_filter?
+
+    apply_card_description_filter(scope.where("balance_month >= ?", Date.new(@year, @month, 1).next_month))
+  rescue ArgumentError
+    apply_card_description_filter(scope)
+  end
+
   def apply_card_month_expense_period(scope, fallback_scope)
     return fallback_scope unless complete_period_filter?
 
@@ -218,7 +228,7 @@ class CardsController < ApplicationController
   end
 
   def remaining_limit_for(card)
-    card.total_limit.to_f - @card_debt_totals_by_card.fetch(card.id, 0).to_f
+    card.total_limit.to_f - @card_projected_limit_totals_by_card.fetch(card.id, 0).to_f
   end
 
   def selected_pay_balance_month

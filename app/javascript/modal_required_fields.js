@@ -2,7 +2,7 @@ const REQUIRED_SELECTOR = "input:not([type='hidden']):not([disabled]), select:no
 const CREDIT_PAYMENT_METHODS = ["credito_a_vista", "credito_parcelado"];
 
 function closestField(input) {
-  return input.closest(".expense-modal-field, .app-goal-resource-form__field, .invoice-import-field, .app-form-field, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .mb-3");
+  return input.closest(".expense-modal-field, .app-goal-resource-form__field, .app-form-field, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .mb-3");
 }
 
 function paymentMethodValue(input) {

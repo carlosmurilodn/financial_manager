@@ -18,63 +18,6 @@ class ExpensesController < ApplicationController
 
   def edit; end
 
-  def import_invoice
-    load_invoice_import_options
-    @invoice_preview_items = []
-    @invoice_import_errors = []
-  end
-
-  def analyze_invoice
-    load_invoice_import_options
-    @selected_card_id = params[:card_id]
-    @invoice_due_date = params[:due_date]
-
-    result = InvoiceImportAnalyzer.new(
-      file: params[:invoice_file],
-      card_id: @selected_card_id,
-      due_date: @invoice_due_date,
-      invoice_password: params[:invoice_password],
-      categories: @categories
-    ).call
-
-    @invoice_preview_items = result.items
-    @invoice_import_errors = result.errors
-
-    render :import_invoice
-  end
-
-  def confirm_invoice_import
-    importable_items = invoice_import_items.select do |item|
-      ActiveModel::Type::Boolean.new.cast(item[:selected])
-    end
-
-    if importable_items.blank?
-      load_invoice_import_options
-      @invoice_preview_items = invoice_import_items
-      @invoice_import_errors = [ "Selecione ao menos um lançamento para importar." ]
-      render :import_invoice, status: :unprocessable_entity
-      return
-    end
-
-    created_count = create_invoice_expenses(importable_items)
-    success_message = "#{created_count} lançamentos importados com sucesso!"
-
-    respond_to do |format|
-      format.html { redirect_to expenses_path, notice: success_message }
-      format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.update("modal", ""),
-          turbo_flash_stream(success_message)
-        ]
-      end
-    end
-  rescue ActiveRecord::RecordInvalid => error
-    load_invoice_import_options
-    @invoice_preview_items = invoice_import_items
-    @invoice_import_errors = [ "Revise os lançamentos: #{error.record.errors.full_messages.to_sentence}" ]
-    render :import_invoice, status: :unprocessable_entity
-  end
-
   def delete_options; end
 
   def toggle_paid_options; end
@@ -257,46 +200,6 @@ class ExpensesController < ApplicationController
 
   def set_expense
     @expense = current_user.expenses.find(params[:id])
-  end
-
-  def load_invoice_import_options
-    @cards = current_user.cards.order(:name)
-    @categories = current_user.categories.to_a.sort_by(&:sort_name)
-  end
-
-  def invoice_import_items
-    raw_items = params[:invoice_items] || {}
-    raw_items = raw_items.permit!.to_h if raw_items.respond_to?(:permit!)
-    raw_items.values.map(&:symbolize_keys)
-  end
-
-  def create_invoice_expenses(items)
-    Expense.transaction do
-      items.each do |item|
-        current_user.expenses.create!(
-          description: item[:description],
-          amount: parse_brazilian_amount(item[:amount], blank: 0),
-          date: parse_invoice_date(item[:date]),
-          balance_month: parse_invoice_date(item[:due_date]) || parse_invoice_date(item[:date]),
-          category_id: item[:category_id],
-          payment_method: item[:payment_method],
-          card_id: item[:card_id].presence,
-          paid: false,
-          installments_count: 1,
-          current_installment: 1
-        )
-      end
-    end
-
-    items.size
-  end
-
-  def parse_invoice_date(value)
-    return if value.blank?
-
-    Date.iso8601(value)
-  rescue ArgumentError
-    parse_brazilian_date(value)
   end
 
   def expense_params

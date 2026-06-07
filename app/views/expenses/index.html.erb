@@ -99,11 +99,6 @@
 
           <%= render "shared/per_page_select" %>
 
-          <%= link_to import_invoice_expenses_path,
-                      class: "app-btn app-btn--secondary app-page__secondary-btn app-filter-actions__import",
-                      data: { turbo_frame: "modal" } do %>
-            <span class="material-symbols-rounded me-1">upload_file</span> Importar Fatura
-          <% end %>
         </div>
       <% end %>
     <% end %>

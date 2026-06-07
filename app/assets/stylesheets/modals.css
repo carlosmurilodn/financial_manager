@@ -90,8 +90,7 @@ html[data-theme="night"] #app-modal-body .modal-header {
 }
 
 #app-modal-body .has-required-error > label,
-#app-modal-body .has-required-error > .form-check-label,
-#app-modal-body .has-required-error > .invoice-import-field__label {
+#app-modal-body .has-required-error > .form-check-label {
   color: var(--danger) !important;
 }
 

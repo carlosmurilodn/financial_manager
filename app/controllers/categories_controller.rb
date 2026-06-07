@@ -16,13 +16,11 @@ class CategoriesController < ApplicationController
       success_message = "Categoria criada com sucesso!"
 
       respond_to do |format|
-        # Turbo: fecha o modal e recarrega a página inteira.
         format.turbo_stream do
           flash[:notice] = success_message
           render turbo_stream: turbo_visit_stream(categories_path)
         end
 
-        # Fallback HTML.
         format.html { redirect_to categories_path, notice: success_message }
       end
     else
@@ -71,48 +69,20 @@ class CategoriesController < ApplicationController
   private
 
   def load_categories
-    categories = current_user.categories.to_a
     @description_filter = params[:description].to_s.strip
+    result = Categories::IndexQuery.new(user: current_user, description: @description_filter).call
 
-    if @description_filter.present?
-      normalized_description = normalize_category_filter(@description_filter)
-
-      categories = categories.select do |category|
-        category.normalized_name.include?(normalized_description)
-      end
-    end
-
-    month_range = Date.current.beginning_of_month..Date.current.end_of_month
-    current_expenses = current_user.expenses.where(balance_month: month_range)
-    current_incomes = current_user.incomes.where(balance_month: month_range)
-
-    @categories_month_expenses = Expense.effective_sum(current_expenses)
-    @categories_month_incomes = current_incomes.sum(:amount)
-
-    @categories_top_expense_value =
-      current_expenses.group_by(&:category_id).values.map { |expenses| expenses.sum(&:effective_amount).abs }.max || 0
-
-    @categories_uncategorized_value =
-      Expense.effective_sum(current_expenses.where(category_id: nil)) +
-      current_incomes.where(category_id: nil).sum(:amount)
-
-    @categories = categories.sort_by(&:sort_name)
-  end
-
-  def normalize_category_filter(value)
-    value
-      .unicode_normalize(:nfkd)
-      .encode("ASCII", replace: "", undef: :replace)
-      .downcase
-      .gsub(/[^a-z0-9]+/, " ")
-      .squeeze(" ")
-      .strip
+    @categories = result.categories
+    @categories_month_expenses = result.month_expenses
+    @categories_month_incomes = result.month_incomes
+    @categories_top_expense_value = result.top_expense_value
+    @categories_uncategorized_value = result.uncategorized_value
   end
 
   def set_category
     @category = current_user.categories.find(params[:id])
   end
-  
+
   def category_params
     params.require(:category).permit(:name, :icon, :color)
   end

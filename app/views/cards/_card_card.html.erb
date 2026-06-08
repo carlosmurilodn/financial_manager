@@ -1,8 +1,8 @@
 <% card_color = card.display_color %>
-<% used_limit = @card_projected_limit_totals_by_card.fetch(card.id, 0).to_f %>
-<% available_limit = card.total_limit.to_f - used_limit %>
-<% selected_month_total = @card_month_totals_by_card.fetch(card.id, used_limit).to_f %>
-<% selected_month_label = @month.present? && @year.present? ? "Total do mês" : "Total utilizado" %>
+<% used_limit = card_projected_used_limit(card) %>
+<% available_limit = card_available_limit(card) %>
+<% selected_month_total = card_selected_month_total(card) %>
+<% selected_month_label = card_selected_month_label %>
 
 <article
   id="<%= dom_id(card) %>"

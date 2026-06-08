@@ -7,7 +7,6 @@ Rails.application.routes.draw do
 
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-  get "passkey_test" => "passkey_test#index"
 
   resources :expenses do
     member do
@@ -17,9 +16,6 @@ Rails.application.routes.draw do
     end
     collection do
       delete :clear_filters
-      post :analyze_invoice
-      post :confirm_invoice_import
-      get :import_invoice
       get :report
       get :report_pdf
     end

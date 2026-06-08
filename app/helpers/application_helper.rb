@@ -1,4 +1,12 @@
 module ApplicationHelper
+  def default_per_page
+    ControllerPagination::DEFAULT_PER_PAGE
+  end
+
+  def per_page_options
+    ControllerPagination::PER_PAGE_OPTIONS
+  end
+
   def pagination_sequence(current_page, total_pages, window: 1)
     return [] if total_pages.to_i <= 1
 

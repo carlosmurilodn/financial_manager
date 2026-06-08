@@ -15,45 +15,7 @@ function getModalBody() {
   return document.getElementById("app-modal-body");
 }
 
-function initializeInvoiceFilePreview(scope) {
-  const fileInput = scope.querySelector("[data-invoice-file-input]");
-  const previewButton = scope.querySelector("[data-invoice-file-preview]");
-
-  if (!fileInput || !previewButton || previewButton.dataset.bound === "true") return;
-
-  let fileUrl = null;
-
-  const revokeFileUrl = () => {
-    if (!fileUrl) return;
-
-    URL.revokeObjectURL(fileUrl);
-    fileUrl = null;
-  };
-
-  const refreshButtonState = () => {
-    revokeFileUrl();
-    previewButton.disabled = fileInput.files.length === 0;
-  };
-
-  previewButton.dataset.bound = "true";
-  previewButton.disabled = fileInput.files.length === 0;
-
-  previewButton.addEventListener("click", () => {
-    const file = fileInput.files[0];
-    if (!file) return;
-
-    revokeFileUrl();
-    fileUrl = URL.createObjectURL(file);
-    window.open(fileUrl, "_blank", "noopener");
-  });
-
-  fileInput.addEventListener("change", refreshButtonState);
-
-  scope.addEventListener("invoice-file-preview:cleanup", revokeFileUrl, { once: true });
-}
-
 function cleanupModalBody(modalBody) {
-  modalBody.dispatchEvent(new CustomEvent("invoice-file-preview:cleanup"));
   modalBody.innerHTML = "";
 }
 
@@ -158,7 +120,6 @@ document.addEventListener("turbo:frame-load", (event) => {
   initializeDatepicker();
   initializeExpenseForm();
   initializeFinancialGoalForm(modalBody);
-  initializeInvoiceFilePreview(modalBody);
 
   const paymentSelect = modalBody.querySelector("#payment_method_select");
   const parcelSection = modalBody.querySelector("#parcelamento_section");
@@ -177,7 +138,6 @@ document.addEventListener("turbo:frame-load", (event) => {
     const resetModalRequestState = () => {
       activeModalRequestController = null;
       modalRequestAborted = false;
-      modalBody.querySelector("[data-invoice-loading]")?.classList.remove("is-visible");
       form.querySelector("[type='submit']")?.removeAttribute("disabled");
     };
 
@@ -192,10 +152,8 @@ document.addEventListener("turbo:frame-load", (event) => {
     form.addEventListener("turbo:submit-start", () => {
       if (form.dataset.stayModal !== "true") return;
 
-      const loadingOverlay = modalBody.querySelector("[data-invoice-loading]");
       const submitButton = form.querySelector("[type='submit']");
 
-      loadingOverlay?.classList.add("is-visible");
       submitButton?.setAttribute("disabled", "disabled");
     });
 
@@ -227,7 +185,6 @@ document.addEventListener("turbo:frame-load", (event) => {
         activeModalRequestController = null;
       }
 
-      modalBody.querySelector("[data-invoice-loading]")?.classList.remove("is-visible");
       modalBody.querySelector("form [type='submit']")?.removeAttribute("disabled");
     },
     { once: true }

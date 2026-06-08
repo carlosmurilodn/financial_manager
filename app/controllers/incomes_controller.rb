@@ -12,13 +12,14 @@ class IncomesController < ApplicationController
   end
 
   def create
-    @income = current_user.incomes.new(income_params)
+    attributes = income_params
+    @income = current_user.incomes.new(attributes)
     @income.repetir ||= 0
 
-    assign_income_dates
+    assign_income_dates(attributes)
 
     if @income.save
-      create_recurring_incomes(@income)
+      Incomes::CreateRecurring.call(income: @income, user: current_user)
       success_message = "Receita criada com sucesso!"
 
       respond_to do |format|
@@ -40,9 +41,10 @@ class IncomesController < ApplicationController
   def edit; end
 
   def update
-    assign_income_dates
+    attributes = income_params
+    assign_income_dates(attributes)
 
-    if @income.update(income_params.except(:date, :balance_month))
+    if @income.update(attributes.except(:date, :balance_month))
       success_message = "Receita atualizada com sucesso!"
 
       respond_to do |format|
@@ -121,23 +123,16 @@ class IncomesController < ApplicationController
     permitted[:category_id] = nil unless current_user.categories.exists?(id: permitted[:category_id])
   end
 
-  def create_recurring_incomes(income)
-    repetir = income.repetir.to_i
-    return if repetir <= 0
+  def load_incomes
+    load_income_filters
+    result = Incomes::IndexQuery.new(user: current_user, filters: income_filters).call
 
-    repetir.times do |i|
-      current_user.incomes.create!(
-        description: income.description,
-        amount: income.amount,
-        date: income.date + (i + 1).month,
-        balance_month: income.balance_month + (i + 1).month,
-        paid: false,
-        category_id: income.category_id
-      )
-    end
+    @incomes = sort_collection(result.incomes, sort_map: income_sort_map, default_sort: "balance_month")
+    assign_income_result(result)
+    paginate_incomes if action_name == "index"
   end
 
-  def load_incomes
+  def load_income_filters
     session[:incomes_month] = params[:month].to_i if params[:month].present?
     @month = session[:incomes_month]
     @month = nil if @month.blank? || @month == 0
@@ -154,65 +149,28 @@ class IncomesController < ApplicationController
     @paid_filter = nil if @paid_filter.blank?
 
     @item_offset = 0
-
-    all_incomes = current_user.incomes.includes(:category).order(balance_month: :asc, date: :asc)
-    all_expenses = current_user.expenses.order(balance_month: :asc)
-
-    @incomes = all_incomes.to_a
-    filter_by_month
-    filter_by_description
-    filter_by_paid
-    @incomes = sort_collection(@incomes, sort_map: income_sort_map, default_sort: "balance_month")
-    calculate_totals
-    paginate_incomes if action_name == "index"
-
-    if @month && @year
-      previous_month_end = Date.new(@year, @month, 1) - 1.day
-
-      receitas_anteriores = all_incomes.where("balance_month <= ?", previous_month_end).sum(:amount)
-      despesas_anteriores = Expense.effective_sum(all_expenses.where("balance_month <= ?", previous_month_end))
-
-      @previous_balance = receitas_anteriores - despesas_anteriores
-
-      current_month_end = Date.new(@year, @month, 1).end_of_month
-      receitas_ate_mes = all_incomes.where("balance_month <= ? AND paid = ?", current_month_end, true).sum(:amount)
-      despesas_ate_mes = Expense.effective_sum(all_expenses.where("balance_month <= ? AND paid = ?", current_month_end, true))
-
-      @current_balance = receitas_ate_mes - despesas_ate_mes
-    else
-      @previous_balance = 0
-      @current_balance = 0
-    end
   end
 
-  def assign_income_dates
-    @income.date = parse_brazilian_date(income_params[:date])
-    @income.balance_month = parse_brazilian_date(income_params[:balance_month])
+  def income_filters
+    {
+      month: @month,
+      year: @year,
+      description: @description_filter,
+      paid: @paid_filter
+    }
   end
 
-  def filter_by_month
-    return if @month.nil? || @year.nil?
-
-    @incomes.select! { |income| income.balance_month.month == @month && income.balance_month.year == @year }
+  def assign_income_result(result)
+    @total_amount = result.total_amount
+    @total_received = result.total_received
+    @total_pending = result.total_pending
+    @previous_balance = result.previous_balance
+    @current_balance = result.current_balance
   end
 
-  def filter_by_description
-    return if @description_filter.blank?
-
-    @incomes.select! { |income| income.description.to_s.downcase.include?(@description_filter.downcase) }
-  end
-
-  def filter_by_paid
-    return if @paid_filter.nil?
-
-    value = ActiveModel::Type::Boolean.new.cast(@paid_filter)
-    @incomes.select! { |income| income.paid == value }
-  end
-
-  def calculate_totals
-    @total_amount = @incomes.sum(&:amount)
-    @total_received = @incomes.select(&:paid?).sum(&:amount)
-    @total_pending = @incomes.reject(&:paid?).sum(&:amount)
+  def assign_income_dates(attributes)
+    @income.date = parse_brazilian_date(attributes[:date])
+    @income.balance_month = parse_brazilian_date(attributes[:balance_month])
   end
 
   def income_sort_map

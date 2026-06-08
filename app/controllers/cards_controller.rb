@@ -77,19 +77,9 @@ class CardsController < ApplicationController
 
   def pay
     balance_month = selected_pay_balance_month
-    balance_month_range = balance_month.beginning_of_month..balance_month.end_of_month
-    now = Time.current
+    updated_expenses_count = Cards::PayInvoice.call(card: @card, user: current_user, balance_month: balance_month)
 
-    ActiveRecord::Base.transaction do
-      updated_expenses_count = @card.expenses
-                                    .where(user: current_user)
-                                    .where(paid: false, payment_method: Expense.card_payment_method_values)
-                                    .where(balance_month: balance_month_range)
-                                    .update_all(paid: true, paid_at: now, updated_at: now)
-
-      flash[:notice] = "Pagamentos atualizados: #{updated_expenses_count} lançamentos marcados como pagos para #{balance_month.strftime('%m/%Y')}."
-    end
-
+    flash[:notice] = "Pagamentos atualizados: #{updated_expenses_count} lançamentos marcados como pagos para #{balance_month.strftime('%m/%Y')}."
     redirect_to cards_path
   rescue => e
     Rails.logger.error("Erro ao pagar cartão ##{@card.id}: #{e.message}\n#{e.backtrace.first(8).join("\n")}")
@@ -104,34 +94,32 @@ class CardsController < ApplicationController
     @pay_balance_month = selected_pay_balance_month
     @pay_balance_month_label = @pay_balance_month.strftime("%m/%Y")
 
-    debt_scope = card_debt_scope
-    expense_scope = card_expense_scope
-    @card_debt_years = debt_year_options(debt_scope)
-    filtered_debt_scope = apply_card_debt_filters(debt_scope)
-    accumulated_debt_scope = apply_card_accumulated_debt_period(debt_scope)
-    projected_limit_scope = apply_card_projected_limit_period(debt_scope)
-    month_expense_scope = apply_card_month_expense_period(expense_scope, accumulated_debt_scope)
-    card_ids_from_debt = card_filter_match_scope(filtered_debt_scope, accumulated_debt_scope)
-                         .distinct
-                         .pluck(:card_id)
-    @card_debt_totals_by_card = Expense.effective_sum_by_card(accumulated_debt_scope)
-    @card_projected_limit_totals_by_card = Expense.effective_sum_by_card(projected_limit_scope)
-    @card_month_totals_by_card = Expense.effective_sum_by_card(month_expense_scope)
+    result = Cards::IndexQuery.new(
+      user: current_user,
+      description: @description_filter,
+      month: @month,
+      year: @year
+    ).call
 
-    cards = current_user.cards.order(:name).to_a
-    cards = cards.select { |card| card_matches_filters?(card, card_ids_from_debt) } if card_filters_active?
+    assign_card_result(result)
 
-    @cards_limit_total = cards.sum { |card| card.total_limit.to_f }
-    @cards_limit_available = cards.sum { |card| remaining_limit_for(card) }
-    @cards_limit_used = @cards_limit_total - @cards_limit_available
-    @cards_open_invoices = cards.sum { |card| @card_debt_totals_by_card.fetch(card.id, 0).to_f }
-
-    cards = sort_collection(cards, sort_map: card_sort_map, default_sort: "name")
+    cards = sort_collection(result.cards, sort_map: card_sort_map, default_sort: "name")
 
     @per_page = pagination_per_page(:cards_per_page)
     @cards = paginate_collection(cards, per_page: @per_page)
 
     @item_offset = ((@current_page.to_i - 1) * @per_page.to_i)
+  end
+
+  def assign_card_result(result)
+    @card_debt_years = result.debt_years
+    @card_debt_totals_by_card = result.debt_totals_by_card
+    @card_projected_limit_totals_by_card = result.projected_limit_totals_by_card
+    @card_month_totals_by_card = result.month_totals_by_card
+    @cards_limit_total = result.limit_total
+    @cards_limit_available = result.limit_available
+    @cards_limit_used = result.limit_used
+    @cards_open_invoices = result.open_invoices
   end
 
   def load_card_filters
@@ -145,86 +133,6 @@ class CardsController < ApplicationController
     session[:cards_year] = params[:year].to_i if params[:year].present?
     @year = session[:cards_year]
     @year = nil if @year.blank? || @year.zero?
-  end
-
-  def card_debt_scope
-    current_user.expenses
-                .where(paid: false, payment_method: Expense.card_payment_method_values)
-                .where.not(card_id: nil)
-  end
-
-  def card_expense_scope
-    current_user.expenses
-                .where(payment_method: Expense.card_payment_method_values)
-                .where.not(card_id: nil)
-  end
-
-  def apply_card_debt_filters(scope)
-    filtered_scope = scope
-    filtered_scope = filtered_scope.where("EXTRACT(MONTH FROM balance_month) = ?", @month) if @month.present?
-    filtered_scope = filtered_scope.where("EXTRACT(YEAR FROM balance_month) = ?", @year) if @year.present?
-
-    apply_card_description_filter(filtered_scope)
-  end
-
-  def apply_card_accumulated_debt_period(scope)
-    return apply_card_description_filter(scope) unless complete_period_filter?
-
-    apply_card_description_filter(scope.where("balance_month >= ?", Date.new(@year, @month, 1)))
-  rescue ArgumentError
-    apply_card_description_filter(scope)
-  end
-
-  def apply_card_projected_limit_period(scope)
-    return apply_card_description_filter(scope) unless complete_period_filter?
-
-    apply_card_description_filter(scope.where("balance_month >= ?", Date.new(@year, @month, 1).next_month))
-  rescue ArgumentError
-    apply_card_description_filter(scope)
-  end
-
-  def apply_card_month_expense_period(scope, fallback_scope)
-    return fallback_scope unless complete_period_filter?
-
-    balance_month = Date.new(@year, @month, 1)
-    apply_card_description_filter(scope.where(balance_month: balance_month.all_month))
-  rescue ArgumentError
-    fallback_scope
-  end
-
-  def apply_card_description_filter(scope)
-    return scope if @description_filter.blank?
-
-    query = "%#{@description_filter.downcase}%"
-    matching_card_ids = current_user.cards.where("LOWER(name) LIKE ?", query).pluck(:id)
-
-    return scope.where("LOWER(description) LIKE ?", query) if matching_card_ids.blank?
-
-    scope.where("LOWER(description) LIKE :query OR card_id IN (:card_ids)", query: query, card_ids: matching_card_ids)
-  end
-
-  def debt_year_options(scope)
-    scope.pluck(:balance_month)
-         .compact
-         .map(&:year)
-         .uniq
-         .sort
-  end
-
-  def card_filters_active?
-    @description_filter.present? || @month.present? || @year.present?
-  end
-
-  def complete_period_filter?
-    @month.present? && @year.present?
-  end
-
-  def card_filter_match_scope(filtered_debt_scope, accumulated_debt_scope)
-    complete_period_filter? ? accumulated_debt_scope : filtered_debt_scope
-  end
-
-  def card_matches_filters?(card, card_ids_from_debt)
-    card_ids_from_debt.include?(card.id)
   end
 
   def remaining_limit_for(card)

@@ -1,20 +1,6 @@
 class ExpensesController < ApplicationController
-  EXPENSE_SORT_OPTIONS = {
-    "description_asc" => { label: "Descrição Crescente", sort: "description", direction: "asc" },
-    "description_desc" => { label: "Descrição Decrescente", sort: "description", direction: "desc" },
-    "amount_desc" => { label: "Maior Valor", sort: "amount", direction: "desc" },
-    "amount_asc" => { label: "Menor Valor", sort: "amount", direction: "asc" },
-    "date_desc" => { label: "Vencimento Recente", sort: "date", direction: "desc" },
-    "date_asc" => { label: "Vencimento Futuro", sort: "date", direction: "asc" },
-    "created_at_desc" => { label: "Criação Recente", sort: "created_at", direction: "desc" },
-    "created_at_asc" => { label: "Criação Remota", sort: "created_at", direction: "asc" },
-    "category_asc" => { label: "Categoria Crescente", sort: "category", direction: "asc" },
-    "category_desc" => { label: "Categoria Descrescente", sort: "category", direction: "desc" }
-  }.freeze
-  DEFAULT_EXPENSE_SORT_OPTION = "date_desc"
-
   before_action :set_expense, only: %i[show edit update destroy toggle_paid delete_options toggle_paid_options]
-  helper_method :expenses_filter_params, :expense_sort_options
+  helper_method :expenses_filter_params
 
   def index
     load_expenses
@@ -31,63 +17,6 @@ class ExpensesController < ApplicationController
   end
 
   def edit; end
-
-  def import_invoice
-    load_invoice_import_options
-    @invoice_preview_items = []
-    @invoice_import_errors = []
-  end
-
-  def analyze_invoice
-    load_invoice_import_options
-    @selected_card_id = params[:card_id]
-    @invoice_due_date = params[:due_date]
-
-    result = InvoiceImportAnalyzer.new(
-      file: params[:invoice_file],
-      card_id: @selected_card_id,
-      due_date: @invoice_due_date,
-      invoice_password: params[:invoice_password],
-      categories: @categories
-    ).call
-
-    @invoice_preview_items = result.items
-    @invoice_import_errors = result.errors
-
-    render :import_invoice
-  end
-
-  def confirm_invoice_import
-    importable_items = invoice_import_items.select do |item|
-      ActiveModel::Type::Boolean.new.cast(item[:selected])
-    end
-
-    if importable_items.blank?
-      load_invoice_import_options
-      @invoice_preview_items = invoice_import_items
-      @invoice_import_errors = [ "Selecione ao menos um lançamento para importar." ]
-      render :import_invoice, status: :unprocessable_entity
-      return
-    end
-
-    created_count = create_invoice_expenses(importable_items)
-    success_message = "#{created_count} lançamentos importados com sucesso!"
-
-    respond_to do |format|
-      format.html { redirect_to expenses_path, notice: success_message }
-      format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.update("modal", ""),
-          turbo_flash_stream(success_message)
-        ]
-      end
-    end
-  rescue ActiveRecord::RecordInvalid => error
-    load_invoice_import_options
-    @invoice_preview_items = invoice_import_items
-    @invoice_import_errors = [ "Revise os lançamentos: #{error.record.errors.full_messages.to_sentence}" ]
-    render :import_invoice, status: :unprocessable_entity
-  end
 
   def delete_options; end
 
@@ -273,46 +202,6 @@ class ExpensesController < ApplicationController
     @expense = current_user.expenses.find(params[:id])
   end
 
-  def load_invoice_import_options
-    @cards = current_user.cards.order(:name)
-    @categories = current_user.categories.to_a.sort_by(&:sort_name)
-  end
-
-  def invoice_import_items
-    raw_items = params[:invoice_items] || {}
-    raw_items = raw_items.permit!.to_h if raw_items.respond_to?(:permit!)
-    raw_items.values.map(&:symbolize_keys)
-  end
-
-  def create_invoice_expenses(items)
-    Expense.transaction do
-      items.each do |item|
-        current_user.expenses.create!(
-          description: item[:description],
-          amount: parse_brazilian_amount(item[:amount], blank: 0),
-          date: parse_invoice_date(item[:date]),
-          balance_month: parse_invoice_date(item[:due_date]) || parse_invoice_date(item[:date]),
-          category_id: item[:category_id],
-          payment_method: item[:payment_method],
-          card_id: item[:card_id].presence,
-          paid: false,
-          installments_count: 1,
-          current_installment: 1
-        )
-      end
-    end
-
-    items.size
-  end
-
-  def parse_invoice_date(value)
-    return if value.blank?
-
-    Date.iso8601(value)
-  rescue ArgumentError
-    parse_brazilian_date(value)
-  end
-
   def expense_params
     params.require(:expense).permit(
       :amount, :description, :date, :balance_month,
@@ -434,14 +323,8 @@ class ExpensesController < ApplicationController
     @paid_filter = session[:expenses_paid]
     @paid_filter = nil if @paid_filter.blank?
 
-    @expenses = expanded_expenses
-
-    filter_by_month
-    filter_by_category
-    filter_by_payment_method
-    filter_by_card
-    filter_by_paid
-    filter_by_description
+    result = Expenses::IndexQuery.new(user: current_user, filters: expense_filters).call
+    assign_expense_result(result)
 
     sort_config = selected_expense_sort_config
     @expenses = sort_collection(
@@ -453,79 +336,28 @@ class ExpensesController < ApplicationController
       direction: sort_config[:direction]
     )
 
-    calculate_totals
-    calculate_net_balance
     paginate_expenses if action_name == "index"
   end
 
-  def filter_by_month
-    return if @month.nil? || @year.nil?
-
-    @expenses.select! do |expense|
-      expense.balance_month.month == @month && expense.balance_month.year == @year
-    end
+  def expense_filters
+    {
+      description: @description_filter,
+      month: @month,
+      year: @year,
+      category_id: @category_filter,
+      payment_method: @payment_method_filter,
+      card_id: @card_filter,
+      paid: @paid_filter
+    }
   end
 
-  def filter_by_category
-    return if @category_filter.nil?
-
-    @expenses.select! do |expense|
-      expense.category_id.to_s == @category_filter.to_s
-    end
-  end
-
-  def filter_by_payment_method
-    return if @payment_method_filter.nil?
-
-    @expenses.select! do |expense|
-      expense.payment_method == @payment_method_filter
-    end
-  end
-
-  def filter_by_card
-    return if @card_filter.nil?
-
-    @expenses.select! do |expense|
-      expense.card_id.to_s == @card_filter.to_s
-    end
-  end
-
-  def filter_by_paid
-    return if @paid_filter.nil?
-
-    value = ActiveModel::Type::Boolean.new.cast(@paid_filter)
-    @expenses.select! { |expense| expense.paid == value }
-  end
-
-  def filter_by_description
-    return if @description_filter.blank?
-
-    @expenses.select! do |expense|
-      expense.description.to_s.downcase.include?(@description_filter.downcase)
-    end
-  end
-
-  def calculate_totals
-    @total_amount = @expenses.sum(&:effective_amount)
-    @total_paid = @expenses.select(&:paid?).sum(&:effective_amount)
-    @total_unpaid = @expenses.reject(&:paid?).sum(&:effective_amount)
-  end
-
-  def calculate_net_balance
-    return unless @month.present? && @year.present?
-
-    current_month_start = Date.new(@year, @month, 1)
-    previous_month_end = current_month_start - 1.day
-    current_month_end = current_month_start.end_of_month
-
-    receitas_anteriores = current_user.incomes.where("balance_month <= ?", previous_month_end).sum(:amount)
-    despesas_anteriores = Expense.effective_sum(current_user.expenses.where("balance_month <= ?", previous_month_end))
-    @previous_balance = receitas_anteriores - despesas_anteriores
-
-    receitas_pag = current_user.incomes.where("balance_month <= ? AND paid = ?", current_month_end, true).sum(:amount)
-    despesas_pag = Expense.effective_sum(current_user.expenses.where("balance_month <= ? AND paid = ?", current_month_end, true))
-
-    @net_balance = receitas_pag - despesas_pag
+  def assign_expense_result(result)
+    @expenses = result.expenses
+    @total_amount = result.total_amount
+    @total_paid = result.total_paid
+    @total_unpaid = result.total_unpaid
+    @previous_balance = result.previous_balance
+    @net_balance = result.net_balance
   end
 
   def create_recurring_expenses(expense)
@@ -555,13 +387,6 @@ class ExpensesController < ApplicationController
     expense.card&.billing_due_date_for(expense.date) || expense.date
   end
 
-  def expanded_expenses
-    current_user.expenses
-                .includes(:category, :card)
-                .order(balance_month: :desc, date: :asc, current_installment: :asc)
-                .to_a
-  end
-
   def expense_sort_map
     {
       "description" => ->(expense) { expense.description.to_s },
@@ -577,17 +402,13 @@ class ExpensesController < ApplicationController
     }
   end
 
-  def expense_sort_options
-    EXPENSE_SORT_OPTIONS.map { |value, config| [ config[:label], value ] }
-  end
-
   def selected_expense_sort_config
     session[:expenses_sort_option] = params[:sort_option] if params[:sort_option].present?
-    @sort_option = session[:expenses_sort_option].presence || DEFAULT_EXPENSE_SORT_OPTION
-    @sort_option = DEFAULT_EXPENSE_SORT_OPTION unless EXPENSE_SORT_OPTIONS.key?(@sort_option)
+    @sort_option = session[:expenses_sort_option].presence || ExpensesHelper::DEFAULT_EXPENSE_SORT_OPTION
+    @sort_option = ExpensesHelper::DEFAULT_EXPENSE_SORT_OPTION unless ExpensesHelper::EXPENSE_SORT_OPTIONS.key?(@sort_option)
     session[:expenses_sort_option] = @sort_option
 
-    EXPENSE_SORT_OPTIONS.fetch(@sort_option)
+    ExpensesHelper::EXPENSE_SORT_OPTIONS.fetch(@sort_option)
   end
 
   def paginate_expenses

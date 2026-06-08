@@ -1,7 +1,7 @@
 <div class="app-per-page-control">
   <%= label_tag :per_page, "Exibir", class: "app-per-page-control__label" %>
   <%= select_tag :per_page,
-        options_for_select(per_page_options, @per_page || ApplicationController::DEFAULT_PER_PAGE),
+        options_for_select(per_page_options, @per_page || default_per_page),
         class: "form-select app-per-page-control__select",
         onchange: "this.form.requestSubmit()" %>
   <span class="app-per-page-control__suffix">por página</span>

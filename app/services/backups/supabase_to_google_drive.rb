@@ -41,6 +41,7 @@ module Backups
         Rails.logger.info("Backup started: database=#{database_log_label}, target_folder=#{folder_id}")
         dump_database(sql_path)
         gzip_file(sql_path, gzip_path)
+        validate_drive_folder_access!
         upload_file(gzip_path)
       end
     end
@@ -131,6 +132,7 @@ module Backups
       uploaded_file = drive_service.create_file(
         metadata,
         fields: "id, webViewLink",
+        supports_all_drives: true,
         upload_source: path,
         content_type: "application/gzip"
       )
@@ -148,6 +150,21 @@ module Backups
     rescue Signet::AuthorizationError => e
       Rails.logger.error("Backup Google Drive authorization failed: #{e.class} - #{e.message}")
       raise Error, "autorizacao do Google Drive falhou"
+    end
+
+    def validate_drive_folder_access!
+      folder = drive_service.get_file(
+        folder_id,
+        fields: "id, name, mimeType",
+        supports_all_drives: true
+      )
+
+      return if folder.mime_type == "application/vnd.google-apps.folder"
+
+      raise Error, "GOOGLE_DRIVE_FOLDER_ID nao aponta para uma pasta"
+    rescue Google::Apis::ClientError => e
+      Rails.logger.error("Backup Google Drive folder access failed: #{e.class} - #{e.message}")
+      raise Error, "pasta do Google Drive nao encontrada ou sem permissao para a service account"
     end
 
     def drive_service

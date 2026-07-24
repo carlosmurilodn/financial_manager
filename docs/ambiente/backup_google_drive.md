@@ -25,6 +25,10 @@ JSON da chave para `GOOGLE_SERVICE_ACCOUNT_JSON`.
 Compartilhe a pasta de destino do Drive com o e-mail da service account. Sem esse
 compartilhamento o upload falha por permissao.
 
+O backup usa o escopo `https://www.googleapis.com/auth/drive` para que a service
+account consiga validar e gravar na pasta compartilhada. O escopo
+`drive.file` pode nao enxergar pastas que nao foram criadas pelo proprio app.
+
 ## Dependencias de runtime
 
 O ambiente precisa ter `pg_dump` disponivel. A imagem Docker do projeto instala

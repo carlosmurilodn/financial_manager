@@ -15,7 +15,7 @@ module Backups
     class Error < StandardError; end
     class ConfigurationError < Error; end
 
-    SCOPE = "https://www.googleapis.com/auth/drive.file"
+    SCOPE = "https://www.googleapis.com/auth/drive"
 
     def self.call(...)
       new(...).call

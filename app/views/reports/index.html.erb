@@ -25,5 +25,14 @@
       <strong>Relatório de Despesas</strong>
       <small>Consulta detalhada com filtros e exportação em PDF.</small>
     <% end %>
+
+    <%= button_to backup_reports_path,
+                  method: :post,
+                  class: "app-report-card app-report-card--button text-start",
+                  form: { data: { turbo_confirm: "Gerar backup agora e enviar para o Google Drive?" } } do %>
+      <span class="app-report-card__icon material-symbols-rounded">backup</span>
+      <strong>Backup do Banco</strong>
+      <small>Gera um arquivo SQL compactado e envia para o Google Drive.</small>
+    <% end %>
   </div>
 </section>

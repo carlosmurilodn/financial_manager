@@ -49,6 +49,7 @@ Rails.application.routes.draw do
 
   resources :reports, only: [ :index ] do
     collection do
+      post :backup
       get :forecast
       get :forecast_pdf
     end

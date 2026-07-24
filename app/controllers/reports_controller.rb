@@ -1,6 +1,14 @@
 class ReportsController < ApplicationController
   def index; end
 
+  def backup
+    result = Backups::SupabaseToGoogleDrive.call
+
+    redirect_to reports_path, notice: "Backup enviado para o Google Drive: #{result.filename}"
+  rescue Backups::SupabaseToGoogleDrive::Error => e
+    redirect_to reports_path, alert: "Nao foi possivel gerar o backup: #{e.message}"
+  end
+
   def forecast
     assign_forecast_result(forecast_result)
   end

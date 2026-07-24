@@ -22,7 +22,7 @@ module Backups
     end
 
     def initialize(
-      database_url: ENV["DATABASE_URL_FINANCIAL_MANAGER"],
+      database_url: ENV["BACKUP_DATABASE_URL"].presence || ENV["DATABASE_URL_FINANCIAL_MANAGER"],
       folder_id: ENV["GOOGLE_DRIVE_FOLDER_ID"],
       service_account_json: ENV["GOOGLE_SERVICE_ACCOUNT_JSON"]
     )
@@ -38,6 +38,7 @@ module Backups
         sql_path = File.join(dir, "#{filename_base}.sql")
         gzip_path = "#{sql_path}.gz"
 
+        Rails.logger.info("Backup started: database=#{database_log_label}, target_folder=#{folder_id}")
         dump_database(sql_path)
         gzip_file(sql_path, gzip_path)
         upload_file(gzip_path)
@@ -49,17 +50,20 @@ module Backups
     attr_reader :database_url, :folder_id, :service_account_json
 
     def validate_configuration!
-      raise ConfigurationError, "DATABASE_URL_FINANCIAL_MANAGER nao configurada" if database_url.blank?
+      raise ConfigurationError, "BACKUP_DATABASE_URL ou DATABASE_URL_FINANCIAL_MANAGER nao configurada" if database_url.blank?
       raise ConfigurationError, "GOOGLE_DRIVE_FOLDER_ID nao configurado" if folder_id.blank?
       raise ConfigurationError, "GOOGLE_SERVICE_ACCOUNT_JSON nao configurado" if service_account_json.blank?
-      raise ConfigurationError, "DATABASE_URL_FINANCIAL_MANAGER sem usuario" if database_uri.user.blank?
-      raise ConfigurationError, "DATABASE_URL_FINANCIAL_MANAGER sem senha" if database_uri.password.blank?
+      raise ConfigurationError, "URL do banco de backup sem usuario" if database_uri.user.blank?
+      raise ConfigurationError, "URL do banco de backup sem senha" if database_uri.password.blank?
     end
 
     def dump_database(sql_path)
       stdout, stderr, status = Open3.capture3(pg_environment, *pg_dump_command(sql_path))
 
-      return if status.success?
+      if status.success?
+        Rails.logger.info("Backup pg_dump finished: size=#{File.size(sql_path)} bytes")
+        return
+      end
 
       Rails.logger.error("Backup pg_dump failed: #{sanitize(stderr.presence || stdout)}")
       raise Error, "pg_dump falhou. Verifique conexao com Supabase e credenciais do banco."
@@ -89,12 +93,12 @@ module Backups
     def database_uri
       @database_uri ||= URI.parse(database_url)
     rescue URI::InvalidURIError
-      raise ConfigurationError, "DATABASE_URL_FINANCIAL_MANAGER invalida"
+      raise ConfigurationError, "URL do banco de backup invalida"
     end
 
     def database_name
       name = database_uri.path.to_s.delete_prefix("/")
-      raise ConfigurationError, "DATABASE_URL_FINANCIAL_MANAGER sem database" if name.blank?
+      raise ConfigurationError, "URL do banco de backup sem database" if name.blank?
 
       name
     end
@@ -110,6 +114,8 @@ module Backups
           IO.copy_stream(source, gzip)
         end
       end
+
+      Rails.logger.info("Backup gzip finished: size=#{File.size(gzip_path)} bytes")
     rescue StandardError => e
       Rails.logger.error("Backup gzip failed: #{e.class} - #{e.message}")
       raise Error, "compactacao do backup falhou"
@@ -133,10 +139,15 @@ module Backups
         filename: File.basename(path),
         drive_file_id: uploaded_file.id,
         drive_web_view_link: uploaded_file.web_view_link
-      )
+      ).tap do |result|
+        Rails.logger.info("Backup Google Drive upload finished: file_id=#{result.drive_file_id}")
+      end
     rescue Google::Apis::Error => e
       Rails.logger.error("Backup Google Drive upload failed: #{e.class} - #{e.message}")
       raise Error, "upload para Google Drive falhou"
+    rescue Signet::AuthorizationError => e
+      Rails.logger.error("Backup Google Drive authorization failed: #{e.class} - #{e.message}")
+      raise Error, "autorizacao do Google Drive falhou"
     end
 
     def drive_service
@@ -157,6 +168,10 @@ module Backups
 
     def sanitize(text)
       text.to_s.gsub(database_url.to_s, "[DATABASE_URL]")
+    end
+
+    def database_log_label
+      "#{database_uri.host}/#{database_name}"
     end
   end
 end

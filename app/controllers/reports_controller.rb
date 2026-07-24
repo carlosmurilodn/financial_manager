@@ -6,6 +6,7 @@ class ReportsController < ApplicationController
 
     redirect_to reports_path, notice: "Backup enviado para o Google Drive: #{result.filename}"
   rescue Backups::SupabaseToGoogleDrive::Error => e
+    Rails.logger.error("Manual backup failed: #{e.class} - #{e.message}")
     redirect_to reports_path, alert: "Nao foi possivel gerar o backup: #{e.message}"
   end
 

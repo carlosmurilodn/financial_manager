@@ -3,13 +3,16 @@
 ## Contexto
 
 A aplicacao permite gerar um backup manual do banco PostgreSQL configurado em
-`DATABASE_URL_FINANCIAL_MANAGER` e enviar o arquivo compactado para o Google
-Drive.
+`BACKUP_DATABASE_URL` ou `DATABASE_URL_FINANCIAL_MANAGER` e enviar o arquivo
+compactado para o Google Drive.
 
 ## Variaveis de ambiente
 
+- `BACKUP_DATABASE_URL`: URL completa do banco PostgreSQL que sera exportado.
+  Em desenvolvimento, prefira esta variavel para nao trocar o banco principal
+  da aplicacao local.
 - `DATABASE_URL_FINANCIAL_MANAGER`: URL completa do banco PostgreSQL usado em
-  producao.
+  producao. O backup usa essa variavel quando `BACKUP_DATABASE_URL` nao existir.
 - `GOOGLE_DRIVE_FOLDER_ID`: ID da pasta do Google Drive que recebera os backups.
 - `GOOGLE_SERVICE_ACCOUNT_JSON`: JSON completo da service account com permissao
   de escrita na pasta.

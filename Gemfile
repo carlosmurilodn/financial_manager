@@ -45,7 +45,6 @@ gem "wkhtmltopdf-binary"
 gem "csv"
 
 gem "aws-sdk-s3", require: false
-gem "google-apis-drive_v3", require: false
 
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]

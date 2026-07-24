@@ -1,34 +1,23 @@
-require "json"
 require "open3"
-require "stringio"
 require "tmpdir"
 require "uri"
 require "zlib"
 
-require "google/apis/drive_v3"
-require "googleauth"
-
 module Backups
-  class SupabaseToGoogleDrive
-    Result = Data.define(:filename, :drive_file_id, :drive_web_view_link)
+  class DatabaseDump
+    Result = Data.define(:filename, :content_type, :data)
 
     class Error < StandardError; end
     class ConfigurationError < Error; end
 
-    SCOPE = "https://www.googleapis.com/auth/drive"
+    CONTENT_TYPE = "application/gzip"
 
     def self.call(...)
       new(...).call
     end
 
-    def initialize(
-      database_url: ENV["BACKUP_DATABASE_URL"].presence || ENV["DATABASE_URL_FINANCIAL_MANAGER"],
-      folder_id: ENV["GOOGLE_DRIVE_FOLDER_ID"],
-      service_account_json: ENV["GOOGLE_SERVICE_ACCOUNT_JSON"]
-    )
+    def initialize(database_url: ENV["BACKUP_DATABASE_URL"].presence || ENV["DATABASE_URL_FINANCIAL_MANAGER"])
       @database_url = database_url
-      @folder_id = folder_id
-      @service_account_json = service_account_json
     end
 
     def call
@@ -38,22 +27,24 @@ module Backups
         sql_path = File.join(dir, "#{filename_base}.sql")
         gzip_path = "#{sql_path}.gz"
 
-        Rails.logger.info("Backup started: database=#{database_log_label}, target_folder=#{folder_id}")
+        Rails.logger.info("Backup download started: database=#{database_log_label}")
         dump_database(sql_path)
         gzip_file(sql_path, gzip_path)
-        validate_drive_folder_access!
-        upload_file(gzip_path)
+
+        Result.new(
+          filename: File.basename(gzip_path),
+          content_type: CONTENT_TYPE,
+          data: File.binread(gzip_path)
+        )
       end
     end
 
     private
 
-    attr_reader :database_url, :folder_id, :service_account_json
+    attr_reader :database_url
 
     def validate_configuration!
       raise ConfigurationError, "BACKUP_DATABASE_URL ou DATABASE_URL_FINANCIAL_MANAGER nao configurada" if database_url.blank?
-      raise ConfigurationError, "GOOGLE_DRIVE_FOLDER_ID nao configurado" if folder_id.blank?
-      raise ConfigurationError, "GOOGLE_SERVICE_ACCOUNT_JSON nao configurado" if service_account_json.blank?
       raise ConfigurationError, "URL do banco de backup sem usuario" if database_uri.user.blank?
       raise ConfigurationError, "URL do banco de backup sem senha" if database_uri.password.blank?
     end
@@ -120,63 +111,6 @@ module Backups
     rescue StandardError => e
       Rails.logger.error("Backup gzip failed: #{e.class} - #{e.message}")
       raise Error, "compactacao do backup falhou"
-    end
-
-    def upload_file(path)
-      metadata = Google::Apis::DriveV3::File.new(
-        name: File.basename(path),
-        parents: [ folder_id ],
-        mime_type: "application/gzip"
-      )
-
-      uploaded_file = drive_service.create_file(
-        metadata,
-        fields: "id, webViewLink",
-        supports_all_drives: true,
-        upload_source: path,
-        content_type: "application/gzip"
-      )
-
-      Result.new(
-        filename: File.basename(path),
-        drive_file_id: uploaded_file.id,
-        drive_web_view_link: uploaded_file.web_view_link
-      ).tap do |result|
-        Rails.logger.info("Backup Google Drive upload finished: file_id=#{result.drive_file_id}")
-      end
-    rescue Google::Apis::Error => e
-      Rails.logger.error("Backup Google Drive upload failed: #{e.class} - #{e.message}")
-      raise Error, "upload para Google Drive falhou"
-    rescue Signet::AuthorizationError => e
-      Rails.logger.error("Backup Google Drive authorization failed: #{e.class} - #{e.message}")
-      raise Error, "autorizacao do Google Drive falhou"
-    end
-
-    def validate_drive_folder_access!
-      folder = drive_service.get_file(
-        folder_id,
-        fields: "id, name, mimeType",
-        supports_all_drives: true
-      )
-
-      return if folder.mime_type == "application/vnd.google-apps.folder"
-
-      raise Error, "GOOGLE_DRIVE_FOLDER_ID nao aponta para uma pasta"
-    rescue Google::Apis::ClientError => e
-      Rails.logger.error("Backup Google Drive folder access failed: #{e.class} - #{e.message}")
-      raise Error, "pasta do Google Drive nao encontrada ou sem permissao para a service account"
-    end
-
-    def drive_service
-      @drive_service ||= Google::Apis::DriveV3::DriveService.new.tap do |service|
-        service.authorization = Google::Auth::ServiceAccountCredentials.make_creds(
-          json_key_io: StringIO.new(service_account_json),
-          scope: SCOPE
-        )
-      end
-    rescue JSON::ParserError => e
-      Rails.logger.error("Backup Google credentials invalid JSON: #{e.message}")
-      raise ConfigurationError, "GOOGLE_SERVICE_ACCOUNT_JSON invalido"
     end
 
     def filename_base

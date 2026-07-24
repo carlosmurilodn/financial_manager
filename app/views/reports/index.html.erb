@@ -29,10 +29,10 @@
     <%= button_to backup_reports_path,
                   method: :post,
                   class: "app-report-card app-report-card--button text-start",
-                  form: { data: { turbo_confirm: "Gerar backup agora e enviar para o Google Drive?" } } do %>
+                  form: { data: { turbo: false } } do %>
       <span class="app-report-card__icon material-symbols-rounded">backup</span>
       <strong>Backup do Banco</strong>
-      <small>Gera um arquivo SQL compactado e envia para o Google Drive.</small>
+      <small>Gera e baixa um arquivo SQL compactado com os dados do banco.</small>
     <% end %>
   </div>
 </section>

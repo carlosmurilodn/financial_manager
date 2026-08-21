@@ -52,7 +52,7 @@
           <div class="app-filter-field">
             <%= f.label :category_id, "Categoria" %>
             <%= select_tag :category_id,
-                options_for_select([["Todas", 0]] + Category.all.sort_by(&:sort_name).map { |c| [c.display_name, c.id] }, @category_filter || 0),
+                options_for_select([["Todas", 0]] + current_user.categories.sort_by(&:sort_name).map { |c| [c.display_name, c.id] }, @category_filter || 0),
                 class: "app-form-select" %>
           </div>
 
@@ -66,15 +66,54 @@
           <div class="app-filter-field">
             <%= f.label :card_id, "Cartão" %>
             <%= f.select :card_id,
-                  options_for_select([["Todos", 0]] + Card.order(:name).map { |c| [c.name, c.id] }, @card_filter || 0),
+                  options_for_select([["Todos", 0]] + current_user.cards.order(:name).map { |c| [c.name, c.id] }, @card_filter || 0),
                   {}, class: "app-form-select" %>
           </div>
 
           <div class="app-filter-field">
+            <%= f.label :amount_min, "Valor mínimo" %>
+            <%= f.text_field :amount_min, value: @amount_min_filter, class: "app-form-control moeda", placeholder: "R$ 0,00" %>
+          </div>
+
+          <div class="app-filter-field">
+            <%= f.label :amount_max, "Valor máximo" %>
+            <%= f.text_field :amount_max, value: @amount_max_filter, class: "app-form-control moeda", placeholder: "R$ 0,00" %>
+          </div>
+
+          <div class="app-filter-field">
             <%= f.label :paid, "Paga?" %>
-            <%= f.select :paid,
-                  options_for_select([["Todas", ""], ["Sim", true], ["Não", false]], @paid_filter || ""),
-                  {}, class: "app-form-select" %>
+            <div class="app-filter-toggle-group">
+              <%= link_to "Todas",
+                    expenses_path(request.query_parameters.except("paid").merge(paid: "")),
+                    class: "app-filter-toggle-btn #{@paid_filter.blank? ? 'is-active' : ''}",
+                    data: { turbo_action: "replace" } %>
+              <%= link_to "Sim",
+                    expenses_path(request.query_parameters.merge(paid: "true")),
+                    class: "app-filter-toggle-btn #{@paid_filter == 'true' ? 'is-active' : ''}",
+                    data: { turbo_action: "replace" } %>
+              <%= link_to "Não",
+                    expenses_path(request.query_parameters.merge(paid: "false")),
+                    class: "app-filter-toggle-btn #{@paid_filter == 'false' ? 'is-active' : ''}",
+                    data: { turbo_action: "replace" } %>
+            </div>
+          </div>
+
+          <div class="app-filter-field">
+            <%= f.label :installment, "Parcelada?" %>
+            <div class="app-filter-toggle-group">
+              <%= link_to "Todas",
+                    expenses_path(request.query_parameters.except("installment").merge(installment: "")),
+                    class: "app-filter-toggle-btn #{@installment_filter.blank? ? 'is-active' : ''}",
+                    data: { turbo_action: "replace" } %>
+              <%= link_to "Sim",
+                    expenses_path(request.query_parameters.merge(installment: "true")),
+                    class: "app-filter-toggle-btn #{@installment_filter == 'true' ? 'is-active' : ''}",
+                    data: { turbo_action: "replace" } %>
+              <%= link_to "Não",
+                    expenses_path(request.query_parameters.merge(installment: "false")),
+                    class: "app-filter-toggle-btn #{@installment_filter == 'false' ? 'is-active' : ''}",
+                    data: { turbo_action: "replace" } %>
+            </div>
           </div>
         </div>
 

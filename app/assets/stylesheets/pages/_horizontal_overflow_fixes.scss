@@ -93,7 +93,7 @@
 }
 
 .app-filter-grid--expenses {
-  grid-template-columns: minmax(220px, 3fr) minmax(120px, 1fr) minmax(100px, 0.8fr) minmax(180px, 1.5fr) minmax(180px, 1.5fr) minmax(180px, 1.5fr) minmax(110px, 0.8fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .app-filter-grid--expenses .app-filter-field:nth-child(n) {
@@ -101,7 +101,7 @@
 }
 
 .app-filter-grid--cards {
-  grid-template-columns: minmax(220px, 2fr) minmax(120px, 1fr) minmax(120px, 1fr);
+  grid-template-columns: minmax(220px, 2fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(160px, 1fr);
 }
 
 .app-filter-field,

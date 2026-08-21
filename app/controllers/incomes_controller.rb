@@ -101,6 +101,9 @@ class IncomesController < ApplicationController
     session.delete(:incomes_year)
     session.delete(:incomes_description)
     session.delete(:incomes_paid)
+    session.delete(:incomes_category_id)
+    session.delete(:incomes_amount_min)
+    session.delete(:incomes_amount_max)
     redirect_to incomes_path, notice: "Filtros limpos com sucesso!"
   end
 
@@ -148,6 +151,16 @@ class IncomesController < ApplicationController
     @paid_filter = session[:incomes_paid]
     @paid_filter = nil if @paid_filter.blank?
 
+    session[:incomes_category_id] = params[:category_id] if params[:category_id].present?
+    @category_filter = session[:incomes_category_id]
+    @category_filter = nil if @category_filter.to_i == 0
+
+    session[:incomes_amount_min] = params[:amount_min].to_s.strip if params.key?(:amount_min)
+    @amount_min_filter = session[:incomes_amount_min].presence
+
+    session[:incomes_amount_max] = params[:amount_max].to_s.strip if params.key?(:amount_max)
+    @amount_max_filter = session[:incomes_amount_max].presence
+
     @item_offset = 0
   end
 
@@ -156,7 +169,10 @@ class IncomesController < ApplicationController
       month: @month,
       year: @year,
       description: @description_filter,
-      paid: @paid_filter
+      paid: @paid_filter,
+      category_id: @category_filter,
+      amount_min: @amount_min_filter,
+      amount_max: @amount_max_filter
     }
   end
 

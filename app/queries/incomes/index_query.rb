@@ -37,6 +37,9 @@ module Incomes
         .then { |incomes| filter_by_month(incomes) }
         .then { |incomes| filter_by_description(incomes) }
         .then { |incomes| filter_by_paid(incomes) }
+        .then { |incomes| filter_by_category(incomes) }
+        .then { |incomes| filter_by_amount_min(incomes) }
+        .then { |incomes| filter_by_amount_max(incomes) }
     end
 
     def base_incomes
@@ -60,6 +63,47 @@ module Incomes
 
       paid_value = ActiveModel::Type::Boolean.new.cast(paid)
       incomes.select { |income| income.paid == paid_value }
+    end
+
+    def filter_by_category(incomes)
+      return incomes if category_id.blank?
+
+      incomes.select { |income| income.category_id.to_s == category_id.to_s }
+    end
+
+    def filter_by_amount_min(incomes)
+      return incomes if amount_min.blank?
+
+      minimum = parse_amount(amount_min)
+      return incomes if minimum.nil? || minimum.zero?
+
+      incomes.select { |income| income.amount.to_d >= minimum }
+    end
+
+    def filter_by_amount_max(incomes)
+      return incomes if amount_max.blank?
+
+      maximum = parse_amount(amount_max)
+      return incomes if maximum.nil? || maximum.zero?
+
+      incomes.select { |income| income.amount.to_d <= maximum }
+    end
+
+    def parse_amount(value)
+      return nil if value.blank?
+
+      cleaned = value.to_s.gsub(/[^\d,\.]/, "")
+      return nil if cleaned.blank?
+
+      normalized = if cleaned.include?(",")
+        cleaned.delete(".").tr(",", ".")
+      else
+        cleaned
+      end
+
+      BigDecimal(normalized)
+    rescue ArgumentError
+      nil
     end
 
     def previous_balance
@@ -110,5 +154,8 @@ module Incomes
     def year = filters[:year]
     def description = filters[:description]
     def paid = filters[:paid]
+    def category_id = filters[:category_id]
+    def amount_min = filters[:amount_min]
+    def amount_max = filters[:amount_max]
   end
 end

@@ -71,6 +71,7 @@ class CardsController < ApplicationController
     session.delete(:cards_description)
     session.delete(:cards_month)
     session.delete(:cards_year)
+    session.delete(:cards_has_debt)
 
     redirect_to cards_path, notice: "Filtros limpos com sucesso!"
   end
@@ -98,7 +99,8 @@ class CardsController < ApplicationController
       user: current_user,
       description: @description_filter,
       month: @month,
-      year: @year
+      year: @year,
+      has_debt: @has_debt_filter
     ).call
 
     assign_card_result(result)
@@ -133,6 +135,10 @@ class CardsController < ApplicationController
     session[:cards_year] = params[:year].to_i if params[:year].present?
     @year = session[:cards_year]
     @year = nil if @year.blank? || @year.zero?
+
+    session[:cards_has_debt] = params[:has_debt] if params.key?(:has_debt)
+    @has_debt_filter = session[:cards_has_debt]
+    @has_debt_filter = nil if @has_debt_filter.blank?
   end
 
   def remaining_limit_for(card)

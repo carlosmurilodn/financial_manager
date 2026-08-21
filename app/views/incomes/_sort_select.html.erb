@@ -1,0 +1,7 @@
+<div class="app-per-page-control app-sort-control">
+  <%= label_tag :sort_option, "Ordenar", class: "app-per-page-control__label" %>
+  <%= select_tag :sort_option,
+        options_for_select(income_sort_options, @sort_option || default_income_sort_option),
+        class: "form-select app-per-page-control__select app-sort-control__select",
+        onchange: "this.form.requestSubmit()" %>
+</div>

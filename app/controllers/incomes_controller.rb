@@ -104,6 +104,7 @@ class IncomesController < ApplicationController
     session.delete(:incomes_category_id)
     session.delete(:incomes_amount_min)
     session.delete(:incomes_amount_max)
+    session.delete(:incomes_sort_option)
     redirect_to incomes_path, notice: "Filtros limpos com sucesso!"
   end
 
@@ -130,7 +131,16 @@ class IncomesController < ApplicationController
     load_income_filters
     result = Incomes::IndexQuery.new(user: current_user, filters: income_filters).call
 
-    @incomes = sort_collection(result.incomes, sort_map: income_sort_map, default_sort: "balance_month")
+    sort_config = selected_income_sort_config
+    @incomes = sort_collection(
+      result.incomes,
+      sort_map: income_sort_map,
+      default_sort: sort_config[:sort],
+      default_direction: sort_config[:direction],
+      sort: sort_config[:sort],
+      direction: sort_config[:direction]
+    )
+
     assign_income_result(result)
     paginate_incomes if action_name == "index"
   end
@@ -205,5 +215,14 @@ class IncomesController < ApplicationController
     @incomes = paginate_collection(@incomes, per_page: @per_page)
 
     @item_offset = ((@current_page.to_i - 1) * @per_page.to_i)
+  end
+
+  def selected_income_sort_config
+    session[:incomes_sort_option] = params[:sort_option] if params[:sort_option].present?
+    @sort_option = session[:incomes_sort_option].presence || IncomesHelper::DEFAULT_INCOME_SORT_OPTION
+    @sort_option = IncomesHelper::DEFAULT_INCOME_SORT_OPTION unless IncomesHelper::INCOME_SORT_OPTIONS.key?(@sort_option)
+    session[:incomes_sort_option] = @sort_option
+
+    IncomesHelper::INCOME_SORT_OPTIONS.fetch(@sort_option)
   end
 end

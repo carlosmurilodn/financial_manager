@@ -27,6 +27,9 @@ class HomeController < ApplicationController
     @category_expense_range = result.category_expense_range
     @previous_category_expense_date = result.previous_category_expense_date
     @next_category_expense_date = result.next_category_expense_date
+    @movement_date = result.movement_date
+    @previous_movement_date = result.previous_movement_date
+    @next_movement_date = result.next_movement_date
     @month = result.month
     @year = result.year
     @calendar_range = result.calendar_range

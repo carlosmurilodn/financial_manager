@@ -133,6 +133,12 @@
   background: var(--pill-danger-bg);
 }
 
+.dashboard-card__header-pills {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .app-table {
   --bs-table-bg: var(--table-surface);
   --bs-table-striped-bg: transparent;

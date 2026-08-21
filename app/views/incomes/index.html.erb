@@ -46,10 +46,38 @@
           </div>
 
           <div class="app-filter-field">
-            <%= label_tag :paid, "Recebida?" %>
-            <%= select_tag :paid,
-              options_for_select([["Todos", ""], ["Sim", true], ["Não", false]], @paid_filter || ""),
+            <%= label_tag :category_id, "Categoria" %>
+            <%= select_tag :category_id,
+              options_for_select([["Todas", 0]] + current_user.categories.sort_by(&:sort_name).map { |c| [c.display_name, c.id] }, @category_filter || 0),
               class: "app-form-select" %>
+          </div>
+
+          <div class="app-filter-field">
+            <%= label_tag :amount_min, "Valor mínimo" %>
+            <%= text_field_tag :amount_min, @amount_min_filter, class: "app-form-control moeda", placeholder: "R$ 0,00" %>
+          </div>
+
+          <div class="app-filter-field">
+            <%= label_tag :amount_max, "Valor máximo" %>
+            <%= text_field_tag :amount_max, @amount_max_filter, class: "app-form-control moeda", placeholder: "R$ 0,00" %>
+          </div>
+
+          <div class="app-filter-field">
+            <%= label_tag :paid, "Recebida?" %>
+            <div class="app-filter-toggle-group">
+              <%= link_to "Todas",
+                    incomes_path(request.query_parameters.except("paid").merge(paid: "")),
+                    class: "app-filter-toggle-btn #{@paid_filter.blank? ? 'is-active' : ''}",
+                    data: { turbo_action: "replace" } %>
+              <%= link_to "Sim",
+                    incomes_path(request.query_parameters.merge(paid: "true")),
+                    class: "app-filter-toggle-btn #{@paid_filter == 'true' ? 'is-active' : ''}",
+                    data: { turbo_action: "replace" } %>
+              <%= link_to "Não",
+                    incomes_path(request.query_parameters.merge(paid: "false")),
+                    class: "app-filter-toggle-btn #{@paid_filter == 'false' ? 'is-active' : ''}",
+                    data: { turbo_action: "replace" } %>
+            </div>
           </div>
         </div>
 

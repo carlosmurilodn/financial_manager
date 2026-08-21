@@ -393,35 +393,11 @@
 }
 
 .app-filter-grid--expenses {
-  grid-template-columns: repeat(14, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
-.app-filter-grid--expenses .app-filter-field:nth-child(1) {
-  grid-column: span 4;
-}
-
-.app-filter-grid--expenses .app-filter-field:nth-child(2) {
-  grid-column: span 2;
-}
-
-.app-filter-grid--expenses .app-filter-field:nth-child(3) {
-  grid-column: span 1;
-}
-
-.app-filter-grid--expenses .app-filter-field:nth-child(4) {
-  grid-column: span 2;
-}
-
-.app-filter-grid--expenses .app-filter-field:nth-child(5) {
-  grid-column: span 2;
-}
-
-.app-filter-grid--expenses .app-filter-field:nth-child(6) {
-  grid-column: span 2;
-}
-
-.app-filter-grid--expenses .app-filter-field:nth-child(7) {
-  grid-column: span 1;
+.app-filter-grid--expenses .app-filter-field:nth-child(n) {
+  grid-column: auto;
 }
 
 .app-filter-grid--incomes {
@@ -429,7 +405,7 @@
 }
 
 .app-filter-grid--cards {
-  grid-template-columns: minmax(240px, 2fr) minmax(140px, 1fr) minmax(140px, 1fr);
+  grid-template-columns: minmax(240px, 2fr) minmax(140px, 1fr) minmax(140px, 1fr) minmax(160px, 1fr);
 }
 
 .app-filter-grid--financial-goals {
@@ -486,6 +462,45 @@
 
 .app-filter-field .form-control::placeholder {
   color: var(--text-soft);
+}
+
+.app-filter-toggle-group {
+  display: inline-flex;
+  border: 1px solid var(--table-border-color);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--app-bg-soft);
+}
+
+.app-filter-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  text-decoration: none;
+  border-right: 1px solid var(--table-border-color);
+  transition: background 0.15s ease, color 0.15s ease;
+  min-height: 38px;
+  cursor: pointer;
+}
+
+.app-filter-toggle-btn:last-child {
+  border-right: none;
+}
+
+.app-filter-toggle-btn:hover {
+  background: var(--hero-badge-icon-bg);
+  color: var(--text-main);
+  text-decoration: none;
+}
+
+.app-filter-toggle-btn.is-active {
+  background: var(--nav-active-icon-color);
+  color: #fff;
+  font-weight: 700;
 }
 
 .app-filter-actions {

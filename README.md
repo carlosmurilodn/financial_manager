@@ -1,145 +1,192 @@
 # Financial Manager
 
-Aplicação Rails para gerenciamento financeiro pessoal, com autenticação via Devise e recursos para controle de despesas, receitas, cartões, categorias, metas financeiras e relatórios.
+Aplicacao Rails para gerenciamento financeiro pessoal. O sistema organiza despesas,
+receitas, cartoes, categorias, metas financeiras e relatorios, com autenticacao via
+Devise e interface server-rendered com Hotwire.
 
----
+## Fontes
 
-## 🔗 Fontes
+- Repositorio oficial: https://github.com/carlosmurilodn/financial_manager
 
-- Repositório oficial: https://github.com/carlosmurilodn/financial_manager
+## Stack
 
----
-
-## 🚀 Tecnologias
-
-- Ruby on Rails 8
+- Ruby on Rails 8.0.3
 - PostgreSQL
 - Devise
-- Hotwire (Turbo + Stimulus)
+- Hotwire: Turbo e Stimulus
 - Propshaft
+- Bootstrap 5
+- Chart.js
 - Solid Cache, Solid Queue e Solid Cable
-- PDFKit + wkhtmltopdf
-- AWS SDK S3
-- Docker/Kamal (opcional)
+- Active Storage com disco local em desenvolvimento e Supabase Storage em producao
+- PDFKit com wkhtmltopdf
+- Kamal, Docker e Thruster para deploy/container
+- RSpec, Minitest, Capybara, RuboCop Omakase e Brakeman
 
----
+## Funcionalidades
 
-## 📦 Funcionalidades
-
-- Autenticação de usuários com Devise
-- Controle de despesas
-- Controle de receitas
-- Cadastro e gerenciamento de categorias
+- Login, logout e sessoes de usuario com Devise
+- Dashboard financeiro
+- Cadastro, filtro, ordenacao e paginacao de despesas
+- Cadastro, filtro, ordenacao e paginacao de receitas
+- Marcacao de despesas e receitas como pagas
+- Controle de despesas parceladas
+- Cadastro e pagamento de cartoes
+- Cadastro de categorias com icones e cores
 - Cadastro e acompanhamento de metas financeiras
-- Gerenciamento de cartões
-- Marcação de despesas e receitas como pagas
-- Importação e análise de faturas
-- Relatórios financeiros
-- Geração de relatórios em PDF
-- Previsão financeira
-- Suporte a PWA
+- Relatorios financeiros e previsao financeira
+- Exportacao de relatorios em PDF
+- Suporte a PWA via manifesto e service worker do Rails
 
----
+## Requisitos
 
-## 🔐 Autenticação
-
-A autenticação é feita com Devise.
-
-Rotas principais:
-
-- Login de usuários
-- Logout de usuários
-- Sessões customizadas em `Users::SessionsController`
-
----
-
-## 🛠️ Setup do projeto
-
-### Pré-requisitos
-
-- Ruby compatível com Rails 8
+- Ruby compativel com Rails 8
 - PostgreSQL
 - Bundler
-- wkhtmltopdf, para geração de PDFs quando necessário
+- Node.js e Yarn
+- wkhtmltopdf, necessario para gerar PDFs
 
-### Instalação
+## Configuracao
+
+O banco principal usa PostgreSQL. Configure as variaveis abaixo para desenvolvimento
+e teste, conforme `config/database.yml`:
+
+```bash
+DEV_USERNAME=
+DEV_HOST=
+DEV_PASSWORD=
+DEV_PORT=
+
+TEST_USERNAME=
+TEST_HOST=
+TEST_PASSWORD=
+TEST_PORT=
+```
+
+Em producao, a aplicacao usa a mesma URL de PostgreSQL para os bancos `primary`,
+`cache`, `queue` e `cable`:
+
+```bash
+DATABASE_URL_FINANCIAL_MANAGER=
+```
+
+Uploads em producao usam Supabase Storage via compatibilidade S3:
+
+```bash
+SUPABASE_S3_ACCESS_KEY_ID=
+SUPABASE_S3_SECRET_ACCESS_KEY=
+SUPABASE_S3_REGION=us-east-1
+SUPABASE_STORAGE_BUCKET=
+SUPABASE_S3_ENDPOINT=
+```
+
+Outras variaveis relevantes:
+
+```bash
+RAILS_MAX_THREADS=5
+RAILS_LOG_LEVEL=info
+PORT=3000
+SOLID_QUEUE_IN_PUMA=
+JOB_CONCURRENCY=1
+```
+
+## Instalacao
 
 ```bash
 git clone https://github.com/carlosmurilodn/financial_manager.git
 cd financial_manager
 
 bundle install
+yarn install --check-files
+bin/rails db:prepare
 ```
 
-### Configuração
-
-Configure as variáveis de ambiente necessárias para o projeto, especialmente:
-
-- Credenciais do banco de dados
-- Configurações de armazenamento, quando usar S3
-- Configurações específicas para geração/importação de arquivos, se aplicável
-
----
-
-## 🗄️ Banco de dados
+Tambem e possivel usar o script do Rails:
 
 ```bash
-rails db:create
-rails db:migrate
+bin/setup
 ```
 
----
+## Execucao local
 
-## ▶️ Rodando a aplicação
+Use `bin/dev` para subir Rails e build JavaScript em modo watch:
 
 ```bash
-rails server
+bin/dev
 ```
 
-A aplicação estará disponível em:
+A aplicacao fica disponivel em:
 
 ```text
 http://localhost:3000
 ```
 
----
-
-## 🧪 Testes
+Para subir apenas o servidor Rails:
 
 ```bash
-rails test
+bin/rails server
 ```
 
----
+## Banco de dados
 
-## 📡 Principais rotas
+Comandos principais:
 
-### Autenticação
+```bash
+bin/rails db:create
+bin/rails db:migrate
+bin/rails db:seed
+```
 
-- Rotas Devise para usuários (`/users/sign_in`, `/users/sign_out`, etc.)
+O projeto tambem inclui `yaml_db`, usado para carga e exportacao de dados em YAML
+quando necessario.
+
+## Testes e qualidade
+
+O projeto possui suites em RSpec e Minitest.
+
+```bash
+bundle exec rspec
+bin/rails test
+bin/rubocop
+bin/brakeman
+```
+
+## Rotas principais
+
+### Autenticacao
+
+- Rotas Devise de usuario, incluindo `/users/sign_in` e `/users/sign_out`
+- Sessoes customizadas em `Users::SessionsController`
 
 ### Financeiro
 
+- `GET /`
 - `GET /expenses`
 - `GET /expenses/report`
 - `GET /expenses/report_pdf`
-- `POST /expenses/analyze_invoice`
-- `POST /expenses/confirm_invoice_import`
-- `GET /expenses/import_invoice`
+- `GET /expenses/:id/delete_options`
+- `GET /expenses/:id/toggle_paid_options`
 - `PATCH /expenses/:id/toggle_paid`
+- `DELETE /expenses/clear_filters`
 - `GET /incomes`
 - `PATCH /incomes/:id/toggle_paid`
+- `DELETE /incomes/clear_filters`
 - `GET /cards`
 - `POST /cards/:id/pay`
+- `DELETE /cards/clear_filters`
 - `GET /categories`
 - `GET /financial_goals`
+- `DELETE /financial_goals/clear_filters`
 - `GET /reports`
 - `GET /reports/forecast`
 - `GET /reports/forecast_pdf`
 
----
+### PWA
 
-## 🏗️ Estrutura do projeto
+- `GET /manifest`
+- `GET /service-worker`
+
+## Estrutura
 
 ```text
 app/
@@ -148,43 +195,50 @@ app/
   views/
   javascript/
   assets/
+config/
+db/
+spec/
+test/
 ```
 
-- Controllers: fluxo HTTP e orquestração das ações
-- Models: regras de domínio, validações, associações e acesso a dados
-- Views: telas HTML renderizadas pelo Rails
-- JavaScript: comportamentos com Stimulus
-- Assets: estilos, imagens e arquivos estáticos
+- `app/controllers`: fluxo HTTP, filtros, ordenacao e respostas Turbo
+- `app/models`: regras de dominio, validacoes e associacoes
+- `app/views`: telas HTML renderizadas pelo Rails
+- `app/javascript`: Stimulus, Bootstrap, Chart.js e scripts da interface
+- `config`: rotas, ambiente, banco, storage, fila e deploy
+- `db`: migrations, schemas dos bancos Solid e seeds
+- `spec` e `test`: suites de teste em RSpec e Minitest
 
----
+## Docker e deploy
 
-## 🐳 Docker e deploy
+O projeto tem `Dockerfile`, `bin/docker-entrypoint` e configuracao Kamal em
+`config/deploy.yml`.
 
-O projeto possui suporte para deploy com Kamal e execução em container Docker, conforme configuração do Rails.
-
-Com Docker, o fluxo básico é:
+Build local da imagem:
 
 ```bash
 docker build -t financial_manager .
+```
+
+Execucao local da imagem:
+
+```bash
 docker run -p 3000:3000 financial_manager
 ```
 
-Para deploy com Kamal, configure os arquivos e variáveis necessários antes de executar os comandos de deploy.
+Antes de publicar em producao, configure as variaveis de banco, storage e segredos
+necessarias no ambiente de deploy.
 
----
+## Convencoes de manutencao
 
-## 📌 Boas práticas do projeto
-
-- Manter autenticação centralizada com Devise
+- Manter autenticacao centralizada com Devise
+- Usar variaveis de ambiente para configuracoes sensiveis
 - Evitar versionar segredos, tokens e credenciais
-- Usar variáveis de ambiente para configurações sensíveis
-- Reutilizar métodos, helpers e padrões já existentes
-- Evitar refatorações amplas quando uma alteração localizada resolver o problema
-- Manter controllers simples sempre que possível
-- Criar services apenas quando houver complexidade real de regra de negócio
+- Preferir controllers simples e regras de negocio nos models/services existentes
+- Reutilizar concerns e padroes ja presentes no projeto
+- Atualizar este README quando mudar onboarding, comandos essenciais, ambiente ou
+  fluxo principal
 
----
-
-## 👨‍💻 Autor
+## Autor
 
 Carlos Novais

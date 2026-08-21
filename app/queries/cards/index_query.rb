@@ -13,11 +13,12 @@ module Cards
       keyword_init: true
     )
 
-    def initialize(user:, description:, month:, year:)
+    def initialize(user:, description:, month:, year:, has_debt: nil)
       @user = user
       @description = description
       @month = month
       @year = year
+      @has_debt = has_debt
     end
 
     def call
@@ -47,7 +48,7 @@ module Cards
 
     private
 
-    attr_reader :user, :description, :month, :year
+    attr_reader :user, :description, :month, :year, :has_debt
 
     def card_debt_scope
       user.expenses
@@ -63,12 +64,27 @@ module Cards
 
     def filtered_cards(accumulated_debt_scope)
       cards = user.cards.order(:name).to_a
+
+      cards = filter_cards_by_debt(cards, accumulated_debt_scope)
+
       return cards unless filters_active?
 
       card_ids_from_debt = card_filter_match_scope(debt_filters(card_debt_scope), accumulated_debt_scope)
                            .distinct
                            .pluck(:card_id)
       cards.select { |card| card_ids_from_debt.include?(card.id) }
+    end
+
+    def filter_cards_by_debt(cards, accumulated_debt_scope)
+      return cards if has_debt.blank?
+
+      debt_card_ids = accumulated_debt_scope.distinct.pluck(:card_id)
+
+      if has_debt == "true"
+        cards.select { |card| debt_card_ids.include?(card.id) }
+      else
+        cards.reject { |card| debt_card_ids.include?(card.id) }
+      end
     end
 
     def debt_filters(scope)

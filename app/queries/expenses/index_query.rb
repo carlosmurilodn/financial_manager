@@ -41,6 +41,9 @@ module Expenses
         .then { |expenses| filter_by_card(expenses) }
         .then { |expenses| filter_by_paid(expenses) }
         .then { |expenses| filter_by_description(expenses) }
+        .then { |expenses| filter_by_amount_min(expenses) }
+        .then { |expenses| filter_by_amount_max(expenses) }
+        .then { |expenses| filter_by_installment(expenses) }
     end
 
     def expanded_expenses
@@ -89,6 +92,51 @@ module Expenses
       expenses.select do |expense|
         expense.description.to_s.downcase.include?(description.downcase)
       end
+    end
+
+    def filter_by_amount_min(expenses)
+      return expenses if amount_min.blank?
+
+      minimum = parse_amount(amount_min)
+      return expenses if minimum.nil? || minimum.zero?
+
+      expenses.select { |expense| expense.effective_amount.abs >= minimum }
+    end
+
+    def filter_by_amount_max(expenses)
+      return expenses if amount_max.blank?
+
+      maximum = parse_amount(amount_max)
+      return expenses if maximum.nil? || maximum.zero?
+
+      expenses.select { |expense| expense.effective_amount.abs <= maximum }
+    end
+
+    def filter_by_installment(expenses)
+      return expenses if installment.blank?
+
+      if installment == "true"
+        expenses.select(&:payment_method_credito_parcelado?)
+      else
+        expenses.reject(&:payment_method_credito_parcelado?)
+      end
+    end
+
+    def parse_amount(value)
+      return nil if value.blank?
+
+      cleaned = value.to_s.gsub(/[^\d,\.]/, "")
+      return nil if cleaned.blank?
+
+      normalized = if cleaned.include?(",")
+        cleaned.delete(".").tr(",", ".")
+      else
+        cleaned
+      end
+
+      BigDecimal(normalized)
+    rescue ArgumentError
+      nil
     end
 
     def totals_for(expenses)
@@ -169,6 +217,18 @@ module Expenses
 
     def paid
       filters[:paid]
+    end
+
+    def amount_min
+      filters[:amount_min]
+    end
+
+    def amount_max
+      filters[:amount_max]
+    end
+
+    def installment
+      filters[:installment]
     end
   end
 end

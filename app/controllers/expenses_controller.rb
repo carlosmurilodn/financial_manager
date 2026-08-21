@@ -140,6 +140,9 @@ class ExpensesController < ApplicationController
     session.delete(:expenses_payment_method)
     session.delete(:expenses_card_id)
     session.delete(:expenses_paid)
+    session.delete(:expenses_amount_min)
+    session.delete(:expenses_amount_max)
+    session.delete(:expenses_installment)
 
     redirect_to expenses_path, notice: "Filtros limpos com sucesso!"
   end
@@ -181,6 +184,9 @@ class ExpensesController < ApplicationController
       payment_method: @payment_method_filter,
       card_id: @card_filter,
       paid: @paid_filter,
+      amount_min: @amount_min_filter,
+      amount_max: @amount_max_filter,
+      installment: @installment_filter,
       sort: @sort,
       direction: @direction,
       sort_option: @sort_option,
@@ -323,6 +329,16 @@ class ExpensesController < ApplicationController
     @paid_filter = session[:expenses_paid]
     @paid_filter = nil if @paid_filter.blank?
 
+    session[:expenses_amount_min] = params[:amount_min].to_s.strip if params.key?(:amount_min)
+    @amount_min_filter = session[:expenses_amount_min].presence
+
+    session[:expenses_amount_max] = params[:amount_max].to_s.strip if params.key?(:amount_max)
+    @amount_max_filter = session[:expenses_amount_max].presence
+
+    session[:expenses_installment] = params[:installment] if params.key?(:installment)
+    @installment_filter = session[:expenses_installment]
+    @installment_filter = nil if @installment_filter.blank?
+
     result = Expenses::IndexQuery.new(user: current_user, filters: expense_filters).call
     assign_expense_result(result)
 
@@ -347,7 +363,10 @@ class ExpensesController < ApplicationController
       category_id: @category_filter,
       payment_method: @payment_method_filter,
       card_id: @card_filter,
-      paid: @paid_filter
+      paid: @paid_filter,
+      amount_min: @amount_min_filter,
+      amount_max: @amount_max_filter,
+      installment: @installment_filter
     }
   end
 

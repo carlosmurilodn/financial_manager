@@ -47,6 +47,24 @@
                   options_for_select([["Todos", 0]] + (@card_debt_years || []), @year || 0),
                   {}, class: "app-form-select" %>
           </div>
+
+          <div class="app-filter-field">
+            <%= f.label :has_debt, "Dívida?" %>
+            <div class="app-filter-toggle-group">
+              <%= link_to "Todos",
+                    cards_path(request.query_parameters.except("has_debt").merge(has_debt: "")),
+                    class: "app-filter-toggle-btn #{@has_debt_filter.blank? ? 'is-active' : ''}",
+                    data: { turbo_action: "replace" } %>
+              <%= link_to "Com",
+                    cards_path(request.query_parameters.merge(has_debt: "true")),
+                    class: "app-filter-toggle-btn #{@has_debt_filter == 'true' ? 'is-active' : ''}",
+                    data: { turbo_action: "replace" } %>
+              <%= link_to "Sem",
+                    cards_path(request.query_parameters.merge(has_debt: "false")),
+                    class: "app-filter-toggle-btn #{@has_debt_filter == 'false' ? 'is-active' : ''}",
+                    data: { turbo_action: "replace" } %>
+            </div>
+          </div>
         </div>
 
         <div class="app-filter-actions">

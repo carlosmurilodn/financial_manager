@@ -15,6 +15,11 @@ module Home
       :category_expense_range,
       :previous_category_expense_date,
       :next_category_expense_date,
+      :movement_month,
+      :movement_year,
+      :movement_date,
+      :previous_movement_date,
+      :next_movement_date,
       :month,
       :year,
       :calendar_range,
@@ -43,6 +48,7 @@ module Home
       @current_month_range = today.all_month
       @card_balance_period = build_period(:card_month, :card_year)
       @category_expense_period = build_period(:category_month, :category_year)
+      @movement_period = build_period(:movement_month, :movement_year)
       @month = (params[:month] || today.month).to_i
       @year = (params[:year] || today.year).to_i
       @calendar_range = Date.new(year, month, 1).all_month
@@ -71,6 +77,11 @@ module Home
         category_expense_range: category_expense_period.range,
         previous_category_expense_date: category_expense_period.previous_date,
         next_category_expense_date: category_expense_period.next_date,
+        movement_month: movement_period.month,
+        movement_year: movement_period.year,
+        movement_date: movement_period.date,
+        previous_movement_date: movement_period.previous_date,
+        next_movement_date: movement_period.next_date,
         month: month,
         year: year,
         calendar_range: calendar_range,
@@ -102,6 +113,7 @@ module Home
                 :current_month_range,
                 :card_balance_period,
                 :category_expense_period,
+                :movement_period,
                 :month,
                 :year,
                 :calendar_range
@@ -231,13 +243,13 @@ module Home
     def recent_expenses
       Expense.includes(:category)
              .select(:id, :description, :amount, :date, :balance_month, :category_id, :payment_method)
-             .where("date >= ?", today.beginning_of_month)
+             .where(balance_month: movement_period.range)
              .order(date: :asc, id: :desc)
     end
 
     def recent_incomes
       Income.includes(:category)
-            .where("balance_month >= ?", today.beginning_of_month)
+            .where(balance_month: movement_period.range)
             .order(balance_month: :asc, date: :desc, id: :desc)
     end
 

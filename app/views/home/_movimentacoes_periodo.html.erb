@@ -1,0 +1,94 @@
+<turbo-frame id="movements-period-summary">
+<div class="dashboard-card dashboard-card--compact dashboard-card--movements-unified">
+  <div class="dashboard-card__header">
+    <div>
+      <p class="dashboard-card__eyebrow">Resumo</p>
+      <h2 class="dashboard-card__title">Movimentações do Período</h2>
+    </div>
+  </div>
+
+  <div class="dashboard-card__pill dashboard-card__pill--period dashboard-card__pill--period-full">
+    <%= link_to root_path(movement_month: @previous_movement_date.month, movement_year: @previous_movement_date.year),
+                class: "dashboard-card__period-button",
+                aria: { label: "Mês anterior" },
+                data: { turbo_frame: "movements-period-summary", turbo_prefetch: "false" } do %>
+      <span class="material-symbols-rounded">chevron_left</span>
+    <% end %>
+    <span class="dashboard-card__period-label">
+      <span class="material-symbols-rounded">swap_vert</span>
+      <span><%= I18n.l(@movement_date, format: "%B de %Y") %></span>
+    </span>
+    <%= link_to root_path(movement_month: @next_movement_date.month, movement_year: @next_movement_date.year),
+                class: "dashboard-card__period-button",
+                aria: { label: "Próximo mês" },
+                data: { turbo_frame: "movements-period-summary", turbo_prefetch: "false" } do %>
+      <span class="material-symbols-rounded">chevron_right</span>
+    <% end %>
+  </div>
+
+  <div class="dashboard-card__body dashboard-card__body--movement-feed">
+    <%
+      month_labels = %w[jan fev mar abr mai jun jul ago set out nov dez]
+
+      movements = @recent_incomes.map { |i| { type: :income, record: i, date: i.date } } +
+                  @recent_expenses.map { |e| { type: :expense, record: e, date: e.date } }
+
+      movements = movements.sort_by { |m| m[:date] }.reverse
+    %>
+
+    <% if movements.any? %>
+      <div class="dashboard-movement-feed">
+        <% movements.each do |movement| %>
+          <% if movement[:type] == :income %>
+            <% income = movement[:record] %>
+            <article class="dashboard-movement-item dashboard-movement-item--income">
+              <div class="dashboard-movement-item__date">
+                <strong><%= income.date.strftime("%d") %></strong>
+                <span><%= month_labels[income.date.month - 1] %></span>
+              </div>
+
+              <div class="dashboard-movement-item__main">
+                <div class="dashboard-movement-item__title">
+                  <span class="material-symbols-rounded dashboard-movement-item__marker"><%= income.category&.material_icon || "category" %></span>
+                  <strong><%= income.description.presence || "Receita" %></strong>
+                </div>
+                <small><%= income.category&.name || "Sem categoria" %></small>
+              </div>
+
+              <strong class="dashboard-movement-item__amount">
+                + <%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
+              </strong>
+            </article>
+          <% else %>
+            <% expense = movement[:record] %>
+            <article class="dashboard-movement-item dashboard-movement-item--expense">
+              <div class="dashboard-movement-item__date">
+                <strong><%= expense.date.strftime("%d") %></strong>
+                <span><%= month_labels[expense.date.month - 1] %></span>
+              </div>
+
+              <div class="dashboard-movement-item__main">
+                <div class="dashboard-movement-item__title">
+                  <span class="material-symbols-rounded dashboard-movement-item__marker"><%= expense.category&.material_icon || "category" %></span>
+                  <strong><%= expense.description.presence || "Despesa" %></strong>
+                </div>
+                <small><%= expense.category&.name || "Sem categoria" %></small>
+              </div>
+
+              <strong class="dashboard-movement-item__amount">
+                - <%= number_to_currency(expense.effective_amount.abs, unit: "R$ ", separator: ",", delimiter: ".") %>
+              </strong>
+            </article>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="dashboard-empty-state">
+        <span class="material-symbols-rounded">swap_vert</span>
+        <strong>Nenhuma movimentação no período</strong>
+        <small>Receitas e despesas aparecem aqui quando houver lançamentos.</small>
+      </div>
+    <% end %>
+  </div>
+</div>
+</turbo-frame>

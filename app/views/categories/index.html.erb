@@ -1,4 +1,8 @@
 <section class="app-page">
+  <%= render "shared/breadcrumbs", breadcrumbs: [
+    { label: "Categorias", path: categories_path }
+  ] %>
+
   <div class="app-page__hero">
     <div class="app-page__hero-top app-page__hero-top--categories">
       <div class="app-page__hero-unit app-page__hero-copy">

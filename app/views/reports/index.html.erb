@@ -1,4 +1,8 @@
 <section class="app-page">
+  <%= render "shared/breadcrumbs", breadcrumbs: [
+    { label: "Relatórios", path: reports_path }
+  ] %>
+
   <div class="app-page__hero">
     <div class="app-page__hero-copy">
       <span class="app-page__hero-icon">

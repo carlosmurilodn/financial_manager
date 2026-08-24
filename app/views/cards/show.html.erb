@@ -21,6 +21,11 @@
       </div>
 
       <div class="app-page__hero-unit" style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+        <%= link_to cards_path, class: "app-show-back-link" do %>
+          <span class="material-symbols-rounded">arrow_back</span>
+          Voltar
+        <% end %>
+
         <%= link_to edit_card_path(@card), class: "app-show-card__action-btn app-show-card__action-btn--edit", data: { turbo_frame: "modal" } do %>
           <span class="material-symbols-rounded">edit</span>
           Editar
@@ -29,11 +34,6 @@
         <%= link_to card_path(@card), data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir este cartão?" }, class: "app-show-card__action-btn app-show-card__action-btn--danger" do %>
           <span class="material-symbols-rounded">delete</span>
           Excluir
-        <% end %>
-
-        <%= link_to cards_path, class: "app-show-back-link" do %>
-          <span class="material-symbols-rounded">arrow_back</span>
-          Voltar
         <% end %>
       </div>
     </div>

@@ -1,0 +1,113 @@
+<section class="app-page">
+  <div class="app-page__hero">
+    <div class="app-page__hero-top app-page__hero-top--expenses">
+      <div class="app-page__hero-unit app-page__hero-copy">
+        <span class="app-page__hero-icon">
+          <span class="material-symbols-rounded">receipt_long</span>
+        </span>
+        <div>
+          <p class="app-page__eyebrow">Detalhes</p>
+          <h1 class="app-page__title">Despesa</h1>
+        </div>
+      </div>
+
+      <div class="app-page__hero-unit" style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+        <%= link_to expenses_path, class: "app-show-back-link" do %>
+          <span class="material-symbols-rounded">arrow_back</span>
+          Voltar
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-panel app-show-panel">
+    <div class="app-show-card" style="--expense-category-color: <%= @expense.category.display_color %>;">
+      <div class="app-show-card__header">
+        <div class="app-show-card__icon-wrapper">
+          <span class="material-symbols-rounded app-show-card__icon">
+            <%= @expense.category.material_icon %>
+          </span>
+        </div>
+
+        <div class="app-show-card__title-area">
+          <h2 class="app-show-card__title"><%= @expense.description %></h2>
+          <div class="app-show-card__badges">
+            <span class="app-show-card__pill"><%= @expense.category.display_name %></span>
+            <span class="app-show-card__pill"><%= Expense.payment_method_names[@expense.payment_method] %></span>
+            <% if @expense.card.present? %>
+              <span class="app-show-card__pill"><%= @expense.card.name %></span>
+            <% end %>
+            <% if @expense.payment_method_credito_parcelado? %>
+              <span class="app-show-card__pill">Parcela <%= @expense.current_installment %> de <%= @expense.installments_count %></span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-show-card__amount-section">
+        <span class="app-show-card__amount-label">Valor</span>
+        <strong class="app-show-card__amount">
+          <%= number_to_currency(@expense.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %>
+        </strong>
+        <span class="app-show-card__status <%= @expense.paid? ? 'app-show-card__status--paid' : 'app-show-card__status--pending' %>">
+          <%= @expense.paid? ? "Pago" : "Pendente" %>
+        </span>
+      </div>
+
+      <div class="app-show-card__details-grid">
+        <div class="app-show-card__detail">
+          <span class="material-symbols-rounded">calendar_month</span>
+          <div>
+            <small>Data</small>
+            <strong><%= @expense.date.strftime("%d/%m/%Y") %></strong>
+          </div>
+        </div>
+
+        <div class="app-show-card__detail">
+          <span class="material-symbols-rounded">event</span>
+          <div>
+            <small>Mês de referência</small>
+            <strong><%= @expense.balance_month&.strftime("%m/%Y") || "—" %></strong>
+          </div>
+        </div>
+
+        <div class="app-show-card__detail">
+          <span class="material-symbols-rounded">schedule</span>
+          <div>
+            <small>Criado em</small>
+            <strong><%= @expense.created_at.strftime("%d/%m/%Y às %H:%M") %></strong>
+          </div>
+        </div>
+
+        <% if @expense.paid_at.present? %>
+          <div class="app-show-card__detail">
+            <span class="material-symbols-rounded">check_circle</span>
+            <div>
+              <small>Pago em</small>
+              <strong><%= @expense.paid_at.strftime("%d/%m/%Y às %H:%M") %></strong>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="app-show-card__actions">
+        <%= link_to edit_expense_path(@expense), class: "app-show-card__action-btn app-show-card__action-btn--edit", data: { turbo_frame: "modal" } do %>
+          <span class="material-symbols-rounded">edit</span>
+          Editar
+        <% end %>
+
+        <% if @expense.payment_method_credito_parcelado? %>
+          <%= link_to delete_options_expense_path(@expense), class: "app-show-card__action-btn app-show-card__action-btn--danger", data: { turbo_frame: "modal" } do %>
+            <span class="material-symbols-rounded">delete</span>
+            Excluir
+          <% end %>
+        <% else %>
+          <%= link_to expense_path(@expense), data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir esta despesa?" }, class: "app-show-card__action-btn app-show-card__action-btn--danger" do %>
+            <span class="material-symbols-rounded">delete</span>
+            Excluir
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>

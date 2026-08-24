@@ -36,7 +36,7 @@
 
         <div class="expense-card__description-row">
           <p class="expense-card__description">
-            <%= income.description.presence || "Sem descrição" %>
+            <%= link_to (income.description.presence || "Sem descrição"), income_path(income), class: "stealth-link" %>
           </p>
 
           <div class="expense-card__meta">

@@ -40,7 +40,7 @@
 
       <div class="expense-card__description-row">
         <p class="expense-card__description">
-          <%= expense.description %>
+          <%= link_to expense.description, expense_path(expense), class: "stealth-link" %>
         </p>
 
           <div class="expense-card__meta"> 

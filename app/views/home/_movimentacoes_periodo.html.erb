@@ -50,7 +50,7 @@
               <div class="dashboard-movement-item__main">
                 <div class="dashboard-movement-item__title">
                   <span class="material-symbols-rounded dashboard-movement-item__marker"><%= income.category&.material_icon || "category" %></span>
-                  <strong><%= income.description.presence || "Receita" %></strong>
+                  <strong><%= link_to (income.description.presence || "Receita"), income_path(income), class: "stealth-link" %></strong>
                 </div>
                 <small><%= income.category&.name || "Sem categoria" %></small>
               </div>
@@ -70,7 +70,7 @@
               <div class="dashboard-movement-item__main">
                 <div class="dashboard-movement-item__title">
                   <span class="material-symbols-rounded dashboard-movement-item__marker"><%= expense.category&.material_icon || "category" %></span>
-                  <strong><%= expense.description.presence || "Despesa" %></strong>
+                  <strong><%= link_to (expense.description.presence || "Despesa"), expense_path(expense), class: "stealth-link" %></strong>
                 </div>
                 <small><%= expense.category&.name || "Sem categoria" %></small>
               </div>

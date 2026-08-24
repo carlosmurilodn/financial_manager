@@ -47,3 +47,16 @@
 .app-text-center {
   text-align: center;
 }
+
+// Link sem aparência de link — herda cor e não tem underline
+.stealth-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.stealth-link:hover,
+.stealth-link:focus {
+  color: inherit;
+  text-decoration: none;
+  opacity: 0.75;
+}

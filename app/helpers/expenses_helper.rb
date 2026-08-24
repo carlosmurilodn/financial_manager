@@ -11,7 +11,7 @@ module ExpensesHelper
     "category_asc" => { label: "Categoria Crescente", sort: "category", direction: "asc" },
     "category_desc" => { label: "Categoria Descrescente", sort: "category", direction: "desc" }
   }.freeze
-  DEFAULT_EXPENSE_SORT_OPTION = "date_desc"
+  DEFAULT_EXPENSE_SORT_OPTION = "created_at_desc"
 
   def default_expense_sort_option
     DEFAULT_EXPENSE_SORT_OPTION

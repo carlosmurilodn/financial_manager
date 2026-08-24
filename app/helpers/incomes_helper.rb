@@ -11,9 +11,11 @@ module IncomesHelper
     "category_asc" => { label: "Categoria Crescente", sort: "category", direction: "asc" },
     "category_desc" => { label: "Categoria Decrescente", sort: "category", direction: "desc" },
     "paid_desc" => { label: "Recebidas Primeiro", sort: "paid", direction: "desc" },
-    "paid_asc" => { label: "Pendentes Primeiro", sort: "paid", direction: "asc" }
+    "paid_asc" => { label: "Pendentes Primeiro", sort: "paid", direction: "asc" },
+    "created_at_desc" => { label: "Criação Recente", sort: "created_at", direction: "desc" },
+    "created_at_asc" => { label: "Criação Remota", sort: "created_at", direction: "asc" }
   }.freeze
-  DEFAULT_INCOME_SORT_OPTION = "balance_month_asc"
+  DEFAULT_INCOME_SORT_OPTION = "created_at_desc"
 
   def default_income_sort_option
     DEFAULT_INCOME_SORT_OPTION

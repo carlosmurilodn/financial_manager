@@ -208,7 +208,8 @@ class IncomesController < ApplicationController
       "amount" => ->(income) { income.amount.to_d },
       "date" => ->(income) { income.date },
       "balance_month" => ->(income) { income.balance_month },
-      "paid" => ->(income) { income.paid? }
+      "paid" => ->(income) { income.paid? },
+      "created_at" => ->(income) { income.created_at }
     }
   end
 

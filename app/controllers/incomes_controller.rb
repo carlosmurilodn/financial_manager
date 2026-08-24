@@ -203,13 +203,9 @@ class IncomesController < ApplicationController
 
   def income_sort_map
     {
-      "description" => ->(income) { income.description.to_s },
-      "category" => ->(income) { income.category&.display_name.to_s },
+      "created_at" => ->(income) { income.created_at },
       "amount" => ->(income) { income.amount.to_d },
-      "date" => ->(income) { income.date },
-      "balance_month" => ->(income) { income.balance_month },
-      "paid" => ->(income) { income.paid? },
-      "created_at" => ->(income) { income.created_at }
+      "date" => ->(income) { income.date }
     }
   end
 

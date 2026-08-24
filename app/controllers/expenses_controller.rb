@@ -410,16 +410,9 @@ class ExpensesController < ApplicationController
 
   def expense_sort_map
     {
-      "description" => ->(expense) { expense.description.to_s },
-      "installment" => ->(expense) { expense.current_installment.to_i },
-      "amount" => ->(expense) { expense.effective_amount.to_d },
-      "date" => ->(expense) { expense.date },
-      "balance_month" => ->(expense) { expense.balance_month },
       "created_at" => ->(expense) { expense.created_at },
-      "category" => ->(expense) { expense.category&.display_name.to_s },
-      "payment_method" => ->(expense) { expense.payment_method.to_s },
-      "card" => ->(expense) { expense.card&.name.to_s },
-      "paid" => ->(expense) { expense.paid? }
+      "amount" => ->(expense) { expense.effective_amount.to_d },
+      "date" => ->(expense) { expense.date }
     }
   end
 

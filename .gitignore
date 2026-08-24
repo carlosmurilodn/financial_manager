@@ -52,3 +52,5 @@
 /android-twa/android-keystore
 .codex
 /config/master.key
+DS_Store
+/DS_Store

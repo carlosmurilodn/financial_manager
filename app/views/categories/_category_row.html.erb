@@ -1,4 +1,6 @@
 <% category_color = category.display_color %>
+<% expense_total = @category_expenses_by_id&.fetch(category.id, 0) || 0 %>
+<% income_total = @category_incomes_by_id&.fetch(category.id, 0) || 0 %>
 
 <div
   id="<%= dom_id(category) %>"
@@ -30,7 +32,18 @@
       </div>
     </div>
 
-    <div class="expense-card__actions">
+    <div class="category-card__totals">
+      <span class="category-card__total category-card__total--income">
+        <span class="material-symbols-rounded">arrow_upward</span>
+        <%= number_to_currency(income_total, unit: "R$ ", separator: ",", delimiter: ".") %>
+      </span>
+      <span class="category-card__total category-card__total--expense">
+        <span class="material-symbols-rounded">arrow_downward</span>
+        <%= number_to_currency(expense_total, unit: "R$ ", separator: ",", delimiter: ".") %>
+      </span>
+    </div>
+
+    <div class="expense-card__actions" style="margin-left: auto;">
       <%= link_to(
             edit_category_path(category),
             class: "app-show-card__action-btn app-show-card__action-btn--edit",

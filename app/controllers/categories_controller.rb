@@ -70,13 +70,26 @@ class CategoriesController < ApplicationController
 
   def load_categories
     @description_filter = params[:description].to_s.strip
-    result = Categories::IndexQuery.new(user: current_user, description: @description_filter).call
+
+    session[:categories_month] = params[:month].to_i if params[:month].present?
+    @month = session[:categories_month]
+    @month = nil if @month.blank? || @month == 0
+    @month ||= Date.current.month
+
+    session[:categories_year] = params[:year].to_i if params[:year].present?
+    @year = session[:categories_year]
+    @year = nil if @year.blank? || @year == 0
+    @year ||= Date.current.year
+
+    result = Categories::IndexQuery.new(user: current_user, description: @description_filter, month: @month, year: @year).call
 
     @categories = result.categories
     @categories_month_expenses = result.month_expenses
     @categories_month_incomes = result.month_incomes
     @categories_top_expense_value = result.top_expense_value
     @categories_uncategorized_value = result.uncategorized_value
+    @category_expenses_by_id = result.expenses_by_category
+    @category_incomes_by_id = result.incomes_by_category
   end
 
   def set_category

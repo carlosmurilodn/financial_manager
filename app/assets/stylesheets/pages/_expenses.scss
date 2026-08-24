@@ -138,6 +138,7 @@
 .expense-card__content {
   display: flex;
   align-items: center;
+  position: relative;
   /*gap: 22px;*/
   padding: 18px 20px 18px 24px;
 }
@@ -1321,4 +1322,39 @@
 
 .app-show-card__installments-table tbody tr:nth-child(even) {
   background: color-mix(in srgb, var(--expense-category-color) 4%, transparent);
+}
+
+// === Category totals in row ===
+
+.category-card__totals {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.category-card__total {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.category-card__total .material-symbols-rounded {
+  font-size: 1.3rem;
+}
+
+.category-card__total--income {
+  background: color-mix(in srgb, #1b9c63 12%, transparent);
+  color: #1b9c63;
+}
+
+.category-card__total--expense {
+  background: color-mix(in srgb, #d83f4f 12%, transparent);
+  color: #d83f4f;
 }

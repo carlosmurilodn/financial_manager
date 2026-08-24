@@ -16,7 +16,7 @@
       <div class="expense-card__details">
         <div class="expense-card__header">
           <h3 class="expense-card__title">
-            <%= expense.category.display_name %>
+            <%= link_to expense.description, expense_path(expense), class: "stealth-link" %>
           </h3>
 
           <div class="expense-card__badges">
@@ -40,7 +40,7 @@
 
       <div class="expense-card__description-row">
         <p class="expense-card__description">
-          <%= link_to expense.description, expense_path(expense), class: "stealth-link" %>
+          <%= expense.category.display_name %>
         </p>
 
           <div class="expense-card__meta"> 

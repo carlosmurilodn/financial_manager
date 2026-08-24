@@ -1,9 +1,4 @@
 <section class="app-page">
-  <%= render "shared/breadcrumbs", breadcrumbs: [
-    { label: "Receitas", path: incomes_path },
-    { label: @income.description.presence || "Sem descrição", path: income_path(@income) }
-  ] %>
-
   <div class="app-page__hero">
     <div class="app-page__hero-top app-page__hero-top--incomes">
       <div class="app-page__hero-unit app-page__hero-copy">
@@ -24,6 +19,11 @@
       </div>
     </div>
   </div>
+
+  <%= render "shared/breadcrumbs", breadcrumbs: [
+    { label: "Receitas", path: incomes_path },
+    { label: @income.description.presence || "Sem descrição", path: income_path(@income) }
+  ] %>
 
   <div class="app-panel app-show-panel">
     <% category = @income.category %>

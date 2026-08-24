@@ -36,10 +36,6 @@
     <div class="dashboard-grid__item dashboard-grid__item--cards-summary">
       <%= render "home/saldo_por_cartao" %>
     </div>
-
-    <div class="dashboard-grid__item dashboard-grid__item--category-chart">
-      <%= render "home/despesas_por_categoria" %>
-    </div>
   </div>
 
   <div class="dashboard-grid dashboard-grid--planning">
@@ -49,10 +45,6 @@
 
     <div class="dashboard-grid__item">
       <%= render "home/forecast_table", year: @year, months: @months %>
-    </div>
-
-    <div class="dashboard-grid__item">
-      <%= render "home/financial_goals" %>
     </div>
   </div>
 </section>

@@ -10,7 +10,6 @@
           <% end %>
         </span>
         <div>
-          <p class="app-page__eyebrow">Detalhes</p>
           <h1 class="app-page__title"><%= @card.name %></h1>
           <% if @card.number.present? %>
             <p style="margin: 4px 0 0; color: var(--text-soft); font-size: 0.82rem; font-weight: 700;">
@@ -38,11 +37,6 @@
       </div>
     </div>
   </div>
-
-  <%= render "shared/breadcrumbs", breadcrumbs: [
-    { label: "Cartões", path: cards_path },
-    { label: @card.name, path: card_path(@card) }
-  ] %>
 
   <%# KPIs + Informações numa única linha dentro de um card branco %>
   <div class="app-panel app-show-panel">

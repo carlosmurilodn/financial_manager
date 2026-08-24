@@ -1,12 +1,11 @@
 <section class="app-page">
   <div class="app-page__hero">
     <div class="app-page__hero-top app-page__hero-top--expenses">
-      <div class="app-page__hero-unit app-page__hero-copy">
+      <div class="app-page__hero-unit app-page__hero-copy" style="flex-wrap: wrap;">
         <span class="app-page__hero-icon">
           <span class="material-symbols-rounded">receipt_long</span>
         </span>
         <div>
-          <p class="app-page__eyebrow">Detalhes</p>
           <h1 class="app-page__title">Despesa</h1>
         </div>
       </div>
@@ -16,14 +15,26 @@
           <span class="material-symbols-rounded">arrow_back</span>
           Voltar
         <% end %>
+
+        <%= link_to edit_expense_path(@expense), class: "app-show-card__action-btn app-show-card__action-btn--edit", data: { turbo_frame: "modal" } do %>
+          <span class="material-symbols-rounded">edit</span>
+          Editar
+        <% end %>
+
+        <% if @expense.payment_method_credito_parcelado? %>
+          <%= link_to delete_options_expense_path(@expense), class: "app-show-card__action-btn app-show-card__action-btn--danger", data: { turbo_frame: "modal" } do %>
+            <span class="material-symbols-rounded">delete</span>
+            Excluir
+          <% end %>
+        <% else %>
+          <%= link_to expense_path(@expense), data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir esta despesa?" }, class: "app-show-card__action-btn app-show-card__action-btn--danger" do %>
+            <span class="material-symbols-rounded">delete</span>
+            Excluir
+          <% end %>
+        <% end %>
       </div>
     </div>
   </div>
-
-  <%= render "shared/breadcrumbs", breadcrumbs: [
-    { label: "Despesas", path: expenses_path },
-    { label: @expense.description, path: expense_path(@expense) }
-  ] %>
 
   <div class="app-panel app-show-panel">
     <div class="app-show-card" style="--expense-category-color: <%= @expense.category.display_color %>;">
@@ -40,7 +51,7 @@
             <span class="app-show-card__pill"><%= @expense.category.display_name %></span>
             <span class="app-show-card__pill"><%= Expense.payment_method_names[@expense.payment_method] %></span>
             <% if @expense.card.present? %>
-              <span class="app-show-card__pill"><%= @expense.card.name %></span>
+              <span class="app-show-card__pill" style="background: color-mix(in srgb, <%= @expense.card.display_color %> 14%, transparent); color: <%= @expense.card.display_color %>;"><%= @expense.card.name %></span>
             <% end %>
             <% if @expense.payment_method_credito_parcelado? %>
               <span class="app-show-card__pill">Parcela <%= @expense.current_installment %> de <%= @expense.installments_count %></span>
@@ -134,24 +145,6 @@
         </div>
       <% end %>
 
-      <div class="app-show-card__actions">
-        <%= link_to edit_expense_path(@expense), class: "app-show-card__action-btn app-show-card__action-btn--edit", data: { turbo_frame: "modal" } do %>
-          <span class="material-symbols-rounded">edit</span>
-          Editar
-        <% end %>
-
-        <% if @expense.payment_method_credito_parcelado? %>
-          <%= link_to delete_options_expense_path(@expense), class: "app-show-card__action-btn app-show-card__action-btn--danger", data: { turbo_frame: "modal" } do %>
-            <span class="material-symbols-rounded">delete</span>
-            Excluir
-          <% end %>
-        <% else %>
-          <%= link_to expense_path(@expense), data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir esta despesa?" }, class: "app-show-card__action-btn app-show-card__action-btn--danger" do %>
-            <span class="material-symbols-rounded">delete</span>
-            Excluir
-          <% end %>
-        <% end %>
-      </div>
     </div>
   </div>
 </section>

@@ -1,12 +1,11 @@
 <section class="app-page">
   <div class="app-page__hero">
     <div class="app-page__hero-top app-page__hero-top--incomes">
-      <div class="app-page__hero-unit app-page__hero-copy">
+      <div class="app-page__hero-unit app-page__hero-copy" style="flex-wrap: wrap;">
         <span class="app-page__hero-icon">
           <span class="material-symbols-rounded">payments</span>
         </span>
         <div>
-          <p class="app-page__eyebrow">Detalhes</p>
           <h1 class="app-page__title">Receita</h1>
         </div>
       </div>
@@ -16,14 +15,19 @@
           <span class="material-symbols-rounded">arrow_back</span>
           Voltar
         <% end %>
+
+        <%= link_to edit_income_path(@income), class: "app-show-card__action-btn app-show-card__action-btn--edit", data: { turbo_frame: "modal" } do %>
+          <span class="material-symbols-rounded">edit</span>
+          Editar
+        <% end %>
+
+        <%= link_to income_path(@income), data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir esta receita?" }, class: "app-show-card__action-btn app-show-card__action-btn--danger" do %>
+          <span class="material-symbols-rounded">delete</span>
+          Excluir
+        <% end %>
       </div>
     </div>
   </div>
-
-  <%= render "shared/breadcrumbs", breadcrumbs: [
-    { label: "Receitas", path: incomes_path },
-    { label: @income.description.presence || "Sem descrição", path: income_path(@income) }
-  ] %>
 
   <div class="app-panel app-show-panel">
     <% category = @income.category %>
@@ -83,17 +87,6 @@
         </div>
       </div>
 
-      <div class="app-show-card__actions">
-        <%= link_to edit_income_path(@income), class: "app-show-card__action-btn app-show-card__action-btn--edit", data: { turbo_frame: "modal" } do %>
-          <span class="material-symbols-rounded">edit</span>
-          Editar
-        <% end %>
-
-        <%= link_to income_path(@income), data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir esta receita?" }, class: "app-show-card__action-btn app-show-card__action-btn--danger" do %>
-          <span class="material-symbols-rounded">delete</span>
-          Excluir
-        <% end %>
-      </div>
     </div>
   </div>
 </section>

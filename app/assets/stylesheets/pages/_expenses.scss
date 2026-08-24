@@ -1009,20 +1009,21 @@
 
 .app-show-card__installments-table th {
   padding: 10px 14px;
-  background: color-mix(in srgb, var(--expense-category-color) 6%, transparent);
-  color: var(--text-soft);
-  font-size: 0.7rem;
+  background: color-mix(in srgb, var(--expense-category-color) 14%, transparent);
+  color: var(--text-main);
+  font-size: 0.78rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  text-align: left;
+  text-align: center;
 }
 
 .app-show-card__installments-table td {
   padding: 10px 14px;
   border-top: 1px solid var(--card-border);
   color: var(--text-main);
-  font-weight: 600;
+  font-weight: 400;
+  text-align: center;
 }
 
 .app-show-card__installments-table tr.is-current {
@@ -1276,4 +1277,10 @@
 
 .app-table-sort-link .material-symbols-rounded {
   font-size: 0.82rem;
+}
+
+// === Zebra striping for installments/invoice tables ===
+
+.app-show-card__installments-table tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--expense-category-color) 4%, transparent);
 }

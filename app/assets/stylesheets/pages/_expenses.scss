@@ -1055,7 +1055,7 @@
 
 .app-show-kpis {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -1216,6 +1216,12 @@
 .app-show-card__empty small {
   color: var(--text-soft);
   font-size: 0.78rem;
+}
+
+@media (max-width: 991px) {
+  .app-show-kpis {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 576px) {

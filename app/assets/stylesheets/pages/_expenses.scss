@@ -1050,3 +1050,220 @@
   background: var(--stat-warning-bg);
   color: var(--stat-warning-icon-bg);
 }
+
+// === Show page KPIs ===
+
+.app-show-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.app-show-kpi {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  background: var(--surface);
+  backdrop-filter: blur(22px);
+}
+
+.app-show-kpi small {
+  color: var(--text-soft);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.app-show-kpi strong {
+  color: var(--kpi-color, var(--text-main));
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.app-show-kpi__progress {
+  height: 6px;
+  margin-top: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.16);
+}
+
+.app-show-kpi__progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+// === Expenses header with month nav ===
+
+.app-show-card__expenses-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.app-show-card__month-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-show-card__month-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--hero-badge-icon-bg);
+  color: var(--nav-active-icon-color);
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.app-show-card__month-btn:hover {
+  opacity: 0.75;
+  color: var(--nav-active-icon-color);
+  text-decoration: none;
+}
+
+.app-show-card__month-btn .material-symbols-rounded {
+  font-size: 1.2rem;
+}
+
+.app-show-card__month-label {
+  color: var(--text-main);
+  font-size: 0.86rem;
+  font-weight: 800;
+  text-transform: capitalize;
+  min-width: 140px;
+  text-align: center;
+}
+
+// === Month summary ===
+
+.app-show-card__month-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--expense-category-color) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--expense-category-color) 14%, transparent);
+}
+
+.app-show-card__month-summary-item {
+  display: grid;
+  gap: 2px;
+}
+
+.app-show-card__month-summary-item small {
+  color: var(--text-soft);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.app-show-card__month-summary-item strong {
+  color: var(--text-main);
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.app-show-card__month-summary-item--paid strong {
+  color: #1b9c63;
+}
+
+.app-show-card__month-summary-item--pending strong {
+  color: #d83f4f;
+}
+
+// === Empty state ===
+
+.app-show-card__empty {
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  padding: 32px 16px;
+  border: 1px dashed var(--card-border);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.app-show-card__empty .material-symbols-rounded {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: var(--hero-badge-icon-bg);
+  color: var(--hero-badge-icon-color);
+  font-size: 1.3rem;
+  margin-bottom: 4px;
+}
+
+.app-show-card__empty strong {
+  color: var(--text-main);
+  font-size: 0.88rem;
+}
+
+.app-show-card__empty small {
+  color: var(--text-soft);
+  font-size: 0.78rem;
+}
+
+@media (max-width: 576px) {
+  .app-show-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .app-show-kpi {
+    padding: 10px 12px;
+  }
+
+  .app-show-kpi strong {
+    font-size: 0.92rem;
+  }
+
+  .app-show-card__expenses-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .app-show-card__month-summary {
+    gap: 12px;
+  }
+}
+
+// === Table sort links ===
+
+.app-table-sort-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-soft);
+  text-decoration: none;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.app-table-sort-link:hover {
+  color: var(--nav-active-icon-color);
+  text-decoration: none;
+}
+
+.app-table-sort-link.is-active {
+  color: var(--nav-active-icon-color);
+}
+
+.app-table-sort-link .material-symbols-rounded {
+  font-size: 0.82rem;
+}

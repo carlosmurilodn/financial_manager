@@ -1,0 +1,225 @@
+<section class="app-page">
+  <div class="app-page__hero">
+    <div class="app-page__hero-top app-page__hero-top--cards">
+      <div class="app-page__hero-unit app-page__hero-copy">
+        <span class="app-page__hero-icon" style="background: color-mix(in srgb, <%= @card.display_color %> 14%, transparent);">
+          <% if @card.icon.attached? %>
+            <%= image_tag @card.icon, class: "app-page__hero-icon-img", style: "width: 100%; height: 100%; object-fit: cover; border-radius: 12px;" %>
+          <% else %>
+            <span class="material-symbols-rounded" style="color: <%= @card.display_color %>;">credit_card</span>
+          <% end %>
+        </span>
+        <div>
+          <p class="app-page__eyebrow">Detalhes</p>
+          <h1 class="app-page__title"><%= @card.name %></h1>
+          <% if @card.number.present? %>
+            <p style="margin: 4px 0 0; color: var(--text-soft); font-size: 0.82rem; font-weight: 700;">
+              **** **** **** <%= @card.number[-4..] %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="app-page__hero-unit" style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+        <%= link_to cards_path, class: "app-show-back-link" do %>
+          <span class="material-symbols-rounded">arrow_back</span>
+          Voltar
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# KPIs de limite %>
+  <div class="app-show-kpis">
+    <div class="app-show-kpi" style="--kpi-color: <%= @card.display_color %>;">
+      <small>Limite Total</small>
+      <strong><%= number_to_currency(@card.total_limit.to_f, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+    </div>
+    <div class="app-show-kpi" style="--kpi-color: #d83f4f;">
+      <small>Utilizado</small>
+      <strong><%= number_to_currency(@card_used, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+    </div>
+    <div class="app-show-kpi" style="--kpi-color: #1b9c63;">
+      <small>Restante</small>
+      <strong><%= number_to_currency(@card_remaining, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+    </div>
+    <div class="app-show-kpi" style="--kpi-color: var(--nav-active-icon-color);">
+      <small>Uso do Limite</small>
+      <strong><%= @card.total_limit.to_f > 0 ? "#{((@card_used / @card.total_limit.to_f) * 100).round(0)}%" : "—" %></strong>
+      <% if @card.total_limit.to_f > 0 %>
+        <div class="app-show-kpi__progress">
+          <span style="width: <%= [(@card_used / @card.total_limit.to_f) * 100, 100].min.round(1) %>%; background: <%= @card.display_color %>;"></span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%# Informações do cartão %>
+  <div class="app-panel app-show-panel">
+    <div class="app-show-card" style="--expense-category-color: <%= @card.display_color %>;">
+      <div class="app-show-card__details-grid">
+        <div class="app-show-card__detail">
+          <span class="material-symbols-rounded">event</span>
+          <div>
+            <small>Dia de Fechamento</small>
+            <strong><%= @card.closing_day.present? ? "Dia #{@card.closing_day}" : "—" %></strong>
+          </div>
+        </div>
+
+        <div class="app-show-card__detail">
+          <span class="material-symbols-rounded">payments</span>
+          <div>
+            <small>Dia de Vencimento</small>
+            <strong><%= @card.due_day.present? ? "Dia #{@card.due_day}" : "—" %></strong>
+          </div>
+        </div>
+
+        <div class="app-show-card__detail">
+          <span class="material-symbols-rounded">palette</span>
+          <div>
+            <small>Cor</small>
+            <strong style="display: flex; align-items: center; gap: 8px;">
+              <span style="display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: <%= @card.display_color %>;"></span>
+              <%= @card.color_name %>
+            </strong>
+          </div>
+        </div>
+
+        <div class="app-show-card__detail">
+          <span class="material-symbols-rounded">schedule</span>
+          <div>
+            <small>Criado em</small>
+            <strong><%= @card.created_at.strftime("%d/%m/%Y") %></strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-show-card__actions">
+        <%= link_to edit_card_path(@card), class: "app-show-card__action-btn app-show-card__action-btn--edit", data: { turbo_frame: "modal" } do %>
+          <span class="material-symbols-rounded">edit</span>
+          Editar
+        <% end %>
+
+        <%= link_to card_path(@card), data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir este cartão?" }, class: "app-show-card__action-btn app-show-card__action-btn--danger" do %>
+          <span class="material-symbols-rounded">delete</span>
+          Excluir
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# Despesas do cartão com navegação por mês %>
+  <div class="app-panel app-show-panel">
+    <div class="app-show-card" style="--expense-category-color: <%= @card.display_color %>;">
+      <div class="app-show-card__expenses-header">
+        <h3 class="app-show-card__installments-title">
+          <span class="material-symbols-rounded">receipt_long</span>
+          Despesas do Cartão
+        </h3>
+
+        <div class="app-show-card__month-nav">
+          <%= link_to card_path(@card, month: @previous_date.month, year: @previous_date.year),
+                      class: "app-show-card__month-btn" do %>
+            <span class="material-symbols-rounded">chevron_left</span>
+          <% end %>
+
+          <span class="app-show-card__month-label">
+            <%= I18n.l(@show_date, format: "%B de %Y") %>
+          </span>
+
+          <%= link_to card_path(@card, month: @next_date.month, year: @next_date.year),
+                      class: "app-show-card__month-btn" do %>
+            <span class="material-symbols-rounded">chevron_right</span>
+          <% end %>
+        </div>
+      </div>
+
+      <%# Resumo do mês %>
+      <div class="app-show-card__month-summary">
+        <span class="app-show-card__month-summary-item">
+          <small>Total</small>
+          <strong><%= number_to_currency(@card_total_month, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        </span>
+        <span class="app-show-card__month-summary-item app-show-card__month-summary-item--paid">
+          <small>Pago</small>
+          <strong><%= number_to_currency(@card_paid_month, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        </span>
+        <span class="app-show-card__month-summary-item app-show-card__month-summary-item--pending">
+          <small>Pendente</small>
+          <strong><%= number_to_currency(@card_pending_month, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        </span>
+      </div>
+
+      <% if @card_expenses.any? %>
+        <div class="app-show-card__installments-table-wrapper">
+          <table class="app-show-card__installments-table">
+            <thead>
+              <tr>
+                <th>
+                  <%= link_to card_path(@card, month: @show_month, year: @show_year, sort: "description", direction: (@sort == "description" && @direction == "asc") ? "desc" : "asc"),
+                              class: "app-table-sort-link #{'is-active' if @sort == 'description'}" do %>
+                    Descrição
+                    <% if @sort == "description" %>
+                      <span class="material-symbols-rounded"><%= @direction == "asc" ? "arrow_upward" : "arrow_downward" %></span>
+                    <% end %>
+                  <% end %>
+                </th>
+                <th>
+                  <%= link_to card_path(@card, month: @show_month, year: @show_year, sort: "category", direction: (@sort == "category" && @direction == "asc") ? "desc" : "asc"),
+                              class: "app-table-sort-link #{'is-active' if @sort == 'category'}" do %>
+                    Categoria
+                    <% if @sort == "category" %>
+                      <span class="material-symbols-rounded"><%= @direction == "asc" ? "arrow_upward" : "arrow_downward" %></span>
+                    <% end %>
+                  <% end %>
+                </th>
+                <th>Pagamento</th>
+                <th>Parcela</th>
+                <th>
+                  <%= link_to card_path(@card, month: @show_month, year: @show_year, sort: "amount", direction: (@sort == "amount" && @direction == "desc") ? "asc" : "desc"),
+                              class: "app-table-sort-link #{'is-active' if @sort == 'amount'}" do %>
+                    Valor
+                    <% if @sort == "amount" %>
+                      <span class="material-symbols-rounded"><%= @direction == "asc" ? "arrow_upward" : "arrow_downward" %></span>
+                    <% end %>
+                  <% end %>
+                </th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @card_expenses.each do |expense| %>
+                <tr>
+                  <td>
+                    <%= link_to expense.description, expense_path(expense), class: "stealth-link" %>
+                  </td>
+                  <td><%= expense.category.display_name %></td>
+                  <td><%= Expense.payment_method_names[expense.payment_method] %></td>
+                  <td>
+                    <% if expense.payment_method_credito_parcelado? %>
+                      <%= expense.current_installment %>/<%= expense.installments_count %>
+                    <% else %>
+                      —
+                    <% end %>
+                  </td>
+                  <td><strong><%= number_to_currency(expense.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %></strong></td>
+                  <td>
+                    <span class="app-show-card__installment-status <%= expense.paid? ? 'app-show-card__installment-status--paid' : 'app-show-card__installment-status--pending' %>">
+                      <%= expense.paid? ? "Pago" : "Pendente" %>
+                    </span>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="app-show-card__empty">
+          <span class="material-symbols-rounded">credit_card_off</span>
+          <strong>Nenhuma despesa neste mês</strong>
+          <small>Despesas vinculadas a este cartão aparecerão aqui.</small>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>

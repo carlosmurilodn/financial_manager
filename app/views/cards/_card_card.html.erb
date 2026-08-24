@@ -21,7 +21,7 @@
         </span>
 
         <div>
-          <h3><%= card.name %></h3>
+          <h3><%= link_to card.name, card_path(card), class: "stealth-link" %></h3>
           <small><%= card.number.present? ? "**** **** **** #{card.number[-4..-1]}" : "Sem número cadastrado" %></small>
         </div>
       </div>

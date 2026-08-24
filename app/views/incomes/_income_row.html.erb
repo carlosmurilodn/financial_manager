@@ -20,7 +20,7 @@
       <div class="expense-card__details">
         <div class="expense-card__header">
           <h3 class="expense-card__title">
-            <%= category&.display_name || "Sem categoria" %>
+            <%= link_to (income.description.presence || "Sem descrição"), income_path(income), class: "stealth-link" %>
           </h3>
 
           <div class="expense-card__badges">
@@ -36,7 +36,9 @@
 
         <div class="expense-card__description-row">
           <p class="expense-card__description">
-            <%= income.description.presence || "Sem descrição" %>
+            <span class="expense-card__pill expense-card__pill--category">
+              <%= category&.display_name || "Sem categoria" %>
+            </span>
           </p>
 
           <div class="expense-card__meta">

@@ -1,0 +1,90 @@
+<% goal_color = financial_goal.display_color %>
+<% category = financial_goal.category %>
+
+<div
+  id="<%= dom_id(financial_goal) %>"
+  class="expense-card"
+  style="--expense-category-color: <%= goal_color %>;"
+>
+  <div class="expense-card__border"></div>
+
+  <div class="expense-card__content">
+    <div class="expense-card__category">
+      <div class="expense-card__icon-wrapper">
+        <span class="material-symbols-rounded expense-card__icon">
+          <%= category&.material_icon || "flag" %>
+        </span>
+      </div>
+
+      <div class="expense-card__details">
+        <div class="expense-card__header">
+          <h3 class="expense-card__title">
+            <%= link_to financial_goal.description, financial_goal_path(financial_goal), class: "stealth-link" %>
+          </h3>
+
+          <div class="expense-card__badges">
+            <span class="expense-card__pill"><%= financial_goal.status_label %></span>
+            <span class="expense-card__pill"><%= financial_goal.priority_label %></span>
+            <span class="expense-card__pill"><%= category&.display_name || "Sem categoria" %></span>
+          </div>
+        </div>
+
+        <div class="expense-card__description-row">
+          <div class="expense-card__meta">
+            <span class="expense-card__meta-item">
+              <span class="material-symbols-rounded">event</span>
+              <%= financial_goal.due_date.strftime("%d/%m/%Y") %>
+            </span>
+
+            <span class="expense-card__meta-item">
+              <span class="material-symbols-rounded">trending_up</span>
+              <%= number_to_percentage(financial_goal.progress_percent, precision: 0) %>
+            </span>
+
+            <span class="expense-card__meta-item">
+              <span class="material-symbols-rounded">payments</span>
+              <%= number_to_currency(financial_goal.monthly_required_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>/mês
+            </span>
+          </div>
+        </div>
+
+        <div class="financial-goal-card__progress" role="img" aria-label="Progresso: <%= number_to_percentage(financial_goal.progress_percent, precision: 0) %>">
+          <span style="width: <%= financial_goal.progress_percent.round(1) %>%;"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="category-card__totals">
+      <span class="category-card__total category-card__total--income">
+        <span class="material-symbols-rounded">savings</span>
+        <%= number_to_currency(financial_goal.progress_amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+      </span>
+      <span class="category-card__total category-card__total--expense">
+        <span class="material-symbols-rounded">flag</span>
+        <%= number_to_currency(financial_goal.target_amount || 0, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+      </span>
+    </div>
+
+    <div class="expense-card__actions" style="margin-left: auto;">
+      <%= link_to(
+            edit_financial_goal_path(financial_goal),
+            class: "app-show-card__action-btn app-show-card__action-btn--edit",
+            title: "Editar objetivo",
+            data: { turbo_frame: "modal" }
+          ) do %>
+        <span class="material-symbols-rounded">edit</span>
+        Editar
+      <% end %>
+
+      <%= link_to(
+            financial_goal_path(financial_goal),
+            data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
+            class: "app-show-card__action-btn app-show-card__action-btn--danger",
+            title: "Excluir objetivo"
+          ) do %>
+        <span class="material-symbols-rounded">delete</span>
+        Excluir
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -305,10 +305,12 @@ class ExpensesController < ApplicationController
     session[:expenses_month] = params[:month].to_i if params[:month].present?
     @month = session[:expenses_month]
     @month = nil if @month.blank? || @month == 0
+    @month ||= Date.current.month
 
     session[:expenses_year] = params[:year].to_i if params[:year].present?
     @year = session[:expenses_year]
     @year = nil if @year.blank? || @year == 0
+    @year ||= Date.current.year
 
     session[:expenses_description] = params[:description]&.strip
     @description_filter = session[:expenses_description].presence
@@ -408,16 +410,9 @@ class ExpensesController < ApplicationController
 
   def expense_sort_map
     {
-      "description" => ->(expense) { expense.description.to_s },
-      "installment" => ->(expense) { expense.current_installment.to_i },
-      "amount" => ->(expense) { expense.effective_amount.to_d },
-      "date" => ->(expense) { expense.date },
-      "balance_month" => ->(expense) { expense.balance_month },
       "created_at" => ->(expense) { expense.created_at },
-      "category" => ->(expense) { expense.category&.display_name.to_s },
-      "payment_method" => ->(expense) { expense.payment_method.to_s },
-      "card" => ->(expense) { expense.card&.name.to_s },
-      "paid" => ->(expense) { expense.paid? }
+      "amount" => ->(expense) { expense.effective_amount.to_d },
+      "date" => ->(expense) { expense.date }
     }
   end
 

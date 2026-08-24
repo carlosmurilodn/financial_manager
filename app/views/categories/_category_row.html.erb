@@ -1,0 +1,68 @@
+<% category_color = category.display_color %>
+<% expense_total = @category_expenses_by_id&.fetch(category.id, 0) || 0 %>
+<% income_total = @category_incomes_by_id&.fetch(category.id, 0) || 0 %>
+
+<div
+  id="<%= dom_id(category) %>"
+  class="expense-card"
+  style="--expense-category-color: <%= category_color %>;"
+>
+  <div class="expense-card__border"></div>
+
+  <div class="expense-card__content">
+    <div class="expense-card__category">
+      <div class="expense-card__icon-wrapper">
+        <span class="material-symbols-rounded expense-card__icon">
+          <%= category.material_icon %>
+        </span>
+      </div>
+
+      <div class="expense-card__details">
+        <div class="expense-card__header">
+          <h3 class="expense-card__title">
+            <%= link_to category.display_name, category_path(category), class: "stealth-link" %>
+          </h3>
+
+          <div class="expense-card__badges">
+            <span class="expense-card__pill">
+              <%= category.color_name %>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="category-card__totals">
+      <span class="category-card__total category-card__total--income">
+        <span class="material-symbols-rounded">arrow_upward</span>
+        <%= number_to_currency(income_total, unit: "R$ ", separator: ",", delimiter: ".") %>
+      </span>
+      <span class="category-card__total category-card__total--expense">
+        <span class="material-symbols-rounded">arrow_downward</span>
+        <%= number_to_currency(expense_total, unit: "R$ ", separator: ",", delimiter: ".") %>
+      </span>
+    </div>
+
+    <div class="expense-card__actions" style="margin-left: auto;">
+      <%= link_to(
+            edit_category_path(category),
+            class: "app-show-card__action-btn app-show-card__action-btn--edit",
+            title: "Editar categoria",
+            data: { turbo_frame: "modal" }
+          ) do %>
+        <span class="material-symbols-rounded">edit</span>
+        Editar
+      <% end %>
+
+      <%= link_to(
+            category_path(category),
+            data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
+            class: "app-show-card__action-btn app-show-card__action-btn--danger",
+            title: "Excluir categoria"
+          ) do %>
+        <span class="material-symbols-rounded">delete</span>
+        Excluir
+      <% end %>
+    </div>
+  </div>
+</div>

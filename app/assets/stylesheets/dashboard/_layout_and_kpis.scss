@@ -5,7 +5,7 @@
 }
 
 .dashboard-grid--planning {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: stretch;
 }
 
@@ -15,7 +15,7 @@
 }
 
 .dashboard-grid--charts {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: stretch;
 }
 

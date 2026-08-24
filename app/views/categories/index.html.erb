@@ -16,10 +16,6 @@
       <div class="app-page__hero-kpis">
         <%= render "hero_kpis" %>
       </div>
-
-      <div class="app-page__hero-unit">
-        <%= render "shared/app_page_hero_badge" %>
-      </div>
     </div>
   </div>
 
@@ -33,6 +29,23 @@
                   value: @description_filter,
                   class: "app-form-control",
                   placeholder: "Buscar descrição..." %>
+          </div>
+
+          <div class="app-filter-field">
+            <%= f.label :month, "Mês" %>
+            <%= f.select :month,
+                  options_for_select(
+                    [["Todos", 0]] + I18n.t("date.month_names")[1..12].map.with_index { |m, i| [m.capitalize, i + 1] },
+                    @month || 0
+                  ),
+                  {}, class: "app-form-select" %>
+          </div>
+
+          <div class="app-filter-field">
+            <%= f.label :year, "Ano" %>
+            <%= f.select :year,
+                  options_for_select([["Todos", 0]] + (Date.today.year - 5..Date.today.year + 1).to_a.reverse, @year || 0),
+                  {}, class: "app-form-select" %>
           </div>
         </div>
 
@@ -50,11 +63,11 @@
     <% end %>
   </div>
 
-  <div class="app-panel app-category-palette-panel">
+  <div class="app-panel">
     <% if @categories.any? %>
-      <div class="app-category-palette">
-        <% @categories.each_with_index do |category, index| %>
-          <%= render "category_card", category: category, position: index + 1 %>
+      <div class="expenses-cards-list">
+        <% @categories.each do |category| %>
+          <%= render "category_row", category: category %>
         <% end %>
       </div>
     <% else %>

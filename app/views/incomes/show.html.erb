@@ -1,0 +1,92 @@
+<section class="app-page">
+  <div class="app-page__hero">
+    <div class="app-page__hero-top app-page__hero-top--incomes">
+      <div class="app-page__hero-unit app-page__hero-copy" style="flex-wrap: wrap;">
+        <span class="app-page__hero-icon">
+          <span class="material-symbols-rounded">payments</span>
+        </span>
+        <div>
+          <h1 class="app-page__title">Receita</h1>
+        </div>
+      </div>
+
+      <div class="app-page__hero-unit" style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+        <%= link_to incomes_path, class: "app-show-back-link" do %>
+          <span class="material-symbols-rounded">arrow_back</span>
+          Voltar
+        <% end %>
+
+        <%= link_to edit_income_path(@income), class: "app-show-card__action-btn app-show-card__action-btn--edit", data: { turbo_frame: "modal" } do %>
+          <span class="material-symbols-rounded">edit</span>
+          Editar
+        <% end %>
+
+        <%= link_to income_path(@income), data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir esta receita?" }, class: "app-show-card__action-btn app-show-card__action-btn--danger" do %>
+          <span class="material-symbols-rounded">delete</span>
+          Excluir
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-panel app-show-panel">
+    <% category = @income.category %>
+    <% category_color = category&.display_color || "#22a889" %>
+    <% category_icon = category&.material_icon || "payments" %>
+
+    <div class="app-show-card" style="--expense-category-color: <%= category_color %>;">
+      <div class="app-show-card__header">
+        <div class="app-show-card__icon-wrapper">
+          <span class="material-symbols-rounded app-show-card__icon">
+            <%= category_icon %>
+          </span>
+        </div>
+
+        <div class="app-show-card__title-area">
+          <div class="app-show-card__title-row">
+            <h2 class="app-show-card__title"><%= @income.description.presence || "Sem descrição" %></h2>
+            <div class="app-show-card__badges">
+              <span class="app-show-card__pill"><%= category&.display_name || "Sem categoria" %></span>
+              <span class="app-show-card__pill"><%= @income.paid? ? "Recebida" : "Pendente" %></span>
+            </div>
+          </div>
+          <div class="app-show-card__subtitle-row">
+            <strong class="app-show-card__amount">
+              <%= number_to_currency(@income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
+            </strong>
+            <span class="app-show-card__status <%= @income.paid? ? 'app-show-card__status--paid' : 'app-show-card__status--pending' %>">
+              <%= @income.paid? ? "Recebida" : "Pendente" %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-show-card__details-grid">
+        <div class="app-show-card__detail">
+          <span class="material-symbols-rounded">calendar_month</span>
+          <div>
+            <small>Data</small>
+            <strong><%= @income.date&.strftime("%d/%m/%Y") || "—" %></strong>
+          </div>
+        </div>
+
+        <div class="app-show-card__detail">
+          <span class="material-symbols-rounded">event</span>
+          <div>
+            <small>Mês de referência</small>
+            <strong><%= @income.balance_month&.strftime("%m/%Y") || "—" %></strong>
+          </div>
+        </div>
+
+        <div class="app-show-card__detail">
+          <span class="material-symbols-rounded">schedule</span>
+          <div>
+            <small>Criado em</small>
+            <strong><%= @income.created_at.strftime("%d/%m/%Y às %H:%M") %></strong>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

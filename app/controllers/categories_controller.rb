@@ -1,8 +1,29 @@
 class CategoriesController < ApplicationController
-  before_action :set_category, only: %i[edit update destroy]
+  before_action :set_category, only: %i[show edit update destroy]
 
   def index
     load_categories
+  end
+
+  def show
+    @show_month = params[:month].present? ? params[:month].to_i : Date.current.month
+    @show_year = params[:year].present? ? params[:year].to_i : Date.current.year
+    @show_date = Date.new(@show_year, @show_month, 1)
+    @previous_date = @show_date.prev_month
+    @next_date = @show_date.next_month
+
+    month_range = @show_date.beginning_of_month..@show_date.end_of_month
+
+    @category_expenses = current_user.expenses
+                              .where(category: @category, balance_month: month_range)
+                              .order(created_at: :desc)
+
+    @category_incomes = current_user.incomes
+                             .where(category: @category, balance_month: month_range)
+                             .order(created_at: :desc)
+
+    @expenses_total = Expense.effective_sum(@category_expenses)
+    @incomes_total = @category_incomes.sum(:amount).to_f
   end
 
   def new
@@ -70,13 +91,26 @@ class CategoriesController < ApplicationController
 
   def load_categories
     @description_filter = params[:description].to_s.strip
-    result = Categories::IndexQuery.new(user: current_user, description: @description_filter).call
+
+    session[:categories_month] = params[:month].to_i if params[:month].present?
+    @month = session[:categories_month]
+    @month = nil if @month.blank? || @month == 0
+    @month ||= Date.current.month
+
+    session[:categories_year] = params[:year].to_i if params[:year].present?
+    @year = session[:categories_year]
+    @year = nil if @year.blank? || @year == 0
+    @year ||= Date.current.year
+
+    result = Categories::IndexQuery.new(user: current_user, description: @description_filter, month: @month, year: @year).call
 
     @categories = result.categories
     @categories_month_expenses = result.month_expenses
     @categories_month_incomes = result.month_incomes
     @categories_top_expense_value = result.top_expense_value
     @categories_uncategorized_value = result.uncategorized_value
+    @category_expenses_by_id = result.expenses_by_category
+    @category_incomes_by_id = result.incomes_by_category
   end
 
   def set_category

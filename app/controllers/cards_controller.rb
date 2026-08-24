@@ -1,8 +1,36 @@
 class CardsController < ApplicationController
-  before_action :set_card, only: %i[edit update destroy pay]
+  before_action :set_card, only: %i[show edit update destroy pay]
 
   def index
     load_cards
+  end
+
+  def show
+    @show_month = params[:month].present? ? params[:month].to_i : Date.current.month
+    @show_year = params[:year].present? ? params[:year].to_i : Date.current.year
+    @show_date = Date.new(@show_year, @show_month, 1)
+    @previous_date = @show_date.prev_month
+    @next_date = @show_date.next_month
+
+    @card_expenses = @card.expenses
+                          .where(balance_month: @show_date.beginning_of_month..@show_date.end_of_month)
+                          .includes(:category)
+
+    # Sorting
+    @sort = params[:sort].presence || "created_at"
+    @direction = params[:direction].presence || "desc"
+    @card_expenses = sort_card_expenses(@card_expenses)
+
+    @card_total_month = Expense.effective_sum(@card_expenses)
+    @card_paid_month = Expense.effective_sum(@card_expenses.where(paid: true))
+    @card_pending_month = Expense.effective_sum(@card_expenses.where(paid: false))
+
+    # KPIs simulam o mês selecionado como pago:
+    # Utilizado = despesas não pagas de OUTROS meses (exclui o mês visualizado)
+    @card_used = Expense.effective_sum(
+      @card.expenses.where(paid: false).where.not(balance_month: @show_date.beginning_of_month..@show_date.end_of_month)
+    )
+    @card_remaining = @card.total_limit.to_f - @card_used.to_f
   end
 
   def new
@@ -131,10 +159,12 @@ class CardsController < ApplicationController
     session[:cards_month] = params[:month].to_i if params[:month].present?
     @month = session[:cards_month]
     @month = nil if @month.blank? || @month.zero?
+    @month ||= Date.current.month
 
     session[:cards_year] = params[:year].to_i if params[:year].present?
     @year = session[:cards_year]
     @year = nil if @year.blank? || @year.zero?
+    @year ||= Date.current.year
 
     session[:cards_has_debt] = params[:has_debt] if params.key?(:has_debt)
     @has_debt_filter = session[:cards_has_debt]
@@ -154,6 +184,21 @@ class CardsController < ApplicationController
     Date.new(year, month, 1)
   rescue ArgumentError
     Date.current.beginning_of_month
+  end
+
+  def sort_card_expenses(expenses)
+    dir = @direction == "asc" ? :asc : :desc
+
+    case @sort
+    when "description"
+      expenses.order(description: dir)
+    when "category"
+      expenses.joins(:category).order("categories.name #{dir}")
+    when "amount"
+      expenses.order(amount: dir)
+    else
+      expenses.order(created_at: :desc)
+    end
   end
 
   def card_sort_map

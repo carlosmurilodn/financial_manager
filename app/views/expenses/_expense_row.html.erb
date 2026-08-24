@@ -16,7 +16,7 @@
       <div class="expense-card__details">
         <div class="expense-card__header">
           <h3 class="expense-card__title">
-            <%= expense.category.display_name %>
+            <%= link_to expense.description, expense_path(expense), class: "stealth-link" %>
           </h3>
 
           <div class="expense-card__badges">
@@ -25,7 +25,7 @@
             </span>
 
               <% if expense.card.present? %>
-                <span class="expense-card__pill">
+                <span class="expense-card__pill" style="background: color-mix(in srgb, <%= expense.card.display_color %> 14%, transparent); color: <%= expense.card.display_color %>;">
                   <%= expense.card.name %>
                 </span>
               <% end %>
@@ -40,7 +40,9 @@
 
       <div class="expense-card__description-row">
         <p class="expense-card__description">
-          <%= expense.description %>
+          <span class="expense-card__pill expense-card__pill--category">
+            <%= expense.category.display_name %>
+          </span>
         </p>
 
           <div class="expense-card__meta"> 

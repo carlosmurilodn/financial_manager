@@ -46,28 +46,28 @@
         </div>
 
         <div class="app-show-card__title-area">
-          <h2 class="app-show-card__title"><%= @expense.description %></h2>
-          <div class="app-show-card__badges">
-            <span class="app-show-card__pill"><%= @expense.category.display_name %></span>
-            <span class="app-show-card__pill"><%= Expense.payment_method_names[@expense.payment_method] %></span>
-            <% if @expense.card.present? %>
-              <span class="app-show-card__pill" style="background: color-mix(in srgb, <%= @expense.card.display_color %> 14%, transparent); color: <%= @expense.card.display_color %>;"><%= @expense.card.name %></span>
-            <% end %>
-            <% if @expense.payment_method_credito_parcelado? %>
-              <span class="app-show-card__pill">Parcela <%= @expense.current_installment %> de <%= @expense.installments_count %></span>
-            <% end %>
+          <div class="app-show-card__title-row">
+            <h2 class="app-show-card__title"><%= @expense.description %></h2>
+            <div class="app-show-card__badges">
+              <span class="app-show-card__pill"><%= @expense.category.display_name %></span>
+              <span class="app-show-card__pill"><%= Expense.payment_method_names[@expense.payment_method] %></span>
+              <% if @expense.card.present? %>
+                <span class="app-show-card__pill" style="background: color-mix(in srgb, <%= @expense.card.display_color %> 14%, transparent); color: <%= @expense.card.display_color %>;"><%= @expense.card.name %></span>
+              <% end %>
+              <% if @expense.payment_method_credito_parcelado? %>
+                <span class="app-show-card__pill">Parcela <%= @expense.current_installment %> de <%= @expense.installments_count %></span>
+              <% end %>
+            </div>
+          </div>
+          <div class="app-show-card__subtitle-row">
+            <strong class="app-show-card__amount">
+              <%= number_to_currency(@expense.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %>
+            </strong>
+            <span class="app-show-card__status <%= @expense.paid? ? 'app-show-card__status--paid' : 'app-show-card__status--pending' %>">
+              <%= @expense.paid? ? "Pago" : "Pendente" %>
+            </span>
           </div>
         </div>
-      </div>
-
-      <div class="app-show-card__amount-section">
-        <span class="app-show-card__amount-label">Valor</span>
-        <strong class="app-show-card__amount">
-          <%= number_to_currency(@expense.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %>
-        </strong>
-        <span class="app-show-card__status <%= @expense.paid? ? 'app-show-card__status--paid' : 'app-show-card__status--pending' %>">
-          <%= @expense.paid? ? "Pago" : "Pendente" %>
-        </span>
       </div>
 
       <div class="app-show-card__details-grid">

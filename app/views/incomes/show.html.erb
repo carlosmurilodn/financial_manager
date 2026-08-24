@@ -43,22 +43,22 @@
         </div>
 
         <div class="app-show-card__title-area">
-          <h2 class="app-show-card__title"><%= @income.description.presence || "Sem descrição" %></h2>
-          <div class="app-show-card__badges">
-            <span class="app-show-card__pill"><%= category&.display_name || "Sem categoria" %></span>
-            <span class="app-show-card__pill"><%= @income.paid? ? "Recebida" : "Pendente" %></span>
+          <div class="app-show-card__title-row">
+            <h2 class="app-show-card__title"><%= @income.description.presence || "Sem descrição" %></h2>
+            <div class="app-show-card__badges">
+              <span class="app-show-card__pill"><%= category&.display_name || "Sem categoria" %></span>
+              <span class="app-show-card__pill"><%= @income.paid? ? "Recebida" : "Pendente" %></span>
+            </div>
+          </div>
+          <div class="app-show-card__subtitle-row">
+            <strong class="app-show-card__amount">
+              <%= number_to_currency(@income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
+            </strong>
+            <span class="app-show-card__status <%= @income.paid? ? 'app-show-card__status--paid' : 'app-show-card__status--pending' %>">
+              <%= @income.paid? ? "Recebida" : "Pendente" %>
+            </span>
           </div>
         </div>
-      </div>
-
-      <div class="app-show-card__amount-section">
-        <span class="app-show-card__amount-label">Valor</span>
-        <strong class="app-show-card__amount">
-          <%= number_to_currency(@income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
-        </strong>
-        <span class="app-show-card__status <%= @income.paid? ? 'app-show-card__status--paid' : 'app-show-card__status--pending' %>">
-          <%= @income.paid? ? "Recebida" : "Pendente" %>
-        </span>
       </div>
 
       <div class="app-show-card__details-grid">

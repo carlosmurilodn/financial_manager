@@ -1,4 +1,9 @@
 <section class="app-page">
+  <%= render "shared/breadcrumbs", breadcrumbs: [
+    { label: "Cartões", path: cards_path },
+    { label: @card.name, path: card_path(@card) }
+  ] %>
+
   <div class="app-page__hero">
     <div class="app-page__hero-top app-page__hero-top--cards">
       <div class="app-page__hero-unit app-page__hero-copy">
@@ -51,7 +56,7 @@
         <strong><%= number_to_currency(@card_used, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
       </div>
       <div class="app-show-kpi" style="--kpi-color: #1b9c63;">
-        <small>Restante</small>
+        <small>Disponível</small>
         <strong><%= number_to_currency(@card_remaining, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
       </div>
       <div class="app-show-kpi" style="--kpi-color: var(--nav-active-icon-color);">
@@ -74,13 +79,13 @@
     </div>
   </div>
 
-  <%# Despesas do cartão com navegação por mês %>
+  <%# Fatura do Mês %>
   <div class="app-panel app-show-panel">
     <div class="app-show-card" style="--expense-category-color: <%= @card.display_color %>;">
       <div class="app-show-card__expenses-header">
         <h3 class="app-show-card__installments-title">
           <span class="material-symbols-rounded">receipt_long</span>
-          Despesas do Cartão
+          Fatura do Mês
         </h3>
 
         <div class="app-show-card__month-nav">
@@ -100,20 +105,20 @@
         </div>
       </div>
 
-      <%# Resumo do mês %>
-      <div class="app-show-card__month-summary">
-        <span class="app-show-card__month-summary-item">
-          <small>Total</small>
+      <%# Resumo da fatura em cards separados %>
+      <div class="app-show-kpis">
+        <div class="app-show-kpi" style="--kpi-color: <%= @card.display_color %>;">
+          <small>Total da Fatura</small>
           <strong><%= number_to_currency(@card_total_month, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
-        </span>
-        <span class="app-show-card__month-summary-item app-show-card__month-summary-item--paid">
+        </div>
+        <div class="app-show-kpi" style="--kpi-color: #1b9c63;">
           <small>Pago</small>
           <strong><%= number_to_currency(@card_paid_month, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
-        </span>
-        <span class="app-show-card__month-summary-item app-show-card__month-summary-item--pending">
+        </div>
+        <div class="app-show-kpi" style="--kpi-color: #d83f4f;">
           <small>Pendente</small>
           <strong><%= number_to_currency(@card_pending_month, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
-        </span>
+        </div>
       </div>
 
       <% if @card_expenses.any? %>

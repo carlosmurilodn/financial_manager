@@ -1059,6 +1059,10 @@
   gap: 12px;
 }
 
+.app-show-panel .app-show-kpis {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .app-show-kpi {
   display: grid;
   gap: 6px;

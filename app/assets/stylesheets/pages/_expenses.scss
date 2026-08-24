@@ -1341,20 +1341,27 @@
   gap: 6px;
   padding: 8px 14px;
   border-radius: 999px;
-  font-size: 1.15rem;
+  font-size: 0.95rem;
   font-weight: 800;
+  color: var(--text-main);
 }
 
 .category-card__total .material-symbols-rounded {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
 }
 
 .category-card__total--income {
   background: color-mix(in srgb, #1b9c63 12%, transparent);
+}
+
+.category-card__total--income .material-symbols-rounded {
   color: #1b9c63;
 }
 
 .category-card__total--expense {
   background: color-mix(in srgb, #d83f4f 12%, transparent);
+}
+
+.category-card__total--expense .material-symbols-rounded {
   color: #d83f4f;
 }

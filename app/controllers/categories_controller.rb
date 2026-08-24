@@ -1,8 +1,29 @@
 class CategoriesController < ApplicationController
-  before_action :set_category, only: %i[edit update destroy]
+  before_action :set_category, only: %i[show edit update destroy]
 
   def index
     load_categories
+  end
+
+  def show
+    @show_month = params[:month].present? ? params[:month].to_i : Date.current.month
+    @show_year = params[:year].present? ? params[:year].to_i : Date.current.year
+    @show_date = Date.new(@show_year, @show_month, 1)
+    @previous_date = @show_date.prev_month
+    @next_date = @show_date.next_month
+
+    month_range = @show_date.beginning_of_month..@show_date.end_of_month
+
+    @category_expenses = current_user.expenses
+                              .where(category: @category, balance_month: month_range)
+                              .order(created_at: :desc)
+
+    @category_incomes = current_user.incomes
+                             .where(category: @category, balance_month: month_range)
+                             .order(created_at: :desc)
+
+    @expenses_total = Expense.effective_sum(@category_expenses)
+    @incomes_total = @category_incomes.sum(:amount).to_f
   end
 
   def new

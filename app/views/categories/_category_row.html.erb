@@ -20,7 +20,7 @@
       <div class="expense-card__details">
         <div class="expense-card__header">
           <h3 class="expense-card__title">
-            <%= category.display_name %>
+            <%= link_to category.display_name, category_path(category), class: "stealth-link" %>
           </h3>
 
           <div class="expense-card__badges">

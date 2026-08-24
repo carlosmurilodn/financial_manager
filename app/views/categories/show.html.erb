@@ -40,10 +40,6 @@
         <small>Despesas do Mês</small>
         <strong><%= number_to_currency(@expenses_total, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
       </div>
-      <div class="app-show-kpi" style="--kpi-color: var(--nav-active-icon-color);">
-        <small>Saldo</small>
-        <strong><%= number_to_currency(@incomes_total - @expenses_total, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
-      </div>
     </div>
   </div>
 

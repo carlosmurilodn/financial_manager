@@ -159,10 +159,12 @@ class CardsController < ApplicationController
     session[:cards_month] = params[:month].to_i if params[:month].present?
     @month = session[:cards_month]
     @month = nil if @month.blank? || @month.zero?
+    @month ||= Date.current.month
 
     session[:cards_year] = params[:year].to_i if params[:year].present?
     @year = session[:cards_year]
     @year = nil if @year.blank? || @year.zero?
+    @year ||= Date.current.year
 
     session[:cards_has_debt] = params[:has_debt] if params.key?(:has_debt)
     @has_debt_filter = session[:cards_has_debt]

@@ -305,10 +305,12 @@ class ExpensesController < ApplicationController
     session[:expenses_month] = params[:month].to_i if params[:month].present?
     @month = session[:expenses_month]
     @month = nil if @month.blank? || @month == 0
+    @month ||= Date.current.month
 
     session[:expenses_year] = params[:year].to_i if params[:year].present?
     @year = session[:expenses_year]
     @year = nil if @year.blank? || @year == 0
+    @year ||= Date.current.year
 
     session[:expenses_description] = params[:description]&.strip
     @description_filter = session[:expenses_description].presence

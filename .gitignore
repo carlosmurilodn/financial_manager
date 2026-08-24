@@ -53,4 +53,5 @@
 .codex
 /config/master.key
 DS_Store
+.DS_Store
 /DS_Store

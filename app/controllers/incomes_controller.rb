@@ -149,10 +149,12 @@ class IncomesController < ApplicationController
     session[:incomes_month] = params[:month].to_i if params[:month].present?
     @month = session[:incomes_month]
     @month = nil if @month.blank? || @month == 0
+    @month ||= Date.current.month
 
     session[:incomes_year] = params[:year].to_i if params[:year].present?
     @year = session[:incomes_year]
     @year = nil if @year.blank? || @year == 0
+    @year ||= Date.current.year
 
     session[:incomes_description] = params[:description].to_s.strip if params[:description].present?
     @description_filter = session[:incomes_description].presence

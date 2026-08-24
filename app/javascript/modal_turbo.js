@@ -3,6 +3,7 @@ import { initializeDatepicker } from "./date_picker";
 import { initializeExpenseForm } from "./expense_form";
 import { initializeFinancialGoalForm } from "./financial_goal_form";
 import { initializeModalRequiredFields } from "./modal_required_fields";
+import { initSelect2 } from "./select2_init";
 
 const modalOpenClass = "app-modal--open";
 const bodyOpenClass = "app-modal-open";
@@ -120,7 +121,7 @@ document.addEventListener("turbo:frame-load", (event) => {
   initializeDatepicker();
   initializeExpenseForm();
   initializeFinancialGoalForm(modalBody);
-
+  initSelect2(modalBody);
   const paymentSelect = modalBody.querySelector("#payment_method_select");
   const parcelSection = modalBody.querySelector("#parcelamento_section");
 

@@ -1,9 +1,17 @@
 <div id="cards-grid">
-  <div class="app-card-palette">
-    <% @cards.each do |card| %>
-      <%= render partial: "card_card", locals: { card: card } %>
-    <% end %>
-  </div>
+  <% if @cards.any? %>
+    <div class="expenses-cards-list">
+      <% @cards.each do |card| %>
+        <%= render partial: "card_row", locals: { card: card } %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="app-show-card__empty">
+      <span class="material-symbols-rounded">credit_card_off</span>
+      <strong>Nenhum cartão encontrado</strong>
+      <small>Ajuste os filtros ou cadastre um novo cartão.</small>
+    </div>
+  <% end %>
 
   <%= render "shared/pagination",
              current_page: @current_page,

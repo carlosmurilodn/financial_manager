@@ -46,11 +46,11 @@
     <% end %>
   </div>
 
-  <div class="app-panel app-category-palette-panel">
+  <div class="app-panel">
     <% if @categories.any? %>
-      <div class="app-category-palette">
-        <% @categories.each_with_index do |category, index| %>
-          <%= render "category_card", category: category, position: index + 1 %>
+      <div class="expenses-cards-list">
+        <% @categories.each do |category| %>
+          <%= render "category_row", category: category %>
         <% end %>
       </div>
     <% else %>

@@ -1089,7 +1089,7 @@
 }
 
 .app-show-panel .app-show-kpis {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 }
 
 .app-show-kpi {
@@ -1117,6 +1117,7 @@
 }
 
 .app-show-kpi__progress {
+  display: flex;
   height: 6px;
   margin-top: 4px;
   overflow: hidden;
@@ -1127,7 +1128,16 @@
 .app-show-kpi__progress span {
   display: block;
   height: 100%;
-  border-radius: inherit;
+}
+
+.app-show-kpi__progress-used {
+  background: #d83f4f;
+  border-radius: 999px 0 0 999px;
+}
+
+.app-show-kpi__progress-available {
+  background: #1b9c63;
+  border-radius: 0 999px 999px 0;
 }
 
 // === Expenses header with month nav ===

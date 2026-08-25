@@ -1,5 +1,5 @@
-const CACHE_NAME = "financial-manager-v1"
-const CACHE_URLS = ["/icon.png", "/icon.svg"]
+const CACHE_NAME = "financial-manager-v2"
+const CACHE_URLS = ["/icon.png"]
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

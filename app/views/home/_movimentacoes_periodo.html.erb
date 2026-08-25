@@ -41,7 +41,8 @@
         <% movements.each do |movement| %>
           <% if movement[:type] == :income %>
             <% income = movement[:record] %>
-            <article class="dashboard-movement-item dashboard-movement-item--income">
+            <% category_color = income.category&.display_color || "var(--dashboard-movement-marker-color)" %>
+            <article class="dashboard-movement-item dashboard-movement-item--income" style="--movement-category-color: <%= category_color %>;">
               <div class="dashboard-movement-item__date">
                 <strong><%= income.date.strftime("%d") %></strong>
                 <span><%= month_labels[income.date.month - 1] %></span>
@@ -52,7 +53,7 @@
                   <span class="material-symbols-rounded dashboard-movement-item__marker"><%= income.category&.material_icon || "category" %></span>
                   <strong><%= link_to (income.description.presence || "Receita"), income_path(income), class: "stealth-link", data: { turbo_frame: "_top" } %></strong>
                 </div>
-                <small><%= income.category&.name || "Sem categoria" %></small>
+                <small class="dashboard-movement-item__category"><%= income.category&.name || "Sem categoria" %></small>
               </div>
 
               <strong class="dashboard-movement-item__amount">
@@ -61,7 +62,8 @@
             </article>
           <% else %>
             <% expense = movement[:record] %>
-            <article class="dashboard-movement-item dashboard-movement-item--expense">
+            <% category_color = expense.category&.display_color || "var(--dashboard-movement-marker-color)" %>
+            <article class="dashboard-movement-item dashboard-movement-item--expense" style="--movement-category-color: <%= category_color %>;">
               <div class="dashboard-movement-item__date">
                 <strong><%= expense.date.strftime("%d") %></strong>
                 <span><%= month_labels[expense.date.month - 1] %></span>
@@ -72,7 +74,7 @@
                   <span class="material-symbols-rounded dashboard-movement-item__marker"><%= expense.category&.material_icon || "category" %></span>
                   <strong><%= link_to (expense.description.presence || "Despesa"), expense_path(expense), class: "stealth-link", data: { turbo_frame: "_top" } %></strong>
                 </div>
-                <small><%= expense.category&.name || "Sem categoria" %></small>
+                <small class="dashboard-movement-item__category"><%= expense.category&.name || "Sem categoria" %></small>
               </div>
 
               <strong class="dashboard-movement-item__amount">

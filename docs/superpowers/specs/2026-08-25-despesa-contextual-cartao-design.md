@@ -9,8 +9,7 @@ Permitir criar despesas diretamente no show de um cartão, reutilizando o modal 
 O cabeçalho da fatura recebe botão `Nova despesa`. O link abre `ExpensesController#new` no frame modal e envia:
 
 - `card_id`: cartão aberto;
-- `balance_month`: primeiro dia do mês exibido na fatura;
-- `return_to`: URL do show do cartão com `month` e `year` atuais.
+- `month` e `year`: período exibido na fatura.
 
 O backend localiza o cartão somente dentro de `current_user.cards`. Parâmetros inválidos ou cartões de outro usuário não ativam contexto fixo.
 
@@ -39,7 +38,7 @@ O backend aceita apenas as duas formas de crédito no contexto fixo. Requisiçã
 
 ## Sucesso e erros
 
-Após criação bem-sucedida:
+Após criação bem-sucedida, a resposta Turbo fecha o modal e recarrega a URL atual do show. No fallback HTML, o backend reconstrói a URL do cartão com o período validado. Assim:
 
 1. modal fecha;
 2. navegador visita show do cartão;

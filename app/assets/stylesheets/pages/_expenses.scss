@@ -1151,6 +1151,24 @@
   flex-wrap: wrap;
 }
 
+.app-show-card__expenses-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.app-show-card__new-expense-btn {
+  min-height: 36px;
+  padding: 8px 12px;
+  font-size: 0.76rem;
+}
+
+.app-show-card__new-expense-btn .material-symbols-rounded {
+  font-size: 1.05rem;
+}
+
 .app-show-card__month-nav {
   display: flex;
   align-items: center;
@@ -1286,6 +1304,15 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
+  }
+
+  .app-show-card__expenses-actions {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .app-show-card__new-expense-btn {
+    width: 100%;
   }
 
   .app-show-card__month-summary {

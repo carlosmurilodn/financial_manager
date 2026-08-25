@@ -7,6 +7,17 @@
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
   </div>
   <div class="modal-body p-3">
+    <% if @expense.errors.any? %>
+      <div class="app-alert app-alert--danger" role="alert">
+        <strong>Não foi possível salvar:</strong>
+        <ul>
+          <% @expense.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
     <%= render "form", expense: @expense %>
   </div>
 </turbo-frame>

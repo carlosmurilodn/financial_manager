@@ -501,6 +501,10 @@ html[data-theme="night"] .app-financial-goal-metrics {
   display: grid;
 }
 
+.expense-new-row-grid:has([data-payment-method-select] option[value="credito_parcelado"]:checked) .expense-modal-installments {
+  display: grid;
+}
+
 .expense-modal-row__remove {
   display: inline-grid;
   place-items: center;

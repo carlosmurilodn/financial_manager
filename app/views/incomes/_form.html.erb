@@ -1,4 +1,4 @@
-<%= form_with model: income, local: true do |f| %>
+<%= form_with model: income, local: true, html: { class: "app-form-page__form", data: { turbo: false } } do |f| %>
   <div class="row app-mb-3">
     <div class="col-md-9">
       <%= f.label :description, t("incomes.form.description") %>
@@ -33,7 +33,7 @@
 
     <div class="col-md-4">
       <%= f.label :category_id, t("incomes.form.category") %>
-      <%= f.collection_select :category_id, Category.order(:name), :id, :display_name, { prompt: "Selecione" }, { class: "app-form-select" } %>
+      <%= f.collection_select :category_id, current_user.categories.order(:name), :id, :display_name, { prompt: "Selecione" }, { class: "app-form-select" } %>
     </div>
 
     <div class="col-md-4">
@@ -53,7 +53,8 @@
     </div>
   </div>
 
-  <div class="app-mb-3">
+  <div class="app-form-page__actions">
+    <%= link_to "Cancelar", income.persisted? ? income_path(income) : incomes_path, class: "app-btn app-btn--outline" %>
     <%= f.submit t("incomes.form.submit"), class: "app-btn app-btn--primary" %>
   </div>
 <% end %>

@@ -1,12 +1,10 @@
-<turbo-frame id="modal">
-  <div class="modal-header">
-    <h5 class="modal-title">
-      <%= action_name == "new" ? "Novo Cartão" : "Editar Cartão" %>
-    </h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-  </div>
-
-  <div class="modal-body p-3">
+<%= render layout: "shared/form_page", locals: {
+  resource: @card,
+  title: "Editar cartão",
+  eyebrow: "Cartões",
+  description: "Revise limites, datas e identidade visual do cartão.",
+  icon: "edit_note",
+  back_path: card_path(@card)
+} do %>
     <%= render "form", card: @card %>
-  </div>
-</turbo-frame>
+<% end %>

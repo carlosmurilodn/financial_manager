@@ -7,7 +7,7 @@
 <% end %>
 
 <% if expense.persisted? %>
-  <%= form_with model: expense, local: false, html: { id: "expense_form" } do |f| %>
+  <%= form_with model: expense, local: true, html: { id: "expense_form", class: "app-form-page__form", data: { turbo: false } } do |f| %>
     <div class="expense-modal-grid expense-modal-grid--edit">
       <div class="expense-modal-field expense-modal-field--wide">
         <%= f.label :description, t("expenses.form.description") %>
@@ -85,6 +85,7 @@
     <% end %>
 
     <div class="expense-modal-actions">
+      <%= link_to "Cancelar", expense_path(expense), class: "app-btn app-btn--outline expense-modal-action-btn" %>
       <% if expense.payment_method_credito_parcelado? %>
         <%= button_tag name: "update_scope", value: "single", type: "submit", class: "app-btn app-btn--primary expense-modal-action-btn" do %>
           <span class="material-symbols-rounded">save</span>
@@ -104,7 +105,7 @@
     </div>
   <% end %>
 <% else %>
-  <%= form_with url: expenses_path, local: false, html: { id: "expense_form", data: { expense_form: true } } do %>
+  <%= form_with url: expenses_path, local: true, html: { id: "expense_form", class: "app-form-page__form", data: { expense_form: true, turbo: false } } do %>
     <% if context_card.present? %>
       <%= hidden_field_tag :card_id, context_card.id %>
       <%= hidden_field_tag :month, @expense_context_balance_date.month %>
@@ -141,6 +142,8 @@
     </template>
 
     <div class="expense-modal-actions">
+      <% cancel_path = context_card.present? ? card_path(context_card, month: @expense_context_balance_date.month, year: @expense_context_balance_date.year) : expenses_path %>
+      <%= link_to "Cancelar", cancel_path, class: "app-btn app-btn--outline expense-modal-action-btn" %>
       <button type="button" class="app-btn app-btn--primary expense-modal-action-btn" data-add-expense-row>
         <span class="material-symbols-rounded">add_circle</span>
         Inserir Despesa

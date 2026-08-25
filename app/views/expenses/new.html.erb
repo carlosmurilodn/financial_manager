@@ -1,23 +1,16 @@
-<turbo-frame id="modal">
-  <div data-modal-size="wide"></div>
-  <div class="modal-header">
-    <h5 class="modal-title">
-      Nova Despesa
-    </h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-  </div>
-  <div class="modal-body p-3">
-    <% if @expense.errors.any? %>
-      <div class="app-alert app-alert--danger" role="alert">
-        <strong>Não foi possível salvar:</strong>
-        <ul>
-          <% @expense.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+<% back_path = if @expense_context_card.present?
+  card_path(@expense_context_card, month: @expense_context_balance_date.month, year: @expense_context_balance_date.year)
+else
+  expenses_path
+end %>
 
+<%= render layout: "shared/form_page", locals: {
+  resource: @expense,
+  title: "Nova despesa",
+  eyebrow: "Despesas",
+  description: "Registre uma ou várias despesas com datas, categoria e forma de pagamento.",
+  icon: "receipt_long",
+  back_path: back_path
+} do %>
     <%= render "form", expense: @expense %>
-  </div>
-</turbo-frame>
+<% end %>

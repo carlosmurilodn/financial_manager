@@ -48,7 +48,7 @@
     <div class="resource-row-actions card-row__actions">
       <div class="resource-row-actions__icons">
         <%= link_to edit_card_path(card), class: "expense-card__action", title: "Editar cartão",
-                    aria: { label: "Editar cartão #{card.name}" }, data: { turbo_frame: "modal" } do %>
+                    aria: { label: "Editar cartão #{card.name}" } do %>
           <span class="material-symbols-rounded">edit</span>
         <% end %>
         <%= link_to card_path(card), data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },

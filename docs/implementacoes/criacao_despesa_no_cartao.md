@@ -2,7 +2,7 @@
 
 ## Comportamento
 
-O show do cartão oferece ação `Nova despesa` no cabeçalho da fatura. O modal de despesas existente é aberto com contexto do cartão e do período visível.
+O show do cartão oferece ação `Nova despesa` no cabeçalho da fatura. A página dedicada de nova despesa é aberta com contexto do cartão e do período visível.
 
 Nesse contexto:
 
@@ -10,11 +10,11 @@ Nesse contexto:
 - pagamento inicia como `Crédito à vista` e permite troca para `Crédito parcelado`;
 - data inicia no dia atual;
 - mês de balanço inicia no período da fatura;
-- novas linhas inseridas no modal herdam os mesmos padrões;
+- novas linhas inseridas no formulário herdam os mesmos padrões;
 - cartão e forma de pagamento são normalizados no backend;
 - sucesso recarrega o show, preservando mês e ano da fatura.
 
-O modal aberto pela página geral de despesas mantém seleção livre de pagamento e cartão. As coleções exibidas no formulário são limitadas ao usuário atual.
+A página aberta pelo índice geral de despesas mantém seleção livre de pagamento e cartão. As coleções exibidas no formulário são limitadas ao usuário atual.
 
 ## Arquivos principais
 
@@ -23,6 +23,6 @@ O modal aberto pela página geral de despesas mantém seleção livre de pagamen
 - `app/views/expenses/_form.html.erb`
 - `app/views/expenses/_form_row.html.erb`
 - `app/assets/stylesheets/pages/_expenses.scss`
-- `app/assets/stylesheets/modals.css`
+- `app/assets/stylesheets/pages/_expenses.scss`
 
 Não houve nova rota, migration ou mudança nos cálculos financeiros.

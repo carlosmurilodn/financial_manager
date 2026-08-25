@@ -8,7 +8,7 @@ class IncomesController < ApplicationController
   def show; end
 
   def new
-    @income = current_user.incomes.new
+    @income = current_user.incomes.new(date: Date.current, balance_month: Date.current.beginning_of_month)
   end
 
   def create

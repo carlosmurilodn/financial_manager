@@ -1,12 +1,10 @@
-<turbo-frame id="modal">
-  <div class="modal-header">
-    <h5 class="modal-title">
-      <%= action_name == "new" ? "Nova Categoria" : "Editar Categoria" %>
-    </h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-  </div>
-
-  <div class="modal-body p-3">
+<%= render layout: "shared/form_page", locals: {
+  resource: @category,
+  title: "Editar categoria",
+  eyebrow: "Categorias",
+  description: "Atualize identidade visual e nome da categoria.",
+  icon: "edit_note",
+  back_path: category_path(@category)
+} do %>
     <%= render "form", category: @category %>
-  </div>
-</turbo-frame>
+<% end %>

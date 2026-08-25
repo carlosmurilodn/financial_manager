@@ -720,6 +720,193 @@
   }
 }
 
+/* Linha de despesa: hierarquia compacta e informações rotuladas */
+.expense-card--expense .expense-card__content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 130px 82px;
+  gap: 18px;
+  padding: 14px 18px 14px 22px;
+}
+
+.expense-card--expense .expense-card__main-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.expense-card--expense .expense-card__main-link:hover .expense-card__title,
+.expense-card--expense .expense-card__main-link:focus-visible .expense-card__title {
+  color: var(--primary);
+}
+
+.expense-card--expense .expense-card__main-link:focus-visible {
+  border-radius: 10px;
+  outline: 2px solid color-mix(in srgb, var(--primary) 45%, transparent);
+  outline-offset: 4px;
+}
+
+.expense-card--expense .expense-card__icon-wrapper {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+}
+
+.expense-card--expense .expense-card__icon {
+  font-size: 1.55rem;
+}
+
+.expense-card--expense .expense-card__identity,
+.expense-card--expense .expense-card__information {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.expense-card--expense .expense-card__identity {
+  gap: 8px;
+}
+
+.expense-card--expense .expense-card__information {
+  gap: 18px;
+  margin-top: 7px;
+}
+
+.expense-card--expense .expense-card__title {
+  font-size: 0.92rem;
+  transition: color 0.15s ease;
+}
+
+.expense-card--expense .expense-card__pill {
+  padding: 4px 8px;
+  font-size: 0.65rem;
+}
+
+.expense-card--expense .expense-card__pill--category {
+  max-width: 210px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.expense-card--expense .expense-card__meta-item {
+  gap: 7px;
+}
+
+.expense-card--expense .expense-card__meta-item > span:last-child {
+  display: grid;
+  gap: 1px;
+}
+
+.expense-card--expense .expense-card__meta-item small {
+  color: var(--text-soft);
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.expense-card--expense .expense-card__meta-item strong {
+  color: var(--text-main);
+  font-size: 0.72rem;
+  line-height: 1.2;
+}
+
+.expense-card--expense .expense-card__amount-area,
+.expense-card--expense .expense-card__actions {
+  min-width: 0;
+}
+
+.expense-card--expense .expense-card__amount-area {
+  align-items: flex-end;
+}
+
+.expense-card--expense .expense-card__actions {
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+@media (max-width: 767px) {
+  .expense-card--expense .expense-card__content {
+    grid-template-columns: minmax(0, 1fr) 110px 74px;
+    gap: 12px;
+  }
+
+  .expense-card--expense .expense-card__information {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .expense-card--expense .expense-card__content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 36px;
+    gap: 10px;
+    padding: 14px 10px 14px 16px;
+  }
+
+  .expense-card--expense .expense-card__main-link {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    align-items: start;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .expense-card--expense .expense-card__icon-wrapper {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+  }
+
+  .expense-card--expense .expense-card__identity {
+    min-height: 42px;
+    padding-right: 88px;
+  }
+
+  .expense-card--expense .expense-card__information {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 24px;
+  }
+
+  .expense-card--expense .expense-card__pill--category {
+    grid-column: 1 / -1;
+    justify-self: start;
+    max-width: 100%;
+  }
+
+  .expense-card--expense .expense-card__amount-area {
+    position: absolute;
+    top: 14px;
+    right: 56px;
+    width: 82px;
+    min-width: 0;
+    align-items: flex-end;
+  }
+
+  .expense-card--expense .expense-card__amount {
+    font-size: 0.88rem;
+  }
+
+  .expense-card--expense .expense-card__actions {
+    flex-direction: column;
+    align-self: center;
+    gap: 8px;
+  }
+
+  .expense-card--expense .expense-card__meta-item {
+    padding: 7px 8px;
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--expense-category-color) 7%, transparent);
+  }
+}
+
 // === Show page styles ===
 
 .app-show-back-link {

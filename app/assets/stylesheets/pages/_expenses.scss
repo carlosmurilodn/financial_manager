@@ -1324,9 +1324,9 @@
   background: color-mix(in srgb, var(--expense-category-color) 4%, transparent);
 }
 
-// === Category totals in row ===
+// === Financial goal totals ===
 
-.category-card__totals {
+.financial-goal-card .category-card__totals {
   display: flex;
   align-items: center;
   gap: 24px;
@@ -1335,33 +1335,290 @@
   transform: translateX(-50%);
 }
 
-.category-card__total {
+.financial-goal-card .category-card__total {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
   border-radius: 999px;
+  color: var(--text-main);
   font-size: 1rem;
   font-weight: 800;
-  color: var(--text-main);
 }
 
-.category-card__total .material-symbols-rounded {
+.financial-goal-card .category-card__total .material-symbols-rounded {
   font-size: 1.1rem;
 }
 
-.category-card__total--income {
+.financial-goal-card .category-card__total--income {
   background: color-mix(in srgb, #1b9c63 12%, transparent);
 }
 
-.category-card__total--income .material-symbols-rounded {
+.financial-goal-card .category-card__total--income .material-symbols-rounded {
   color: #1b9c63;
 }
 
-.category-card__total--expense {
+.financial-goal-card .category-card__total--expense {
   background: color-mix(in srgb, #d83f4f 12%, transparent);
 }
 
-.category-card__total--expense .material-symbols-rounded {
+.financial-goal-card .category-card__total--expense .material-symbols-rounded {
   color: #d83f4f;
+}
+
+// === Card and category resource rows ===
+
+.card-row__content,
+.category-row__content {
+  display: grid;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 20px 18px 24px;
+}
+
+.card-row__content {
+  grid-template-columns: minmax(190px, 1.15fr) minmax(420px, 2fr) minmax(150px, auto);
+}
+
+.category-row__content {
+  grid-template-columns: minmax(220px, 1fr) minmax(300px, 1.2fr) auto;
+}
+
+.card-row__identity,
+.category-row__identity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.card-row__copy,
+.category-row__copy {
+  display: grid;
+  justify-items: start;
+  gap: 7px;
+  min-width: 0;
+}
+
+.card-row__copy .expense-card__title,
+.category-row__copy .expense-card__title {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.card-row__number {
+  color: var(--text-soft);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.card-row__image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.card-row__metrics,
+.category-row__metrics {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.card-row__metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.category-row__metrics {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.resource-row-metric {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--expense-category-color) 12%, var(--card-border));
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--expense-category-color) 5%, transparent);
+}
+
+.resource-row-metric span {
+  color: var(--text-soft);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.resource-row-metric strong {
+  overflow-wrap: anywhere;
+  color: var(--text-main);
+  font-size: 0.86rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.resource-row-metric--income strong {
+  color: #1b9c63;
+}
+
+.resource-row-metric--expense strong {
+  color: #d83f4f;
+}
+
+.resource-row-actions {
+  display: grid;
+  justify-items: end;
+  gap: 10px;
+}
+
+.resource-row-actions__icons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.card-row__pay-form {
+  width: 100%;
+}
+
+.card-row__pay-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--expense-category-color) 16%, transparent);
+  color: var(--expense-category-color);
+  font-size: 0.72rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.card-row__pay-button .material-symbols-rounded {
+  font-size: 1.05rem;
+}
+
+@media (max-width: 1199px) {
+  .card-row__content {
+    grid-template-columns: minmax(180px, 1fr) minmax(320px, 1.6fr) auto;
+  }
+
+  .card-row__metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 991px) {
+  .card-row__content,
+  .category-row__content {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .card-row__metrics,
+  .category-row__metrics {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .card-row__actions,
+  .category-row__actions {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 576px) {
+  .card-row__content,
+  .category-row__content {
+    gap: 14px 10px;
+    padding: 14px 12px 16px 18px;
+  }
+
+  .card-row__identity,
+  .category-row__identity {
+    align-self: start;
+    gap: 10px;
+  }
+
+  .card-row .expense-card__icon-wrapper,
+  .category-row .expense-card__icon-wrapper {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+  }
+
+  .card-row .expense-card__icon,
+  .category-row .expense-card__icon {
+    font-size: 1.45rem;
+  }
+
+  .card-row .expense-card__title,
+  .category-row .expense-card__title {
+    font-size: 0.86rem;
+  }
+
+  .card-row .expense-card__badges {
+    gap: 5px;
+  }
+
+  .card-row .expense-card__pill,
+  .category-row .expense-card__pill {
+    padding: 4px 8px;
+    font-size: 0.62rem;
+  }
+
+  .card-row__metrics,
+  .category-row__metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .resource-row-metric {
+    padding: 9px 10px;
+  }
+
+  .resource-row-metric strong {
+    font-size: 0.78rem;
+  }
+
+  .resource-row-actions {
+    align-self: start;
+  }
+
+  .resource-row-actions__icons {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .card-row .expense-card__action,
+  .category-row .expense-card__action {
+    width: 42px;
+    height: 42px;
+  }
+
+  .card-row__actions {
+    display: contents;
+  }
+
+  .card-row__actions .resource-row-actions__icons {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .card-row__actions .card-row__pay-form {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  .card-row__pay-button {
+    width: 100%;
+    min-height: 44px;
+  }
 }

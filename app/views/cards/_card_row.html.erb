@@ -1,72 +1,73 @@
 <% card_color = card.display_color %>
 <% used_limit = card_projected_used_limit(card) %>
 <% available_limit = card_available_limit(card) %>
+<% selected_month_total = card_selected_month_total(card) %>
 
-<div
-  id="<%= dom_id(card) %>"
-  class="expense-card"
-  style="--expense-category-color: <%= card_color %>;"
->
+<article id="<%= dom_id(card) %>" class="expense-card card-row" style="--expense-category-color: <%= card_color %>;">
   <div class="expense-card__border"></div>
 
-  <div class="expense-card__content">
-    <div class="expense-card__category">
-      <div class="expense-card__icon-wrapper">
+  <div class="card-row__content">
+    <div class="card-row__identity">
+      <span class="expense-card__icon-wrapper">
         <% if card.icon.attached? %>
-          <%= image_tag card.icon, style: "width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" %>
+          <%= image_tag card.icon, class: "card-row__image", alt: card.name %>
         <% else %>
           <span class="material-symbols-rounded expense-card__icon">credit_card</span>
         <% end %>
-      </div>
+      </span>
 
-      <div class="expense-card__details">
-        <div class="expense-card__header">
-          <h3 class="expense-card__title">
-            <%= link_to card.name, card_path(card), class: "stealth-link" %>
-          </h3>
-
-          <div class="expense-card__badges">
-            <% if card.number.present? %>
-              <span class="expense-card__pill">**** <%= card.number[-4..] %></span>
-            <% end %>
-            <span class="expense-card__pill">Fecha dia <%= card.closing_day || "—" %></span>
-            <span class="expense-card__pill">Vence dia <%= card.due_day || "—" %></span>
-          </div>
+      <div class="card-row__copy">
+        <h3 class="expense-card__title"><%= link_to card.name, card_path(card), class: "stealth-link" %></h3>
+        <span class="card-row__number"><%= card.number.present? ? "•••• #{card.number[-4..]}" : "Sem número cadastrado" %></span>
+        <div class="expense-card__badges">
+          <span class="expense-card__pill">Fecha dia <%= card.closing_day || "—" %></span>
+          <span class="expense-card__pill">Vence dia <%= card.due_day || "—" %></span>
         </div>
       </div>
     </div>
 
-    <div class="category-card__totals">
-      <span class="category-card__total category-card__total--income">
-        <span class="material-symbols-rounded">lock_open</span>
-        <%= number_to_currency(available_limit, unit: "R$ ", separator: ",", delimiter: ".") %>
-      </span>
-      <span class="category-card__total category-card__total--expense">
-        <span class="material-symbols-rounded">lock</span>
-        <%= number_to_currency(used_limit, unit: "R$ ", separator: ",", delimiter: ".") %>
-      </span>
+    <div class="card-row__metrics">
+      <div class="resource-row-metric">
+        <span>Limite total</span>
+        <strong><%= number_to_currency(card.total_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+      </div>
+      <div class="resource-row-metric resource-row-metric--income">
+        <span>Disponível</span>
+        <strong><%= number_to_currency(available_limit, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+      </div>
+      <div class="resource-row-metric resource-row-metric--expense">
+        <span>Utilizado</span>
+        <strong><%= number_to_currency(used_limit, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+      </div>
+      <div class="resource-row-metric">
+        <span><%= card_selected_month_label %></span>
+        <strong><%= number_to_currency(selected_month_total, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+      </div>
     </div>
 
-    <div class="expense-card__actions" style="margin-left: auto;">
-      <%= link_to(
-            edit_card_path(card),
-            class: "app-show-card__action-btn app-show-card__action-btn--edit",
-            title: "Editar cartão",
-            data: { turbo_frame: "modal" }
-          ) do %>
-        <span class="material-symbols-rounded">edit</span>
-        Editar
+    <div class="resource-row-actions card-row__actions">
+      <%= form_with url: pay_card_path(card), method: :post,
+                    data: { turbo_confirm: "Deseja marcar como pagos todos os lançamentos NÃO pagos deste cartão para o mês de balanço #{@pay_balance_month_label}?" },
+                    class: "card-row__pay-form" do %>
+        <%= hidden_field_tag :month, @month if @month.present? %>
+        <%= hidden_field_tag :year, @year if @year.present? %>
+        <button type="submit" class="card-row__pay-button">
+          <span class="material-symbols-rounded">credit_card</span>
+          <span>Pagar fatura</span>
+        </button>
       <% end %>
 
-      <%= link_to(
-            card_path(card),
-            data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
-            class: "app-show-card__action-btn app-show-card__action-btn--danger",
-            title: "Excluir cartão"
-          ) do %>
-        <span class="material-symbols-rounded">delete</span>
-        Excluir
-      <% end %>
+      <div class="resource-row-actions__icons">
+        <%= link_to edit_card_path(card), class: "expense-card__action", title: "Editar cartão",
+                    aria: { label: "Editar cartão #{card.name}" }, data: { turbo_frame: "modal" } do %>
+          <span class="material-symbols-rounded">edit</span>
+        <% end %>
+        <%= link_to card_path(card), data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
+                    class: "expense-card__action expense-card__action--danger", title: "Excluir cartão",
+                    aria: { label: "Excluir cartão #{card.name}" } do %>
+          <span class="material-symbols-rounded">delete</span>
+        <% end %>
+      </div>
     </div>
   </div>
-</div>
+</article>

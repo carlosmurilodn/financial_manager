@@ -21,12 +21,11 @@
     </div>
 
     <div class="expense-modal-field expense-modal-field--paid-toggle">
-      <span class="expense-edit-form__field-label"><%= t("expenses.form.paid") %></span>
       <label class="expense-paid-toggle" for="expenses_<%= index %>_paid">
         <input type="hidden" name="expenses[<%= index %>][paid]" value="0">
         <input type="checkbox" name="expenses[<%= index %>][paid]" id="expenses_<%= index %>_paid" value="1" class="expense-paid-toggle__input" <%= "checked" if ActiveModel::Type::Boolean.new.cast(values[:paid]) %>>
         <span class="expense-paid-toggle__track" aria-hidden="true"><span class="expense-paid-toggle__thumb"></span></span>
-        <span class="expense-paid-toggle__text">Paga</span>
+        <span class="expense-paid-toggle__text">Foi Paga?</span>
       </label>
     </div>
 

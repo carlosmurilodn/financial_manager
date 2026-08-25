@@ -32,11 +32,10 @@
       </div>
 
       <div class="expense-modal-field">
-        <span class="expense-edit-form__field-label"><%= t("expenses.form.paid") %></span>
         <label class="expense-paid-toggle" for="expense_paid">
           <%= f.check_box :paid, class: "expense-paid-toggle__input", id: "expense_paid" %>
           <span class="expense-paid-toggle__track" aria-hidden="true"><span class="expense-paid-toggle__thumb"></span></span>
-          <span class="expense-paid-toggle__text">Paga</span>
+          <span class="expense-paid-toggle__text">Foi Paga?</span>
         </label>
       </div>
 

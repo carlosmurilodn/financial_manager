@@ -12,6 +12,24 @@ class IncomesController < ApplicationController
   end
 
   def create
+    if params[:incomes].present?
+      @income_rows = multiple_income_params
+      @income = current_user.incomes.new
+
+      if @income_rows.blank?
+        @income.errors.add(:base, "Informe ao menos uma receita.")
+        render_new_income_with_errors
+        return
+      end
+
+      ActiveRecord::Base.transaction do
+        @income_rows.each { |attributes| create_income!(attributes) }
+      end
+
+      redirect_to incomes_path, notice: "Receitas criadas com sucesso!"
+      return
+    end
+
     attributes = income_params
     @income = current_user.incomes.new(attributes)
     @income.repetir ||= 0
@@ -31,11 +49,11 @@ class IncomesController < ApplicationController
         format.html { redirect_to incomes_path, notice: success_message }
       end
     else
-      respond_to do |format|
-        format.turbo_stream { render :new, status: :unprocessable_entity }
-        format.html { render :new, status: :unprocessable_entity }
-      end
+      render_new_income_with_errors
     end
+  rescue ActiveRecord::RecordInvalid => error
+    @income = error.record
+    render_new_income_with_errors
   end
 
   def edit; end
@@ -119,6 +137,45 @@ class IncomesController < ApplicationController
     permitted[:amount] = parse_brazilian_amount(permitted[:amount])
     normalize_category_reference(permitted)
     permitted
+  end
+
+  def multiple_income_params
+    params.require(:incomes).to_unsafe_h.values.filter_map do |raw_attributes|
+      attributes = ActionController::Parameters.new(raw_attributes).permit(
+        :amount, :description, :date, :balance_month, :paid, :repetir, :category_id
+      )
+
+      normalize_category_reference(attributes)
+      attributes if income_row_present?(attributes)
+    end
+  end
+
+  def income_row_present?(attributes)
+    attributes[:description].present? ||
+      parse_brazilian_amount(attributes[:amount], blank: 0).positive? ||
+      attributes[:category_id].present? ||
+      ActiveModel::Type::Boolean.new.cast(attributes[:paid]) ||
+      attributes[:repetir].to_i.positive?
+  end
+
+  def create_income!(attributes)
+    income = current_user.incomes.new(
+      attributes.except(:amount, :date, :balance_month).merge(
+        amount: parse_brazilian_amount(attributes[:amount]),
+        date: parse_brazilian_date(attributes[:date]),
+        balance_month: parse_brazilian_date(attributes[:balance_month]),
+        repetir: attributes[:repetir].presence || 0
+      )
+    )
+    income.save!
+    Incomes::CreateRecurring.call(income: income, user: current_user)
+  end
+
+  def render_new_income_with_errors
+    respond_to do |format|
+      format.turbo_stream { render :new, formats: [ :html ], status: :unprocessable_entity }
+      format.html { render :new, status: :unprocessable_entity }
+    end
   end
 
   def normalize_category_reference(permitted)

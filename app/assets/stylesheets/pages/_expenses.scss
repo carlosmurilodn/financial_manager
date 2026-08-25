@@ -1300,11 +1300,18 @@
 }
 
 .expense-new-row-grid .expense-modal-field--amount,
-.expense-new-row-grid .expense-modal-field--paid-toggle,
 .expense-new-row-grid .expense-modal-field--date,
-.expense-new-row-grid .expense-modal-field--balance,
-.expense-new-row-grid .expense-modal-field--category-select {
+.expense-new-row-grid .expense-modal-field--balance {
   grid-column: span 2;
+}
+
+.expense-new-row-grid .expense-modal-field--paid-toggle {
+  grid-column: span 1;
+  justify-content: center;
+}
+
+.expense-new-row-grid .expense-modal-field--category-select {
+  grid-column: span 3;
 }
 
 .expense-new-row-grid .expense-modal-field--payment,
@@ -1323,6 +1330,21 @@
 .expense-new-row-grid .expense-modal-row__remove {
   grid-column: span 1;
   align-self: end;
+}
+
+.income-form-row {
+  position: relative;
+}
+
+.income-form-row > .expense-modal-row__remove {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+}
+
+.income-form-row > .expense-edit-form__row--primary {
+  padding-right: 42px;
 }
 
 .expense-edit-form .expense-modal-installments {

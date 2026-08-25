@@ -7,44 +7,40 @@
 
   <div class="expense-card__content">
     <%= link_to expense_path(expense), class: "expense-card__main-link", aria: { label: "Ver detalhes de #{expense.description}" } do %>
-      <div class="expense-card__icon-wrapper">
-        <span class="material-symbols-rounded expense-card__icon"><%= expense.category.material_icon %></span>
+      <div class="expense-card__identity-block">
+        <div class="expense-card__icon-wrapper">
+          <span class="material-symbols-rounded expense-card__icon"><%= expense.category.material_icon %></span>
+        </div>
+
+        <h3 class="expense-card__title"><%= expense.description %></h3>
       </div>
 
-      <div class="expense-card__details">
-        <div class="expense-card__identity">
-          <h3 class="expense-card__title"><%= expense.description %></h3>
+      <div class="expense-card__badges">
+        <span class="expense-card__pill"><%= Expense.payment_method_names[expense.payment_method] %></span>
 
-          <div class="expense-card__badges">
-            <span class="expense-card__pill"><%= Expense.payment_method_names[expense.payment_method] %></span>
-
-            <% if expense.card.present? %>
-              <span class="expense-card__pill" style="background: color-mix(in srgb, <%= expense.card.display_color %> 14%, transparent); color: <%= expense.card.display_color %>;">
-                <%= expense.card.name %>
-              </span>
-            <% end %>
-
-            <% if expense.payment_method_credito_parcelado? %>
-              <span class="expense-card__pill"><%= "Parcela #{expense.current_installment} de #{expense.installments_count}" %></span>
-            <% end %>
-          </div>
-        </div>
-
-        <div class="expense-card__information">
-          <span class="expense-card__pill expense-card__pill--category">
-            <%= expense.category.display_name %>
+        <% if expense.card.present? %>
+          <span class="expense-card__pill" style="background: color-mix(in srgb, <%= expense.card.display_color %> 14%, transparent); color: <%= expense.card.display_color %>;">
+            <%= expense.card.name %>
           </span>
+        <% end %>
 
-          <span class="expense-card__meta-item">
-            <span class="material-symbols-rounded">calendar_month</span>
-            <span><small>Data</small><strong><%= expense.date.strftime("%d/%m/%Y") %></strong></span>
-          </span>
+        <% if expense.payment_method_credito_parcelado? %>
+          <span class="expense-card__pill"><%= "Parcela #{expense.current_installment} de #{expense.installments_count}" %></span>
+        <% end %>
 
-          <span class="expense-card__meta-item">
-            <span class="material-symbols-rounded">event</span>
-            <span><small>Balanço</small><strong><%= expense.balance_month&.strftime("%m/%Y") || "—" %></strong></span>
-          </span>
-        </div>
+        <span class="expense-card__pill expense-card__pill--category"><%= expense.category.display_name %></span>
+      </div>
+
+      <div class="expense-card__information">
+        <span class="expense-card__meta-item">
+          <span class="material-symbols-rounded">calendar_month</span>
+          <span><small>Data</small><strong><%= expense.date.strftime("%d/%m/%Y") %></strong></span>
+        </span>
+
+        <span class="expense-card__meta-item">
+          <span class="material-symbols-rounded">event</span>
+          <span><small>Balanço</small><strong><%= expense.balance_month&.strftime("%m/%Y") || "—" %></strong></span>
+        </span>
       </div>
     <% end %>
 
@@ -54,20 +50,20 @@
       </strong>
 
       <% if expense.payment_method_credito_parcelado? %>
-        <%= link_to(
-              expense.paid? ? "Pago" : "Pendente",
-              toggle_paid_options_expense_path(expense, month: params[:month]),
-              class: "expense-card__status #{expense.paid? ? 'expense-card__status--paid' : 'expense-card__status--pending'}",
-              data: { turbo_frame: "modal" }
-            ) %>
+        <%= link_to toggle_paid_options_expense_path(expense, month: params[:month]),
+                    class: "expense-card__status #{expense.paid? ? 'expense-card__status--paid' : 'expense-card__status--pending'}",
+                    data: { turbo_frame: "modal" } do %>
+          <span class="material-symbols-rounded"><%= expense.paid? ? "check" : "schedule" %></span>
+          <%= expense.paid? ? "Pago" : "Pendente" %>
+        <% end %>
       <% else %>
-        <%= link_to(
-              expense.paid? ? "Pago" : "Pendente",
-              toggle_paid_expense_path(expense, month: params[:month]),
-              method: :patch,
-              data: { turbo_method: :patch, turbo_stream: true },
-              class: "expense-card__status #{expense.paid? ? 'expense-card__status--paid' : 'expense-card__status--pending'}"
-            ) %>
+        <%= link_to toggle_paid_expense_path(expense, month: params[:month]),
+                    method: :patch,
+                    data: { turbo_method: :patch, turbo_stream: true },
+                    class: "expense-card__status #{expense.paid? ? 'expense-card__status--paid' : 'expense-card__status--pending'}" do %>
+          <span class="material-symbols-rounded"><%= expense.paid? ? "check" : "schedule" %></span>
+          <%= expense.paid? ? "Pago" : "Pendente" %>
+        <% end %>
       <% end %>
     </div>
 
@@ -78,6 +74,7 @@
             title: "Editar despesa"
           ) do %>
         <span class="material-symbols-rounded">edit</span>
+        <span class="expense-card__action-label">Editar</span>
       <% end %>
 
       <% if expense.payment_method_credito_parcelado? %>
@@ -88,6 +85,7 @@
               data: { turbo_frame: "modal" }
             ) do %>
           <span class="material-symbols-rounded">delete</span>
+          <span class="expense-card__action-label">Excluir</span>
         <% end %>
       <% else %>
         <%= link_to(
@@ -97,6 +95,7 @@
               title: "Excluir despesa"
             ) do %>
           <span class="material-symbols-rounded">delete</span>
+          <span class="expense-card__action-label">Excluir</span>
         <% end %>
       <% end %>
     </div>

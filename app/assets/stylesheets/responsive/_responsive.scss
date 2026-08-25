@@ -800,3 +800,88 @@
     padding: 0.8rem 0.55rem;
   }
 }
+
+@media (max-width: 576px) {
+  .app-page--card-show .app-page__hero-top--cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .app-page--card-show .app-show-card__hero-actions {
+    width: 100%;
+    justify-content: stretch !important;
+  }
+
+  .app-page--card-show .app-show-card__hero-actions > a {
+    flex: 1 1 0;
+    min-height: 44px;
+    justify-content: center;
+    padding-inline: 8px;
+  }
+
+  .app-page--card-show .app-show-panel .app-show-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-page--card-show .app-show-kpi {
+    min-width: 0;
+  }
+
+  .app-page--card-show .app-show-kpi small,
+  .app-page--card-show .app-show-kpi strong {
+    overflow-wrap: anywhere;
+  }
+
+  .app-page--card-show .app-show-card__installments-table-wrapper {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .app-page--card-show .app-show-card__installments-table,
+  .app-page--card-show .app-show-card__installments-table tbody,
+  .app-page--card-show .app-show-card__installments-table tr,
+  .app-page--card-show .app-show-card__installments-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .app-page--card-show .app-show-card__installments-table thead {
+    display: none;
+  }
+
+  .app-page--card-show .app-show-card__installments-table tbody {
+    display: grid;
+    gap: 10px;
+  }
+
+  .app-page--card-show .app-show-card__installments-table tr {
+    overflow: hidden;
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    background: var(--surface);
+  }
+
+  .app-page--card-show .app-show-card__installments-table td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 9px 12px;
+    text-align: right;
+  }
+
+  .app-page--card-show .app-show-card__installments-table td::before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    color: var(--text-soft);
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .app-page--card-show .app-show-card__installments-table td:first-child {
+    background: color-mix(in srgb, var(--expense-category-color) 10%, transparent);
+    font-weight: 800;
+  }
+}

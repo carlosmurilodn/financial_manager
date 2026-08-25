@@ -19,7 +19,7 @@
         </div>
       </div>
 
-      <div class="app-page__hero-unit" style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+      <div class="app-page__hero-unit app-show-card__hero-actions" style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
         <%= link_to cards_path, class: "app-show-back-link" do %>
           <span class="material-symbols-rounded">arrow_back</span>
           Voltar
@@ -175,20 +175,20 @@
             <tbody>
               <% @card_expenses.each do |expense| %>
                 <tr>
-                  <td>
+                  <td data-label="Descrição">
                     <%= link_to expense.description, expense_path(expense), class: "stealth-link" %>
                   </td>
-                  <td><%= expense.category.display_name %></td>
-                  <td><%= Expense.payment_method_names[expense.payment_method] %></td>
-                  <td>
+                  <td data-label="Categoria"><%= expense.category.display_name %></td>
+                  <td data-label="Pagamento"><%= Expense.payment_method_names[expense.payment_method] %></td>
+                  <td data-label="Parcela">
                     <% if expense.payment_method_credito_parcelado? %>
                       <%= expense.current_installment %>/<%= expense.installments_count %>
                     <% else %>
                       —
                     <% end %>
                   </td>
-                  <td><strong><%= number_to_currency(expense.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %></strong></td>
-                  <td>
+                  <td data-label="Valor"><strong><%= number_to_currency(expense.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %></strong></td>
+                  <td data-label="Status">
                     <span class="app-show-card__installment-status <%= expense.paid? ? 'app-show-card__installment-status--paid' : 'app-show-card__installment-status--pending' %>">
                       <%= expense.paid? ? "Pago" : "Pendente" %>
                     </span>

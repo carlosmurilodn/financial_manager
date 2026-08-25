@@ -53,6 +53,17 @@ function defaultBalanceDate(row) {
   return purchaseDate;
 }
 
+function updateInstallmentsVisibility(paymentSelect) {
+  const row = paymentSelect.closest("[data-expense-row]");
+  const installmentsSection = row?.querySelector("[data-installments-section]");
+  if (!installmentsSection) return;
+
+  const visible = paymentSelect.value === "credito_parcelado";
+
+  installmentsSection.classList.toggle("is-visible", visible);
+  installmentsSection.style.display = visible ? "grid" : "none";
+}
+
 export function initializeExpenseForm() {
   document.querySelectorAll("[data-expense-form]").forEach((form) => {
     if (form.dataset.expenseFormBound === "true") return;
@@ -97,7 +108,7 @@ export function initializeExpenseForm() {
 
       if (paymentSelect && installmentsSection && paymentSelect.dataset.bound !== "true") {
         const toggleInstallments = () => {
-          installmentsSection.classList.toggle("is-visible", paymentSelect.value === "credito_parcelado");
+          updateInstallmentsVisibility(paymentSelect);
           refreshBalanceDate();
         };
 
@@ -157,7 +168,17 @@ export function initializeExpenseForm() {
   });
 }
 
-document.addEventListener("turbo:load", initializeExpenseForm);
+document.addEventListener("turbo:load", () => {
+  document.querySelectorAll("[data-payment-method-select]").forEach(updateInstallmentsVisibility);
+  initializeExpenseForm();
+});
+
+document.addEventListener("change", (event) => {
+  const paymentSelect = event.target.closest?.("[data-payment-method-select]");
+  if (!paymentSelect) return;
+
+  updateInstallmentsVisibility(paymentSelect);
+});
 
 document.addEventListener("turbo:before-cache", () => {
   document.querySelectorAll("[data-expense-form]").forEach((form) => {

@@ -19,12 +19,18 @@
 
     <div class="category-row__metrics">
       <div class="resource-row-metric resource-row-metric--income">
-        <span>Receitas</span>
-        <strong><%= number_to_currency(income_total, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        <span class="resource-row-metric__icon"><span class="material-symbols-rounded">trending_up</span></span>
+        <span class="resource-row-metric__content">
+          <span class="resource-row-metric__label">Receitas</span>
+          <strong><%= number_to_currency(income_total, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        </span>
       </div>
       <div class="resource-row-metric resource-row-metric--expense">
-        <span>Despesas</span>
-        <strong><%= number_to_currency(expense_total, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        <span class="resource-row-metric__icon"><span class="material-symbols-rounded">payments</span></span>
+        <span class="resource-row-metric__content">
+          <span class="resource-row-metric__label">Despesas</span>
+          <strong><%= number_to_currency(expense_total, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        </span>
       </div>
     </div>
 

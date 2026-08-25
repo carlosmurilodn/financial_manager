@@ -728,16 +728,6 @@
   padding: 14px 18px 14px 22px;
 }
 
-.expense-card--expense .expense-card__main-link {
-  display: grid;
-  grid-template-columns: minmax(380px, 560px) minmax(220px, 1fr);
-  align-items: center;
-  gap: clamp(18px, 2.5vw, 40px);
-  min-width: 0;
-  color: inherit;
-  text-decoration: none;
-}
-
 .expense-card--expense .expense-card__identity-block {
   display: flex;
   align-items: center;
@@ -745,12 +735,19 @@
   min-width: 0;
 }
 
-.expense-card--expense .expense-card__main-link:hover .expense-card__title,
-.expense-card--expense .expense-card__main-link:focus-visible .expense-card__title {
+.expense-card--expense .expense-card__description-link {
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.expense-card--expense .expense-card__description-link:hover .expense-card__title,
+.expense-card--expense .expense-card__description-link:focus-visible .expense-card__title {
   color: var(--primary);
 }
 
-.expense-card--expense .expense-card__main-link:focus-visible {
+.expense-card--expense .expense-card__description-link:focus-visible {
+  display: block;
   border-radius: 10px;
   outline: 2px solid color-mix(in srgb, var(--primary) 45%, transparent);
   outline-offset: 4px;
@@ -789,6 +786,23 @@
 .expense-card--expense .expense-card__pill {
   padding: 4px 8px;
   font-size: 0.65rem;
+}
+
+.expense-card--expense .expense-card__pill--link {
+  cursor: pointer;
+  text-decoration: none;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.expense-card--expense .expense-card__pill--link:hover {
+  color: inherit;
+  filter: brightness(0.96);
+  transform: translateY(-1px);
+}
+
+.expense-card--expense .expense-card__pill--link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 .expense-card--expense .expense-card__pill--category {
@@ -856,12 +870,6 @@
     gap: 12px;
   }
 
-  .expense-card--expense .expense-card__main-link {
-    grid-column: 1 / -1;
-    grid-template-columns: minmax(300px, 1.2fr) minmax(190px, 0.8fr);
-    gap: 14px;
-  }
-
   .expense-card--expense .expense-card__amount-area {
     grid-column: 1;
     grid-row: 2;
@@ -883,15 +891,6 @@
     grid-template-columns: minmax(0, 1fr) 36px;
     gap: 10px;
     padding: 14px 10px 14px 16px;
-  }
-
-  .expense-card--expense .expense-card__main-link {
-    display: grid;
-    grid-column: 1;
-    grid-template-columns: 1fr;
-    align-items: start;
-    gap: 10px;
-    min-width: 0;
   }
 
   .expense-card--expense .expense-card__identity-block {
@@ -1889,7 +1888,36 @@
   background: color-mix(in srgb, var(--resource-metric-color) 10%, transparent);
 }
 
-.resource-row-metric span {
+.card-row .resource-row-metric,
+.category-row .resource-row-metric {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.resource-row-metric__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--resource-metric-color) 16%, transparent);
+  color: var(--resource-metric-color);
+}
+
+.resource-row-metric__icon .material-symbols-rounded {
+  font-size: 1rem;
+}
+
+.resource-row-metric__content {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.resource-row-metric__label,
+.resource-row-metric > span:not(.resource-row-metric__icon):not(.resource-row-metric__content) {
   color: var(--text-soft);
   font-size: 0.62rem;
   font-weight: 800;
@@ -1903,6 +1931,15 @@
   font-size: 0.86rem;
   font-weight: 800;
   line-height: 1.2;
+}
+
+.card-row .resource-row-metric strong,
+.app-cards-hero-kpis .stat-card__value,
+.app-page--card-show .app-show-kpi strong,
+.category-row .resource-row-metric strong,
+.app-categories-hero-kpis .stat-card__value,
+.app-page--category-show .app-show-kpi strong {
+  color: var(--text-main);
 }
 
 .resource-row-metric--primary {
@@ -2040,10 +2077,6 @@
   gap: 12px;
 }
 
-.expense-card--expense .expense-card__main-link {
-  display: contents;
-}
-
 .expense-card--expense .expense-card__identity-block .expense-card__title {
   overflow-wrap: anywhere;
   white-space: normal;
@@ -2054,14 +2087,14 @@
   align-self: stretch;
   justify-content: center;
   padding-left: 16px;
-  border-left: 1px solid var(--card-border);
+  border-left: 0;
 }
 
 .expense-card--expense .expense-card__amount-area {
   grid-column: 3;
   grid-row: 1;
   padding-left: 16px;
-  border-left: 1px solid var(--card-border);
+  border-left: 0;
   align-items: center;
   justify-content: center;
 }
@@ -2073,15 +2106,15 @@
   flex-wrap: nowrap;
   justify-content: center;
   padding-left: 16px;
-  border-left: 1px solid var(--card-border);
+  border-left: 0;
 }
 
 .expense-card--expense .expense-card__actions {
   grid-column: 5;
   grid-row: 1;
   padding-left: 12px;
-  border-left: 1px solid var(--card-border);
-  justify-content: center;
+  border-left: 0;
+  justify-content: flex-end;
 }
 
 .expense-card--expense .expense-card__action {
@@ -2118,36 +2151,35 @@
     grid-template-columns: 1fr;
   }
 
-  .expense-card--expense .expense-card__main-link {
-    display: grid;
-    grid-column: 1 / -1;
-    grid-template-columns: 1fr;
-    gap: 10px;
+  .expense-card--expense .expense-card__identity-block {
+    grid-column: 1;
+    grid-row: 1;
   }
 
   .expense-card--expense .expense-card__badges {
-    grid-column: 1;
-    padding: 0;
-    border: 0;
-  }
-
-  .expense-card--expense .expense-card__information {
-    grid-column: 1 / -1;
-    grid-row: auto;
-    padding: 10px 0 0;
-    border: 0;
-  }
-
-  .expense-card--expense .expense-card__amount-area {
     grid-column: 1;
     grid-row: 2;
     padding: 0;
     border: 0;
   }
 
-  .expense-card--expense .expense-card__actions {
+  .expense-card--expense .expense-card__information {
     grid-column: 1;
     grid-row: 3;
+    padding: 10px 0 0;
+    border: 0;
+  }
+
+  .expense-card--expense .expense-card__amount-area {
+    grid-column: 1;
+    grid-row: 4;
+    padding: 0;
+    border: 0;
+  }
+
+  .expense-card--expense .expense-card__actions {
+    grid-column: 1;
+    grid-row: 5;
     padding: 0;
     border: 0;
   }
@@ -2158,11 +2190,6 @@
 }
 
 @media (max-width: 576px) {
-  .expense-card--expense .expense-card__main-link {
-    grid-column: 1;
-    grid-template-columns: 1fr;
-  }
-
   .expense-card--expense .expense-card__identity-block {
     padding-right: 88px;
   }
@@ -2174,12 +2201,12 @@
 
   .expense-card--expense .expense-card__actions {
     grid-column: 1;
-    grid-row: 2;
+    grid-row: 4;
     flex-direction: row;
   }
 
   .expense-card--expense:not(.financial-goal-card) .expense-card__action {
-    flex: 1 1 0;
+    flex: 0 0 auto;
     width: auto;
     min-height: 40px;
     padding: 0 12px;

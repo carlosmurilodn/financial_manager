@@ -28,20 +28,32 @@
 
     <div class="card-row__metrics">
       <div class="resource-row-metric resource-row-metric--primary">
-        <span>Limite total</span>
-        <strong><%= number_to_currency(card.total_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        <span class="resource-row-metric__icon"><span class="material-symbols-rounded">account_balance_wallet</span></span>
+        <span class="resource-row-metric__content">
+          <span class="resource-row-metric__label">Limite total</span>
+          <strong><%= number_to_currency(card.total_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        </span>
       </div>
       <div class="resource-row-metric resource-row-metric--income">
-        <span>Disponível</span>
-        <strong><%= number_to_currency(available_limit, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        <span class="resource-row-metric__icon"><span class="material-symbols-rounded">savings</span></span>
+        <span class="resource-row-metric__content">
+          <span class="resource-row-metric__label">Disponível</span>
+          <strong><%= number_to_currency(available_limit, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        </span>
       </div>
       <div class="resource-row-metric resource-row-metric--expense">
-        <span>Utilizado</span>
-        <strong><%= number_to_currency(used_limit, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        <span class="resource-row-metric__icon"><span class="material-symbols-rounded">credit_score</span></span>
+        <span class="resource-row-metric__content">
+          <span class="resource-row-metric__label">Utilizado</span>
+          <strong><%= number_to_currency(used_limit, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        </span>
       </div>
       <div class="resource-row-metric resource-row-metric--warning">
-        <span><%= card_selected_month_label %></span>
-        <strong><%= number_to_currency(selected_month_total, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        <span class="resource-row-metric__icon"><span class="material-symbols-rounded">calendar_month</span></span>
+        <span class="resource-row-metric__content">
+          <span class="resource-row-metric__label"><%= card_selected_month_label %></span>
+          <strong><%= number_to_currency(selected_month_total, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        </span>
       </div>
     </div>
 

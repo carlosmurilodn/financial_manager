@@ -14,8 +14,8 @@
       </div>
     </div>
 
-    <div class="expense-edit-form__row expense-edit-form__row--details">
-      <div class="expense-modal-field">
+    <div class="expense-edit-form__row expense-edit-form__row--details income-form-details">
+      <div class="expense-modal-field income-form-details__amount">
         <%= f.label :amount, t("incomes.form.amount") %>
         <%= f.text_field :amount,
           class: "app-form-control moeda",
@@ -24,7 +24,7 @@
           data: { required_currency: true } %>
       </div>
 
-      <div class="expense-modal-field">
+      <div class="expense-modal-field income-form-details__paid">
         <span class="expense-edit-form__field-label"><%= t("incomes.form.paid") %></span>
         <label class="expense-paid-toggle" for="income_paid">
           <%= f.check_box :paid, class: "expense-paid-toggle__input", id: "income_paid" %>
@@ -33,19 +33,19 @@
         </label>
       </div>
 
-      <div class="expense-modal-field">
+      <div class="expense-modal-field income-form-details__category">
         <%= f.label :category_id, t("incomes.form.category") %>
         <%= f.collection_select :category_id, categories, :id, :display_name, { prompt: "Selecione" }, { class: "app-form-select" } %>
       </div>
 
-      <div class="expense-modal-field">
+      <div class="expense-modal-field income-form-details__date">
         <%= f.label :date, t("incomes.form.date") %>
         <div class="custom-date-wrapper">
           <%= f.text_field :date, class: "app-form-control custom-date", autocomplete: "off", placeholder: "Selecione a data", required: true %>
         </div>
       </div>
 
-      <div class="expense-modal-field">
+      <div class="expense-modal-field income-form-details__balance">
         <%= f.label :balance_month, t("incomes.form.balance_month") %>
         <div class="custom-date-wrapper">
           <%= f.text_field :balance_month, class: "app-form-control custom-date", autocomplete: "off", placeholder: "Selecione o mês", required: true %>

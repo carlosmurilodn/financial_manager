@@ -158,3 +158,21 @@ export function initializeExpenseForm() {
 }
 
 document.addEventListener("turbo:load", initializeExpenseForm);
+
+document.addEventListener("turbo:before-cache", () => {
+  document.querySelectorAll("[data-expense-form]").forEach((form) => {
+    delete form.dataset.expenseFormBound;
+
+    form.querySelectorAll("[data-payment-method-select], [data-remove-expense-row]").forEach((element) => {
+      delete element.dataset.bound;
+    });
+
+    form.querySelectorAll("[data-expense-date-input], [data-card-select]").forEach((element) => {
+      delete element.dataset.balanceBound;
+    });
+
+    form.querySelectorAll("[data-expense-balance-input]").forEach((element) => {
+      delete element.dataset.manualBound;
+    });
+  });
+});

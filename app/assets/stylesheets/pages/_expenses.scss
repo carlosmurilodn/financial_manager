@@ -1347,6 +1347,25 @@
   padding-right: 42px;
 }
 
+.income-form-details {
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+}
+
+.income-form-details__amount,
+.income-form-details__date,
+.income-form-details__balance {
+  grid-column: span 2;
+}
+
+.income-form-details__paid {
+  grid-column: span 1;
+  justify-content: center;
+}
+
+.income-form-details__category {
+  grid-column: span 3;
+}
+
 .expense-edit-form .expense-modal-installments {
   grid-column: span 2;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1414,12 +1433,22 @@
   position: absolute;
   top: 3px;
   left: 3px;
+  display: grid;
+  place-items: center;
   width: 18px;
   height: 18px;
   border-radius: 50%;
   background: var(--surface);
+  color: var(--danger);
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.22);
-  transition: transform 0.15s ease;
+  font-size: 0.8rem;
+  font-weight: 900;
+  line-height: 1;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.expense-paid-toggle__thumb::before {
+  content: "\00d7";
 }
 
 .expense-paid-toggle__input:checked + .expense-paid-toggle__track {
@@ -1427,7 +1456,12 @@
 }
 
 .expense-paid-toggle__input:checked + .expense-paid-toggle__track .expense-paid-toggle__thumb {
+  color: var(--success);
   transform: translateX(18px);
+}
+
+.expense-paid-toggle__input:checked + .expense-paid-toggle__track .expense-paid-toggle__thumb::before {
+  content: "\2713";
 }
 
 .expense-paid-toggle__input:focus-visible + .expense-paid-toggle__track {
@@ -1472,6 +1506,10 @@
 
   .expense-edit-form__row--details {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .income-form-details > .expense-modal-field {
+    grid-column: auto;
   }
 
   .expense-edit-form__row--payment {

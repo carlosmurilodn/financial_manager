@@ -1250,7 +1250,173 @@
 }
 
 .app-form-page .expense-modal-installments {
-  justify-content: start;
+  grid-template-columns: minmax(140px, 180px) minmax(140px, 180px) minmax(280px, 1fr);
+  justify-content: stretch;
+  align-items: end;
+  width: 100%;
+}
+
+.app-form-page .expense-modal-installments__notice {
+  display: flex;
+  align-items: center;
+  min-height: 34px;
+  margin: 0;
+}
+
+.expense-edit-form {
+  display: grid;
+  gap: 18px;
+}
+
+.expense-edit-form__row {
+  display: grid;
+  gap: 16px;
+  align-items: end;
+}
+
+.expense-edit-form__row--primary {
+  grid-template-columns: minmax(0, 2fr) minmax(180px, 1fr);
+}
+
+.expense-edit-form__row--details {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.expense-edit-form__row--payment {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.app-form-page .expense-new-row-grid {
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.expense-new-row-grid .expense-modal-field--description {
+  grid-column: span 8;
+}
+
+.expense-new-row-grid .expense-modal-field--repeat {
+  grid-column: span 2;
+}
+
+.expense-new-row-grid .expense-modal-field--amount,
+.expense-new-row-grid .expense-modal-field--paid-toggle,
+.expense-new-row-grid .expense-modal-field--date,
+.expense-new-row-grid .expense-modal-field--balance,
+.expense-new-row-grid .expense-modal-field--category-select {
+  grid-column: span 2;
+}
+
+.expense-new-row-grid .expense-modal-field--payment,
+.expense-new-row-grid .expense-modal-field--card-select,
+.expense-new-row-grid .expense-modal-installments {
+  grid-column: span 3;
+}
+
+.expense-new-row-grid .expense-modal-installments {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  justify-content: stretch;
+  padding: 0;
+}
+
+.expense-new-row-grid .expense-modal-row__remove {
+  grid-column: span 1;
+  align-self: end;
+}
+
+.expense-edit-form .expense-modal-installments {
+  grid-column: span 2;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  padding: 0;
+}
+
+.expense-edit-form__footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+}
+
+.expense-edit-form__notice {
+  min-height: 42px;
+  margin: 0;
+}
+
+.expense-edit-form__footer .expense-modal-actions {
+  margin-top: 0;
+}
+
+.expense-edit-form__footer .expense-modal-actions:only-child {
+  grid-column: 2;
+}
+
+.expense-edit-form__field-label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--text-main);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.expense-paid-toggle {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 34px;
+  cursor: pointer;
+}
+
+.expense-paid-toggle__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.expense-paid-toggle__track {
+  position: relative;
+  width: 42px;
+  height: 24px;
+  flex: 0 0 42px;
+  border-radius: 999px;
+  background: var(--table-border-color);
+  transition: background 0.15s ease;
+}
+
+.expense-paid-toggle__thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.22);
+  transition: transform 0.15s ease;
+}
+
+.expense-paid-toggle__input:checked + .expense-paid-toggle__track {
+  background: var(--primary);
+}
+
+.expense-paid-toggle__input:checked + .expense-paid-toggle__track .expense-paid-toggle__thumb {
+  transform: translateX(18px);
+}
+
+.expense-paid-toggle__input:focus-visible + .expense-paid-toggle__track {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.expense-paid-toggle__text {
+  color: var(--text-main);
+  font-size: 0.76rem;
+  font-weight: 700;
 }
 
 .app-form-page__actions,
@@ -1268,6 +1434,36 @@
 }
 
 @media (max-width: 900px) {
+  .app-form-page .expense-new-row-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .expense-new-row-grid > .expense-modal-field,
+  .expense-new-row-grid > .expense-modal-installments,
+  .expense-new-row-grid > .expense-modal-row__remove {
+    grid-column: 1;
+  }
+
+  .expense-new-row-grid .expense-modal-installments {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .expense-edit-form__row--details {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .expense-edit-form__row--payment {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .expense-edit-form__footer {
+    grid-template-columns: 1fr;
+  }
+
+  .expense-edit-form__footer .expense-modal-actions:only-child {
+    grid-column: 1;
+  }
+
   .app-form-page .expense-modal-row__main,
   .app-form-page .expense-modal-grid,
   .app-form-page .expense-modal-grid--edit {
@@ -1310,6 +1506,21 @@
   .app-form-page .expense-modal-grid,
   .app-form-page .expense-modal-grid--edit,
   .app-form-page .expense-modal-installments {
+    grid-template-columns: 1fr;
+  }
+
+  .expense-edit-form__row--primary,
+  .expense-edit-form__row--details,
+  .expense-edit-form__row--payment,
+  .expense-edit-form .expense-modal-installments {
+    grid-template-columns: 1fr;
+  }
+
+  .expense-edit-form .expense-modal-installments {
+    grid-column: auto;
+  }
+
+  .expense-new-row-grid .expense-modal-installments {
     grid-template-columns: 1fr;
   }
 

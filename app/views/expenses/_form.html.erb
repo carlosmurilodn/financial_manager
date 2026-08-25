@@ -7,9 +7,9 @@
 <% end %>
 
 <% if expense.persisted? %>
-  <%= form_with model: expense, local: true, html: { id: "expense_form", class: "app-form-page__form", data: { turbo: false } } do |f| %>
-    <div class="expense-modal-grid expense-modal-grid--edit">
-      <div class="expense-modal-field expense-modal-field--wide">
+  <%= form_with model: expense, local: true, html: { id: "expense_form", class: "app-form-page__form expense-edit-form", data: { turbo: false } } do |f| %>
+    <div class="expense-edit-form__row expense-edit-form__row--primary">
+      <div class="expense-modal-field">
         <%= f.label :description, t("expenses.form.description") %>
         <%= f.text_field :description, class: "app-form-control", required: true %>
       </div>
@@ -18,7 +18,9 @@
         <%= f.label :repetir, "Repetir (meses)" %>
         <%= f.number_field :repetir, value: @expense.repetir || 0, min: 0, class: "app-form-control" %>
       </div>
+    </div>
 
+    <div class="expense-edit-form__row expense-edit-form__row--details">
       <div class="expense-modal-field">
         <%= f.label :amount, t("expenses.form.amount") %>
         <%= f.text_field :amount,
@@ -29,9 +31,13 @@
         %>
       </div>
 
-      <div class="expense-modal-field expense-modal-field--check app-form-check">
-        <%= f.check_box :paid, class: "app-form-check-input", id: "expense_paid" %>
-        <%= f.label :paid, t("expenses.form.paid"), class: "app-form-check-label" %>
+      <div class="expense-modal-field">
+        <span class="expense-edit-form__field-label"><%= t("expenses.form.paid") %></span>
+        <label class="expense-paid-toggle" for="expense_paid">
+          <%= f.check_box :paid, class: "expense-paid-toggle__input", id: "expense_paid" %>
+          <span class="expense-paid-toggle__track" aria-hidden="true"><span class="expense-paid-toggle__thumb"></span></span>
+          <span class="expense-paid-toggle__text">Paga</span>
+        </label>
       </div>
 
       <div class="expense-modal-field">
@@ -52,7 +58,9 @@
         <%= f.label :category_id, t("expenses.form.category") %>
         <%= f.collection_select :category_id, categories, :id, :display_name, { prompt: "Selecione" }, { class: "app-form-select", required: true } %>
       </div>
+    </div>
 
+    <div class="expense-edit-form__row expense-edit-form__row--payment">
       <div class="expense-modal-field">
         <%= f.label :payment_method, t("expenses.form.payment_method") %>
         <%= f.select :payment_method, payment_options,
@@ -64,44 +72,46 @@
         <%= f.label :card_id, t("expenses.form.card") %>
         <%= f.collection_select :card_id, cards, :id, :display_name, { prompt: "Selecione" }, { class: "app-form-select", data: { required_when_credit: true } } %>
       </div>
+
+      <div class="expense-modal-installments" id="parcelamento_section">
+        <div class="expense-modal-field">
+          <%= f.label :current_installment, "Parcela Atual" %>
+          <%= f.number_field :current_installment, class: "app-form-control", value: expense.current_installment || 1, min: 1, data: { required_when_installments: true } %>
+        </div>
+
+        <div class="expense-modal-field">
+          <%= f.label :installments_count, "Total de Parcelas" %>
+          <%= f.number_field :installments_count, class: "app-form-control", value: expense.installments_count || 1, min: 1, data: { required_when_installments: true } %>
+        </div>
+      </div>
     </div>
 
-    <div class="expense-modal-installments" id="parcelamento_section">
-      <div class="expense-modal-field">
-        <%= f.label :current_installment, "Parcela Atual" %>
-        <%= f.number_field :current_installment, class: "app-form-control", value: expense.current_installment || 1, min: 1, data: { required_when_installments: true } %>
-      </div>
-
-      <div class="expense-modal-field">
-        <%= f.label :installments_count, "Total de Parcelas" %>
-        <%= f.number_field :installments_count, class: "app-form-control", value: expense.installments_count || 1, min: 1, data: { required_when_installments: true } %>
-      </div>
-    </div>
-
-    <% if expense.payment_method_credito_parcelado? %>
-      <div class="app-alert app-alert--info" role="alert">
-        Escolha abaixo se deseja atualizar apenas esta parcela ou aplicar as alterações desta parcela em diante.
-      </div>
-    <% end %>
-
-    <div class="expense-modal-actions">
-      <%= link_to "Cancelar", expense_path(expense), class: "app-btn app-btn--outline expense-modal-action-btn" %>
+    <div class="expense-edit-form__footer">
       <% if expense.payment_method_credito_parcelado? %>
-        <%= button_tag name: "update_scope", value: "single", type: "submit", class: "app-btn app-btn--primary expense-modal-action-btn" do %>
-          <span class="material-symbols-rounded">save</span>
-          Atualizar só esta parcela
-        <% end %>
-
-        <%= button_tag name: "update_scope", value: "group", type: "submit", class: "app-btn app-btn--outline expense-modal-action-btn" do %>
-          <span class="material-symbols-rounded">done_all</span>
-          Atualizar esta e próximas
-        <% end %>
-      <% else %>
-        <%= button_tag type: "submit", class: "app-btn app-btn--primary expense-modal-action-btn" do %>
-          <span class="material-symbols-rounded">save</span>
-          <%= t("expenses.form.submit") %>
-        <% end %>
+        <div class="app-alert app-alert--info expense-edit-form__notice" role="alert">
+          Escolha abaixo se deseja atualizar apenas esta parcela ou aplicar as alterações desta parcela em diante.
+        </div>
       <% end %>
+
+      <div class="expense-modal-actions">
+        <%= link_to "Cancelar", expense_path(expense), class: "app-btn app-btn--outline expense-modal-action-btn" %>
+        <% if expense.payment_method_credito_parcelado? %>
+          <%= button_tag name: "update_scope", value: "single", type: "submit", class: "app-btn app-btn--primary expense-modal-action-btn" do %>
+            <span class="material-symbols-rounded">save</span>
+            Atualizar só esta parcela
+          <% end %>
+
+          <%= button_tag name: "update_scope", value: "group", type: "submit", class: "app-btn app-btn--outline expense-modal-action-btn" do %>
+            <span class="material-symbols-rounded">done_all</span>
+            Atualizar esta e próximas
+          <% end %>
+        <% else %>
+          <%= button_tag type: "submit", class: "app-btn app-btn--primary expense-modal-action-btn" do %>
+            <span class="material-symbols-rounded">save</span>
+            <%= t("expenses.form.submit") %>
+          <% end %>
+        <% end %>
+      </div>
     </div>
   <% end %>
 <% else %>

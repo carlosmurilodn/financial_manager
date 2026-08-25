@@ -42,7 +42,7 @@ export function initializeDatepicker() {
   if (paymentSelect && parcelSection) {
     function toggleParcelSection() {
       parcelSection.style.display =
-        paymentSelect.value === "credito_parcelado" ? "flex" : "none";
+        paymentSelect.value === "credito_parcelado" ? "grid" : "none";
     }
     paymentSelect.addEventListener("change", toggleParcelSection);
     toggleParcelSection();

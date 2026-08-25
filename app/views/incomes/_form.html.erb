@@ -1,59 +1,86 @@
-<%= form_with model: income, local: true do |f| %>
-  <div class="row app-mb-3">
-    <div class="col-md-9">
-      <%= f.label :description, t("incomes.form.description") %>
-      <%= f.text_field :description, class: "app-form-control" %>
+<% categories = current_user.categories.order(:name) %>
+
+<% if income.persisted? %>
+  <%= form_with model: income, local: true, html: { class: "app-form-page__form expense-edit-form", data: { turbo: false } } do |f| %>
+    <div class="expense-edit-form__row expense-edit-form__row--primary">
+      <div class="expense-modal-field">
+        <%= f.label :description, t("incomes.form.description") %>
+        <%= f.text_field :description, class: "app-form-control" %>
+      </div>
+
+      <div class="expense-modal-field">
+        <%= f.label :repetir, "Repetir (meses)" %>
+        <%= f.number_field :repetir, value: income.repetir || 0, min: 0, class: "app-form-control" %>
+      </div>
     </div>
 
-    <div class="col-md-3">
-      <%= f.label :repetir, "Repetir (meses)" %>
-      <%= f.number_field :repetir, value: @income.repetir || 0, min: 0, class: "app-form-control" %>
-    </div>
-  </div>
+    <div class="expense-edit-form__row expense-edit-form__row--details income-form-details">
+      <div class="expense-modal-field income-form-details__amount">
+        <%= f.label :amount, t("incomes.form.amount") %>
+        <%= f.text_field :amount,
+          class: "app-form-control moeda",
+          value: (income.amount.present? ? number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) : "R$ 0,00"),
+          required: true,
+          data: { required_currency: true } %>
+      </div>
 
-  <div class="row app-mb-3 app-align-end">
-    <div class="col-md-4">
-      <div class="app-flex app-align-center app-gap-3">
-        <div class="app-flex-grow">
-          <%= f.label :amount, t("incomes.form.amount") %>
-          <%= f.text_field :amount,
-            class: "app-form-control moeda",
-            value: (income.amount.present? ? number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) : "R$ 0,00"),
-            required: true,
-            data: { required_currency: true }
-          %>
+      <div class="expense-modal-field income-form-details__paid">
+        <span class="expense-edit-form__field-label"><%= t("incomes.form.paid") %></span>
+        <label class="expense-paid-toggle" for="income_paid">
+          <%= f.check_box :paid, class: "expense-paid-toggle__input", id: "income_paid" %>
+          <span class="expense-paid-toggle__track" aria-hidden="true"><span class="expense-paid-toggle__thumb"></span></span>
+          <span class="expense-paid-toggle__text">Recebida</span>
+        </label>
+      </div>
+
+      <div class="expense-modal-field income-form-details__category">
+        <%= f.label :category_id, t("incomes.form.category") %>
+        <%= f.collection_select :category_id, categories, :id, :display_name, { prompt: "Selecione" }, { class: "app-form-select" } %>
+      </div>
+
+      <div class="expense-modal-field income-form-details__date">
+        <%= f.label :date, t("incomes.form.date") %>
+        <div class="custom-date-wrapper">
+          <%= f.text_field :date, class: "app-form-control custom-date", autocomplete: "off", placeholder: "Selecione a data", required: true %>
         </div>
+      </div>
 
-        <div class="app-form-check app-mb-2">
-          <%= f.check_box :paid, class: "app-form-check-input", id: "income_paid" %>
-          <%= f.label :paid, t("incomes.form.paid"), class: "app-form-check-label", for: "income_paid" %>
+      <div class="expense-modal-field income-form-details__balance">
+        <%= f.label :balance_month, t("incomes.form.balance_month") %>
+        <div class="custom-date-wrapper">
+          <%= f.text_field :balance_month, class: "app-form-control custom-date", autocomplete: "off", placeholder: "Selecione o mês", required: true %>
         </div>
       </div>
     </div>
 
-    <div class="col-md-4">
-      <%= f.label :category_id, t("incomes.form.category") %>
-      <%= f.collection_select :category_id, Category.order(:name), :id, :display_name, { prompt: "Selecione" }, { class: "app-form-select" } %>
+    <div class="app-form-page__actions">
+      <%= link_to "Cancelar", income_path(income), class: "app-btn app-btn--outline" %>
+      <%= f.submit t("incomes.form.submit"), class: "app-btn app-btn--primary" %>
+    </div>
+  <% end %>
+<% else %>
+  <%= form_with url: incomes_path, local: true, html: { class: "app-form-page__form", data: { income_form: true, turbo: false } } do %>
+    <div class="expense-modal-rows" data-income-rows>
+      <% income_rows = @income_rows.presence || [{}] %>
+      <% income_rows.each_with_index do |row_values, index| %>
+        <%= render "incomes/form_row", index: index, categories: categories, row_values: row_values, removable: income_rows.many? %>
+      <% end %>
     </div>
 
-    <div class="col-md-4">
-      <%= f.label :date, t("incomes.form.date") %>
-      <div class="custom-date-wrapper">
-        <%= f.text_field :date, class: "app-form-control custom-date", autocomplete: "off", placeholder: "Selecione a data", required: true %>
-      </div>
-    </div>
-  </div>
+    <template data-income-row-template>
+      <%= render "incomes/form_row", index: "NEW_RECORD", categories: categories, row_values: {}, removable: true %>
+    </template>
 
-  <div class="row app-mb-3 app-align-end">
-    <div class="col-md-4">
-      <%= f.label :balance_month, t("incomes.form.balance_month") %>
-      <div class="custom-date-wrapper">
-        <%= f.text_field :balance_month, class: "app-form-control custom-date", autocomplete: "off", placeholder: "Selecione o mês", required: true %>
-      </div>
+    <div class="expense-modal-actions">
+      <%= link_to "Cancelar", incomes_path, class: "app-btn app-btn--outline expense-modal-action-btn" %>
+      <button type="button" class="app-btn app-btn--primary expense-modal-action-btn" data-add-income-row>
+        <span class="material-symbols-rounded">add_circle</span>
+        Adicionar Receita
+      </button>
+      <button type="submit" class="app-btn app-btn--primary expense-modal-action-btn">
+        <span class="material-symbols-rounded">save</span>
+        <%= t("incomes.form.submit") %>
+      </button>
     </div>
-  </div>
-
-  <div class="app-mb-3">
-    <%= f.submit t("incomes.form.submit"), class: "app-btn app-btn--primary" %>
-  </div>
+  <% end %>
 <% end %>

@@ -1,5 +1,8 @@
 class ExpensesController < ApplicationController
+  CONTEXT_CARD_PAYMENT_METHODS = %w[credito_a_vista credito_parcelado].freeze
+
   before_action :set_expense, only: %i[show edit update destroy toggle_paid delete_options toggle_paid_options]
+  before_action :load_card_expense_context, only: %i[new create]
   helper_method :expenses_filter_params
 
   def index
@@ -13,7 +16,12 @@ class ExpensesController < ApplicationController
   def show; end
 
   def new
-    @expense = current_user.expenses.new
+    @expense = current_user.expenses.new(
+      date: Date.current,
+      balance_month: @expense_context_balance_date,
+      card: @expense_context_card,
+      payment_method: contextual_expense_creation? ? :credito_a_vista : nil
+    )
   end
 
   def edit; end
@@ -25,6 +33,7 @@ class ExpensesController < ApplicationController
   def create
     if params[:expenses].present?
       expense_rows = multiple_expenses_params
+      @expense_rows = expense_rows
       @expense = current_user.expenses.new
 
       if expense_rows.blank?
@@ -37,7 +46,7 @@ class ExpensesController < ApplicationController
       success_message = "Despesas criadas com sucesso!"
 
       respond_to do |format|
-        format.html { redirect_to expenses_path, notice: success_message }
+        format.html { redirect_to expense_creation_success_path, notice: success_message }
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.update("modal", ""),
@@ -54,7 +63,7 @@ class ExpensesController < ApplicationController
         success_message = "Despesa criada com sucesso!"
 
         respond_to do |format|
-          format.html { redirect_to expenses_path, notice: success_message }
+          format.html { redirect_to expense_creation_success_path, notice: success_message }
           format.turbo_stream do
             render turbo_stream: [
               turbo_stream.update("modal", ""),
@@ -208,6 +217,38 @@ class ExpensesController < ApplicationController
     @expense = current_user.expenses.find(params[:id])
   end
 
+  def load_card_expense_context
+    return if params[:card_id].blank?
+
+    @expense_context_card = current_user.cards.find(params[:card_id])
+    @expense_context_balance_date = contextual_balance_date
+  end
+
+  def contextual_balance_date
+    month = params[:month].to_i
+    year = params[:year].to_i
+
+    return Date.current.beginning_of_month if month.zero? || year.zero?
+
+    Date.new(year, month, 1)
+  rescue Date::Error
+    Date.current.beginning_of_month
+  end
+
+  def contextual_expense_creation?
+    @expense_context_card.present?
+  end
+
+  def expense_creation_success_path
+    return expenses_path unless contextual_expense_creation?
+
+    card_path(
+      @expense_context_card,
+      month: @expense_context_balance_date.month,
+      year: @expense_context_balance_date.year
+    )
+  end
+
   def expense_params
     params.require(:expense).permit(
       :amount, :description, :date, :balance_month,
@@ -226,7 +267,7 @@ class ExpensesController < ApplicationController
         :installments_count, :current_installment, :repetir
       )
 
-      attributes if expense_row_present?(attributes)
+      normalize_card_context(attributes) if expense_row_present?(attributes)
     end
   end
 
@@ -251,12 +292,23 @@ class ExpensesController < ApplicationController
   end
 
   def build_expense(attributes, raw_attributes)
+    attributes = normalize_card_context(attributes)
+    raw_attributes = normalize_card_context(raw_attributes)
     expense = current_user.expenses.new(attributes.except(:amount, :date, :balance_month))
     expense.amount = parse_brazilian_amount(raw_attributes[:amount], blank: 0)
     expense.date = parse_brazilian_date(raw_attributes[:date])
     expense.balance_month = parse_brazilian_date(raw_attributes[:balance_month]) || default_balance_month_for(expense)
     expense.repetir ||= 0
     expense
+  end
+
+  def normalize_card_context(attributes)
+    return attributes unless contextual_expense_creation?
+
+    payment_method = attributes[:payment_method]
+    payment_method = "credito_a_vista" unless CONTEXT_CARD_PAYMENT_METHODS.include?(payment_method)
+
+    attributes.merge(card_id: @expense_context_card.id, payment_method: payment_method)
   end
 
   def assign_expense_dates

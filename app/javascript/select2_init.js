@@ -32,6 +32,12 @@ export function initSelect2(container = document) {
       }
 
       $(el).select2(options)
+
+      // Select2 triggers jQuery events only; dispatch a native event
+      // so that vanilla addEventListener handlers (expense_form, etc.) work.
+      $(el).on("change.select2bridge", function () {
+        this.dispatchEvent(new Event("change", { bubbles: true }))
+      })
     })
   })
 }

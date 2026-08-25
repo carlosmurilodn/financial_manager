@@ -1,10 +1,10 @@
-<turbo-frame id="modal">
-  <div class="modal-header">
-    <h5 class="modal-title">Novo Objetivo</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-  </div>
-
-  <div class="modal-body p-3">
+<%= render layout: "shared/form_page", locals: {
+  resource: @financial_goal,
+  title: "Novo Objetivo",
+  eyebrow: "Objetivos financeiros",
+  description: "Planeje valor, prazo e recursos disponíveis para alcançar sua meta.",
+  icon: "flag",
+  back_path: financial_goals_path
+} do %>
     <%= render "form", financial_goal: @financial_goal %>
-  </div>
-</turbo-frame>
+<% end %>

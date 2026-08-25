@@ -1,84 +1,101 @@
+<% values = row_values.to_h.with_indifferent_access %>
+<% selected_payment_method = values[:payment_method].presence || (context_card.present? ? "credito_a_vista" : nil) %>
+<% expense_date = values[:date].presence || default_date %>
+<% balance_month = values[:balance_month].presence || default_balance_month %>
+
 <div class="expense-modal-row" data-expense-row>
-  <div class="expense-modal-row__main">
+  <div class="expense-modal-row__main expense-new-row-grid">
     <div class="expense-modal-field expense-modal-field--description">
       <label for="expenses_<%= index %>_description"><%= t("expenses.form.description") %></label>
-      <input type="text" name="expenses[<%= index %>][description]" id="expenses_<%= index %>_description" class="app-form-control" required>
+      <input type="text" name="expenses[<%= index %>][description]" id="expenses_<%= index %>_description" value="<%= values[:description] %>" class="app-form-control" required>
     </div>
 
     <div class="expense-modal-field expense-modal-field--repeat">
       <label for="expenses_<%= index %>_repetir">Repetir</label>
-      <input type="number" name="expenses[<%= index %>][repetir]" id="expenses_<%= index %>_repetir" value="0" min="0" class="app-form-control">
+      <input type="number" name="expenses[<%= index %>][repetir]" id="expenses_<%= index %>_repetir" value="<%= values[:repetir].presence || 0 %>" min="0" class="app-form-control">
     </div>
 
     <div class="expense-modal-field expense-modal-field--amount">
       <label for="expenses_<%= index %>_amount"><%= t("expenses.form.amount") %></label>
-      <input type="text" name="expenses[<%= index %>][amount]" id="expenses_<%= index %>_amount" value="R$ 0,00" class="app-form-control moeda" required data-required-currency="true">
+      <input type="text" name="expenses[<%= index %>][amount]" id="expenses_<%= index %>_amount" value="<%= values[:amount].presence || "R$ 0,00" %>" class="app-form-control moeda" required data-required-currency="true">
     </div>
 
-    <div class="expense-modal-field expense-modal-field--paid app-form-check">
-      <input type="hidden" name="expenses[<%= index %>][paid]" value="0">
-      <input type="checkbox" name="expenses[<%= index %>][paid]" id="expenses_<%= index %>_paid" value="1" class="app-form-check-input">
-      <label for="expenses_<%= index %>_paid" class="app-form-check-label"><%= t("expenses.form.paid") %></label>
+    <div class="expense-modal-field expense-modal-field--paid-toggle">
+      <label class="expense-paid-toggle" for="expenses_<%= index %>_paid">
+        <input type="hidden" name="expenses[<%= index %>][paid]" value="0">
+        <input type="checkbox" name="expenses[<%= index %>][paid]" id="expenses_<%= index %>_paid" value="1" class="expense-paid-toggle__input" <%= "checked" if ActiveModel::Type::Boolean.new.cast(values[:paid]) %>>
+        <span class="expense-paid-toggle__track" aria-hidden="true"><span class="expense-paid-toggle__thumb"></span></span>
+        <span class="expense-paid-toggle__text">Foi Paga?</span>
+      </label>
     </div>
 
-    <div class="expense-modal-field">
+    <div class="expense-modal-field expense-modal-field--date">
       <label for="expenses_<%= index %>_date"><%= t("expenses.form.date") %></label>
       <div class="custom-date-wrapper">
-        <input type="text" name="expenses[<%= index %>][date]" id="expenses_<%= index %>_date" class="app-form-control custom-date" autocomplete="off" placeholder="Selecione a data" data-expense-date-input required>
+        <input type="text" name="expenses[<%= index %>][date]" id="expenses_<%= index %>_date" value="<%= expense_date %>" class="app-form-control custom-date" autocomplete="off" placeholder="Selecione a data" data-expense-date-input required>
       </div>
     </div>
 
-    <div class="expense-modal-field">
+    <div class="expense-modal-field expense-modal-field--balance">
       <label for="expenses_<%= index %>_balance_month"><%= t("expenses.form.balance_month") %></label>
       <div class="custom-date-wrapper">
-        <input type="text" name="expenses[<%= index %>][balance_month]" id="expenses_<%= index %>_balance_month" class="app-form-control custom-date" autocomplete="off" placeholder="Selecione o mês" data-expense-balance-input data-balance-auto-filled="true" required>
+        <input type="text" name="expenses[<%= index %>][balance_month]" id="expenses_<%= index %>_balance_month" value="<%= balance_month %>" class="app-form-control custom-date" autocomplete="off" placeholder="Selecione o mês" data-expense-balance-input data-balance-auto-filled="<%= context_card.present? ? "false" : "true" %>" required>
       </div>
     </div>
 
-    <div class="expense-modal-field">
+    <div class="expense-modal-field expense-modal-field--category-select">
       <label for="expenses_<%= index %>_category_id"><%= t("expenses.form.category") %></label>
       <select name="expenses[<%= index %>][category_id]" id="expenses_<%= index %>_category_id" class="app-form-select" required>
         <option value="">Selecione</option>
         <% categories.each do |category| %>
-          <option value="<%= category.id %>"><%= category.display_name %></option>
+          <option value="<%= category.id %>" <%= "selected" if values[:category_id].to_s == category.id.to_s %>><%= category.display_name %></option>
         <% end %>
       </select>
     </div>
 
-    <div class="expense-modal-field">
+    <div class="expense-modal-field expense-modal-field--payment">
       <label for="expenses_<%= index %>_payment_method"><%= t("expenses.form.payment_method") %></label>
       <select name="expenses[<%= index %>][payment_method]" id="expenses_<%= index %>_payment_method" class="app-form-select" data-payment-method-select required>
         <option value="">Selecione</option>
         <% payment_options.each do |label, value| %>
-          <option value="<%= value %>"><%= label %></option>
+          <option value="<%= value %>" <%= "selected" if selected_payment_method == value %>><%= label %></option>
         <% end %>
       </select>
     </div>
 
-    <div class="expense-modal-field">
+    <div class="expense-modal-field expense-modal-field--card-select">
       <label for="expenses_<%= index %>_card_id"><%= t("expenses.form.card") %></label>
-      <select name="expenses[<%= index %>][card_id]" id="expenses_<%= index %>_card_id" class="app-form-select" data-card-select data-required-when-credit="true">
-        <option value="">Selecione</option>
-        <% cards.each do |card| %>
-          <option value="<%= card.id %>" data-due-day="<%= card.due_day %>" data-closing-day="<%= card.closing_day %>"><%= card.display_name %></option>
-        <% end %>
-      </select>
+      <% if context_card.present? %>
+        <input type="hidden" name="expenses[<%= index %>][card_id]" id="expenses_<%= index %>_card_id" value="<%= context_card.id %>">
+        <div class="expense-modal-fixed-card" aria-label="Cartão fixo: <%= context_card.display_name %>">
+          <span class="material-symbols-rounded">credit_card</span>
+          <strong><%= context_card.display_name %></strong>
+          <span>Fixo</span>
+        </div>
+      <% else %>
+        <select name="expenses[<%= index %>][card_id]" id="expenses_<%= index %>_card_id" class="app-form-select" data-card-select data-required-when-credit="true">
+          <option value="">Selecione</option>
+          <% cards.each do |card| %>
+            <option value="<%= card.id %>" data-due-day="<%= card.due_day %>" data-closing-day="<%= card.closing_day %>" <%= "selected" if values[:card_id].to_s == card.id.to_s %>><%= card.display_name %></option>
+          <% end %>
+        </select>
+      <% end %>
+    </div>
+
+    <div class="expense-modal-installments" data-installments-section>
+      <div class="expense-modal-field">
+        <label for="expenses_<%= index %>_current_installment">Parcela Atual</label>
+        <input type="number" name="expenses[<%= index %>][current_installment]" id="expenses_<%= index %>_current_installment" value="<%= values[:current_installment].presence || 1 %>" min="1" class="app-form-control" data-required-when-installments="true">
+      </div>
+
+      <div class="expense-modal-field">
+        <label for="expenses_<%= index %>_installments_count">Total de Parcelas</label>
+        <input type="number" name="expenses[<%= index %>][installments_count]" id="expenses_<%= index %>_installments_count" value="<%= values[:installments_count].presence || 1 %>" min="1" class="app-form-control" data-required-when-installments="true">
+      </div>
     </div>
 
     <button type="button" class="app-btn app-btn--ghost expense-modal-row__remove <%= "is-hidden" unless removable %>" data-remove-expense-row aria-label="Remover despesa">
       <span class="material-symbols-rounded">close</span>
     </button>
-  </div>
-
-  <div class="expense-modal-installments" data-installments-section>
-    <div class="expense-modal-field">
-      <label for="expenses_<%= index %>_current_installment">Parcela Atual</label>
-      <input type="number" name="expenses[<%= index %>][current_installment]" id="expenses_<%= index %>_current_installment" value="1" min="1" class="app-form-control" data-required-when-installments="true">
-    </div>
-
-    <div class="expense-modal-field">
-      <label for="expenses_<%= index %>_installments_count">Total de Parcelas</label>
-      <input type="number" name="expenses[<%= index %>][installments_count]" id="expenses_<%= index %>_installments_count" value="1" min="1" class="app-form-control" data-required-when-installments="true">
-    </div>
   </div>
 </div>

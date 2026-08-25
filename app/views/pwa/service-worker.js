@@ -1,5 +1,5 @@
-const CACHE_NAME = "financial-manager-v1"
-const CACHE_URLS = ["/icon.png", "/icon.svg"]
+const CACHE_NAME = "financial-manager-v2"
+const CACHE_URLS = ["/icon.png"]
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -25,6 +25,15 @@ self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return
 
   event.respondWith(
-    fetch(event.request).catch(() => caches.match(event.request))
+    fetch(event.request).catch(async () => {
+      const cachedResponse = await caches.match(event.request)
+      if (cachedResponse) return cachedResponse
+
+      return new Response("Serviço temporariamente indisponível.", {
+        status: 503,
+        statusText: "Service Unavailable",
+        headers: { "Content-Type": "text/plain; charset=utf-8" }
+      })
+    })
   )
 })

@@ -447,6 +447,40 @@ html[data-theme="night"] .app-financial-goal-metrics {
   font-size: 0.78rem;
 }
 
+.expense-modal-fixed-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 8px 11px;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  background: var(--surface-muted, color-mix(in srgb, var(--primary) 6%, transparent));
+  color: var(--text-main);
+}
+
+.expense-modal-fixed-card .material-symbols-rounded {
+  color: var(--primary);
+  font-size: 1.15rem;
+}
+
+.expense-modal-fixed-card strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.82rem;
+}
+
+.expense-modal-fixed-card > span:last-child {
+  margin-left: auto;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--primary);
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
 .expense-modal-field--check,
 .expense-modal-field--paid {
   display: flex;
@@ -464,6 +498,10 @@ html[data-theme="night"] .app-financial-goal-metrics {
 }
 
 .expense-modal-installments.is-visible {
+  display: grid;
+}
+
+.expense-new-row-grid:has([data-payment-method-select] option[value="credito_parcelado"]:checked) .expense-modal-installments {
   display: grid;
 }
 

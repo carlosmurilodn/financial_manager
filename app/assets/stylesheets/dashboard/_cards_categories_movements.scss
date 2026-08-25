@@ -944,12 +944,12 @@ html[data-theme="night"] .dashboard-goal-item {
 
 .dashboard-movement-item__marker {
   flex-shrink: 0;
-  color: var(--dashboard-movement-marker-color);
+  color: var(--movement-category-color, var(--dashboard-movement-marker-color));
   font-size: 0.9rem;
 }
 
 .material-symbols-rounded.dashboard-movement-item__marker {
-  color: var(--dashboard-movement-marker-color);
+  color: var(--movement-category-color, var(--dashboard-movement-marker-color));
 }
 
 .dashboard-movement-item__main small {
@@ -960,6 +960,10 @@ html[data-theme="night"] .dashboard-goal-item {
   font-size: 0.8rem;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.dashboard-movement-item__main .dashboard-movement-item__category {
+  color: var(--movement-category-color, var(--text-soft));
 }
 
 .dashboard-movement-item__amount {

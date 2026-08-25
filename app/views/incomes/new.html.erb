@@ -1,11 +1,10 @@
-<turbo-frame id="modal">
-  <div class="modal-header">
-    <h5 class="modal-title">
-      Nova Receita
-    </h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-  </div>
-  <div class="modal-body p-3">
+<%= render layout: "shared/form_page", locals: {
+  resource: @income,
+  title: "Nova Receita",
+  eyebrow: "Receitas",
+  description: "Registre valor, categoria e período da receita.",
+  icon: "payments",
+  back_path: incomes_path
+} do %>
     <%= render "form", income: @income %>
-  </div>
-</turbo-frame>
+<% end %>

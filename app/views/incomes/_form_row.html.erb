@@ -1,0 +1,62 @@
+<% values = row_values.to_h.with_indifferent_access %>
+<% income_date = values[:date].presence || Date.current %>
+<% balance_month = values[:balance_month].presence || Date.current.beginning_of_month %>
+
+<div class="expense-modal-row income-form-row" data-income-row>
+  <button type="button" class="app-btn app-btn--ghost expense-modal-row__remove <%= "is-hidden" unless removable %>" data-remove-income-row aria-label="Remover receita">
+    <span class="material-symbols-rounded">close</span>
+  </button>
+
+  <div class="expense-edit-form__row expense-edit-form__row--primary">
+    <div class="expense-modal-field">
+      <label for="incomes_<%= index %>_description"><%= t("incomes.form.description") %></label>
+      <input type="text" name="incomes[<%= index %>][description]" id="incomes_<%= index %>_description" value="<%= values[:description] %>" class="app-form-control">
+    </div>
+
+    <div class="expense-modal-field">
+      <label for="incomes_<%= index %>_repetir">Repetir (meses)</label>
+      <input type="number" name="incomes[<%= index %>][repetir]" id="incomes_<%= index %>_repetir" value="<%= values[:repetir].presence || 0 %>" min="0" class="app-form-control">
+    </div>
+  </div>
+
+  <div class="expense-edit-form__row expense-edit-form__row--details income-form-details">
+    <div class="expense-modal-field income-form-details__amount">
+      <label for="incomes_<%= index %>_amount"><%= t("incomes.form.amount") %></label>
+      <input type="text" name="incomes[<%= index %>][amount]" id="incomes_<%= index %>_amount" value="<%= values[:amount].presence || "R$ 0,00" %>" class="app-form-control moeda" required data-required-currency="true">
+    </div>
+
+    <div class="expense-modal-field income-form-details__paid">
+      <span class="expense-edit-form__field-label"><%= t("incomes.form.paid") %></span>
+      <label class="expense-paid-toggle" for="incomes_<%= index %>_paid">
+        <input type="hidden" name="incomes[<%= index %>][paid]" value="0">
+        <input type="checkbox" name="incomes[<%= index %>][paid]" id="incomes_<%= index %>_paid" value="1" class="expense-paid-toggle__input" <%= "checked" if ActiveModel::Type::Boolean.new.cast(values[:paid]) %>>
+        <span class="expense-paid-toggle__track" aria-hidden="true"><span class="expense-paid-toggle__thumb"></span></span>
+        <span class="expense-paid-toggle__text">Recebida</span>
+      </label>
+    </div>
+
+    <div class="expense-modal-field income-form-details__category">
+      <label for="incomes_<%= index %>_category_id"><%= t("incomes.form.category") %></label>
+      <select name="incomes[<%= index %>][category_id]" id="incomes_<%= index %>_category_id" class="app-form-select">
+        <option value="">Selecione</option>
+        <% categories.each do |category| %>
+          <option value="<%= category.id %>" <%= "selected" if values[:category_id].to_s == category.id.to_s %>><%= category.display_name %></option>
+        <% end %>
+      </select>
+    </div>
+
+    <div class="expense-modal-field income-form-details__date">
+      <label for="incomes_<%= index %>_date"><%= t("incomes.form.date") %></label>
+      <div class="custom-date-wrapper">
+        <input type="text" name="incomes[<%= index %>][date]" id="incomes_<%= index %>_date" value="<%= income_date %>" class="app-form-control custom-date" autocomplete="off" placeholder="Selecione a data" required>
+      </div>
+    </div>
+
+    <div class="expense-modal-field income-form-details__balance">
+      <label for="incomes_<%= index %>_balance_month"><%= t("incomes.form.balance_month") %></label>
+      <div class="custom-date-wrapper">
+        <input type="text" name="incomes[<%= index %>][balance_month]" id="incomes_<%= index %>_balance_month" value="<%= balance_month %>" class="app-form-control custom-date" autocomplete="off" placeholder="Selecione o mês" required>
+      </div>
+    </div>
+  </div>
+</div>

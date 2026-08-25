@@ -1,4 +1,4 @@
-<section class="app-page">
+<section class="app-page app-page--card-show">
   <div class="app-page__hero">
     <div class="app-page__hero-top app-page__hero-top--cards">
       <div class="app-page__hero-unit app-page__hero-copy">
@@ -25,7 +25,7 @@
           Voltar
         <% end %>
 
-        <%= link_to edit_card_path(@card), class: "app-show-card__action-btn app-show-card__action-btn--edit", data: { turbo_frame: "modal" } do %>
+        <%= link_to edit_card_path(@card), class: "app-show-card__action-btn app-show-card__action-btn--edit" do %>
           <span class="material-symbols-rounded">edit</span>
           Editar
         <% end %>
@@ -83,20 +83,39 @@
           Fatura do Mês
         </h3>
 
-        <div class="app-show-card__month-nav">
-          <%= link_to card_path(@card, month: @previous_date.month, year: @previous_date.year),
-                      class: "app-show-card__month-btn" do %>
-            <span class="material-symbols-rounded">chevron_left</span>
+        <div class="app-show-card__expenses-actions">
+          <%= link_to new_expense_path(card_id: @card.id, month: @show_month, year: @show_year),
+                      class: "app-btn app-btn--primary app-show-card__new-expense-btn" do %>
+            <span class="material-symbols-rounded">add</span>
+            Nova despesa
           <% end %>
 
-          <span class="app-show-card__month-label">
-            <%= I18n.l(@show_date, format: "%B de %Y") %>
-          </span>
-
-          <%= link_to card_path(@card, month: @next_date.month, year: @next_date.year),
-                      class: "app-show-card__month-btn" do %>
-            <span class="material-symbols-rounded">chevron_right</span>
+          <%= form_with url: pay_card_path(@card), method: :post,
+                        data: { turbo_confirm: "Deseja marcar como pagos todos os lançamentos NÃO pagos deste cartão para #{@show_date.strftime('%m/%Y')}?" },
+                        class: "app-show-card__pay-form" do %>
+            <%= hidden_field_tag :month, @show_month %>
+            <%= hidden_field_tag :year, @show_year %>
+            <button type="submit" class="app-show-card__pay-button">
+              <span class="material-symbols-rounded">credit_card</span>
+              Pagar fatura
+            </button>
           <% end %>
+
+          <div class="app-show-card__month-nav">
+            <%= link_to card_path(@card, month: @previous_date.month, year: @previous_date.year),
+                        class: "app-show-card__month-btn" do %>
+              <span class="material-symbols-rounded">chevron_left</span>
+            <% end %>
+
+            <span class="app-show-card__month-label">
+              <%= I18n.l(@show_date, format: "%B de %Y") %>
+            </span>
+
+            <%= link_to card_path(@card, month: @next_date.month, year: @next_date.year),
+                        class: "app-show-card__month-btn" do %>
+              <span class="material-symbols-rounded">chevron_right</span>
+            <% end %>
+          </div>
         </div>
       </div>
 

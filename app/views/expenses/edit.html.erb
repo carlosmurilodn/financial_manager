@@ -1,21 +1,16 @@
-<turbo-frame id="modal">
-  <div class="modal-header">
-    <div>
-      <h5 class="modal-title">
-        Editar Despesa
-      </h5>
-      <% if @expense.payment_method_credito_parcelado? %>
-        <div class="text-muted small mt-1">
-          Parcela <%= @expense.current_installment %>/<%= @expense.installments_count %>
-          <% if @expense.installment_group_id.present? %>
-            • Grupo #<%= @expense.installment_group_id %>
-          <% end %>
-        </div>
-      <% end %>
-    </div>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-  </div>
-  <div class="modal-body p-3">
+<% description = if @expense.payment_method_credito_parcelado?
+  "Parcela #{@expense.current_installment}/#{@expense.installments_count}. Escolha o alcance da atualização ao salvar."
+else
+  "Revise os dados da despesa e salve as alterações."
+end %>
+
+<%= render layout: "shared/form_page", locals: {
+  resource: @expense,
+  title: "Editar Despesa",
+  eyebrow: "Despesas",
+  description: description,
+  icon: "edit_note",
+  back_path: expense_path(@expense)
+} do %>
     <%= render "form", expense: @expense %>
-  </div>
-</turbo-frame>
+<% end %>

@@ -11,6 +11,7 @@ import "./modal_turbo"
 import "./confirm_dialog"
 import "./dashboard_category_items"
 import "./expense_form"
+import "./income_form"
 import "./financial_goal_form"
 import "./calendar_tabs"
 import "./flash_messages"
@@ -18,7 +19,15 @@ import "./color_select_preview"
 import "./mobile_filter_accordion"
 
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/service-worker.js")
+  window.addEventListener("load", async () => {
+    const isLocalDevelopment = ["localhost", "127.0.0.1"].includes(window.location.hostname)
+
+    if (isLocalDevelopment) {
+      const registrations = await navigator.serviceWorker.getRegistrations()
+      await Promise.all(registrations.map((registration) => registration.unregister()))
+      return
+    }
+
+    navigator.serviceWorker.register("/service-worker.js").catch(() => {})
   })
 }

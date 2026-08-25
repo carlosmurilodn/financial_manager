@@ -1,6 +1,6 @@
 <section class="app-page app-page--category-show">
   <div class="app-page__hero">
-    <div class="app-page__hero-top app-page__hero-top--categories">
+    <div class="app-page__hero-top app-page__hero-top--categories app-page__hero-top--show">
       <div class="app-page__hero-unit app-page__hero-copy">
         <span class="app-page__hero-icon" style="background: color-mix(in srgb, <%= @category.display_color %> 14%, transparent);">
           <span class="material-symbols-rounded" style="color: <%= @category.display_color %>;"><%= @category.material_icon %></span>
@@ -10,7 +10,7 @@
         </div>
       </div>
 
-      <div class="app-page__hero-unit" style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+      <div class="app-page__hero-unit app-show-page__hero-actions">
         <%= link_to categories_path, class: "app-show-back-link" do %>
           <span class="material-symbols-rounded">arrow_back</span>
           Voltar

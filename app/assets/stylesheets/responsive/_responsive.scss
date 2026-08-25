@@ -802,20 +802,30 @@
 }
 
 @media (max-width: 576px) {
-  .app-page--card-show .app-page__hero-top--cards {
+  .app-page__hero-top--show {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .app-page--card-show .app-show-card__hero-actions {
+  .app-page__hero-top--show > .app-page__hero-copy {
+    grid-column: 1;
     width: 100%;
-    justify-content: stretch !important;
   }
 
-  .app-page--card-show .app-show-card__hero-actions > a {
-    flex: 1 1 0;
+  .app-page__hero-top--show > .app-show-page__hero-actions {
+    display: grid;
+    grid-column: 1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+  }
+
+  .app-page__hero-top--show > .app-show-page__hero-actions > a {
+    min-width: 0;
     min-height: 44px;
     justify-content: center;
-    padding-inline: 8px;
+    gap: 4px;
+    padding-inline: 4px;
+    font-size: 0.74rem;
   }
 
   .app-page--card-show .app-show-panel .app-show-kpis {

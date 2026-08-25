@@ -1,6 +1,6 @@
 <section class="app-page app-page--card-show">
   <div class="app-page__hero">
-    <div class="app-page__hero-top app-page__hero-top--cards">
+    <div class="app-page__hero-top app-page__hero-top--cards app-page__hero-top--show">
       <div class="app-page__hero-unit app-page__hero-copy">
         <span class="app-page__hero-icon" style="background: color-mix(in srgb, <%= @card.display_color %> 14%, transparent);">
           <% if @card.icon.attached? %>
@@ -19,7 +19,7 @@
         </div>
       </div>
 
-      <div class="app-page__hero-unit app-show-card__hero-actions" style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+      <div class="app-page__hero-unit app-show-page__hero-actions">
         <%= link_to cards_path, class: "app-show-back-link" do %>
           <span class="material-symbols-rounded">arrow_back</span>
           Voltar

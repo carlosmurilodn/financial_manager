@@ -1153,6 +1153,13 @@
   border-top: 1px solid var(--card-border);
 }
 
+.app-show-page__hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
 .app-show-card__action-btn {
   display: inline-flex;
   align-items: center;

@@ -91,6 +91,17 @@
             Nova despesa
           <% end %>
 
+          <%= form_with url: pay_card_path(@card), method: :post,
+                        data: { turbo_confirm: "Deseja marcar como pagos todos os lançamentos NÃO pagos deste cartão para #{@show_date.strftime('%m/%Y')}?" },
+                        class: "app-show-card__pay-form" do %>
+            <%= hidden_field_tag :month, @show_month %>
+            <%= hidden_field_tag :year, @show_year %>
+            <button type="submit" class="app-show-card__pay-button">
+              <span class="material-symbols-rounded">credit_card</span>
+              Pagar fatura
+            </button>
+          <% end %>
+
           <div class="app-show-card__month-nav">
             <%= link_to card_path(@card, month: @previous_date.month, year: @previous_date.year),
                         class: "app-show-card__month-btn" do %>

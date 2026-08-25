@@ -1169,6 +1169,47 @@
   font-size: 1.05rem;
 }
 
+.app-show-card__pay-form {
+  margin: 0;
+}
+
+.app-show-card__pay-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--primary);
+  color: var(--white);
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 800;
+  white-space: nowrap;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.app-show-card__pay-button:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.app-show-card__pay-button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--primary) 30%, transparent);
+  outline-offset: 2px;
+}
+
+.app-show-card__pay-button:active {
+  filter: brightness(0.96);
+  transform: translateY(0);
+}
+
+.app-show-card__pay-button .material-symbols-rounded {
+  font-size: 1.05rem;
+}
+
 .app-show-card__month-nav {
   display: flex;
   align-items: center;
@@ -1312,6 +1353,11 @@
   }
 
   .app-show-card__new-expense-btn {
+    width: 100%;
+  }
+
+  .app-show-card__pay-form,
+  .app-show-card__pay-button {
     width: 100%;
   }
 
@@ -1462,13 +1508,15 @@
 }
 
 .resource-row-metric {
+  --resource-metric-color: var(--text-main);
+
   display: grid;
   gap: 4px;
   min-width: 0;
   padding: 10px 12px;
-  border: 1px solid color-mix(in srgb, var(--expense-category-color) 12%, var(--card-border));
+  border: 1px solid color-mix(in srgb, var(--resource-metric-color) 24%, var(--card-border));
   border-radius: 12px;
-  background: color-mix(in srgb, var(--expense-category-color) 5%, transparent);
+  background: color-mix(in srgb, var(--resource-metric-color) 10%, transparent);
 }
 
 .resource-row-metric span {
@@ -1481,18 +1529,26 @@
 
 .resource-row-metric strong {
   overflow-wrap: anywhere;
-  color: var(--text-main);
+  color: var(--resource-metric-color);
   font-size: 0.86rem;
   font-weight: 800;
   line-height: 1.2;
 }
 
-.resource-row-metric--income strong {
-  color: #1b9c63;
+.resource-row-metric--primary {
+  --resource-metric-color: var(--primary);
 }
 
-.resource-row-metric--expense strong {
-  color: #d83f4f;
+.resource-row-metric--income {
+  --resource-metric-color: var(--pill-success-color);
+}
+
+.resource-row-metric--expense {
+  --resource-metric-color: var(--pill-danger-color);
+}
+
+.resource-row-metric--warning {
+  --resource-metric-color: var(--stat-warning-icon-bg);
 }
 
 .resource-row-actions {
@@ -1506,30 +1562,6 @@
   align-items: center;
   justify-content: flex-end;
   gap: 10px;
-}
-
-.card-row__pay-form {
-  width: 100%;
-}
-
-.card-row__pay-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  min-height: 36px;
-  padding: 8px 12px;
-  border: 0;
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--expense-category-color) 16%, transparent);
-  color: var(--expense-category-color);
-  font-size: 0.72rem;
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-.card-row__pay-button .material-symbols-rounded {
-  font-size: 1.05rem;
 }
 
 @media (max-width: 1199px) {
@@ -1630,22 +1662,4 @@
     height: 42px;
   }
 
-  .card-row__actions {
-    display: contents;
-  }
-
-  .card-row__actions .resource-row-actions__icons {
-    grid-column: 2;
-    grid-row: 1;
-  }
-
-  .card-row__actions .card-row__pay-form {
-    grid-column: 1 / -1;
-    grid-row: 3;
-  }
-
-  .card-row__pay-button {
-    width: 100%;
-    min-height: 44px;
-  }
 }

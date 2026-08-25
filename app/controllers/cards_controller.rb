@@ -109,11 +109,12 @@ class CardsController < ApplicationController
     updated_expenses_count = Cards::PayInvoice.call(card: @card, user: current_user, balance_month: balance_month)
 
     flash[:notice] = "Pagamentos atualizados: #{updated_expenses_count} lançamentos marcados como pagos para #{balance_month.strftime('%m/%Y')}."
-    redirect_to cards_path
+    redirect_to card_path(@card, month: balance_month.month, year: balance_month.year)
   rescue => e
     Rails.logger.error("Erro ao pagar cartão ##{@card.id}: #{e.message}\n#{e.backtrace.first(8).join("\n")}")
     flash[:alert] = "Ocorreu um erro ao processar o pagamento: #{e.message}"
-    redirect_to cards_path
+    balance_month ||= selected_pay_balance_month
+    redirect_to card_path(@card, month: balance_month.month, year: balance_month.year)
   end
 
   private

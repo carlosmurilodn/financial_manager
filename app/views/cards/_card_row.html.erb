@@ -27,7 +27,7 @@
     </div>
 
     <div class="card-row__metrics">
-      <div class="resource-row-metric">
+      <div class="resource-row-metric resource-row-metric--primary">
         <span>Limite total</span>
         <strong><%= number_to_currency(card.total_limit || 0, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
       </div>
@@ -39,24 +39,13 @@
         <span>Utilizado</span>
         <strong><%= number_to_currency(used_limit, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
       </div>
-      <div class="resource-row-metric">
+      <div class="resource-row-metric resource-row-metric--warning">
         <span><%= card_selected_month_label %></span>
         <strong><%= number_to_currency(selected_month_total, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
       </div>
     </div>
 
     <div class="resource-row-actions card-row__actions">
-      <%= form_with url: pay_card_path(card), method: :post,
-                    data: { turbo_confirm: "Deseja marcar como pagos todos os lançamentos NÃO pagos deste cartão para o mês de balanço #{@pay_balance_month_label}?" },
-                    class: "card-row__pay-form" do %>
-        <%= hidden_field_tag :month, @month if @month.present? %>
-        <%= hidden_field_tag :year, @year if @year.present? %>
-        <button type="submit" class="card-row__pay-button">
-          <span class="material-symbols-rounded">credit_card</span>
-          <span>Pagar fatura</span>
-        </button>
-      <% end %>
-
       <div class="resource-row-actions__icons">
         <%= link_to edit_card_path(card), class: "expense-card__action", title: "Editar cartão",
                     aria: { label: "Editar cartão #{card.name}" }, data: { turbo_frame: "modal" } do %>

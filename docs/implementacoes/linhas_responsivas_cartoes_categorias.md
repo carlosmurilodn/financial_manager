@@ -4,13 +4,13 @@
 
 Os índices de cartões e categorias usam linhas verticais alinhadas à identidade visual de despesas e receitas. A superfície, borda colorida, ícones, pills e botões seguem os componentes visuais já existentes, enquanto cada recurso possui grid próprio para seus dados.
 
-Cartões exibem limite total, limite disponível, limite utilizado e total do mês selecionado. A ação de pagar fatura foi preservada com envio do mês e ano ativos. Categorias exibem receitas e despesas do período filtrado.
+Cartões exibem limite total, limite disponível, limite utilizado e total do mês selecionado. Categorias exibem receitas e despesas do período filtrado. A ação de pagar fatura fica no show do cartão e usa o mês e ano da fatura aberta.
 
 ## Responsividade
 
 - Desktop distribui identidade, métricas e ações em colunas.
 - Telas intermediárias movem métricas para uma segunda faixa.
-- Em até `576px`, métricas usam duas colunas, editar/excluir usam botões de ícone e pagamento ocupa a largura disponível.
+- Em até `576px`, métricas usam duas colunas e editar/excluir usam botões de ícone.
 - Valores e nomes longos quebram dentro do componente, sem posicionamento absoluto.
 
 ## Arquivos principais

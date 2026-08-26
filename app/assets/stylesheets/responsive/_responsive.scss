@@ -900,29 +900,41 @@
     grid-template-areas:
       "identity amount"
       "badges badges"
-      "information actions";
+      "footer footer";
+  }
+
+  .expense-card--expense:not(.financial-goal-card) .expense-card__footer {
+    display: grid;
+    grid-area: footer;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: stretch;
+    gap: 12px;
   }
 
   .expense-card--expense:not(.financial-goal-card) .expense-card__information {
-    grid-area: information;
+    grid-area: auto;
+    grid-column: 1;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     min-width: 0;
   }
 
   .expense-card--expense:not(.financial-goal-card) .expense-card__actions {
     display: flex;
-    grid-area: actions;
+    grid-area: auto;
+    grid-column: 2;
     flex-direction: row;
     flex-wrap: nowrap;
     align-self: stretch;
     align-items: stretch;
     gap: 8px;
+    padding-top: 10px;
   }
 
   .expense-card--expense:not(.financial-goal-card) .expense-card__action {
     flex: 0 0 44px;
     width: 44px;
-    height: 100%;
+    height: auto;
     min-height: 0;
+    align-self: stretch;
   }
 }

@@ -40,18 +40,6 @@
       <% end %>
     </div>
 
-    <div class="expense-card__information">
-      <span class="expense-card__meta-item">
-        <span class="material-symbols-rounded">calendar_month</span>
-        <span><small>Data</small><strong><%= expense.date.strftime("%d/%m/%Y") %></strong></span>
-      </span>
-
-      <span class="expense-card__meta-item">
-        <span class="material-symbols-rounded">event</span>
-        <span><small>Balanço</small><strong><%= expense.balance_month&.strftime("%m/%Y") || "—" %></strong></span>
-      </span>
-    </div>
-
     <div class="expense-card__amount-area">
       <strong class="expense-card__amount">
         <%= number_to_currency(expense.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %>
@@ -75,40 +63,54 @@
       <% end %>
     </div>
 
-    <div class="expense-card__actions">
-      <%= link_to(
-            edit_expense_path(expense),
-            class: "expense-card__action",
-            title: "Editar despesa",
-            aria: { label: "Editar despesa #{expense.description}" }
-          ) do %>
-        <span class="material-symbols-rounded">edit</span>
-        <span class="expense-card__action-label">Editar</span>
-      <% end %>
+    <div class="expense-card__footer">
+      <div class="expense-card__information">
+        <span class="expense-card__meta-item">
+          <span class="material-symbols-rounded">calendar_month</span>
+          <span><small>Data</small><strong><%= expense.date.strftime("%d/%m/%Y") %></strong></span>
+        </span>
 
-      <% if expense.payment_method_credito_parcelado? %>
+        <span class="expense-card__meta-item">
+          <span class="material-symbols-rounded">event</span>
+          <span><small>Balanço</small><strong><%= expense.balance_month&.strftime("%m/%Y") || "—" %></strong></span>
+        </span>
+      </div>
+
+      <div class="expense-card__actions">
         <%= link_to(
-              delete_options_expense_path(expense),
-              class: "expense-card__action expense-card__action--danger",
-              title: "Excluir despesa",
-              aria: { label: "Excluir despesa #{expense.description}" },
-              data: { turbo_frame: "modal" }
+              edit_expense_path(expense),
+              class: "expense-card__action",
+              title: "Editar despesa",
+              aria: { label: "Editar despesa #{expense.description}" }
             ) do %>
-          <span class="material-symbols-rounded">delete</span>
-          <span class="expense-card__action-label">Excluir</span>
+          <span class="material-symbols-rounded">edit</span>
+          <span class="expense-card__action-label">Editar</span>
         <% end %>
-      <% else %>
-        <%= link_to(
-              expense_path(expense),
-              data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
-              class: "expense-card__action expense-card__action--danger",
-              title: "Excluir despesa",
-              aria: { label: "Excluir despesa #{expense.description}" }
-            ) do %>
-          <span class="material-symbols-rounded">delete</span>
-          <span class="expense-card__action-label">Excluir</span>
+
+        <% if expense.payment_method_credito_parcelado? %>
+          <%= link_to(
+                delete_options_expense_path(expense),
+                class: "expense-card__action expense-card__action--danger",
+                title: "Excluir despesa",
+                aria: { label: "Excluir despesa #{expense.description}" },
+                data: { turbo_frame: "modal" }
+              ) do %>
+            <span class="material-symbols-rounded">delete</span>
+            <span class="expense-card__action-label">Excluir</span>
+          <% end %>
+        <% else %>
+          <%= link_to(
+                expense_path(expense),
+                data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
+                class: "expense-card__action expense-card__action--danger",
+                title: "Excluir despesa",
+                aria: { label: "Excluir despesa #{expense.description}" }
+              ) do %>
+            <span class="material-symbols-rounded">delete</span>
+            <span class="expense-card__action-label">Excluir</span>
+          <% end %>
         <% end %>
-      <% end %>
+      </div>
     </div>
   </div>
 </div>

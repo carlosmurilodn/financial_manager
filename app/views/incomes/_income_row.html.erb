@@ -35,18 +35,6 @@
       <% end %>
     </div>
 
-    <div class="expense-card__information">
-      <span class="expense-card__meta-item">
-        <span class="material-symbols-rounded">calendar_month</span>
-        <span><small>Data</small><strong><%= income.date&.strftime("%d/%m/%Y") || "—" %></strong></span>
-      </span>
-
-      <span class="expense-card__meta-item">
-        <span class="material-symbols-rounded">event</span>
-        <span><small>Balanço</small><strong><%= income.balance_month&.strftime("%m/%Y") || "—" %></strong></span>
-      </span>
-    </div>
-
     <div class="expense-card__amount-area">
       <strong class="expense-card__amount">
         <%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
@@ -61,21 +49,35 @@
       <% end %>
     </div>
 
-    <div class="expense-card__actions">
-      <%= link_to edit_income_path(income), class: "expense-card__action", title: "Editar receita",
-                  aria: { label: "Editar receita #{income.description.presence || 'sem descrição'}" } do %>
-        <span class="material-symbols-rounded">edit</span>
-        <span class="expense-card__action-label">Editar</span>
-      <% end %>
+    <div class="expense-card__footer">
+      <div class="expense-card__information">
+        <span class="expense-card__meta-item">
+          <span class="material-symbols-rounded">calendar_month</span>
+          <span><small>Data</small><strong><%= income.date&.strftime("%d/%m/%Y") || "—" %></strong></span>
+        </span>
 
-      <%= link_to income_path(income),
-                  data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
-                  class: "expense-card__action expense-card__action--danger",
-                  title: "Excluir receita",
-                  aria: { label: "Excluir receita #{income.description.presence || 'sem descrição'}" } do %>
-        <span class="material-symbols-rounded">delete</span>
-        <span class="expense-card__action-label">Excluir</span>
-      <% end %>
+        <span class="expense-card__meta-item">
+          <span class="material-symbols-rounded">event</span>
+          <span><small>Balanço</small><strong><%= income.balance_month&.strftime("%m/%Y") || "—" %></strong></span>
+        </span>
+      </div>
+
+      <div class="expense-card__actions">
+        <%= link_to edit_income_path(income), class: "expense-card__action", title: "Editar receita",
+                    aria: { label: "Editar receita #{income.description.presence || 'sem descrição'}" } do %>
+          <span class="material-symbols-rounded">edit</span>
+          <span class="expense-card__action-label">Editar</span>
+        <% end %>
+
+        <%= link_to income_path(income),
+                    data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
+                    class: "expense-card__action expense-card__action--danger",
+                    title: "Excluir receita",
+                    aria: { label: "Excluir receita #{income.description.presence || 'sem descrição'}" } do %>
+          <span class="material-symbols-rounded">delete</span>
+          <span class="expense-card__action-label">Excluir</span>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>

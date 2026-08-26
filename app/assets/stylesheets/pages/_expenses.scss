@@ -292,6 +292,10 @@
   justify-content: right;
 }
 
+.expense-card__footer {
+  display: contents;
+}
+
 .expense-card__action {
   display: inline-flex;
   align-items: center;

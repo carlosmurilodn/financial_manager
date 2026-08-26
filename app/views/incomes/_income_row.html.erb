@@ -62,7 +62,8 @@
     </div>
 
     <div class="expense-card__actions">
-      <%= link_to edit_income_path(income), class: "expense-card__action", title: "Editar receita" do %>
+      <%= link_to edit_income_path(income), class: "expense-card__action", title: "Editar receita",
+                  aria: { label: "Editar receita #{income.description.presence || 'sem descrição'}" } do %>
         <span class="material-symbols-rounded">edit</span>
         <span class="expense-card__action-label">Editar</span>
       <% end %>
@@ -70,7 +71,8 @@
       <%= link_to income_path(income),
                   data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
                   class: "expense-card__action expense-card__action--danger",
-                  title: "Excluir receita" do %>
+                  title: "Excluir receita",
+                  aria: { label: "Excluir receita #{income.description.presence || 'sem descrição'}" } do %>
         <span class="material-symbols-rounded">delete</span>
         <span class="expense-card__action-label">Excluir</span>
       <% end %>

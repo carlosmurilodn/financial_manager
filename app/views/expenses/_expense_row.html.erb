@@ -79,7 +79,8 @@
       <%= link_to(
             edit_expense_path(expense),
             class: "expense-card__action",
-            title: "Editar despesa"
+            title: "Editar despesa",
+            aria: { label: "Editar despesa #{expense.description}" }
           ) do %>
         <span class="material-symbols-rounded">edit</span>
         <span class="expense-card__action-label">Editar</span>
@@ -90,6 +91,7 @@
               delete_options_expense_path(expense),
               class: "expense-card__action expense-card__action--danger",
               title: "Excluir despesa",
+              aria: { label: "Excluir despesa #{expense.description}" },
               data: { turbo_frame: "modal" }
             ) do %>
           <span class="material-symbols-rounded">delete</span>
@@ -100,7 +102,8 @@
               expense_path(expense),
               data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" },
               class: "expense-card__action expense-card__action--danger",
-              title: "Excluir despesa"
+              title: "Excluir despesa",
+              aria: { label: "Excluir despesa #{expense.description}" }
             ) do %>
           <span class="material-symbols-rounded">delete</span>
           <span class="expense-card__action-label">Excluir</span>

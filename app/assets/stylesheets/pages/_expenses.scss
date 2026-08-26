@@ -2468,25 +2468,75 @@
 }
 
 @media (max-width: 576px) {
+  .expense-card--expense .expense-card__content {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "identity amount"
+      "badges badges"
+      "information actions";
+    align-items: center;
+    column-gap: 12px;
+    row-gap: 12px;
+    padding: 14px 12px 14px 18px;
+  }
+
   .expense-card--expense .expense-card__identity-block {
-    padding-right: 88px;
+    grid-area: identity;
+    min-width: 0;
+    padding-right: 0;
+  }
+
+  .expense-card--expense .expense-card__badges {
+    grid-area: badges;
+    justify-content: flex-start;
   }
 
   .expense-card--expense .expense-card__amount-area {
-    grid-column: auto;
-    grid-row: auto;
+    position: static;
+    grid-area: amount;
+    width: auto;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+
+  .expense-card--expense .expense-card__information {
+    grid-area: information;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    min-width: 0;
+    margin-top: 0;
   }
 
   .expense-card--expense .expense-card__actions {
-    grid-column: 1;
-    grid-row: 4;
+    display: flex;
+    grid-area: actions;
     flex-direction: row;
+    flex-wrap: nowrap;
+    align-self: stretch;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .expense-card--expense .expense-card__meta-item {
+    min-width: 0;
+    padding-inline: 6px;
+  }
+
+  .expense-card--expense .expense-card__meta-item strong {
+    font-size: 0.68rem;
   }
 
   .expense-card--expense:not(.financial-goal-card) .expense-card__action {
-    flex: 0 0 auto;
-    width: auto;
-    min-height: 40px;
-    padding: 0 12px;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
+    padding: 0;
+  }
+
+  .expense-card--expense:not(.financial-goal-card) .expense-card__action-label {
+    display: none;
   }
 }

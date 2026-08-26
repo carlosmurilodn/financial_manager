@@ -898,9 +898,51 @@
   .expense-card--expense:not(.financial-goal-card) .expense-card__content {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
-      "identity amount"
+      "identity identity"
       "badges badges"
       "footer footer";
+  }
+
+  .expense-card--expense:not(.financial-goal-card) .expense-card__identity-block {
+    display: grid;
+    grid-area: identity;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .expense-card--expense:not(.financial-goal-card) .expense-card__identity-main {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .expense-card--expense:not(.financial-goal-card) .expense-card__identity-block .expense-card__amount-area {
+    grid-area: auto;
+    grid-column: 2;
+    grid-row: 1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0;
+  }
+
+  .expense-card--expense:not(.financial-goal-card) .expense-card__status {
+    display: inline-grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+  }
+
+  .expense-card--expense:not(.financial-goal-card) .expense-card__status-state-icon,
+  .expense-card--expense:not(.financial-goal-card) .expense-card__status-label {
+    display: none;
+  }
+
+  .expense-card--expense:not(.financial-goal-card) .expense-card__status-mobile-icon {
+    display: inline;
   }
 
   .expense-card--expense:not(.financial-goal-card) .expense-card__footer {

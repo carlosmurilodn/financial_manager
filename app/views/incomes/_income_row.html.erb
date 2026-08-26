@@ -12,13 +12,31 @@
 
   <div class="expense-card__content">
     <div class="expense-card__identity-block">
-      <div class="expense-card__icon-wrapper">
-        <span class="material-symbols-rounded expense-card__icon"><%= category_icon %></span>
+      <div class="expense-card__identity-main">
+        <div class="expense-card__icon-wrapper">
+          <span class="material-symbols-rounded expense-card__icon"><%= category_icon %></span>
+        </div>
+
+        <%= link_to income_path(income), class: "expense-card__description-link", aria: { label: "Ver detalhes de #{income.description.presence || 'receita'}" } do %>
+          <h3 class="expense-card__title"><%= income.description.presence || "Sem descrição" %></h3>
+        <% end %>
       </div>
 
-      <%= link_to income_path(income), class: "expense-card__description-link", aria: { label: "Ver detalhes de #{income.description.presence || 'receita'}" } do %>
-        <h3 class="expense-card__title"><%= income.description.presence || "Sem descrição" %></h3>
-      <% end %>
+      <div class="expense-card__amount-area">
+        <strong class="expense-card__amount">
+          <%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
+        </strong>
+
+        <%= link_to toggle_paid_income_path(income),
+                    method: :patch,
+                    data: { turbo_method: :patch, turbo_stream: true },
+                    aria: { label: (income.paid? ? "Receita recebida" : "Receita pendente") },
+                    class: "expense-card__status #{income.paid? ? 'expense-card__status--paid' : 'expense-card__status--pending'}" do %>
+          <span class="material-symbols-rounded expense-card__status-state-icon"><%= income.paid? ? "check" : "schedule" %></span>
+          <span class="expense-card__status-label"><%= income.paid? ? "Recebida" : "Pendente" %></span>
+          <span class="material-symbols-rounded expense-card__status-mobile-icon" aria-hidden="true">attach_money</span>
+        <% end %>
+      </div>
     </div>
 
     <div class="expense-card__badges">
@@ -32,20 +50,6 @@
         <% end %>
       <% else %>
         <span class="expense-card__pill expense-card__pill--category">Sem categoria</span>
-      <% end %>
-    </div>
-
-    <div class="expense-card__amount-area">
-      <strong class="expense-card__amount">
-        <%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
-      </strong>
-
-      <%= link_to toggle_paid_income_path(income),
-                  method: :patch,
-                  data: { turbo_method: :patch, turbo_stream: true },
-                  class: "expense-card__status #{income.paid? ? 'expense-card__status--paid' : 'expense-card__status--pending'}" do %>
-        <span class="material-symbols-rounded"><%= income.paid? ? "check" : "schedule" %></span>
-        <%= income.paid? ? "Recebida" : "Pendente" %>
       <% end %>
     </div>
 

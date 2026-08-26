@@ -313,6 +313,15 @@
   color: var(--primary);
 }
 
+.expense-card__action--duplicate {
+  background: color-mix(in srgb, #7c3aed 12%, transparent);
+  color: #7c3aed;
+}
+
+.expense-card__action--duplicate:hover {
+  color: #7c3aed;
+}
+
 .expense-card__action--danger {
   background: color-mix(in srgb, var(--danger) 12%, transparent);
   color: var(--danger);
@@ -1204,6 +1213,15 @@
   color: var(--primary);
 }
 
+.app-show-card__action-btn--duplicate {
+  background: color-mix(in srgb, #7c3aed 12%, transparent);
+  color: #7c3aed;
+}
+
+.app-show-card__action-btn--duplicate:hover {
+  color: #7c3aed;
+}
+
 .app-show-card__action-btn--danger {
   background: color-mix(in srgb, var(--danger) 12%, transparent);
   color: var(--danger);
@@ -1678,6 +1696,10 @@
   font-size: 0.92rem;
   font-weight: 800;
   color: var(--text-main);
+}
+
+.app-page--card-show .app-show-card__installments-title {
+  font-size: 1.5rem;
 }
 
 .app-show-card__installments-title .material-symbols-rounded {

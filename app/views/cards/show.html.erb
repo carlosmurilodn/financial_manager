@@ -150,6 +150,15 @@
                   <% end %>
                 </th>
                 <th>
+                  <%= link_to card_path(@card, month: @show_month, year: @show_year, sort: "date", direction: (@sort == "date" && @direction == "desc") ? "asc" : "desc"),
+                              class: "app-table-sort-link #{'is-active' if @sort == 'date'}" do %>
+                    Data da compra
+                    <% if @sort == "date" %>
+                      <span class="material-symbols-rounded"><%= @direction == "asc" ? "arrow_upward" : "arrow_downward" %></span>
+                    <% end %>
+                  <% end %>
+                </th>
+                <th>
                   <%= link_to card_path(@card, month: @show_month, year: @show_year, sort: "category", direction: (@sort == "category" && @direction == "asc") ? "desc" : "asc"),
                               class: "app-table-sort-link #{'is-active' if @sort == 'category'}" do %>
                     Categoria
@@ -178,6 +187,7 @@
                   <td data-label="Descrição">
                     <%= link_to expense.description, expense_path(expense), class: "stealth-link" %>
                   </td>
+                  <td data-label="Data da compra"><%= expense.date.strftime("%d/%m/%Y") %></td>
                   <td data-label="Categoria"><%= expense.category.display_name %></td>
                   <td data-label="Pagamento"><%= Expense.payment_method_names[expense.payment_method] %></td>
                   <td data-label="Parcela">

@@ -67,6 +67,14 @@
       </div>
 
       <div class="expense-card__actions">
+        <%= link_to new_income_path(duplicate_from: income.id),
+                    class: "expense-card__action expense-card__action--duplicate",
+                    title: "Duplicar receita",
+                    aria: { label: "Duplicar receita #{income.description.presence || 'sem descrição'}" } do %>
+          <span class="material-symbols-rounded">content_copy</span>
+          <span class="expense-card__action-label">Duplicar</span>
+        <% end %>
+
         <%= link_to edit_income_path(income), class: "expense-card__action", title: "Editar receita",
                     aria: { label: "Editar receita #{income.description.presence || 'sem descrição'}" } do %>
           <span class="material-symbols-rounded">edit</span>

@@ -2,6 +2,8 @@
 <% selected_payment_method = values[:payment_method].presence || (context_card.present? ? "credito_a_vista" : nil) %>
 <% expense_date = values[:date].presence || default_date %>
 <% balance_month = values[:balance_month].presence || default_balance_month %>
+<% amount = values[:amount].presence %>
+<% amount = number_to_currency(amount, unit: "R$ ", separator: ",", delimiter: ".") if amount.is_a?(Numeric) %>
 
 <div class="expense-modal-row" data-expense-row>
   <div class="expense-modal-row__main expense-new-row-grid">
@@ -17,7 +19,7 @@
 
     <div class="expense-modal-field expense-modal-field--amount">
       <label for="expenses_<%= index %>_amount"><%= t("expenses.form.amount") %></label>
-      <input type="text" name="expenses[<%= index %>][amount]" id="expenses_<%= index %>_amount" value="<%= values[:amount].presence || "R$ 0,00" %>" class="app-form-control moeda" required data-required-currency="true">
+      <input type="text" name="expenses[<%= index %>][amount]" id="expenses_<%= index %>_amount" value="<%= amount || "R$ 0,00" %>" class="app-form-control moeda" required data-required-currency="true">
     </div>
 
     <div class="expense-modal-field expense-modal-field--paid-toggle">

@@ -22,6 +22,8 @@ class ExpensesController < ApplicationController
       card: @expense_context_card,
       payment_method: contextual_expense_creation? ? :credito_a_vista : nil
     )
+
+    prepare_expense_duplication if params[:duplicate_from].present?
   end
 
   def edit; end
@@ -183,6 +185,24 @@ class ExpensesController < ApplicationController
   end
 
   private
+
+  def prepare_expense_duplication
+    source = current_user.expenses.find(params[:duplicate_from])
+
+    @expense_rows = [ {
+      description: source.description,
+      amount: source.amount,
+      date: Date.current,
+      balance_month: nil,
+      category_id: source.category_id,
+      payment_method: source.payment_method,
+      card_id: source.card_id,
+      paid: false,
+      repetir: 0,
+      current_installment: 1,
+      installments_count: 1
+    } ]
+  end
 
   def expenses_filter_params
     {
@@ -364,14 +384,14 @@ class ExpensesController < ApplicationController
     @year = nil if @year.blank? || @year == 0
     @year ||= Date.current.year
 
-    session[:expenses_description] = params[:description]&.strip
+    session[:expenses_description] = params[:description].to_s.strip if params.key?(:description)
     @description_filter = session[:expenses_description].presence
 
     session[:expenses_category_id] = params[:category_id] if params[:category_id].present?
     @category_filter = session[:expenses_category_id]
     @category_filter = nil if @category_filter.to_i == 0
 
-    session[:expenses_payment_method] = params[:payment_method] || nil
+    session[:expenses_payment_method] = params[:payment_method].to_s if params.key?(:payment_method)
     @payment_method_filter = session[:expenses_payment_method]
     @payment_method_filter = nil if @payment_method_filter.blank?
 

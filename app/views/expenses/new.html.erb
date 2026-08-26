@@ -6,9 +6,9 @@ end %>
 
 <%= render layout: "shared/form_page", locals: {
   resource: @expense,
-  title: "Nova Despesa",
+  title: params[:duplicate_from].present? ? "Duplicar Despesa" : "Nova Despesa",
   eyebrow: "Despesas",
-  description: "Registre uma ou várias despesas com datas, categoria e forma de pagamento.",
+  description: params[:duplicate_from].present? ? "Revise os dados antes de salvar a nova despesa." : "Registre uma ou várias despesas com datas, categoria e forma de pagamento.",
   icon: "receipt_long",
   back_path: back_path
 } do %>

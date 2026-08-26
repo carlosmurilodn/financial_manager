@@ -193,6 +193,8 @@ class CardsController < ApplicationController
     case @sort
     when "description"
       expenses.order(description: dir)
+    when "date"
+      expenses.order(date: dir)
     when "category"
       expenses.joins(:category).order("categories.name #{dir}")
     when "amount"

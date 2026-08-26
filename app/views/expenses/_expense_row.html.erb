@@ -84,6 +84,16 @@
 
       <div class="expense-card__actions">
         <%= link_to(
+              new_expense_path(duplicate_from: expense.id),
+              class: "expense-card__action expense-card__action--duplicate",
+              title: "Duplicar despesa",
+              aria: { label: "Duplicar despesa #{expense.description}" }
+            ) do %>
+          <span class="material-symbols-rounded">content_copy</span>
+          <span class="expense-card__action-label">Duplicar</span>
+        <% end %>
+
+        <%= link_to(
               edit_expense_path(expense),
               class: "expense-card__action",
               title: "Editar despesa",

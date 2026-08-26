@@ -1,8 +1,8 @@
 <%= render layout: "shared/form_page", locals: {
   resource: @income,
-  title: "Nova Receita",
+  title: params[:duplicate_from].present? ? "Duplicar Receita" : "Nova Receita",
   eyebrow: "Receitas",
-  description: "Registre valor, categoria e período da receita.",
+  description: params[:duplicate_from].present? ? "Revise os dados antes de salvar a nova receita." : "Registre valor, categoria e período da receita.",
   icon: "payments",
   back_path: incomes_path
 } do %>

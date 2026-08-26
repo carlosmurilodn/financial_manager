@@ -9,6 +9,7 @@ class IncomesController < ApplicationController
 
   def new
     @income = current_user.incomes.new(date: Date.current, balance_month: Date.current.beginning_of_month)
+    prepare_income_duplication if params[:duplicate_from].present?
   end
 
   def create
@@ -127,6 +128,20 @@ class IncomesController < ApplicationController
   end
 
   private
+
+  def prepare_income_duplication
+    source = current_user.incomes.find(params[:duplicate_from])
+
+    @income_rows = [ {
+      description: source.description,
+      amount: source.amount,
+      date: Date.current,
+      balance_month: Date.current.beginning_of_month,
+      category_id: source.category_id,
+      paid: false,
+      repetir: 0
+    } ]
+  end
 
   def set_income
     @income = current_user.incomes.find(params[:id])

@@ -1,6 +1,8 @@
 <% values = row_values.to_h.with_indifferent_access %>
 <% income_date = values[:date].presence || Date.current %>
 <% balance_month = values[:balance_month].presence || Date.current.beginning_of_month %>
+<% amount = values[:amount].presence %>
+<% amount = number_to_currency(amount, unit: "R$ ", separator: ",", delimiter: ".") if amount.is_a?(Numeric) %>
 
 <div class="expense-modal-row income-form-row" data-income-row>
   <button type="button" class="app-btn app-btn--ghost expense-modal-row__remove <%= "is-hidden" unless removable %>" data-remove-income-row aria-label="Remover receita">
@@ -22,7 +24,7 @@
   <div class="expense-edit-form__row expense-edit-form__row--details income-form-details">
     <div class="expense-modal-field income-form-details__amount">
       <label for="incomes_<%= index %>_amount"><%= t("incomes.form.amount") %></label>
-      <input type="text" name="incomes[<%= index %>][amount]" id="incomes_<%= index %>_amount" value="<%= values[:amount].presence || "R$ 0,00" %>" class="app-form-control moeda" required data-required-currency="true">
+      <input type="text" name="incomes[<%= index %>][amount]" id="incomes_<%= index %>_amount" value="<%= amount || "R$ 0,00" %>" class="app-form-control moeda" required data-required-currency="true">
     </div>
 
     <div class="expense-modal-field income-form-details__paid">

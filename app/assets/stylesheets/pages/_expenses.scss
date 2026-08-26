@@ -313,6 +313,15 @@
   color: var(--primary);
 }
 
+.expense-card__action--duplicate {
+  background: color-mix(in srgb, #7c3aed 12%, transparent);
+  color: #7c3aed;
+}
+
+.expense-card__action--duplicate:hover {
+  color: #7c3aed;
+}
+
 .expense-card__action--danger {
   background: color-mix(in srgb, var(--danger) 12%, transparent);
   color: var(--danger);
@@ -1202,6 +1211,15 @@
 
 .app-show-card__action-btn--edit:hover {
   color: var(--primary);
+}
+
+.app-show-card__action-btn--duplicate {
+  background: color-mix(in srgb, #7c3aed 12%, transparent);
+  color: #7c3aed;
+}
+
+.app-show-card__action-btn--duplicate:hover {
+  color: #7c3aed;
 }
 
 .app-show-card__action-btn--danger {

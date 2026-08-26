@@ -10,10 +10,15 @@
         </div>
       </div>
 
-      <div class="app-page__hero-unit app-show-page__hero-actions">
+      <div class="app-page__hero-unit app-show-page__hero-actions app-show-page__hero-actions--duplicable">
         <%= link_to incomes_path, class: "app-show-back-link" do %>
           <span class="material-symbols-rounded">arrow_back</span>
           Voltar
+        <% end %>
+
+        <%= link_to new_income_path(duplicate_from: @income.id), class: "app-show-card__action-btn app-show-card__action-btn--duplicate" do %>
+          <span class="material-symbols-rounded">content_copy</span>
+          Duplicar
         <% end %>
 
         <%= link_to edit_income_path(@income), class: "app-show-card__action-btn app-show-card__action-btn--edit" do %>

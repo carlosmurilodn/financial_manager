@@ -1698,6 +1698,10 @@
   color: var(--text-main);
 }
 
+.app-page--card-show .app-show-card__installments-title {
+  font-size: 1.5rem;
+}
+
 .app-show-card__installments-title .material-symbols-rounded {
   font-size: 1.2rem;
   color: var(--expense-category-color);

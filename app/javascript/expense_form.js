@@ -1,4 +1,5 @@
 import { initializeDatepicker } from "./date_picker";
+import { initSelect2 } from "./select2_init";
 import { initializeFormUtils } from "./utils";
 
 function parseBrazilianDate(value) {
@@ -162,6 +163,7 @@ export function initializeExpenseForm() {
       rowsContainer.appendChild(row);
       setupRow(row);
       updateRemoveButtons();
+      initSelect2(row);
       initializeFormUtils();
       initializeDatepicker();
     });

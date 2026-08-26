@@ -1,4 +1,5 @@
 import { initializeDatepicker } from "./date_picker";
+import { initSelect2 } from "./select2_init";
 import { initializeFormUtils } from "./utils";
 
 export function initializeIncomeForm() {
@@ -45,6 +46,7 @@ export function initializeIncomeForm() {
       rowsContainer.appendChild(row);
       setupRow(row);
       updateRemoveButtons();
+      initSelect2(row);
       initializeFormUtils();
       initializeDatepicker();
     });

@@ -364,14 +364,14 @@ class ExpensesController < ApplicationController
     @year = nil if @year.blank? || @year == 0
     @year ||= Date.current.year
 
-    session[:expenses_description] = params[:description]&.strip
+    session[:expenses_description] = params[:description].to_s.strip if params.key?(:description)
     @description_filter = session[:expenses_description].presence
 
     session[:expenses_category_id] = params[:category_id] if params[:category_id].present?
     @category_filter = session[:expenses_category_id]
     @category_filter = nil if @category_filter.to_i == 0
 
-    session[:expenses_payment_method] = params[:payment_method] || nil
+    session[:expenses_payment_method] = params[:payment_method].to_s if params.key?(:payment_method)
     @payment_method_filter = session[:expenses_payment_method]
     @payment_method_filter = nil if @payment_method_filter.blank?
 

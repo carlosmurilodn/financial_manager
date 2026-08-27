@@ -1,33 +1,54 @@
 <turbo-frame id="modal">
-  <div class="modal-header">
-    <div>
-      <h5 class="modal-title">
-        Excluir Despesa
-      </h5>
-      <% if @expense.payment_method_credito_parcelado? %>
-        <div class="text-muted small mt-1">
-          Parcela <%= @expense.current_installment %>/<%= @expense.installments_count %>
-          <% if @expense.installment_group_id.present? %>
-            • Grupo #<%= @expense.installment_group_id %>
-          <% end %>
-        </div>
-      <% end %>
+  <div class="modal-header expense-delete-modal__header">
+    <div class="expense-delete-modal__heading">
+      <span class="material-symbols-rounded expense-delete-modal__heading-icon">delete</span>
+      <div>
+        <h5 class="modal-title">Excluir despesa</h5>
+        <% if @expense.payment_method_credito_parcelado? %>
+          <div class="expense-delete-modal__meta">
+            <span>Parcela <%= @expense.current_installment %>/<%= @expense.installments_count %></span>
+            <% if @expense.installment_group_id.present? %>
+              <span>Grupo #<%= @expense.installment_group_id %></span>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
     </div>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
   </div>
-  <div class="modal-body p-3">
-    <p class="mb-3">Escolha como deseja excluir esta despesa parcelada.</p>
+  <div class="modal-body expense-delete-modal">
+    <p class="expense-delete-modal__intro">
+      Escolha quais parcelas devem ser excluídas. Esta ação não poderá ser desfeita.
+    </p>
 
-    <div class="d-flex gap-2 flex-wrap">
-      <%= link_to "Excluir só esta parcela",
-                  expense_path(@expense, delete_scope: "single"),
-                  class: "btn btn-danger",
-                  data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" } %>
+    <div class="expense-delete-modal__options">
+      <article class="expense-delete-option">
+        <span class="material-symbols-rounded expense-delete-option__icon">filter_1</span>
+        <div class="expense-delete-option__copy">
+          <h6>Somente esta parcela</h6>
+          <p>Exclui a parcela atual e preserva todas as parcelas seguintes.</p>
+        </div>
+        <%= link_to "Excluir esta parcela",
+                    expense_path(@expense, delete_scope: "single"),
+                    class: "app-btn expense-delete-option__action",
+                    data: { turbo_method: :delete } %>
+      </article>
 
-      <%= link_to "Excluir esta e próximas",
-                  expense_path(@expense, delete_scope: "group"),
-                  class: "btn btn-outline-danger",
-                  data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" } %>
+      <article class="expense-delete-option expense-delete-option--group">
+        <span class="material-symbols-rounded expense-delete-option__icon">auto_delete</span>
+        <div class="expense-delete-option__copy">
+          <h6>Esta e próximas</h6>
+          <p>Exclui a parcela atual e toda a sequência que vem depois dela.</p>
+        </div>
+        <%= link_to "Excluir sequência",
+                    expense_path(@expense, delete_scope: "group"),
+                    class: "app-btn app-btn--danger expense-delete-option__action",
+                    data: { turbo_method: :delete } %>
+      </article>
+    </div>
+
+    <div class="expense-delete-modal__footer">
+      <button type="button" class="app-btn app-btn--ghost" data-close-modal>Cancelar</button>
     </div>
   </div>
 </turbo-frame>

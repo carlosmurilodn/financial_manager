@@ -1,3 +1,257 @@
+@media (min-width: 1200px) and (max-width: 1440px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .app-sidebar {
+    width: var(--sidebar-width-collapsed);
+  }
+
+  .app-sidebar__inner {
+    gap: 12px;
+    padding-inline: 12px;
+  }
+
+  .app-sidebar__brand-copy,
+  .app-sidebar .link-text,
+  .app-theme-toggle__copy {
+    display: none !important;
+  }
+
+  .app-sidebar__brand-main,
+  .app-nav-link,
+  .app-theme-toggle {
+    justify-content: center;
+  }
+
+  .app-nav-link {
+    gap: 0;
+    padding: 8px;
+  }
+
+  .app-nav-link::after {
+    top: 8px;
+    height: calc(100% - 16px);
+  }
+
+  .app-nav-link__icon,
+  .app-theme-toggle__icon {
+    flex: 0 0 auto;
+  }
+
+  .app-theme-toggle {
+    padding: 8px;
+  }
+
+  .app-content,
+  #wrapper.collapsed .app-content {
+    min-width: 0;
+    margin-left: calc(var(--sidebar-width-collapsed) + 8px);
+  }
+
+  .app-content__inner,
+  .app-page,
+  .dashboard-page,
+  .app-page > *,
+  .dashboard-page > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .app-page__hero-top,
+  .app-page__hero-top--expenses,
+  .app-page__hero-top--incomes,
+  .app-page__hero-top--cards,
+  .app-page__hero-top--categories,
+  .app-page__hero-top--financial-goals {
+    display: grid;
+    grid-template-columns: minmax(170px, 0.38fr) minmax(0, 1.62fr);
+    align-items: stretch;
+  }
+
+  .app-page__hero-top > .app-page__hero-kpis {
+    display: block;
+    min-width: 0;
+  }
+
+  .app-page__hero-top > .app-page__hero-kpis > .app-expenses-hero-kpis,
+  .app-page__hero-top > .app-page__hero-kpis > .app-incomes-hero-kpis,
+  .app-page__hero-top > .app-page__hero-kpis > .app-cards-hero-kpis,
+  .app-page__hero-top > .app-page__hero-kpis > .app-categories-hero-kpis,
+  .app-page__hero-top > .app-page__hero-kpis > .app-financial-goals-hero-kpis {
+    display: grid;
+    grid-template-columns: minmax(130px, 0.72fr) repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    height: 100%;
+  }
+
+  .app-page__hero-kpis > :is(
+    .app-expenses-hero-kpis,
+    .app-incomes-hero-kpis,
+    .app-cards-hero-kpis,
+    .app-categories-hero-kpis,
+    .app-financial-goals-hero-kpis
+  ) > .app-page__hero-unit:first-child {
+    grid-row: 1 / span 2;
+  }
+
+  .app-page__hero-copy,
+  .app-page__hero-unit,
+  .stat-card__main,
+  .stat-card__main > div {
+    min-width: 0;
+  }
+
+  .app-page__hero-unit .stat-card__value {
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  .app-filter-grid,
+  .app-filter-grid--expenses,
+  .app-filter-grid--incomes,
+  .app-filter-grid--cards,
+  .app-filter-grid--financial-goals {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .app-filter-actions {
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  .app-filter-actions > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .expense-card--expense .expense-card__content {
+    grid-template-columns: minmax(210px, 1.2fr) minmax(250px, 1fr) auto;
+    grid-template-rows: auto auto;
+    gap: 12px 18px;
+  }
+
+  .expense-card--expense .expense-card__identity-main {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .expense-card--expense .expense-card__badges {
+    grid-column: 2;
+    grid-row: 1;
+    justify-content: flex-start;
+    min-width: 0;
+    padding-left: 0;
+  }
+
+  .expense-card--expense .expense-card__amount-area {
+    grid-column: 3;
+    grid-row: 1;
+    min-width: 0;
+    padding-left: 0;
+  }
+
+  .expense-card--expense .expense-card__information {
+    grid-column: 1 / span 2;
+    grid-row: 2;
+    justify-content: flex-start;
+    min-width: 0;
+    padding: 10px 0 0;
+    border-top: 1px solid var(--card-border);
+  }
+
+  .expense-card--expense .expense-card__actions {
+    grid-column: 3;
+    grid-row: 2;
+    align-self: end;
+    min-width: 0;
+    padding: 10px 0 0;
+    border-top: 1px solid var(--card-border);
+  }
+
+  .card-row__content,
+  .category-row__content {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "identity actions"
+      "metrics metrics";
+    gap: 14px 18px;
+  }
+
+  .card-row__identity,
+  .category-row__identity {
+    grid-area: identity;
+  }
+
+  .card-row__metrics,
+  .category-row__metrics {
+    grid-area: metrics;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding-top: 12px;
+    border-top: 1px solid var(--card-border);
+  }
+
+  .category-row__metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .card-row__actions,
+  .category-row__actions {
+    grid-area: actions;
+    align-self: center;
+  }
+
+  .dashboard-hero {
+    align-items: stretch;
+  }
+
+  .dashboard-hero h1 {
+    font-size: clamp(1.8rem, 2.5vw, 2.25rem);
+    text-align: left;
+  }
+
+  .dashboard-description {
+    white-space: normal;
+  }
+
+  .dashboard-hero__badge {
+    flex: 0 1 460px;
+    min-width: 0;
+  }
+
+  .dashboard-hero__badge-item {
+    min-width: 0;
+  }
+
+  .dashboard-hero__badge-item--weather {
+    min-width: 210px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-grid,
+  .dashboard-grid--charts,
+  .dashboard-grid--planning {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-grid--planning > .dashboard-grid__item,
+  .dashboard-grid--charts > .dashboard-grid__item {
+    height: auto;
+  }
+
+  .app-footer {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .app-footer__meta {
+    display: none;
+  }
+}
+
 @media (max-width: 1199px) {
   .kpi-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

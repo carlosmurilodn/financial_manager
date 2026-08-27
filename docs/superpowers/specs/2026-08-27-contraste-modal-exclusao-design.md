@@ -10,7 +10,7 @@ Corrigir textos brancos sobre fundos claros nos fluxos de exclusão, mantendo co
 - tela modal de opções para excluir despesa parcelada;
 - modal de confirmação final usado pelas ações destrutivas.
 
-Comportamento, textos, botões e ações de exclusão permanecem inalterados.
+As regras de exclusão permanecem inalteradas.
 
 ## Solução
 
@@ -22,6 +22,20 @@ Substituir cores brancas fixas e herança indefinida por tokens semânticos do t
 - botão de cancelamento mantém contraste definido pelo componente existente.
 
 O contêiner `#app-modal-body` deve definir cor principal explicitamente, evitando herança de regras globais. O modal de confirmação deve aplicar tokens diretamente ao título e à mensagem.
+
+## Modal de exclusão parcelada
+
+O modal deve seguir componentes e hierarquia visual do sistema:
+
+- cabeçalho com ícone de alerta, título, identificação da parcela e grupo em badge;
+- texto curto explicando que usuário deve escolher alcance da exclusão;
+- duas opções apresentadas como cartões com ícone, título, descrição e ação;
+- opção `Somente esta parcela` informa que parcelas seguintes serão preservadas;
+- opção `Esta e próximas` informa que sequência a partir da parcela atual será excluída;
+- rodapé com ação `Cancelar`;
+- cartões lado a lado no desktop e empilhados em telas menores.
+
+Botões das opções usam componentes `app-btn` e executam exclusão diretamente. Seus atributos `turbo_confirm` devem ser removidos, pois próprio modal já representa confirmação consciente do alcance. Exclusões iniciadas fora desse fluxo continuam usando modal de confirmação padrão.
 
 ## Temas
 

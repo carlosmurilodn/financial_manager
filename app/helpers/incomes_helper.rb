@@ -14,6 +14,6 @@ module IncomesHelper
   end
 
   def income_sort_options
-    INCOME_SORT_OPTIONS.map { |value, config| [config[:label], value] }
+    INCOME_SORT_OPTIONS.map { |value, config| [ config[:label], value ] }
   end
 end

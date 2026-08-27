@@ -21,39 +21,39 @@
     </div>
 
     <nav class="app-sidebar__nav">
-      <%= link_to root_path, class: "app-nav-link #{'active-menu' if current_page?(root_path)}", id: "link-home", data: { turbo: false } do %>
+      <%= link_to root_path, class: "app-nav-link #{'active-menu' if current_page?(root_path)}", id: "link-home", title: "Dashboard", aria: { label: "Dashboard" }, data: { turbo: false } do %>
         <span class="material-symbols-rounded app-nav-link__icon">space_dashboard</span>
         <span class="link-text">Dashboard</span>
       <% end %>
 
-      <%= link_to expenses_path, class: "app-nav-link #{'active-menu' if current_page?(expenses_path)}", id: "link-expenses", data: { turbo: false } do %>
+      <%= link_to expenses_path, class: "app-nav-link #{'active-menu' if current_page?(expenses_path)}", id: "link-expenses", title: "Despesas", aria: { label: "Despesas" }, data: { turbo: false } do %>
         <span class="material-symbols-rounded app-nav-link__icon">receipt_long</span>
         <span class="link-text">Despesas</span>
       <% end %>
 
-      <%= link_to incomes_path, class: "app-nav-link #{'active-menu' if current_page?(incomes_path)}", id: "link-incomes", data: { turbo: false } do %>
+      <%= link_to incomes_path, class: "app-nav-link #{'active-menu' if current_page?(incomes_path)}", id: "link-incomes", title: "Receitas", aria: { label: "Receitas" }, data: { turbo: false } do %>
         <span class="material-symbols-rounded app-nav-link__icon">payments</span>
         <span class="link-text">Receitas</span>
       <% end %>
 
-      <%= link_to cards_path, class: "app-nav-link #{'active-menu' if current_page?(cards_path)}", id: "link-cards", data: { turbo: false } do %>
+      <%= link_to cards_path, class: "app-nav-link #{'active-menu' if current_page?(cards_path)}", id: "link-cards", title: "Cartões", aria: { label: "Cartões" }, data: { turbo: false } do %>
         <span class="material-symbols-rounded app-nav-link__icon">credit_card</span>
         <span class="link-text">Cartoes</span>
       <% end %>
 
-      <%= link_to categories_path, class: "app-nav-link #{'active-menu' if current_page?(categories_path)}", id: "link-categories", data: { turbo: false } do %>
+      <%= link_to categories_path, class: "app-nav-link #{'active-menu' if current_page?(categories_path)}", id: "link-categories", title: "Categorias", aria: { label: "Categorias" }, data: { turbo: false } do %>
         <span class="material-symbols-rounded app-nav-link__icon">category</span>
         <span class="link-text">Categorias</span>
       <% end %>
 
-      <%= link_to financial_goals_path, class: "app-nav-link #{'active-menu' if current_page?(financial_goals_path)}", id: "link-financial-goals", data: { turbo: false } do %>
+      <%= link_to financial_goals_path, class: "app-nav-link #{'active-menu' if current_page?(financial_goals_path)}", id: "link-financial-goals", title: "Objetivos", aria: { label: "Objetivos" }, data: { turbo: false } do %>
         <span class="material-symbols-rounded app-nav-link__icon">flag</span>
         <span class="link-text">Objetivos</span>
       <% end %>
 
       <!-- Calculadora ocultada temporariamente. -->
 
-      <%= link_to reports_path, class: "app-nav-link #{'active-menu' if current_page?(reports_path)}", id: "link-reports", data: { turbo: false } do %>
+      <%= link_to reports_path, class: "app-nav-link #{'active-menu' if current_page?(reports_path)}", id: "link-reports", title: "Relatórios", aria: { label: "Relatórios" }, data: { turbo: false } do %>
         <span class="material-symbols-rounded app-nav-link__icon">insert_chart</span>
         <span class="link-text">Relatorios</span>
       <% end %>
@@ -63,7 +63,7 @@
         <span class="link-text app-theme-toggle-mobile__label">Sistema</span>
       </button>
 
-      <%= button_to destroy_user_session_path, method: :delete, class: "app-nav-link app-nav-link--logout", form: { class: "app-nav-form" } do %>
+      <%= button_to destroy_user_session_path, method: :delete, class: "app-nav-link app-nav-link--logout", title: "Sair", aria: { label: "Sair" }, form: { class: "app-nav-form" } do %>
         <span class="material-symbols-rounded app-nav-link__icon">logout</span>
         <span class="link-text">Sair</span>
       <% end %>

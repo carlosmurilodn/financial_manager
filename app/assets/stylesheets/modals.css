@@ -2,6 +2,7 @@
   box-sizing: border-box;
   flex: 1 1 auto;
   padding: 1.5rem;
+  color: var(--text-main);
   width: 100%;
   min-height: 0;
   overflow-x: hidden;
@@ -158,14 +159,14 @@ html[data-theme="night"] #app-modal-body .modal-header {
 
 .app-confirm-modal__title {
   margin: 0 0 6px;
-  color: var(--white) !important;
+  color: var(--text-main) !important;
   font-size: 1rem;
   font-weight: 800;
 }
 
 .app-confirm-modal__message {
   margin: 0;
-  color: var(--white) !important;
+  color: var(--text-soft) !important;
   font-size: 0.9rem;
   line-height: 1.45;
 }
@@ -198,8 +199,139 @@ html[data-theme="night"] #app-modal-body .modal-header {
 
 .app-confirm-modal__confirm:hover,
 .app-confirm-modal__confirm:focus-visible {
-  color: #ff0000;
+  color: var(--white);
   filter: brightness(1.03);
+}
+
+.expense-delete-modal__header {
+  align-items: center !important;
+}
+
+.expense-delete-modal__heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.expense-delete-modal__heading-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  background: var(--stat-danger-bg);
+  color: var(--danger);
+}
+
+.expense-delete-modal__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.expense-delete-modal__meta span {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--pill-bg);
+  color: var(--text-soft);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.expense-delete-modal {
+  color: var(--text-main);
+}
+
+.expense-delete-modal__intro {
+  margin: 0 0 16px;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+.expense-delete-modal__options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.expense-delete-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  background: var(--ghost-btn-bg);
+}
+
+.expense-delete-option__icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--stat-danger-bg);
+  color: var(--danger);
+  font-size: 1.2rem;
+}
+
+.expense-delete-option__copy {
+  flex: 1;
+}
+
+.expense-delete-option__copy h6 {
+  margin: 0 0 6px;
+  color: var(--text-main) !important;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.expense-delete-option__copy p {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.expense-delete-option__action {
+  width: 100%;
+  justify-content: center;
+  border: 1px solid var(--danger);
+  background: transparent;
+  color: var(--danger);
+}
+
+.expense-delete-option__action:hover,
+.expense-delete-option__action:focus {
+  background: var(--stat-danger-bg);
+  color: var(--danger);
+}
+
+.expense-delete-option--group .expense-delete-option__action,
+.expense-delete-option--group .expense-delete-option__action:hover,
+.expense-delete-option--group .expense-delete-option__action:focus {
+  background: var(--danger);
+  color: var(--white);
+}
+
+.expense-delete-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
+@media (max-width: 575px) {
+  .expense-delete-modal__options {
+    grid-template-columns: 1fr;
+  }
+
+  .expense-delete-modal__footer .app-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .app-goal-progress {

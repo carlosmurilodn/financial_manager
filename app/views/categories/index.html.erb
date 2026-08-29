@@ -13,6 +13,17 @@
         </div>
       </div>
 
+      <div class="app-page__hero-unit app-page__hero-action">
+        <%= link_to new_category_path, class: "app-expenses-hero-kpis__action" do %>
+          <span class="app-expenses-hero-kpis__action-icon">
+            <span class="material-symbols-rounded">add</span>
+          </span>
+          <span class="app-expenses-hero-kpis__action-copy">
+            <strong><%= t("buttons.new.feminine", model: t("models.category")) %></strong>
+          </span>
+        <% end %>
+      </div>
+
       <div class="app-page__hero-kpis">
         <%= render "hero_kpis" %>
       </div>

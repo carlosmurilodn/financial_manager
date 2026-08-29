@@ -3,35 +3,49 @@
     overflow-x: hidden;
   }
 
-  .app-sidebar {
-    width: var(--sidebar-width-collapsed);
+  .app-sidebar,
+  #wrapper.collapsed .app-sidebar {
+    width: var(--sidebar-width);
   }
 
   .app-sidebar__inner {
-    gap: 12px;
-    padding-inline: 12px;
+    gap: 8px;
+    padding: 10px 16px;
+  }
+
+  .app-sidebar__brand {
+    min-height: 50px;
+  }
+
+  .app-sidebar__logo {
+    width: 42px;
+    height: 42px;
+  }
+
+  .sidebar-title {
+    font-size: 1.05rem;
   }
 
   .app-sidebar__brand-copy,
   .app-sidebar .link-text,
   .app-theme-toggle__copy {
-    display: none !important;
+    display: flex !important;
   }
 
-  .app-sidebar__brand-main,
-  .app-nav-link,
-  .app-theme-toggle {
+  .app-sidebar__brand-main {
     justify-content: center;
   }
 
   .app-nav-link {
-    gap: 0;
-    padding: 8px;
+    justify-content: flex-start;
+    gap: 14px;
+    min-height: 44px;
+    padding: 4px 24px 4px 14px;
   }
 
   .app-nav-link::after {
-    top: 8px;
-    height: calc(100% - 16px);
+    top: 7px;
+    height: calc(100% - 14px);
   }
 
   .app-nav-link__icon,
@@ -40,13 +54,25 @@
   }
 
   .app-theme-toggle {
-    padding: 8px;
+    justify-content: flex-start;
+    gap: 12px;
+    min-height: 44px;
+    padding: 4px 12px;
+  }
+
+  .app-sidebar__nav {
+    gap: 2px;
+    margin-top: 2px;
+  }
+
+  .app-sidebar__footer {
+    gap: 6px;
   }
 
   .app-content,
   #wrapper.collapsed .app-content {
     min-width: 0;
-    margin-left: calc(var(--sidebar-width-collapsed) + 8px);
+    margin-left: var(--sidebar-width);
   }
 
   .app-content__inner,
@@ -58,41 +84,51 @@
     max-width: 100%;
   }
 
-  .app-page__hero-top,
   .app-page__hero-top--expenses,
   .app-page__hero-top--incomes,
   .app-page__hero-top--cards,
   .app-page__hero-top--categories,
   .app-page__hero-top--financial-goals {
     display: grid;
-    grid-template-columns: minmax(170px, 0.38fr) minmax(0, 1.62fr);
+    grid-template-columns: minmax(180px, 0.72fr) repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
     align-items: stretch;
-  }
-
-  .app-page__hero-top > .app-page__hero-kpis {
-    display: block;
-    min-width: 0;
-  }
-
-  .app-page__hero-top > .app-page__hero-kpis > .app-expenses-hero-kpis,
-  .app-page__hero-top > .app-page__hero-kpis > .app-incomes-hero-kpis,
-  .app-page__hero-top > .app-page__hero-kpis > .app-cards-hero-kpis,
-  .app-page__hero-top > .app-page__hero-kpis > .app-categories-hero-kpis,
-  .app-page__hero-top > .app-page__hero-kpis > .app-financial-goals-hero-kpis {
-    display: grid;
-    grid-template-columns: minmax(130px, 0.72fr) repeat(2, minmax(0, 1fr));
     gap: 8px;
-    height: 100%;
   }
 
-  .app-page__hero-kpis > :is(
+  .app-page__hero-top--expenses > .app-page__hero-copy,
+  .app-page__hero-top--incomes > .app-page__hero-copy,
+  .app-page__hero-top--cards > .app-page__hero-copy,
+  .app-page__hero-top--categories > .app-page__hero-copy,
+  .app-page__hero-top--financial-goals > .app-page__hero-copy {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .app-page__hero-top--expenses > .app-page__hero-action,
+  .app-page__hero-top--incomes > .app-page__hero-action,
+  .app-page__hero-top--cards > .app-page__hero-action,
+  .app-page__hero-top--categories > .app-page__hero-action,
+  .app-page__hero-top--financial-goals > .app-page__hero-action {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .app-page__hero-top > .app-page__hero-kpis,
+  .app-page__hero-top > .app-page__hero-kpis > :is(
     .app-expenses-hero-kpis,
     .app-incomes-hero-kpis,
     .app-cards-hero-kpis,
     .app-categories-hero-kpis,
     .app-financial-goals-hero-kpis
-  ) > .app-page__hero-unit:first-child {
-    grid-row: 1 / span 2;
+  ) {
+    display: contents;
+  }
+
+  .app-form-page__hero .app-show-back-link {
+    align-self: center;
+    width: auto;
+    height: auto;
   }
 
   .app-page__hero-copy,
@@ -204,6 +240,7 @@
 
   .dashboard-hero {
     align-items: stretch;
+    padding: 14px 16px;
   }
 
   .dashboard-hero h1 {
@@ -216,20 +253,118 @@
   }
 
   .dashboard-hero__badge {
-    flex: 0 1 460px;
+    display: flex;
+    flex: 0 0 310px;
+    flex-direction: column;
+    align-self: stretch;
+    gap: 6px;
     min-width: 0;
   }
 
   .dashboard-hero__badge-item {
+    width: 100%;
     min-width: 0;
+    min-height: 0;
+    padding: 6px 10px;
+  }
+
+  .dashboard-hero__badge-item--primary {
+    flex: 1 1 0;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .dashboard-hero__badge .material-symbols-rounded {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
   }
 
   .dashboard-hero__badge-item--weather {
-    min-width: 210px;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .dashboard-hero__badge-item--weather .today-weather,
+  .dashboard-hero__badge-item--weather .today-weather--placeholder {
+    grid-template-columns: auto auto minmax(0, 1fr);
+    grid-template-rows: 1fr;
+    justify-content: center;
+    gap: 8px;
+    height: 100%;
+    min-height: 0;
+    padding: 5px 10px;
+  }
+
+  .dashboard-hero__badge-item--weather .today-weather__description {
+    align-self: center;
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+
+  .dashboard-hero__badge-item--weather .today-weather__current {
+    gap: 4px;
+  }
+
+  .dashboard-hero__badge-item--weather .today-weather__current img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .dashboard-hero__badge-item--weather .today-weather__current strong {
+    font-size: 1rem;
+  }
+
+  .dashboard-hero__badge-item--weather .today-weather__city {
+    font-size: 0.58rem;
+  }
+
+  .dashboard-hero__badge-item--weather .today-weather__range {
+    align-self: center;
+    min-width: 0;
+    text-align: center;
+  }
+
+  .dashboard-hero__badge-item--weather .today-weather__range small {
+    display: block;
+    font-size: 0.58rem;
+    line-height: 1.2;
+    white-space: normal;
   }
 
   .kpi-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .kpi-grid .stat-card {
+    gap: 6px;
+    min-width: 0;
+    padding: 14px;
+  }
+
+  .kpi-grid .stat-card__main {
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .kpi-grid .stat-card__icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .kpi-grid .stat-card__main > div {
+    min-width: 0;
+  }
+
+  .kpi-grid .stat-card__value {
+    font-size: 0.75rem;
+    overflow-wrap: anywhere;
+  }
+
+  .kpi-grid .stat-card__meta {
+    margin-top: 2px;
   }
 
   .dashboard-grid,
@@ -1100,57 +1235,21 @@
   }
 
   .app-page--card-show .app-show-card__installments-table-wrapper {
-    overflow: visible;
-    border: 0;
-    border-radius: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
-  .app-page--card-show .app-show-card__installments-table,
-  .app-page--card-show .app-show-card__installments-table tbody,
-  .app-page--card-show .app-show-card__installments-table tr,
-  .app-page--card-show .app-show-card__installments-table td {
-    display: block;
-    width: 100%;
+  .app-page--card-show .app-show-card__installments-table {
+    min-width: 760px;
   }
 
   .app-page--card-show .app-show-card__installments-table thead {
-    display: none;
-  }
-
-  .app-page--card-show .app-show-card__installments-table tbody {
-    display: grid;
-    gap: 10px;
-  }
-
-  .app-page--card-show .app-show-card__installments-table tr {
-    overflow: hidden;
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    background: var(--surface);
-  }
-
-  .app-page--card-show .app-show-card__installments-table td {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 9px 12px;
-    text-align: right;
+    display: table-header-group;
   }
 
   .app-page--card-show .app-show-card__installments-table td::before {
-    content: attr(data-label);
-    flex: 0 0 auto;
-    color: var(--text-soft);
-    font-size: 0.65rem;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  .app-page--card-show .app-show-card__installments-table td:first-child {
-    background: color-mix(in srgb, var(--expense-category-color) 10%, transparent);
-    font-weight: 800;
+    content: none;
   }
 
   .expense-card--expense:not(.financial-goal-card) .expense-card__content {

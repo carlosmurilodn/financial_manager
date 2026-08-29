@@ -1710,7 +1710,7 @@
 
 .app-show-card__installments-title .material-symbols-rounded {
   font-size: 1.2rem;
-  color: var(--expense-category-color);
+  color: var(--nav-active-icon-color);
 }
 
 .app-show-card__installments-table-wrapper {
@@ -1727,8 +1727,8 @@
 
 .app-show-card__installments-table th {
   padding: 10px 14px;
-  background: color-mix(in srgb, var(--expense-category-color) 14%, transparent);
-  color: var(--text-main);
+  background: var(--detail-table-head-bg);
+  color: var(--detail-table-head-color);
   font-size: 0.78rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -1744,12 +1744,38 @@
   text-align: center;
 }
 
+.app-table__currency {
+  white-space: nowrap;
+}
+
 .app-show-card__installments-table tr.is-current {
-  background: color-mix(in srgb, var(--expense-category-color) 8%, transparent);
+  background: var(--detail-table-current-bg);
 }
 
 .app-show-card__installments-table tr.is-current td {
   font-weight: 800;
+}
+
+.app-show-card__installment-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--nav-active-bg);
+  color: var(--nav-active-text);
+  font-weight: 800;
+  text-decoration: none;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.app-show-card__installment-link:hover,
+.app-show-card__installment-link:focus-visible {
+  background: var(--detail-table-current-bg);
+  color: var(--nav-active-text);
+  box-shadow: 0 3px 8px var(--detail-table-hover-bg);
+  transform: translateY(-1px);
 }
 
 .app-show-card__installment-status {
@@ -1783,13 +1809,64 @@
 }
 
 .app-show-kpi {
+  --show-kpi-bg: color-mix(in srgb, var(--text-main) 6%, transparent);
+  --show-kpi-icon-bg: var(--text-soft);
   display: grid;
   gap: 6px;
   padding: 14px 16px;
-  border: 1px solid color-mix(in srgb, var(--kpi-color, var(--text-main)) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--show-kpi-icon-bg) 24%, transparent);
   border-radius: 14px;
-  background: color-mix(in srgb, var(--kpi-color, var(--text-main)) 6%, transparent);
+  background: var(--show-kpi-bg);
   backdrop-filter: blur(22px);
+}
+
+.app-show-kpi--primary {
+  --show-kpi-bg: var(--stat-primary-bg);
+  --show-kpi-icon-bg: var(--stat-primary-icon-bg);
+}
+
+.app-show-kpi--success {
+  --show-kpi-bg: var(--stat-success-bg);
+  --show-kpi-icon-bg: var(--stat-success-icon-bg);
+}
+
+.app-show-kpi--danger {
+  --show-kpi-bg: var(--stat-danger-bg);
+  --show-kpi-icon-bg: var(--stat-danger-icon-bg);
+}
+
+.app-show-kpi--warning {
+  --show-kpi-bg: var(--stat-warning-bg);
+  --show-kpi-icon-bg: var(--stat-warning-icon-bg);
+}
+
+.app-show-kpi--neutral {
+  --show-kpi-bg: var(--pill-bg);
+  --show-kpi-icon-bg: var(--text-soft);
+}
+
+.app-show-kpi__main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.app-show-kpi__icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--show-kpi-icon-bg);
+  color: var(--white);
+  font-size: 1.25rem;
+}
+
+.app-show-kpi__copy {
+  flex: 1;
+  min-width: 0;
 }
 
 .app-show-kpi small {
@@ -1801,6 +1878,7 @@
 }
 
 .app-show-kpi strong {
+  display: block;
   color: var(--kpi-color, var(--text-main));
   font-size: 1.1rem;
   font-weight: 800;
@@ -1808,11 +1886,19 @@
 
 .app-show-kpi__progress {
   display: flex;
+  flex: 1;
+  min-width: 42px;
   height: 6px;
-  margin-top: 4px;
   overflow: hidden;
   border-radius: 999px;
   background: rgba(148, 163, 184, 0.16);
+}
+
+.app-show-kpi__usage-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
 }
 
 .app-show-kpi__progress span {
@@ -2080,10 +2166,24 @@
   font-size: 0.82rem;
 }
 
+.app-show-card__installments-table th .app-table-sort-link,
+.app-show-card__installments-table th .app-table-sort-link:hover,
+.app-show-card__installments-table th .app-table-sort-link.is-active {
+  color: var(--detail-table-head-color);
+}
+
 // === Zebra striping for installments/invoice tables ===
 
 .app-show-card__installments-table tbody tr:nth-child(even) {
-  background: color-mix(in srgb, var(--expense-category-color) 4%, transparent);
+  background: var(--detail-table-stripe-bg);
+}
+
+.app-show-card__installments-table tbody tr:hover {
+  background: var(--detail-table-hover-bg);
+}
+
+.app-show-card__installments-table tbody tr.is-current {
+  background: var(--detail-table-current-bg);
 }
 
 // === Financial goal totals ===

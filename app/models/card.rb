@@ -1,5 +1,18 @@
 class Card < ApplicationRecord
   COLOR_PALETTE = Category::COLOR_PALETTE
+  LimitUsage = Data.define(:used, :available, :percentage) do
+    def exceeded?
+      percentage.present? && percentage > 100
+    end
+
+    def used_bar_percentage
+      percentage.to_f.clamp(0, 100)
+    end
+
+    def available_bar_percentage
+      100 - used_bar_percentage
+    end
+  end
 
   belongs_to :user
 
@@ -20,6 +33,16 @@ class Card < ApplicationRecord
 
   def remaining_limit
     total_limit.to_f - unpaid_total
+  end
+
+  def limit_usage_from(reference_date)
+    start_date = reference_date.to_date.next_month.beginning_of_month
+    used = Expense.effective_sum(expenses.where(paid: false, balance_month: start_date..))
+    limit = (total_limit || 0).to_d
+    available = limit - used
+    percentage = (used / limit) * 100 if limit.positive?
+
+    LimitUsage.new(used: used, available: available, percentage: percentage)
   end
 
   def display_name

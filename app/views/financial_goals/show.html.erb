@@ -158,7 +158,7 @@
                 <tr>
                   <td><%= resource.description %></td>
                   <td><span class="expense-card__pill"><%= resource.resource_type_label %></span></td>
-                  <td><strong><%= number_to_currency(resource.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %></strong></td>
+                  <td class="app-table__currency"><strong><%= number_to_currency(resource.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %></strong></td>
                   <td>
                     <span class="app-show-card__installment-status <%= resource.include_in_total? ? 'app-show-card__installment-status--paid' : 'app-show-card__installment-status--pending' %>">
                       <%= resource.include_in_total? ? "Sim" : "Não" %>

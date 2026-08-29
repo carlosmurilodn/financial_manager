@@ -1,5 +1,7 @@
 # Refinamentos do layout HD
 
+Esta especificação substitui as definições de Sidebar e Cabeçalhos/KPIs do documento `2026-08-27-layout-responsivo-hd-design.md`.
+
 ## Objetivo
 
 Refinar distribuição visual em telas HD, especialmente `1366×768`, preservando espaço útil, hierarquia dos cabeçalhos e leitura das tabelas no celular.

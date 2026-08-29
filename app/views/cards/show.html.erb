@@ -41,21 +41,41 @@
   <%# KPIs + Informações numa única linha dentro de um card branco %>
   <div class="app-panel app-show-panel">
     <div class="app-show-kpis">
-      <div class="app-show-kpi" style="--kpi-color: var(--nav-active-icon-color);">
-        <small>Limite Total</small>
-        <strong><%= number_to_currency(@card.total_limit.to_f, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+      <div class="app-show-kpi app-show-kpi--primary">
+        <div class="app-show-kpi__main">
+          <span class="app-show-kpi__icon material-symbols-rounded">account_balance_wallet</span>
+          <div class="app-show-kpi__copy">
+            <small>Limite Total</small>
+            <strong><%= number_to_currency(@card.total_limit.to_f, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+          </div>
+        </div>
       </div>
-      <div class="app-show-kpi" style="--kpi-color: #d83f4f;">
-        <small>Utilizado</small>
-        <strong><%= number_to_currency(@card_used, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+      <div class="app-show-kpi app-show-kpi--danger">
+        <div class="app-show-kpi__main">
+          <span class="app-show-kpi__icon material-symbols-rounded">credit_card</span>
+          <div class="app-show-kpi__copy">
+            <small>Utilizado</small>
+            <strong><%= number_to_currency(@card_used, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+          </div>
+        </div>
       </div>
-      <div class="app-show-kpi" style="--kpi-color: #1b9c63;">
-        <small>Disponível</small>
-        <strong><%= number_to_currency(@card_remaining, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+      <div class="app-show-kpi app-show-kpi--success">
+        <div class="app-show-kpi__main">
+          <span class="app-show-kpi__icon material-symbols-rounded">savings</span>
+          <div class="app-show-kpi__copy">
+            <small>Disponível</small>
+            <strong><%= number_to_currency(@card_remaining, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+          </div>
+        </div>
       </div>
-      <div class="app-show-kpi" style="--kpi-color: var(--text-soft);">
-        <small>Uso do Limite</small>
-        <strong><%= @card.total_limit.to_f > 0 ? "#{((@card_used / @card.total_limit.to_f) * 100).round(0)}%" : "—" %></strong>
+      <div class="app-show-kpi app-show-kpi--warning">
+        <div class="app-show-kpi__main">
+          <span class="app-show-kpi__icon material-symbols-rounded">donut_large</span>
+          <div class="app-show-kpi__copy">
+            <small>Uso do Limite</small>
+            <strong><%= @card.total_limit.to_f > 0 ? "#{((@card_used / @card.total_limit.to_f) * 100).round(0)}%" : "—" %></strong>
+          </div>
+        </div>
         <% if @card.total_limit.to_f > 0 %>
           <div class="app-show-kpi__progress">
             <span class="app-show-kpi__progress-used" style="width: <%= [(@card_used / @card.total_limit.to_f) * 100, 100].min.round(1) %>%;"></span>
@@ -63,13 +83,23 @@
           </div>
         <% end %>
       </div>
-      <div class="app-show-kpi" style="--kpi-color: var(--text-soft);">
-        <small>Fechamento</small>
-        <strong><%= @card.closing_day.present? ? "Dia #{@card.closing_day}" : "—" %></strong>
+      <div class="app-show-kpi app-show-kpi--neutral">
+        <div class="app-show-kpi__main">
+          <span class="app-show-kpi__icon material-symbols-rounded">event_available</span>
+          <div class="app-show-kpi__copy">
+            <small>Fechamento</small>
+            <strong><%= @card.closing_day.present? ? "Dia #{@card.closing_day}" : "—" %></strong>
+          </div>
+        </div>
       </div>
-      <div class="app-show-kpi" style="--kpi-color: var(--text-soft);">
-        <small>Vencimento</small>
-        <strong><%= @card.due_day.present? ? "Dia #{@card.due_day}" : "—" %></strong>
+      <div class="app-show-kpi app-show-kpi--neutral">
+        <div class="app-show-kpi__main">
+          <span class="app-show-kpi__icon material-symbols-rounded">event_upcoming</span>
+          <div class="app-show-kpi__copy">
+            <small>Vencimento</small>
+            <strong><%= @card.due_day.present? ? "Dia #{@card.due_day}" : "—" %></strong>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -121,17 +151,32 @@
 
       <%# Resumo da fatura em cards separados %>
       <div class="app-show-kpis">
-        <div class="app-show-kpi" style="--kpi-color: <%= @card.display_color %>;">
-          <small>Total da Fatura</small>
-          <strong><%= number_to_currency(@card_total_month, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        <div class="app-show-kpi app-show-kpi--primary">
+          <div class="app-show-kpi__main">
+            <span class="app-show-kpi__icon material-symbols-rounded">receipt_long</span>
+            <div class="app-show-kpi__copy">
+              <small>Total da Fatura</small>
+              <strong><%= number_to_currency(@card_total_month, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+            </div>
+          </div>
         </div>
-        <div class="app-show-kpi" style="--kpi-color: #1b9c63;">
-          <small>Pago</small>
-          <strong><%= number_to_currency(@card_paid_month, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        <div class="app-show-kpi app-show-kpi--success">
+          <div class="app-show-kpi__main">
+            <span class="app-show-kpi__icon material-symbols-rounded">check_circle</span>
+            <div class="app-show-kpi__copy">
+              <small>Pago</small>
+              <strong><%= number_to_currency(@card_paid_month, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+            </div>
+          </div>
         </div>
-        <div class="app-show-kpi" style="--kpi-color: #d83f4f;">
-          <small>Pendente</small>
-          <strong><%= number_to_currency(@card_pending_month, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        <div class="app-show-kpi app-show-kpi--danger">
+          <div class="app-show-kpi__main">
+            <span class="app-show-kpi__icon material-symbols-rounded">schedule</span>
+            <div class="app-show-kpi__copy">
+              <small>Pendente</small>
+              <strong><%= number_to_currency(@card_pending_month, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+            </div>
+          </div>
         </div>
       </div>
 

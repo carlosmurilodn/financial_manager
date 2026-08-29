@@ -87,7 +87,7 @@
                   <td><span class="expense-card__pill" style="background: color-mix(in srgb, #1b9c63 14%, transparent); color: #1b9c63;">Receita</span></td>
                   <td><%= link_to income.description.presence || "Sem descrição", income_path(income), class: "stealth-link" %></td>
                   <td><%= income.date&.strftime("%d/%m/%Y") %></td>
-                  <td><strong><%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %></strong></td>
+                  <td class="app-table__currency"><strong><%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %></strong></td>
                   <td>
                     <span class="app-show-card__installment-status <%= income.paid? ? 'app-show-card__installment-status--paid' : 'app-show-card__installment-status--pending' %>">
                       <%= income.paid? ? "Recebida" : "Pendente" %>
@@ -100,7 +100,7 @@
                   <td><span class="expense-card__pill" style="background: color-mix(in srgb, #d83f4f 14%, transparent); color: #d83f4f;">Despesa</span></td>
                   <td><%= link_to expense.description, expense_path(expense), class: "stealth-link" %></td>
                   <td><%= expense.date.strftime("%d/%m/%Y") %></td>
-                  <td><strong><%= number_to_currency(expense.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %></strong></td>
+                  <td class="app-table__currency"><strong><%= number_to_currency(expense.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %></strong></td>
                   <td>
                     <span class="app-show-card__installment-status <%= expense.paid? ? 'app-show-card__installment-status--paid' : 'app-show-card__installment-status--pending' %>">
                       <%= expense.paid? ? "Pago" : "Pendente" %>

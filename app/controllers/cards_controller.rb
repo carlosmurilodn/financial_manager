@@ -25,12 +25,7 @@ class CardsController < ApplicationController
     @card_paid_month = Expense.effective_sum(@card_expenses.where(paid: true))
     @card_pending_month = Expense.effective_sum(@card_expenses.where(paid: false))
 
-    # KPIs simulam o mês selecionado como pago:
-    # Utilizado = despesas não pagas de OUTROS meses (exclui o mês visualizado)
-    @card_used = Expense.effective_sum(
-      @card.expenses.where(paid: false).where.not(balance_month: @show_date.beginning_of_month..@show_date.end_of_month)
-    )
-    @card_remaining = @card.total_limit.to_f - @card_used.to_f
+    @card_limit_usage = @card.limit_usage_from(@show_date)
   end
 
   def new

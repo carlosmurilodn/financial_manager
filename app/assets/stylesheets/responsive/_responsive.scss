@@ -333,6 +333,15 @@
     white-space: normal;
   }
 
+  .app-page--card-show .app-show-kpi strong {
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  .app-page--card-show .app-show-panel .app-show-kpis {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .kpi-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 10px;

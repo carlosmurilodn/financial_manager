@@ -55,7 +55,7 @@
           <span class="app-show-kpi__icon material-symbols-rounded">credit_card</span>
           <div class="app-show-kpi__copy">
             <small>Utilizado</small>
-            <strong><%= number_to_currency(@card_used, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+            <strong><%= number_to_currency(@card_limit_usage.used, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
           </div>
         </div>
       </div>
@@ -64,24 +64,26 @@
           <span class="app-show-kpi__icon material-symbols-rounded">savings</span>
           <div class="app-show-kpi__copy">
             <small>Disponível</small>
-            <strong><%= number_to_currency(@card_remaining, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+            <strong><%= number_to_currency(@card_limit_usage.available, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
           </div>
         </div>
       </div>
-      <div class="app-show-kpi app-show-kpi--warning">
+      <div class="app-show-kpi app-show-kpi--<%= @card_limit_usage.exceeded? ? 'danger' : 'warning' %>">
         <div class="app-show-kpi__main">
           <span class="app-show-kpi__icon material-symbols-rounded">donut_large</span>
           <div class="app-show-kpi__copy">
             <small>Uso do Limite</small>
-            <strong><%= @card.total_limit.to_f > 0 ? "#{((@card_used / @card.total_limit.to_f) * 100).round(0)}%" : "—" %></strong>
+            <div class="app-show-kpi__usage-value">
+              <strong><%= @card_limit_usage.percentage.present? ? "#{@card_limit_usage.percentage.round(0)}%" : "—" %></strong>
+              <% if @card_limit_usage.percentage.present? %>
+                <div class="app-show-kpi__progress">
+                  <span class="app-show-kpi__progress-used" style="width: <%= @card_limit_usage.used_bar_percentage.round(1) %>%;"></span>
+                  <span class="app-show-kpi__progress-available" style="width: <%= @card_limit_usage.available_bar_percentage.round(1) %>%;"></span>
+                </div>
+              <% end %>
+            </div>
           </div>
         </div>
-        <% if @card.total_limit.to_f > 0 %>
-          <div class="app-show-kpi__progress">
-            <span class="app-show-kpi__progress-used" style="width: <%= [(@card_used / @card.total_limit.to_f) * 100, 100].min.round(1) %>%;"></span>
-            <span class="app-show-kpi__progress-available" style="width: <%= [100 - (@card_used / @card.total_limit.to_f) * 100, 0].max.round(1) %>%;"></span>
-          </div>
-        <% end %>
       </div>
       <div class="app-show-kpi app-show-kpi--neutral">
         <div class="app-show-kpi__main">
@@ -242,7 +244,7 @@
                       —
                     <% end %>
                   </td>
-                  <td data-label="Valor"><strong><%= number_to_currency(expense.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %></strong></td>
+                  <td class="app-table__currency" data-label="Valor"><strong><%= number_to_currency(expense.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %></strong></td>
                   <td data-label="Status">
                     <span class="app-show-card__installment-status <%= expense.paid? ? 'app-show-card__installment-status--paid' : 'app-show-card__installment-status--pending' %>">
                       <%= expense.paid? ? "Pago" : "Pendente" %>

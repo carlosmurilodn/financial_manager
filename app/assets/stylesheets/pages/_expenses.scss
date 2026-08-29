@@ -1744,6 +1744,10 @@
   text-align: center;
 }
 
+.app-table__currency {
+  white-space: nowrap;
+}
+
 .app-show-card__installments-table tr.is-current {
   background: var(--detail-table-current-bg);
 }
@@ -1861,6 +1865,7 @@
 }
 
 .app-show-kpi__copy {
+  flex: 1;
   min-width: 0;
 }
 
@@ -1881,11 +1886,19 @@
 
 .app-show-kpi__progress {
   display: flex;
+  flex: 1;
+  min-width: 42px;
   height: 6px;
-  margin-top: 4px;
   overflow: hidden;
   border-radius: 999px;
   background: rgba(148, 163, 184, 0.16);
+}
+
+.app-show-kpi__usage-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
 }
 
 .app-show-kpi__progress span {

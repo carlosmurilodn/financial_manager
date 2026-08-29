@@ -145,15 +145,11 @@
                 <% installments.each do |installment| %>
                   <tr class="<%= 'is-current' if installment.id == @expense.id %>">
                     <td>
-                      <strong><%= installment.current_installment %>/<%= installment.installments_count %></strong>
+                      <%= link_to "#{installment.current_installment}/#{installment.installments_count}",
+                                  expense_path(installment),
+                                  class: "app-show-card__installment-link" %>
                     </td>
-                    <td>
-                      <% if installment.balance_month.present? %>
-                        <%= link_to installment.balance_month.strftime("%m/%Y"), expense_path(installment) %>
-                      <% else %>
-                        —
-                      <% end %>
-                    </td>
+                    <td><%= installment.balance_month&.strftime("%m/%Y") || "—" %></td>
                     <td><%= number_to_currency(installment.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %></td>
                     <td>
                       <span class="app-show-card__installment-status <%= installment.paid? ? 'app-show-card__installment-status--paid' : 'app-show-card__installment-status--pending' %>">

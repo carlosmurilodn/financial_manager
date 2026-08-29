@@ -1752,6 +1752,28 @@
   font-weight: 800;
 }
 
+.app-show-card__installment-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--expense-category-color) 14%, transparent);
+  color: var(--text-main);
+  font-weight: 800;
+  text-decoration: none;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.app-show-card__installment-link:hover,
+.app-show-card__installment-link:focus-visible {
+  background: color-mix(in srgb, var(--expense-category-color) 24%, transparent);
+  color: var(--text-main);
+  box-shadow: 0 3px 8px color-mix(in srgb, var(--expense-category-color) 18%, transparent);
+  transform: translateY(-1px);
+}
+
 .app-show-card__installment-status {
   display: inline-flex;
   padding: 4px 10px;

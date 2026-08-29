@@ -126,9 +126,14 @@ class ExpensesController < ApplicationController
 
   def toggle_paid
     toggle_paid_with_scope
-    load_expenses
-
     success_message = "Status da despesa atualizado com sucesso!"
+
+    if params[:return_to] == "show"
+      redirect_to expense_path(@expense), notice: success_message
+      return
+    end
+
+    load_expenses
 
     respond_to do |format|
       format.turbo_stream do

@@ -68,9 +68,21 @@
             <strong class="app-show-card__amount">
               <%= number_to_currency(@expense.effective_amount, unit: "R$ ", separator: ",", delimiter: ".") %>
             </strong>
-            <span class="app-show-card__status <%= @expense.paid? ? 'app-show-card__status--paid' : 'app-show-card__status--pending' %>">
-              <%= @expense.paid? ? "Pago" : "Pendente" %>
-            </span>
+            <% if @expense.payment_method_credito_parcelado? %>
+              <%= link_to toggle_paid_options_expense_path(@expense, return_to: "show"),
+                          class: "app-show-card__status #{@expense.paid? ? 'app-show-card__status--paid' : 'app-show-card__status--pending'}",
+                          aria: { label: (@expense.paid? ? "Despesa paga" : "Despesa pendente") },
+                          data: { turbo_frame: "modal" } do %>
+                <%= @expense.paid? ? "Pago" : "Pendente" %>
+              <% end %>
+            <% else %>
+              <%= link_to toggle_paid_expense_path(@expense, return_to: "show"),
+                          class: "app-show-card__status #{@expense.paid? ? 'app-show-card__status--paid' : 'app-show-card__status--pending'}",
+                          aria: { label: (@expense.paid? ? "Despesa paga" : "Despesa pendente") },
+                          data: { turbo_method: :patch } do %>
+                <%= @expense.paid? ? "Pago" : "Pendente" %>
+              <% end %>
+            <% end %>
           </div>
         </div>
       </div>

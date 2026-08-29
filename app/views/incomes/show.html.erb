@@ -59,9 +59,12 @@
             <strong class="app-show-card__amount">
               <%= number_to_currency(@income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
             </strong>
-            <span class="app-show-card__status <%= @income.paid? ? 'app-show-card__status--paid' : 'app-show-card__status--pending' %>">
+            <%= link_to toggle_paid_income_path(@income, return_to: "show"),
+                        class: "app-show-card__status #{@income.paid? ? 'app-show-card__status--paid' : 'app-show-card__status--pending'}",
+                        aria: { label: (@income.paid? ? "Receita recebida" : "Receita pendente") },
+                        data: { turbo_method: :patch } do %>
               <%= @income.paid? ? "Recebida" : "Pendente" %>
-            </span>
+            <% end %>
           </div>
         </div>
       </div>

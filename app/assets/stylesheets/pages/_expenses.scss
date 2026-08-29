@@ -1117,6 +1117,12 @@
   border-radius: 999px;
   font-size: 0.74rem;
   font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.app-show-card__status:hover {
+  text-decoration: none;
 }
 
 .app-show-card__status--paid {

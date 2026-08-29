@@ -100,8 +100,14 @@ class IncomesController < ApplicationController
 
   def toggle_paid
     @income.update(paid: !@income.paid)
-    load_incomes
     success_message = "Status da receita atualizado com sucesso!"
+
+    if params[:return_to] == "show"
+      redirect_to income_path(@income), notice: success_message
+      return
+    end
+
+    load_incomes
 
     respond_to do |format|
       format.turbo_stream do

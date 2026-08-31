@@ -102,9 +102,16 @@ class CategoriesController < ApplicationController
     @year = nil if @year.blank? || @year == 0
     @year ||= Date.current.year
 
-    result = Categories::IndexQuery.new(user: current_user, description: @description_filter, month: @month, year: @year).call
+    result = Categories::IndexQuery.new(
+      user: current_user,
+      description: @description_filter,
+      month: @month,
+      year: @year,
+      sort_option: params[:sort_option]
+    ).call
 
     @categories = result.categories
+    @sort_option = result.sort_option
     @categories_month_expenses = result.month_expenses
     @categories_month_incomes = result.month_incomes
     @categories_top_expense_value = result.top_expense_value

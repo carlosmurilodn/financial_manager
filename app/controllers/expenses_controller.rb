@@ -380,14 +380,18 @@ class ExpensesController < ApplicationController
 
   def load_expenses
     session[:expenses_month] = params[:month].to_i if params[:month].present?
-    @month = session[:expenses_month]
-    @month = nil if @month.blank? || @month == 0
-    @month ||= Date.current.month
+    @month = if session.key?(:expenses_month)
+      session[:expenses_month].presence&.nonzero?
+    else
+      Date.current.month
+    end
 
     session[:expenses_year] = params[:year].to_i if params[:year].present?
-    @year = session[:expenses_year]
-    @year = nil if @year.blank? || @year == 0
-    @year ||= Date.current.year
+    @year = if session.key?(:expenses_year)
+      session[:expenses_year].presence&.nonzero?
+    else
+      Date.current.year
+    end
 
     session[:expenses_description] = params[:description].to_s.strip if params.key?(:description)
     @description_filter = session[:expenses_description].presence

@@ -2,6 +2,7 @@ module Categories
   class IndexQuery
     Result = Struct.new(
       :categories,
+      :sort_option,
       :month_expenses,
       :month_incomes,
       :top_expense_value,
@@ -11,41 +12,61 @@ module Categories
       keyword_init: true
     )
 
-    def initialize(user:, description:, month: nil, year: nil)
+    SORT_OPTIONS = %w[name_asc expense_desc expense_asc].freeze
+    DEFAULT_SORT_OPTION = "name_asc"
+
+    def initialize(user:, description:, month: nil, year: nil, sort_option: nil)
       @user = user
       @description = description
       @month = month
       @year = year
+      @sort_option = SORT_OPTIONS.include?(sort_option) ? sort_option : DEFAULT_SORT_OPTION
     end
 
     def call
       current_expenses = user.expenses.where(balance_month: month_range)
       current_incomes = user.incomes.where(balance_month: month_range)
+      expenses_by_category = expenses_grouped_by_category(current_expenses)
 
       Result.new(
-        categories: filtered_categories,
+        categories: filtered_categories(expenses_by_category),
+        sort_option: sort_option,
         month_expenses: Expense.effective_sum(current_expenses),
         month_incomes: current_incomes.sum(:amount),
         top_expense_value: top_expense_value(current_expenses),
         uncategorized_value: uncategorized_value(current_expenses, current_incomes),
-        expenses_by_category: expenses_grouped_by_category(current_expenses),
+        expenses_by_category: expenses_by_category,
         incomes_by_category: incomes_grouped_by_category(current_incomes)
       )
     end
 
     private
 
-    attr_reader :user, :description, :month, :year
+    attr_reader :user, :description, :month, :year, :sort_option
 
-    def filtered_categories
+    def filtered_categories(expenses_by_category)
       categories = user.categories.to_a
-      return categories.sort_by(&:sort_name) if description.blank?
+      if description.present?
+        normalized_description = normalize_description(description)
+        categories.select! { |category| category.normalized_name.include?(normalized_description) }
+      end
 
-      normalized_description = normalize_description(description)
+      sort_categories(categories, expenses_by_category)
+    end
 
-      categories
-        .select { |category| category.normalized_name.include?(normalized_description) }
-        .sort_by(&:sort_name)
+    def sort_categories(categories, expenses_by_category)
+      categories.sort_by do |category|
+        expense_total = expenses_by_category.fetch(category.id, 0)
+
+        case sort_option
+        when "expense_desc"
+          [ -expense_total, category.sort_name ]
+        when "expense_asc"
+          [ expense_total, category.sort_name ]
+        else
+          [ category.sort_name ]
+        end
+      end
     end
 
     def month_range

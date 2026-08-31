@@ -58,6 +58,20 @@
                   options_for_select([["Todos", 0]] + (Date.today.year - 5..Date.today.year + 1).to_a.reverse, @year || 0),
                   {}, class: "app-form-select" %>
           </div>
+
+          <div class="app-filter-field">
+            <%= f.label :sort_option, "Ordenar" %>
+            <%= f.select :sort_option,
+                  options_for_select(
+                    [
+                      ["Nome (A–Z)", "name_asc"],
+                      ["Maior despesa", "expense_desc"],
+                      ["Menor despesa", "expense_asc"]
+                    ],
+                    @sort_option
+                  ),
+                  {}, class: "app-form-select" %>
+          </div>
         </div>
 
         <div class="app-filter-actions">

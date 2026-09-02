@@ -128,6 +128,10 @@
   background: var(--surface);
 }
 
+.expense-card--expense {
+  border-left: 5px solid var(--expense-category-color);
+}
+
 .expense-card__border {
   position: absolute;
   inset: 0 auto 0 0;

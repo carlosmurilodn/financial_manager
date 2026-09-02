@@ -875,6 +875,32 @@
 }
 
 @media (max-width: 767px) {
+  .dashboard-movement-item {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 7px 10px;
+  }
+
+  .dashboard-movement-item__date {
+    grid-row: 1 / span 2;
+  }
+
+  .dashboard-movement-item__main {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .dashboard-movement-item__status {
+    grid-column: 2 / 4;
+    grid-row: 2;
+    justify-self: start;
+    min-width: 0;
+  }
+
+  .dashboard-movement-item__amount {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
   .app-page__hero-badge {
     gap: 8px;
   }

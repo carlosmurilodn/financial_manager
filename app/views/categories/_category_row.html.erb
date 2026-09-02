@@ -3,8 +3,6 @@
 <% income_total = @category_incomes_by_id&.fetch(category.id, 0) || 0 %>
 
 <article id="<%= dom_id(category) %>" class="expense-card category-row" style="--expense-category-color: <%= category_color %>;">
-  <div class="expense-card__border"></div>
-
   <div class="category-row__content">
     <div class="category-row__identity">
       <span class="expense-card__icon-wrapper">

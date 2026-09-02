@@ -124,19 +124,9 @@
   position: relative;
   overflow: hidden;
   border: 1px solid var(--card-border);
+  border-left: 5px solid var(--expense-category-color);
   border-radius: 18px;
   background: var(--surface);
-}
-
-.expense-card--expense {
-  border-left: 5px solid var(--expense-category-color);
-}
-
-.expense-card__border {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 5px;
-  background: var(--expense-category-color);
 }
 
 .expense-card__content {

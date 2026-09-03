@@ -242,7 +242,7 @@ module Home
 
     def recent_expenses
       Expense.includes(:category)
-             .select(:id, :description, :amount, :date, :balance_month, :category_id, :payment_method)
+             .select(:id, :description, :amount, :date, :balance_month, :category_id, :payment_method, :paid)
              .where(balance_month: movement_period.range)
              .order(date: :asc, id: :desc)
     end

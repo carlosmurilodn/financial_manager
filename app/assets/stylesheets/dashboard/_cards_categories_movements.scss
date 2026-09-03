@@ -881,13 +881,22 @@ html[data-theme="night"] .dashboard-goal-item {
 
 .dashboard-movement-item {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 12px;
-  padding: 8px 8px;
+  padding: 8px 8px 8px 10px;
   border: 1px solid var(--card-border);
+  border-left: 4px solid var(--movement-status-color);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-movement-item--paid {
+  --movement-status-color: var(--pill-success-color);
+}
+
+.dashboard-movement-item--pending {
+  --movement-status-color: var(--pill-danger-color);
 }
 
 .dashboard-movement-item__date {
@@ -973,18 +982,30 @@ html[data-theme="night"] .dashboard-goal-item {
   white-space: nowrap;
 }
 
-.dashboard-movement-item--income .dashboard-movement-item__date {
-  background: var(--pill-success-bg);
+.dashboard-movement-item__status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 88px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
 }
 
-.dashboard-movement-item--income .dashboard-movement-item__amount {
+.dashboard-movement-item__status .material-symbols-rounded {
+  font-size: 0.9rem;
+}
+
+.dashboard-movement-item__status--paid {
+  background: var(--pill-success-bg);
   color: var(--pill-success-color);
 }
 
-.dashboard-movement-item--expense .dashboard-movement-item__date {
+.dashboard-movement-item__status--pending {
   background: var(--pill-danger-bg);
-}
-
-.dashboard-movement-item--expense .dashboard-movement-item__amount {
   color: var(--pill-danger-color);
 }

@@ -42,7 +42,8 @@
           <% if movement[:type] == :income %>
             <% income = movement[:record] %>
             <% category_color = income.category&.display_color || "var(--dashboard-movement-marker-color)" %>
-            <article class="dashboard-movement-item dashboard-movement-item--income" style="--movement-category-color: <%= category_color %>;">
+            <% status_class = income.paid? ? "paid" : "pending" %>
+            <article class="dashboard-movement-item dashboard-movement-item--income dashboard-movement-item--<%= status_class %>" style="--movement-category-color: <%= category_color %>;">
               <div class="dashboard-movement-item__date">
                 <strong><%= income.date.strftime("%d") %></strong>
                 <span><%= month_labels[income.date.month - 1] %></span>
@@ -56,6 +57,11 @@
                 <small class="dashboard-movement-item__category"><%= income.category&.name || "Sem categoria" %></small>
               </div>
 
+              <span class="dashboard-movement-item__status dashboard-movement-item__status--<%= status_class %>">
+                <span class="material-symbols-rounded" aria-hidden="true"><%= income.paid? ? "check" : "schedule" %></span>
+                <span><%= income.paid? ? "Recebido" : "Pendente" %></span>
+              </span>
+
               <strong class="dashboard-movement-item__amount">
                 + <%= number_to_currency(income.amount, unit: "R$ ", separator: ",", delimiter: ".") %>
               </strong>
@@ -63,7 +69,8 @@
           <% else %>
             <% expense = movement[:record] %>
             <% category_color = expense.category&.display_color || "var(--dashboard-movement-marker-color)" %>
-            <article class="dashboard-movement-item dashboard-movement-item--expense" style="--movement-category-color: <%= category_color %>;">
+            <% status_class = expense.paid? ? "paid" : "pending" %>
+            <article class="dashboard-movement-item dashboard-movement-item--expense dashboard-movement-item--<%= status_class %>" style="--movement-category-color: <%= category_color %>;">
               <div class="dashboard-movement-item__date">
                 <strong><%= expense.date.strftime("%d") %></strong>
                 <span><%= month_labels[expense.date.month - 1] %></span>
@@ -76,6 +83,11 @@
                 </div>
                 <small class="dashboard-movement-item__category"><%= expense.category&.name || "Sem categoria" %></small>
               </div>
+
+              <span class="dashboard-movement-item__status dashboard-movement-item__status--<%= status_class %>">
+                <span class="material-symbols-rounded" aria-hidden="true"><%= expense.paid? ? "check" : "schedule" %></span>
+                <span><%= expense.paid? ? "Pago" : "Pendente" %></span>
+              </span>
 
               <strong class="dashboard-movement-item__amount">
                 - <%= number_to_currency(expense.effective_amount.abs, unit: "R$ ", separator: ",", delimiter: ".") %>

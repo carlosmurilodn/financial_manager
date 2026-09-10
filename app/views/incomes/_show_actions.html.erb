@@ -1,0 +1,14 @@
+<%= link_to new_income_path(duplicate_from: @income.id), class: "app-show-card__action-btn app-show-card__action-btn--duplicate" do %>
+  <span class="material-symbols-rounded">content_copy</span>
+  Duplicar
+<% end %>
+
+<%= link_to edit_income_path(@income), class: "app-show-card__action-btn app-show-card__action-btn--edit" do %>
+  <span class="material-symbols-rounded">edit</span>
+  Editar
+<% end %>
+
+<%= link_to income_path(@income), data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir esta receita?" }, class: "app-show-card__action-btn app-show-card__action-btn--danger" do %>
+  <span class="material-symbols-rounded">delete</span>
+  Excluir
+<% end %>

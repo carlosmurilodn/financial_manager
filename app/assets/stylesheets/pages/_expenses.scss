@@ -1176,6 +1176,26 @@
   border-top: 1px solid var(--card-border);
 }
 
+.app-show-card__mobile-actions {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .app-show-card__mobile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 16px;
+    border-top: 1px solid var(--card-border);
+  }
+
+  .app-show-card__mobile-actions .app-show-card__action-btn {
+    justify-content: center;
+    min-height: 44px;
+    width: 100%;
+  }
+}
+
 .app-show-page__hero-actions {
   display: flex;
   align-items: center;

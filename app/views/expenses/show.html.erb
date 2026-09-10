@@ -16,27 +16,7 @@
           Voltar
         <% end %>
 
-        <%= link_to new_expense_path(duplicate_from: @expense.id), class: "app-show-card__action-btn app-show-card__action-btn--duplicate" do %>
-          <span class="material-symbols-rounded">content_copy</span>
-          Duplicar
-        <% end %>
-
-        <%= link_to edit_expense_path(@expense), class: "app-show-card__action-btn app-show-card__action-btn--edit" do %>
-          <span class="material-symbols-rounded">edit</span>
-          Editar
-        <% end %>
-
-        <% if @expense.payment_method_credito_parcelado? %>
-          <%= link_to delete_options_expense_path(@expense), class: "app-show-card__action-btn app-show-card__action-btn--danger", data: { turbo_frame: "modal" } do %>
-            <span class="material-symbols-rounded">delete</span>
-            Excluir
-          <% end %>
-        <% else %>
-          <%= link_to expense_path(@expense), data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir esta despesa?" }, class: "app-show-card__action-btn app-show-card__action-btn--danger" do %>
-            <span class="material-symbols-rounded">delete</span>
-            Excluir
-          <% end %>
-        <% end %>
+        <%= render "show_actions" %>
       </div>
     </div>
   </div>
@@ -163,6 +143,10 @@
           </div>
         </div>
       <% end %>
+
+      <div class="app-show-card__mobile-actions">
+        <%= render "show_actions" %>
+      </div>
 
     </div>
   </div>

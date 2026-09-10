@@ -1244,7 +1244,7 @@
   }
 
   .app-page__hero-top--show > .app-show-page__hero-actions--duplicable {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    display: none;
   }
 
   .app-page__hero-top--show > .app-show-page__hero-actions > a {

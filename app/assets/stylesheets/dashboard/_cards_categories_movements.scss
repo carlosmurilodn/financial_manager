@@ -912,6 +912,14 @@ html[data-theme="night"] .dashboard-goal-item {
   flex-shrink: 0;
 }
 
+.dashboard-movement-item--income .dashboard-movement-item__date {
+  background: var(--pill-success-bg);
+}
+
+.dashboard-movement-item--expense .dashboard-movement-item__date {
+  background: var(--pill-danger-bg);
+}
+
 .dashboard-movement-item__date strong,
 .dashboard-movement-item__date span {
   line-height: 1;

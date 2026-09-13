@@ -912,11 +912,11 @@ html[data-theme="night"] .dashboard-goal-item {
   flex-shrink: 0;
 }
 
-.dashboard-movement-item--paid .dashboard-movement-item__date {
+.dashboard-movement-item--income .dashboard-movement-item__date {
   background: var(--pill-success-bg);
 }
 
-.dashboard-movement-item--pending .dashboard-movement-item__date {
+.dashboard-movement-item--expense .dashboard-movement-item__date {
   background: var(--pill-danger-bg);
 }
 

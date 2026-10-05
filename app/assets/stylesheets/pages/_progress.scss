@@ -1,0 +1,235 @@
+.app-page__hero-top--progress {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.6fr) minmax(220px, 0.6fr);
+  align-items: stretch;
+  gap: 12px;
+}
+
+.progress-hero-card {
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  background: var(--app-bg-soft);
+}
+
+.progress-hero-card--accent {
+  background: var(--hero-badge-icon-bg);
+}
+
+.progress-hero-card__label {
+  color: var(--text-soft);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.progress-hero-card strong {
+  color: var(--text-main);
+  font-size: 1.05rem;
+  line-height: 1.15;
+}
+
+.progress-hero-card small {
+  color: var(--text-soft);
+  line-height: 1.35;
+}
+
+.progress-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.progress-grid--summary {
+  align-items: stretch;
+}
+
+.progress-panel {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+
+.progress-panel h2 {
+  margin: 0;
+  color: var(--text-main);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.progress-panel__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.progress-panel__header > .material-symbols-rounded {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+  background: var(--hero-badge-icon-bg);
+  color: var(--hero-badge-icon-color);
+}
+
+.progress-milestones {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.progress-milestone {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--table-border-color);
+  border-radius: var(--radius-md);
+  background: var(--app-bg-soft);
+}
+
+.progress-milestone span {
+  color: var(--text-main);
+  font-weight: 800;
+}
+
+.progress-milestone strong {
+  color: var(--text-soft);
+  font-size: 0.74rem;
+}
+
+.progress-milestone.is-done {
+  border-color: transparent;
+  background: var(--pill-success-bg);
+}
+
+.progress-milestone.is-done span,
+.progress-milestone.is-current span {
+  color: var(--pill-success-color);
+}
+
+.progress-milestone.is-current {
+  border-color: var(--primary);
+  background: var(--stat-primary-bg);
+}
+
+.progress-checklist {
+  display: grid;
+  gap: 10px;
+}
+
+.progress-checklist div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--table-border-color);
+}
+
+.progress-checklist div:last-child {
+  border-bottom: 0;
+}
+
+.progress-checklist span,
+.progress-review li,
+.progress-indicator small {
+  color: var(--text-soft);
+}
+
+.progress-checklist strong {
+  color: var(--text-main);
+  white-space: nowrap;
+}
+
+.progress-indicators {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.progress-indicator {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--table-border-color);
+  border-radius: var(--radius-md);
+  background: var(--app-bg-soft);
+}
+
+.progress-indicator .material-symbols-rounded {
+  color: var(--nav-active-icon-color);
+}
+
+.progress-indicator strong {
+  color: var(--text-main);
+}
+
+.progress-indicator small {
+  line-height: 1.4;
+}
+
+.progress-review {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.progress-review li {
+  padding-left: 4px;
+  line-height: 1.4;
+}
+
+.progress-wins {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.progress-wins span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 7px 12px;
+  border: 1px solid var(--table-border-color);
+  border-radius: 999px;
+  background: var(--pill-bg);
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+@media (max-width: 1199px) {
+  .app-page__hero-top--progress,
+  .progress-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-milestones,
+  .progress-indicators {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 575px) {
+  .progress-milestones,
+  .progress-indicators {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-checklist div {
+    display: grid;
+    gap: 4px;
+  }
+
+  .progress-wins span {
+    width: 100%;
+  }
+}

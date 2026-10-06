@@ -1,4 +1,39 @@
 module ApplicationHelper
+  HEALTH_CONTROLLERS = %w[
+    progress
+    weight_entries
+    health_weight_goals
+    weekly_health_plans
+    weekly_health_reviews
+    weekly_wellbeings
+    health_wins
+  ].freeze
+
+  def health_section?
+    controller_name.in?(HEALTH_CONTROLLERS)
+  end
+
+  def health_nav_active?(item)
+    case item
+    when :progress
+      controller_name == "progress"
+    when :weight
+      controller_name == "weight_entries"
+    when :milestones
+      controller_name == "health_weight_goals"
+    when :goals
+      controller_name == "weekly_health_plans"
+    when :questions
+      controller_name == "weekly_health_reviews"
+    when :week_review
+      controller_name == "weekly_wellbeings"
+    when :wins
+      controller_name == "health_wins"
+    else
+      false
+    end
+  end
+
   def default_per_page
     ControllerPagination::DEFAULT_PER_PAGE
   end

@@ -14,7 +14,10 @@
         </div>
       </div>
 
-      <div class="progress-hero-card">
+      <div class="progress-hero-card progress-hero-card--warning">
+        <div class="progress-hero-card__main">
+          <span class="progress-hero-card__weight-icon material-symbols-rounded" aria-hidden="true">monitor_weight</span>
+          <div class="progress-hero-card__weight-copy">
         <span class="progress-hero-card__label">Marco atual</span>
         <% if @latest_weight_entry %>
           <strong><%= number_with_precision(@latest_weight_entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ",") %> kg</strong>
@@ -23,13 +26,19 @@
           <strong>Sem medição</strong>
           <small>Registre seu primeiro peso para começar.</small>
         <% end %>
+          </div>
+        </div>
       </div>
 
-      <div class="progress-hero-card progress-hero-card--accent">
+      <div class="progress-hero-card progress-hero-card--success">
+        <div class="progress-hero-card__main">
+          <span class="progress-hero-card__goal-icon material-symbols-rounded" aria-hidden="true">flag</span>
+          <div class="progress-hero-card__weight-copy">
         <span class="progress-hero-card__label">Objetivo maior</span>
         <strong><%= @health_weight_goal ? "#{number_with_precision(@health_weight_goal.target_weight, precision: 2, strip_insignificant_zeros: true, separator: ',')} kg" : "Defina seu objetivo" %></strong>
         <small>Foco em processo, nao em julgamento diario.</small>
-        <%= link_to @health_weight_goal ? "Editar objetivo" : "Configurar objetivo", edit_health_weight_goal_path, data: { turbo: false } %>
+          </div>
+        </div>
       </div>
     </div>
   </div>

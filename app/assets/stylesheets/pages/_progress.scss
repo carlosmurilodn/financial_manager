@@ -20,6 +20,42 @@
   background: var(--hero-badge-icon-bg);
 }
 
+.progress-hero-card--warning {
+  background: var(--stat-warning-bg);
+}
+
+.progress-hero-card--success {
+  background: var(--stat-success-bg);
+}
+
+.progress-hero-card__main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-hero-card__weight-icon,
+.progress-hero-card__goal-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+  background: var(--stat-warning-icon-bg);
+  color: #fff;
+}
+
+.progress-hero-card__goal-icon {
+  background: var(--stat-success-icon-bg);
+}
+
+.progress-hero-card__weight-copy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
 .progress-hero-card__label {
   color: var(--text-soft);
   font-size: 0.72rem;

@@ -122,13 +122,15 @@
     .app-categories-hero-kpis,
     .app-financial-goals-hero-kpis,
     .app-health-goals-hero-kpis,
-    .app-weekly-wellbeings-hero-kpis
+    .app-weekly-wellbeings-hero-kpis,
+    .app-weekly-health-plans-hero-kpis
   ) {
     display: contents;
   }
 
   .app-page__hero-top--health-goals,
-  .app-page__hero-top--weekly-wellbeings {
+  .app-page__hero-top--weekly-wellbeings,
+  .app-page__hero-top--weekly-health-plans {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-template-rows: 1fr;
   }
@@ -136,7 +138,9 @@
   .app-page__hero-top--health-goals > .app-page__hero-copy,
   .app-page__hero-top--health-goals > .app-page__hero-action,
   .app-page__hero-top--weekly-wellbeings > .app-page__hero-copy,
-  .app-page__hero-top--weekly-wellbeings > .app-page__hero-action {
+  .app-page__hero-top--weekly-wellbeings > .app-page__hero-action,
+  .app-page__hero-top--weekly-health-plans > .app-page__hero-copy,
+  .app-page__hero-top--weekly-health-plans > .app-page__hero-action {
     grid-column: auto;
     grid-row: auto;
   }
@@ -656,7 +660,8 @@
   .app-page__hero-top--categories,
   .app-page__hero-top--financial-goals,
   .app-page__hero-top--health-goals,
-  .app-page__hero-top--weekly-wellbeings {
+  .app-page__hero-top--weekly-wellbeings,
+  .app-page__hero-top--weekly-health-plans {
     display: grid;
     grid-template-columns: 1fr;
   }
@@ -673,7 +678,8 @@
   .app-categories-hero-kpis,
   .app-financial-goals-hero-kpis,
   .app-health-goals-hero-kpis,
-  .app-weekly-wellbeings-hero-kpis {
+  .app-weekly-wellbeings-hero-kpis,
+  .app-weekly-health-plans-hero-kpis {
     grid-template-columns: 1fr;
   }
 
@@ -684,7 +690,8 @@
   .app-page__hero-top > .app-page__hero-kpis > .app-categories-hero-kpis,
   .app-page__hero-top > .app-page__hero-kpis > .app-financial-goals-hero-kpis,
   .app-page__hero-top > .app-page__hero-kpis > .app-health-goals-hero-kpis,
-  .app-page__hero-top > .app-page__hero-kpis > .app-weekly-wellbeings-hero-kpis {
+  .app-page__hero-top > .app-page__hero-kpis > .app-weekly-wellbeings-hero-kpis,
+  .app-page__hero-top > .app-page__hero-kpis > .app-weekly-health-plans-hero-kpis {
     display: grid;
     gap: 10px;
   }

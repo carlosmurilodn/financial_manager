@@ -4,7 +4,8 @@
 .app-categories-hero-kpis,
 .app-financial-goals-hero-kpis,
 .app-health-goals-hero-kpis,
-.app-weekly-wellbeings-hero-kpis {
+.app-weekly-wellbeings-hero-kpis,
+.app-weekly-health-plans-hero-kpis {
   display: contents;
 }
 
@@ -77,7 +78,8 @@
 .app-categories-hero-kpis .stat-card,
 .app-financial-goals-hero-kpis .stat-card,
 .app-health-goals-hero-kpis .stat-card,
-.app-weekly-wellbeings-hero-kpis .stat-card {
+.app-weekly-wellbeings-hero-kpis .stat-card,
+.app-weekly-health-plans-hero-kpis .stat-card {
   min-width: 0;
   padding: 8px 10px;
 }
@@ -88,7 +90,8 @@
 .app-categories-hero-kpis .stat-card__icon,
 .app-financial-goals-hero-kpis .stat-card__icon,
 .app-health-goals-hero-kpis .stat-card__icon,
-.app-weekly-wellbeings-hero-kpis .stat-card__icon {
+.app-weekly-wellbeings-hero-kpis .stat-card__icon,
+.app-weekly-health-plans-hero-kpis .stat-card__icon {
   width: 32px;
   height: 32px;
   min-width: 32px;
@@ -100,7 +103,8 @@
 .app-categories-hero-kpis .stat-card__icon .material-symbols-rounded,
 .app-financial-goals-hero-kpis .stat-card__icon .material-symbols-rounded,
 .app-health-goals-hero-kpis .stat-card__icon .material-symbols-rounded,
-.app-weekly-wellbeings-hero-kpis .stat-card__icon .material-symbols-rounded {
+.app-weekly-wellbeings-hero-kpis .stat-card__icon .material-symbols-rounded,
+.app-weekly-health-plans-hero-kpis .stat-card__icon .material-symbols-rounded {
   font-size: 1rem;
 }
 
@@ -110,7 +114,8 @@
 .app-categories-hero-kpis .stat-card__label,
 .app-financial-goals-hero-kpis .stat-card__label,
 .app-health-goals-hero-kpis .stat-card__label,
-.app-weekly-wellbeings-hero-kpis .stat-card__label {
+.app-weekly-wellbeings-hero-kpis .stat-card__label,
+.app-weekly-health-plans-hero-kpis .stat-card__label {
   margin-bottom: 3px;
   font-size: 0.72rem;
   line-height: 1.15;
@@ -122,7 +127,8 @@
 .app-categories-hero-kpis .stat-card__value,
 .app-financial-goals-hero-kpis .stat-card__value,
 .app-health-goals-hero-kpis .stat-card__value,
-.app-weekly-wellbeings-hero-kpis .stat-card__value {
+.app-weekly-wellbeings-hero-kpis .stat-card__value,
+.app-weekly-health-plans-hero-kpis .stat-card__value {
   font-size: clamp(0.82rem, 1.05vw, 1rem);
 }
 
@@ -130,6 +136,87 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+.weekly-health-plan-days {
+  display: grid;
+  gap: 10px;
+}
+
+.weekly-health-plan-days__goal {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--surface-muted) 70%, transparent);
+}
+
+.weekly-health-plan-days__goal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--text-main);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.weekly-health-plan-days__goal-header span {
+  color: var(--text-soft);
+}
+
+.weekly-health-plan-days__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.weekly-health-plan-days__day-form {
+  min-width: 0;
+}
+
+.weekly-health-plan-days__day {
+  display: grid;
+  min-width: 0;
+  width: 100%;
+  min-height: 62px;
+  place-items: center;
+  gap: 2px;
+  padding: 6px 4px;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-soft);
+  font: inherit;
+}
+
+.weekly-health-plan-days__day span:first-child {
+  font-size: 0.66rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.weekly-health-plan-days__day strong {
+  color: var(--text-main);
+  font-size: 0.88rem;
+}
+
+.weekly-health-plan-days__day .material-symbols-rounded {
+  font-size: 1rem;
+}
+
+.weekly-health-plan-days__day.is-checked {
+  border-color: color-mix(in srgb, var(--success) 45%, transparent);
+  background: color-mix(in srgb, var(--success) 12%, var(--surface));
+  color: var(--success);
+}
+
+.weekly-health-plan-days__day:hover,
+.weekly-health-plan-days__day:focus-visible {
+  border-color: color-mix(in srgb, var(--nav-active-bar) 45%, transparent);
+  color: var(--nav-active-bar);
+  transform: translateY(-1px);
 }
 
 .expense-card {

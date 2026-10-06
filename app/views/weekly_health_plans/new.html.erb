@@ -1,0 +1,13 @@
+<%= render layout: "shared/form_page", locals: {
+  resource: @weekly_health_plan,
+  title: "Nova Meta",
+  eyebrow: "Progresso · segunda a domingo",
+  description: "Selecione a semana e cadastre metas que dependem de você.",
+  icon: "task_alt",
+  back_path: weekly_health_plans_path
+} do %>
+  <%= render "form",
+             weekly_health_plan: @weekly_health_plan,
+             form_url: weekly_health_plans_path,
+             form_method: :post %>
+<% end %>

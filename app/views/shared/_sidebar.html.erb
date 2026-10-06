@@ -42,7 +42,7 @@
           <span class="link-text">Além da Balança</span>
         <% end %>
 
-        <%= link_to progress_path(anchor: "metas-processo"), class: "app-nav-link #{'active-menu' if health_nav_active?(:goals)}", id: "link-health-goals", title: "Metas que Dependem de Você", aria: { label: "Metas que Dependem de Você" }, data: { turbo: false } do %>
+        <%= link_to weekly_health_plans_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:goals)}", id: "link-health-goals", title: "Metas que Dependem de Você", aria: { label: "Metas que Dependem de Você" }, data: { turbo: false } do %>
           <span class="material-symbols-rounded app-nav-link__icon">task_alt</span>
           <span class="link-text">Metas</span>
         <% end %>

@@ -197,6 +197,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_170000) do
     t.index ["webauthn_id"], name: "index_users_on_webauthn_id", unique: true
   end
 
+  create_table "weekly_health_goal_days", force: :cascade do |t|
+    t.bigint "weekly_health_goal_id", null: false
+    t.date "occurred_on", null: false
+    t.boolean "completed", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["weekly_health_goal_id", "occurred_on"], name: "index_weekly_health_goal_days_on_goal_and_date", unique: true
+    t.index ["weekly_health_goal_id"], name: "index_weekly_health_goal_days_on_weekly_health_goal_id"
+  end
+
   create_table "weekly_health_goals", force: :cascade do |t|
     t.bigint "weekly_health_plan_id", null: false
     t.string "name", null: false
@@ -275,6 +285,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_170000) do
   add_foreign_key "incomes", "categories"
   add_foreign_key "incomes", "users"
   add_foreign_key "passkey_credentials", "users"
+  add_foreign_key "weekly_health_goal_days", "weekly_health_goals"
   add_foreign_key "weekly_health_goals", "weekly_health_plans"
   add_foreign_key "weekly_health_plans", "users"
   add_foreign_key "weekly_health_reviews", "users"

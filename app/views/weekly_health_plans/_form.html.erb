@@ -1,0 +1,33 @@
+<%= form_with model: weekly_health_plan, url: form_url, method: form_method, local: true, html: { class: "app-form-page__form", data: { turbo: false, controller: "weekly-goals" } } do |f| %>
+  <%= f.hidden_field :week_start %>
+  <p class="progress-empty">Defina quantas ações planeja realizar e quantas já realizou. Você pode renomear, remover ou adicionar metas; alimentação inclui marmitas, lanches e outras refeições.</p>
+
+  <div class="progress-review-form">
+    <div>
+      <%= label_tag :week_number, "Semana do lançamento" %>
+      <%= select_tag :week_number,
+            options_for_select(@week_options, @selected_week_number),
+            class: "app-form-select",
+            required: true %>
+      <small>As semanas seguem o padrão de segunda a domingo.</small>
+    </div>
+  </div>
+
+  <div class="progress-week-form" data-weekly-goals-target="rows">
+    <%= f.fields_for :weekly_health_goals do |goal_fields| %>
+      <%= render "goal_fields", goal_fields: goal_fields %>
+    <% end %>
+  </div>
+
+  <template data-weekly-goals-target="template">
+    <%= f.fields_for :weekly_health_goals, WeeklyHealthGoal.new(target_count: 1, completed_count: 0), child_index: "NEW_GOAL" do |goal_fields| %>
+      <%= render "goal_fields", goal_fields: goal_fields %>
+    <% end %>
+  </template>
+
+  <div class="app-form-page__actions">
+    <%= link_to "Cancelar", weekly_health_plans_path, class: "app-btn app-btn--outline" %>
+    <button type="button" class="app-btn app-btn--outline" data-action="weekly-goals#add">Adicionar meta</button>
+    <%= f.submit "Salvar metas da semana", class: "app-btn app-btn--primary" %>
+  </div>
+<% end %>

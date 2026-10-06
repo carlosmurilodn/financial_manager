@@ -1,0 +1,101 @@
+<% goals = weekly_health_plan.weekly_health_goals.to_a %>
+<% total_target = goals.sum(&:target_count) %>
+<% total_completed = goals.sum(&:completed_count) %>
+<% progress = total_target.positive? ? (total_completed.to_f / total_target * 100).round : 0 %>
+<% week_days = (weekly_health_plan.week_start..weekly_health_plan.week_end).to_a %>
+
+<div
+  id="<%= dom_id(weekly_health_plan) %>"
+  class="expense-card expense-card--expense <%= progress >= 100 ? "expense-card--paid" : "expense-card--pending" %>"
+  style="--expense-category-color: #5c6df2;"
+>
+  <div class="expense-card__content">
+    <div class="expense-card__identity-block">
+      <div class="expense-card__identity-main">
+        <div class="expense-card__icon-wrapper">
+          <span class="material-symbols-rounded expense-card__icon">task_alt</span>
+        </div>
+
+        <div class="expense-card__description-link">
+          <h3 class="expense-card__title">Semana de <%= weekly_health_plan.week_start.strftime("%d/%m/%Y") %></h3>
+        </div>
+      </div>
+
+      <div class="expense-card__amount-area">
+        <strong class="expense-card__amount"><%= progress %>%</strong>
+
+        <span class="expense-card__status <%= progress >= 100 ? "expense-card__status--paid" : "expense-card__status--pending" %>">
+          <span class="material-symbols-rounded expense-card__status-state-icon"><%= progress >= 100 ? "check" : "schedule" %></span>
+          <span class="expense-card__status-label"><%= progress >= 100 ? "Cumprida" : "Em andamento" %></span>
+          <span class="material-symbols-rounded expense-card__status-mobile-icon" aria-hidden="true">task_alt</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="expense-card__badges">
+      <% goals.each do |goal| %>
+        <span class="expense-card__pill"><%= goal.name %>: <%= goal.completed_count %>/<%= goal.target_count %></span>
+      <% end %>
+    </div>
+
+    <div class="weekly-health-plan-days">
+      <% goals.each do |goal| %>
+        <div class="weekly-health-plan-days__goal">
+          <div class="weekly-health-plan-days__goal-header">
+            <strong><%= goal.name %></strong>
+            <span><%= goal.completed_count %>/<%= goal.target_count %></span>
+          </div>
+
+          <div class="weekly-health-plan-days__grid">
+            <% week_days.each do |day| %>
+              <% completed = goal.completed_on?(day) %>
+              <%= button_to toggle_day_weekly_health_goal_path(goal, occurred_on: day.iso8601),
+                            method: :patch,
+                            class: "weekly-health-plan-days__day #{'is-checked' if completed}",
+                            form: { class: "weekly-health-plan-days__day-form" },
+                            title: "#{completed ? 'Desmarcar' : 'Marcar'} #{goal.name} em #{day.strftime("%d/%m/%Y")}",
+                            aria: { label: "#{completed ? 'Desmarcar' : 'Marcar'} #{goal.name} em #{day.strftime("%d/%m/%Y")}" } do %>
+                <span><%= I18n.l(day, format: "%a").first(3).capitalize %></span>
+                <strong><%= day.strftime("%d") %></strong>
+                <span class="material-symbols-rounded"><%= completed ? "check" : "add" %></span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="expense-card__footer">
+      <div class="expense-card__information">
+        <span class="expense-card__meta-item">
+          <span class="material-symbols-rounded">calendar_month</span>
+          <span><small>Semana</small><strong><%= weekly_health_plan.week_start.strftime("%d/%m/%Y") %> a <%= weekly_health_plan.week_end.strftime("%d/%m/%Y") %></strong></span>
+        </span>
+
+        <span class="expense-card__meta-item">
+          <span class="material-symbols-rounded">format_list_numbered</span>
+          <span><small>Total</small><strong><%= total_completed %>/<%= total_target %></strong></span>
+        </span>
+      </div>
+
+      <div class="expense-card__actions">
+        <%= link_to edit_weekly_health_plan_path(weekly_health_plan.week_start.iso8601),
+                    class: "expense-card__action",
+                    title: "Editar metas",
+                    aria: { label: "Editar metas da semana de #{weekly_health_plan.week_start.strftime("%d/%m/%Y")}" } do %>
+          <span class="material-symbols-rounded">edit</span>
+          <span class="expense-card__action-label">Editar</span>
+        <% end %>
+
+        <%= link_to weekly_health_plan_path(weekly_health_plan.week_start.iso8601),
+                    data: { turbo_method: :delete, turbo_confirm: "Excluir as metas da semana de #{weekly_health_plan.week_start.strftime("%d/%m/%Y")}?" },
+                    class: "expense-card__action expense-card__action--danger",
+                    title: "Excluir metas",
+                    aria: { label: "Excluir metas da semana de #{weekly_health_plan.week_start.strftime("%d/%m/%Y")}" } do %>
+          <span class="material-symbols-rounded">delete</span>
+          <span class="expense-card__action-label">Excluir</span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

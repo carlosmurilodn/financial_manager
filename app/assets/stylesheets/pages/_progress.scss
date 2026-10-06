@@ -5,6 +5,11 @@
   gap: 12px;
 }
 
+.app-filter-grid--health-weight {
+  grid-template-columns: repeat(2, minmax(180px, 240px));
+  justify-content: start;
+}
+
 .progress-hero-card {
   display: grid;
   align-content: center;
@@ -189,6 +194,12 @@
 
 @media (max-width: 767px) {
   .progress-weight-overview {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .app-filter-grid--health-weight {
     grid-template-columns: 1fr;
   }
 }

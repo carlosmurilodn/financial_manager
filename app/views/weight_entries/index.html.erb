@@ -1,6 +1,6 @@
 <section class="app-page">
   <div class="app-page__hero">
-    <div class="app-page__hero-top app-page__hero-top--progress">
+    <div class="app-page__hero-top app-page__hero-top--financial-goals">
       <div class="app-page__hero-unit app-page__hero-copy">
         <span class="app-page__hero-icon">
           <span class="material-symbols-rounded">monitor_weight</span>
@@ -23,21 +23,35 @@
         <% end %>
       </div>
 
-      <div class="app-page__hero-unit">
-        <div class="stat-card">
-          <span class="stat-card__label">Última medição</span>
-          <strong class="stat-card__value">
-            <%= @latest_weight_entry ? "#{number_with_precision(@latest_weight_entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ",")} kg" : "Sem registro" %>
-          </strong>
-          <small><%= @latest_weight_entry ? @latest_weight_entry.measured_on.strftime("%d/%m/%Y") : "Registre seu primeiro peso." %></small>
-        </div>
-      </div>
+      <div class="app-page__hero-kpis">
+        <div class="app-financial-goals-hero-kpis">
+          <div class="app-page__hero-unit">
+            <div class="stat-card stat-card--warning">
+              <div class="stat-card__icon">
+                <span class="material-symbols-rounded">monitor_weight</span>
+              </div>
+              <div>
+                <span class="stat-card__label">Última medição</span>
+                <strong class="stat-card__value">
+                  <%= @latest_weight_entry ? "#{number_with_precision(@latest_weight_entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ",")} kg" : "Sem registro" %>
+                </strong>
+                <small class="stat-card__meta"><%= @latest_weight_entry ? @latest_weight_entry.measured_on.strftime("%d/%m/%Y") : "Registre seu primeiro peso." %></small>
+              </div>
+            </div>
+          </div>
 
-      <div class="app-page__hero-unit">
-        <div class="stat-card">
-          <span class="stat-card__label">Registros filtrados</span>
-          <strong class="stat-card__value"><%= @filtered_count %></strong>
-          <small><%= @initial_weight_entry ? "Desde #{@initial_weight_entry.measured_on.strftime("%d/%m/%Y")}" : "Nenhum histórico disponível." %></small>
+          <div class="app-page__hero-unit">
+            <div class="stat-card stat-card--primary">
+              <div class="stat-card__icon">
+                <span class="material-symbols-rounded">format_list_numbered</span>
+              </div>
+              <div>
+                <span class="stat-card__label">Registros filtrados</span>
+                <strong class="stat-card__value"><%= @filtered_count %></strong>
+                <small class="stat-card__meta"><%= @initial_weight_entry ? "Desde #{@initial_weight_entry.measured_on.strftime("%d/%m/%Y")}" : "Nenhum histórico disponível." %></small>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -46,7 +60,7 @@
   <div class="app-panel">
     <%= render "shared/filter_accordion" do %>
       <%= form_with url: weight_entries_path, method: :get, local: true, class: "app-filter-form" do |f| %>
-        <div class="app-filter-grid">
+        <div class="app-filter-grid app-filter-grid--health-weight">
           <div class="app-filter-field">
             <%= f.label :measured_from, "De" %>
             <%= f.date_field :measured_from, value: @measured_from_filter, class: "app-form-control", max: Date.current.iso8601 %>
@@ -87,7 +101,7 @@
               <tr>
                 <td data-label="Data"><%= entry.measured_on.strftime("%d/%m/%Y") %></td>
                 <td data-label="Peso"><strong><%= number_with_precision(entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ",") %> kg</strong></td>
-                <td data-label="Ações">
+                <td class="text-end" data-label="Ações">
                   <div class="app-record-actions">
                     <%= link_to edit_weight_entry_path(entry), class: "app-btn app-btn--outline", data: { turbo: false }, aria: { label: "Editar medição de #{entry.measured_on.strftime("%d/%m/%Y")}" } do %>
                       <span class="material-symbols-rounded">edit</span>

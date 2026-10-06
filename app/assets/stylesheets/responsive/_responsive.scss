@@ -129,8 +129,8 @@
 
   .app-page__hero-top--health-goals,
   .app-page__hero-top--weekly-wellbeings {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: 1fr;
   }
 
   .app-page__hero-top--health-goals > .app-page__hero-copy,

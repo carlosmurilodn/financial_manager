@@ -1,6 +1,6 @@
 class WeeklyWellbeingsController < ApplicationController
-  before_action :set_week_start, only: %i[edit update]
-  before_action :load_week_options, only: %i[new create]
+  before_action :set_week_start, only: %i[edit update destroy]
+  before_action :load_week_options, only: %i[new create edit update]
 
   def index
     load_weekly_wellbeings
@@ -27,11 +27,14 @@ class WeeklyWellbeingsController < ApplicationController
 
   def edit
     @weekly_wellbeing = current_user.weekly_wellbeings.find_or_initialize_by(week_start: @week_start)
+    @selected_week_number = week_number_for(@weekly_wellbeing.week_start)
   end
 
   def update
     saved = current_user.with_lock do
       @weekly_wellbeing = current_user.weekly_wellbeings.find_or_initialize_by(week_start: @week_start)
+      @selected_week_number = selected_week_number
+      @weekly_wellbeing.week_start = week_start_for_number(@selected_week_number)
       @weekly_wellbeing.assign_attributes(weekly_wellbeing_params)
       @weekly_wellbeing.save
     end
@@ -40,6 +43,16 @@ class WeeklyWellbeingsController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordNotUnique
+    @weekly_wellbeing.errors.add(:week_start, "já possui um registro. Edite a semana existente ou escolha outra semana.")
+    render :edit, status: :unprocessable_entity
+  end
+
+  def destroy
+    weekly_wellbeing = current_user.weekly_wellbeings.find_by!(week_start: @week_start)
+    weekly_wellbeing.destroy!
+
+    redirect_to weekly_wellbeings_path, notice: "Registro de bem-estar excluído com sucesso!", status: :see_other
   end
 
   def clear_filters
@@ -84,6 +97,10 @@ class WeeklyWellbeingsController < ApplicationController
 
   def current_week_number
     [[ Date.current.cweek, 1 ].max, 52 ].min
+  end
+
+  def week_number_for(date)
+    [[ date.cweek, 1 ].max, 52 ].min
   end
 
   def week_start_for_number(week_number)

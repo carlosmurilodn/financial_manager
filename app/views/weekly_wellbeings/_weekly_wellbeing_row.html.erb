@@ -55,6 +55,15 @@
           <span class="material-symbols-rounded">edit</span>
           <span class="expense-card__action-label">Editar</span>
         <% end %>
+
+        <%= link_to weekly_wellbeing_path(weekly_wellbeing.week_start.iso8601),
+                    data: { turbo_method: :delete, turbo_confirm: "Excluir o registro da semana de #{weekly_wellbeing.week_start.strftime("%d/%m/%Y")}?" },
+                    class: "expense-card__action expense-card__action--danger",
+                    title: "Excluir bem-estar",
+                    aria: { label: "Excluir bem-estar da semana de #{weekly_wellbeing.week_start.strftime("%d/%m/%Y")}" } do %>
+          <span class="material-symbols-rounded">delete</span>
+          <span class="expense-card__action-label">Excluir</span>
+        <% end %>
       </div>
     </div>
   </div>

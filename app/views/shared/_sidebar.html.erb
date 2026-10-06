@@ -47,7 +47,7 @@
           <span class="link-text">Metas</span>
         <% end %>
 
-        <%= link_to progress_path(anchor: "perguntas-semana"), class: "app-nav-link #{'active-menu' if health_nav_active?(:questions)}", id: "link-health-questions", title: "Perguntas da Semana", aria: { label: "Perguntas da Semana" }, data: { turbo: false } do %>
+        <%= link_to weekly_health_reviews_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:questions)}", id: "link-health-questions", title: "Perguntas da Semana", aria: { label: "Perguntas da Semana" }, data: { turbo: false } do %>
           <span class="material-symbols-rounded app-nav-link__icon">edit_note</span>
           <span class="link-text">Perguntas</span>
         <% end %>

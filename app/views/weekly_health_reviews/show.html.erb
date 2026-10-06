@@ -1,0 +1,52 @@
+<section class="app-page health-review-show">
+  <div class="health-review-show__hero">
+    <div class="health-review-show__title-group">
+      <span class="health-review-show__icon">
+        <span class="material-symbols-rounded">edit_note</span>
+      </span>
+      <div>
+        <p class="app-page__eyebrow">Perguntas da Semana</p>
+        <h1 class="health-review-show__title"><%= @weekly_health_review.period_title %></h1>
+      </div>
+    </div>
+
+    <div class="health-review-show__summary">
+      <div class="health-review-show__metric">
+        <span class="material-symbols-rounded">format_list_numbered</span>
+        <span><small>Respostas</small><strong><%= @weekly_health_review.answered_count %>/<%= WeeklyHealthReview::QUESTIONS.size %></strong></span>
+      </div>
+
+      <span class="health-review-show__status <%= @weekly_health_review.complete? ? "health-review-show__status--success" : "health-review-show__status--pending" %>">
+        <span class="material-symbols-rounded"><%= @weekly_health_review.complete? ? "check" : "schedule" %></span>
+        <span><%= @weekly_health_review.complete? ? "Completa" : "Parcial" %></span>
+      </span>
+    </div>
+
+    <div class="health-review-show__actions">
+      <%= link_to edit_weekly_health_review_path(@weekly_health_review.week_start.iso8601, kind: @weekly_health_review.review_kind),
+                  class: "health-review-show__action" do %>
+        <span class="material-symbols-rounded">edit</span>
+        <span>Editar</span>
+      <% end %>
+
+      <%= link_to weekly_health_reviews_path, class: "health-review-show__action health-review-show__action--secondary" do %>
+        <span class="material-symbols-rounded">arrow_back</span>
+        <span>Voltar</span>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="health-review-show__answers">
+    <% WeeklyHealthReview::QUESTIONS.each do |attribute, question| %>
+      <article class="health-review-show__answer">
+        <span class="health-review-show__answer-icon">
+          <span class="material-symbols-rounded"><%= @weekly_health_review.public_send(attribute).present? ? "check" : "remove" %></span>
+        </span>
+        <div>
+          <h2><%= question %></h2>
+          <p><%= @weekly_health_review.public_send(attribute).presence || "Sem resposta." %></p>
+        </div>
+      </article>
+    <% end %>
+  </div>
+</section>

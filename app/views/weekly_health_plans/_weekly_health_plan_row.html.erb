@@ -11,25 +11,51 @@
   style="--health-card-accent: #5c6df2;"
 >
   <div class="health-card__content">
-    <div class="health-card__identity-block">
-      <div class="health-card__identity-main">
-        <div class="health-card__icon-wrapper">
-          <span class="material-symbols-rounded health-card__icon">task_alt</span>
-        </div>
+    <div class="health-card__summary">
+      <div class="health-card__identity-block">
+        <div class="health-card__identity-main">
+          <div class="health-card__icon-wrapper">
+            <span class="material-symbols-rounded health-card__icon">task_alt</span>
+          </div>
 
-        <div class="health-card__description">
-          <h3 class="health-card__title">Semana de <%= weekly_health_plan.week_start.strftime("%d/%m/%Y") %></h3>
+          <div class="health-card__description">
+            <h3 class="health-card__title">Semana de <%= weekly_health_plan.week_start.strftime("%d/%m/%Y") %> a <%= weekly_health_plan.week_end.strftime("%d/%m/%Y") %></h3>
+          </div>
         </div>
       </div>
 
       <div class="health-card__progress">
         <strong class="health-card__amount"><%= progress %>%</strong>
-
         <span class="health-card__status <%= progress >= 100 ? "health-card__status--success" : "health-card__status--pending" %>">
-          <span class="material-symbols-rounded health-card__status-state-icon"><%= progress >= 100 ? "check" : "schedule" %></span>
-          <span class="health-card__status-label"><%= progress >= 100 ? "Cumprida" : "Em andamento" %></span>
-          <span class="material-symbols-rounded health-card__status-mobile-icon" aria-hidden="true">task_alt</span>
+          <span class="material-symbols-rounded health-card__status-icon"><%= progress >= 100 ? "check" : "schedule" %></span>
+          <span><%= progress >= 100 ? "Cumprida" : "Em andamento" %></span>
         </span>
+      </div>
+
+      <div class="health-card__information">
+        <span class="health-card__meta-item">
+          <span class="material-symbols-rounded">format_list_numbered</span>
+          <span><small>Total</small><strong><%= total_completed %>/<%= total_target %></strong></span>
+        </span>
+      </div>
+
+      <div class="health-card__actions">
+        <%= link_to edit_weekly_health_plan_path(weekly_health_plan.week_start.iso8601),
+                    class: "health-card__action",
+                    title: "Editar metas",
+                    aria: { label: "Editar metas da semana de #{weekly_health_plan.week_start.strftime("%d/%m/%Y")}" } do %>
+          <span class="material-symbols-rounded">edit</span>
+          <span class="health-card__action-label">Editar</span>
+        <% end %>
+
+        <%= link_to weekly_health_plan_path(weekly_health_plan.week_start.iso8601),
+                    data: { turbo_method: :delete, turbo_confirm: "Excluir as metas da semana de #{weekly_health_plan.week_start.strftime("%d/%m/%Y")}?" },
+                    class: "health-card__action health-card__action--danger",
+                    title: "Excluir metas",
+                    aria: { label: "Excluir metas da semana de #{weekly_health_plan.week_start.strftime("%d/%m/%Y")}" } do %>
+          <span class="material-symbols-rounded">delete</span>
+          <span class="health-card__action-label">Excluir</span>
+        <% end %>
       </div>
     </div>
 
@@ -58,39 +84,6 @@
           </div>
         </div>
       <% end %>
-    </div>
-
-    <div class="health-card__footer">
-      <div class="health-card__information">
-        <span class="health-card__meta-item">
-          <span class="material-symbols-rounded">calendar_month</span>
-          <span><small>Semana</small><strong><%= weekly_health_plan.week_start.strftime("%d/%m/%Y") %> a <%= weekly_health_plan.week_end.strftime("%d/%m/%Y") %></strong></span>
-        </span>
-
-        <span class="health-card__meta-item">
-          <span class="material-symbols-rounded">format_list_numbered</span>
-          <span><small>Total</small><strong><%= total_completed %>/<%= total_target %></strong></span>
-        </span>
-      </div>
-
-      <div class="health-card__actions">
-        <%= link_to edit_weekly_health_plan_path(weekly_health_plan.week_start.iso8601),
-                    class: "health-card__action",
-                    title: "Editar metas",
-                    aria: { label: "Editar metas da semana de #{weekly_health_plan.week_start.strftime("%d/%m/%Y")}" } do %>
-          <span class="material-symbols-rounded">edit</span>
-          <span class="health-card__action-label">Editar</span>
-        <% end %>
-
-        <%= link_to weekly_health_plan_path(weekly_health_plan.week_start.iso8601),
-                    data: { turbo_method: :delete, turbo_confirm: "Excluir as metas da semana de #{weekly_health_plan.week_start.strftime("%d/%m/%Y")}?" },
-                    class: "health-card__action health-card__action--danger",
-                    title: "Excluir metas",
-                    aria: { label: "Excluir metas da semana de #{weekly_health_plan.week_start.strftime("%d/%m/%Y")}" } do %>
-          <span class="material-symbols-rounded">delete</span>
-          <span class="health-card__action-label">Excluir</span>
-        <% end %>
-      </div>
     </div>
   </div>
 </div>

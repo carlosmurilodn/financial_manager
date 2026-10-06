@@ -21,7 +21,11 @@ Rails.application.routes.draw do
       patch :toggle_day
     end
   end
-  resources :weekly_health_reviews, path: "progresso/revisoes", param: :week_start, only: %i[edit update]
+  resources :weekly_health_reviews, path: "progresso/perguntas", param: :week_start, only: %i[index show new create edit update destroy] do
+    collection do
+      delete :clear_filters
+    end
+  end
   resources :health_wins, path: "progresso/vitorias", only: %i[new create edit update destroy]
   resources :health_weight_goals, path: "progresso/objetivos", only: %i[index new create edit update destroy] do
     collection do

@@ -1,6 +1,7 @@
 .app-page__hero-top--health-goals,
 .app-page__hero-top--weekly-wellbeings,
-.app-page__hero-top--weekly-health-plans {
+.app-page__hero-top--weekly-health-plans,
+.app-page__hero-top--weekly-health-reviews {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: stretch;
@@ -8,26 +9,30 @@
 
 .app-page__hero-top > .app-page__hero-kpis > .app-health-goals-hero-kpis,
 .app-page__hero-top > .app-page__hero-kpis > .app-weekly-wellbeings-hero-kpis,
-.app-page__hero-top > .app-page__hero-kpis > .app-weekly-health-plans-hero-kpis {
+.app-page__hero-top > .app-page__hero-kpis > .app-weekly-health-plans-hero-kpis,
+.app-page__hero-top > .app-page__hero-kpis > .app-weekly-health-reviews-hero-kpis {
   display: contents;
 }
 
 .app-health-goals-hero-kpis,
 .app-weekly-wellbeings-hero-kpis,
-.app-weekly-health-plans-hero-kpis {
+.app-weekly-health-plans-hero-kpis,
+.app-weekly-health-reviews-hero-kpis {
   display: contents;
 }
 
 .app-health-goals-hero-kpis .stat-card,
 .app-weekly-wellbeings-hero-kpis .stat-card,
-.app-weekly-health-plans-hero-kpis .stat-card {
+.app-weekly-health-plans-hero-kpis .stat-card,
+.app-weekly-health-reviews-hero-kpis .stat-card {
   min-width: 0;
   padding: 8px 10px;
 }
 
 .app-health-goals-hero-kpis .stat-card__icon,
 .app-weekly-wellbeings-hero-kpis .stat-card__icon,
-.app-weekly-health-plans-hero-kpis .stat-card__icon {
+.app-weekly-health-plans-hero-kpis .stat-card__icon,
+.app-weekly-health-reviews-hero-kpis .stat-card__icon {
   width: 32px;
   height: 32px;
   min-width: 32px;
@@ -35,13 +40,15 @@
 
 .app-health-goals-hero-kpis .stat-card__icon .material-symbols-rounded,
 .app-weekly-wellbeings-hero-kpis .stat-card__icon .material-symbols-rounded,
-.app-weekly-health-plans-hero-kpis .stat-card__icon .material-symbols-rounded {
+.app-weekly-health-plans-hero-kpis .stat-card__icon .material-symbols-rounded,
+.app-weekly-health-reviews-hero-kpis .stat-card__icon .material-symbols-rounded {
   font-size: 1rem;
 }
 
 .app-health-goals-hero-kpis .stat-card__label,
 .app-weekly-wellbeings-hero-kpis .stat-card__label,
-.app-weekly-health-plans-hero-kpis .stat-card__label {
+.app-weekly-health-plans-hero-kpis .stat-card__label,
+.app-weekly-health-reviews-hero-kpis .stat-card__label {
   margin-bottom: 3px;
   font-size: 0.72rem;
   line-height: 1.15;
@@ -49,7 +56,8 @@
 
 .app-health-goals-hero-kpis .stat-card__value,
 .app-weekly-wellbeings-hero-kpis .stat-card__value,
-.app-weekly-health-plans-hero-kpis .stat-card__value {
+.app-weekly-health-plans-hero-kpis .stat-card__value,
+.app-weekly-health-reviews-hero-kpis .stat-card__value {
   font-size: clamp(0.82rem, 1.05vw, 1rem);
 }
 
@@ -62,17 +70,358 @@
   background: var(--surface);
 }
 
-.health-card__content {
-  display: grid;
-  grid-template-columns: minmax(260px, 1fr) minmax(180px, auto) minmax(280px, auto) auto;
+.health-review-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  border-left: 5px solid var(--nav-active-bar);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.health-review-card__content {
+  display: flex;
   align-items: center;
   gap: 18px;
+  padding: 18px 20px 18px 24px;
+}
+
+.health-review-card__main {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.health-review-card__main:hover,
+.health-review-card__main:focus-visible {
+  color: inherit;
+}
+
+.health-review-card__identity {
+  display: flex;
+  flex: 1 1 520px;
+  align-items: center;
+  gap: 14px;
+  min-width: 260px;
+}
+
+.health-review-card__icon {
+  display: grid;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--nav-active-bar) 12%, var(--surface));
+  color: var(--nav-active-bar);
+}
+
+.health-review-card__title {
+  margin: 0;
+  color: var(--text-main);
+  font-size: 0.96rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.health-review-card__amount {
+  flex: 0 0 auto;
+  color: var(--text-main);
+  font-size: 1.05rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.health-review-card__status {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 34px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.health-review-card__status .material-symbols-rounded {
+  font-size: 0.95rem;
+}
+
+.health-review-card__status--success {
+  background: color-mix(in srgb, var(--success) 13%, var(--surface));
+  color: var(--success);
+}
+
+.health-review-card__status--pending {
+  background: color-mix(in srgb, #d99a34 16%, var(--surface));
+  color: #d99a34;
+}
+
+.health-review-card__actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.health-review-card__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 8px 13px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--nav-active-bar) 10%, var(--surface));
+  color: var(--nav-active-bar);
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.health-review-card__action:hover,
+.health-review-card__action:focus-visible {
+  color: var(--nav-active-bar);
+  filter: brightness(0.98);
+  transform: translateY(-1px);
+}
+
+.health-review-card__action--danger {
+  background: color-mix(in srgb, var(--danger) 11%, var(--surface));
+  color: var(--danger);
+}
+
+.health-review-card__action--danger:hover,
+.health-review-card__action--danger:focus-visible {
+  color: var(--danger);
+}
+
+.health-review-card__action .material-symbols-rounded {
+  font-size: 1.15rem;
+}
+
+.health-review-show {
+  gap: 18px;
+}
+
+.health-review-show__hero,
+.health-review-show__answers {
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.health-review-show__hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 24px;
+}
+
+.health-review-show__title-group {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.health-review-show__icon,
+.health-review-show__answer-icon {
+  display: grid;
+  place-items: center;
+  color: var(--nav-active-bar);
+  background: color-mix(in srgb, var(--nav-active-bar) 12%, var(--surface));
+}
+
+.health-review-show__icon {
+  flex: 0 0 52px;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+}
+
+.health-review-show__title {
+  margin: 0;
+  color: var(--text-main);
+  font-size: clamp(1.18rem, 1.7vw, 1.55rem);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.health-review-show__summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.health-review-show__metric {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 130px;
+}
+
+.health-review-show__metric > .material-symbols-rounded {
+  color: var(--text-soft);
+  font-size: 1.1rem;
+}
+
+.health-review-show__metric span:last-child {
+  display: grid;
+  gap: 1px;
+}
+
+.health-review-show__metric small {
+  color: var(--text-soft);
+  font-size: 0.64rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.health-review-show__metric strong {
+  color: var(--text-main);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.health-review-show__status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 34px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.health-review-show__status .material-symbols-rounded {
+  font-size: 0.95rem;
+}
+
+.health-review-show__status--success {
+  background: color-mix(in srgb, var(--success) 13%, var(--surface));
+  color: var(--success);
+}
+
+.health-review-show__status--pending {
+  background: color-mix(in srgb, #d99a34 16%, var(--surface));
+  color: #d99a34;
+}
+
+.health-review-show__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.health-review-show__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 8px 13px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--nav-active-bar) 10%, var(--surface));
+  color: var(--nav-active-bar);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.health-review-show__action:hover,
+.health-review-show__action:focus-visible {
+  color: var(--nav-active-bar);
+  filter: brightness(0.98);
+  transform: translateY(-1px);
+}
+
+.health-review-show__action--secondary {
+  background: color-mix(in srgb, var(--text-soft) 10%, var(--surface));
+  color: var(--nav-link-color);
+}
+
+.health-review-show__answers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 18px;
+}
+
+.health-review-show__answer {
+  display: flex;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface-muted) 72%, transparent);
+}
+
+.health-review-show__answer-icon {
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+}
+
+.health-review-show__answer-icon .material-symbols-rounded {
+  font-size: 1rem;
+}
+
+.health-review-show__answer h2 {
+  margin: 0 0 8px;
+  color: var(--text-main);
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.health-review-show__answer p {
+  margin: 0;
+  color: var(--text-main);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.health-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
   position: relative;
-  padding: 14px 18px 14px 22px;
+  padding: 20px 26px 20px 28px;
+}
+
+.health-card__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  width: 100%;
 }
 
 .health-card__identity-block {
-  display: contents;
+  display: flex;
+  align-items: center;
+  min-width: 320px;
 }
 
 .health-card__identity-main {
@@ -111,10 +460,10 @@
 
 .health-card__progress {
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  min-width: 0;
+  gap: 12px;
 }
 
 .health-card__amount {
@@ -149,23 +498,15 @@
   color: #d99a34;
 }
 
-.health-card__status .material-symbols-rounded {
+.health-card__status-icon {
   font-size: 0.95rem;
-}
-
-.health-card__status-mobile-icon {
-  display: none;
-}
-
-.health-card__footer {
-  display: contents;
 }
 
 .health-card__information {
   display: flex;
+  flex: 0 0 150px;
   align-items: center;
   justify-content: center;
-  gap: clamp(18px, 3vw, 42px);
   min-width: 0;
 }
 
@@ -206,6 +547,7 @@
 
 .health-card__actions {
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
@@ -253,7 +595,6 @@
 .weekly-health-plan-days {
   display: flex;
   flex-wrap: wrap;
-  grid-column: 1 / -1;
   align-items: start;
   justify-content: center;
   width: 100%;
@@ -265,7 +606,6 @@
   flex: 1 1 calc((100% - 30px) / 4);
   gap: 8px;
   min-width: 260px;
-  max-width: calc((100% - 30px) / 4);
   padding: 10px;
   border: 1px solid var(--card-border);
   border-radius: 10px;
@@ -340,26 +680,35 @@
 }
 
 @media (max-width: 1199px) {
-  .health-card__content {
-    grid-template-columns: minmax(0, 1fr) auto;
+  .health-card__summary {
+    flex-wrap: wrap;
+    gap: 14px;
   }
 
-  .health-card__progress,
-  .health-card__information {
-    justify-content: flex-start;
-  }
-
-  .health-card__footer {
-    display: grid;
-    grid-column: 1 / -1;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 12px;
+  .health-card__identity-block {
+    flex: 1 1 100%;
   }
 
   .weekly-health-plan-days__goal {
     flex-basis: calc((100% - 10px) / 2);
     max-width: calc((100% - 10px) / 2);
+  }
+
+  .health-review-card__content,
+  .health-review-card__main {
+    flex-wrap: wrap;
+  }
+
+  .health-review-card__identity {
+    flex: 1 1 100%;
+  }
+
+  .health-review-show__hero {
+    flex-wrap: wrap;
+  }
+
+  .health-review-show__title-group {
+    flex: 1 1 100%;
   }
 }
 
@@ -367,14 +716,16 @@
   .app-page__hero-top > .app-page__hero-kpis > :is(
     .app-health-goals-hero-kpis,
     .app-weekly-wellbeings-hero-kpis,
-    .app-weekly-health-plans-hero-kpis
+    .app-weekly-health-plans-hero-kpis,
+    .app-weekly-health-reviews-hero-kpis
   ) {
     display: contents;
   }
 
   .app-page__hero-top--health-goals,
   .app-page__hero-top--weekly-wellbeings,
-  .app-page__hero-top--weekly-health-plans {
+  .app-page__hero-top--weekly-health-plans,
+  .app-page__hero-top--weekly-health-reviews {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-template-rows: 1fr;
   }
@@ -384,7 +735,9 @@
   .app-page__hero-top--weekly-wellbeings > .app-page__hero-copy,
   .app-page__hero-top--weekly-wellbeings > .app-page__hero-action,
   .app-page__hero-top--weekly-health-plans > .app-page__hero-copy,
-  .app-page__hero-top--weekly-health-plans > .app-page__hero-action {
+  .app-page__hero-top--weekly-health-plans > .app-page__hero-action,
+  .app-page__hero-top--weekly-health-reviews > .app-page__hero-copy,
+  .app-page__hero-top--weekly-health-reviews > .app-page__hero-action {
     grid-column: auto;
     grid-row: auto;
   }
@@ -393,29 +746,47 @@
 @media (max-width: 991px) {
   .app-page__hero-top--health-goals,
   .app-page__hero-top--weekly-wellbeings,
-  .app-page__hero-top--weekly-health-plans {
+  .app-page__hero-top--weekly-health-plans,
+  .app-page__hero-top--weekly-health-reviews {
     display: grid;
     grid-template-columns: 1fr;
   }
 
   .app-health-goals-hero-kpis,
   .app-weekly-wellbeings-hero-kpis,
-  .app-weekly-health-plans-hero-kpis {
+  .app-weekly-health-plans-hero-kpis,
+  .app-weekly-health-reviews-hero-kpis {
     grid-template-columns: 1fr;
   }
 
   .app-page__hero-top > .app-page__hero-kpis > .app-health-goals-hero-kpis,
   .app-page__hero-top > .app-page__hero-kpis > .app-weekly-wellbeings-hero-kpis,
-  .app-page__hero-top > .app-page__hero-kpis > .app-weekly-health-plans-hero-kpis {
+  .app-page__hero-top > .app-page__hero-kpis > .app-weekly-health-plans-hero-kpis,
+  .app-page__hero-top > .app-page__hero-kpis > .app-weekly-health-reviews-hero-kpis {
     display: grid;
     gap: 10px;
   }
 }
 
 @media (max-width: 640px) {
-  .health-card__content,
-  .health-card__footer {
-    grid-template-columns: 1fr;
+  .health-card__content {
+    padding: 18px;
+  }
+
+  .health-card__summary,
+  .health-card__identity-block,
+  .health-card__identity-main {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .health-card__identity-block {
+    min-width: 0;
+  }
+
+  .health-card__progress,
+  .health-card__information {
+    justify-content: flex-start;
   }
 
   .health-card__actions {
@@ -425,6 +796,50 @@
 
   .health-card__action {
     flex: 1 1 0;
+  }
+
+  .health-review-card__content,
+  .health-review-card__main,
+  .health-review-card__identity {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .health-review-card__identity {
+    min-width: 0;
+  }
+
+  .health-review-card__actions {
+    width: 100%;
+  }
+
+  .health-review-card__action {
+    flex: 1 1 0;
+  }
+
+  .health-review-show__hero,
+  .health-review-show__title-group,
+  .health-review-show__summary,
+  .health-review-show__actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .health-review-show__actions {
+    width: 100%;
+  }
+
+  .health-review-show__action {
+    width: 100%;
+  }
+
+  .health-review-show__answers {
+    grid-template-columns: 1fr;
+    padding: 14px;
+  }
+
+  .health-review-show__answer {
+    padding: 14px;
   }
 
   .weekly-health-plan-days__goal {

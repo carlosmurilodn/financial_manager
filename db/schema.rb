@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_06_170000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_06_180000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -239,9 +239,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_170000) do
     t.text "minimum_goal"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id", "week_start"], name: "index_weekly_health_reviews_on_user_id_and_week_start", unique: true
+    t.string "review_kind", default: "weekly", null: false
+    t.index ["user_id", "review_kind", "week_start"], name: "index_weekly_health_reviews_on_user_kind_and_start", unique: true
     t.index ["user_id"], name: "index_weekly_health_reviews_on_user_id"
-    t.check_constraint "EXTRACT(isodow FROM week_start) = 1::numeric", name: "weekly_health_reviews_start_on_monday"
   end
 
   create_table "weekly_wellbeings", force: :cascade do |t|

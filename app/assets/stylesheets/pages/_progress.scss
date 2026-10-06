@@ -314,6 +314,37 @@
   line-height: 1.4;
 }
 
+.progress-indicator__value {
+  color: var(--text-main);
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.progress-indicator__goals {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--text-main);
+}
+
+.progress-indicator__goals li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.progress-indicator__goals li > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.progress-indicator__goals li > strong {
+  flex-shrink: 0;
+}
+
 .progress-review {
   display: grid;
   gap: 10px;

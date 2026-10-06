@@ -1,0 +1,39 @@
+<%= turbo_frame_tag "progress-weight-chart" do %>
+  <article class="app-panel progress-panel">
+    <div class="progress-history__header">
+      <div class="progress-panel__header">
+        <span class="material-symbols-rounded">show_chart</span>
+        <div>
+          <p class="app-page__eyebrow">Medições por data</p>
+          <h2>Evolução do peso</h2>
+        </div>
+      </div>
+      <nav class="progress-chart-filters" aria-label="Período do gráfico de peso">
+        <% { "30" => "30 dias", "90" => "90 dias", "all" => "Todo histórico" }.each do |period, label| %>
+          <%= link_to label, progress_path(weight_period: period), class: "app-btn app-btn--outline #{'is-selected' if @weight_period == period}", aria: { current: (@weight_period == period ? "true" : nil) }, data: { turbo_frame: "progress-weight-chart", turbo_prefetch: false } %>
+        <% end %>
+      </nav>
+    </div>
+    <% if @weight_chart_points.any? %>
+      <div data-controller="weight-chart" data-weight-chart-points-value="<%= @weight_chart_points.to_json %>" data-weight-chart-goal-value="<%= @health_weight_goal&.target_weight || 0 %>" data-action="turbo:before-cache@document->weight-chart#destroyChart">
+        <div class="progress-weight-chart">
+          <canvas data-weight-chart-target="canvas" role="img" aria-label="Evolução do peso por data. Valores disponíveis na tabela abaixo."></canvas>
+        </div>
+      </div>
+      <p class="progress-empty">Somente medições registradas. Passe sobre os pontos para ver data e peso.<%= " Linha tracejada: peso desejado." if @health_weight_goal %></p>
+      <details>
+        <summary>Ver valores do gráfico</summary>
+        <ul class="progress-history">
+          <% @weight_chart_points.each do |point| %>
+            <li class="progress-history__row">
+              <time datetime="<%= point[:date] %>"><%= Date.iso8601(point[:date]).strftime("%d/%m/%Y") %></time>
+              <strong><%= number_with_precision(point[:weight], precision: 2, separator: ",") %> kg</strong>
+            </li>
+          <% end %>
+        </ul>
+      </details>
+    <% else %>
+      <p class="progress-empty">Nenhuma medição neste período. Registre seu peso ou selecione outro período.</p>
+    <% end %>
+  </article>
+<% end %>

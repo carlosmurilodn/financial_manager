@@ -7,6 +7,10 @@ class ProgressController < ApplicationController
     @total_pages = [ (entries.count / 10.0).ceil, 1 ].max
     @current_page = params[:page].to_i.clamp(1, @total_pages)
     @weight_entries = entries.offset((@current_page - 1) * 10).limit(10)
+    @weight_period = %w[30 90 all].include?(params[:weight_period]) ? params[:weight_period] : "30"
+    chart_entries = current_user.weight_entries.where("measured_on <= ?", Date.current)
+    chart_entries = chart_entries.where(measured_on: (Date.current - (@weight_period.to_i - 1).days)..Date.current) unless @weight_period == "all"
+    @weight_chart_points = chart_entries.order(:measured_on).pluck(:measured_on, :weight_kg).map { |date, weight| { date: date.iso8601, weight: weight.to_f } }
     @week_start = Health::WeeklyPlan.week_start(params[:week])
     @weekly_health_plan = Health::WeeklyPlan.build(user: current_user, week_start: @week_start)
     @weekly_health_review = current_user.weekly_health_reviews.find_by(week_start: @week_start)

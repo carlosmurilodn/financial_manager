@@ -49,6 +49,24 @@
   gap: 20px;
 }
 
+.progress-weight-chart {
+  position: relative;
+  height: 300px;
+  min-width: 0;
+}
+
+.progress-chart-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.progress-chart-filters .is-selected {
+  background: var(--hero-badge-icon-bg);
+  color: var(--text-main);
+  border-color: var(--primary);
+}
+
 .progress-history__header,
 .progress-history__row,
 .progress-history__measurement,

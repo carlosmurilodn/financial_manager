@@ -16,12 +16,12 @@
     </div>
     <div class="progress-weight-scroll" tabindex="0" role="region" aria-label="Gráfico e valores de peso">
     <% if @weight_chart_points.any? %>
-      <div data-controller="weight-chart" data-weight-chart-points-value="<%= @weight_chart_points.to_json %>" data-weight-chart-goal-value="<%= @health_weight_goal&.target_weight || 0 %>" data-action="turbo:before-cache@document->weight-chart#destroyChart">
+      <div data-controller="weight-chart" data-weight-chart-points-value="<%= @weight_chart_points.to_json %>" data-weight-chart-goal-value="<%= @final_health_weight_goal&.target_weight || 0 %>" data-action="turbo:before-cache@document->weight-chart#destroyChart">
         <div class="progress-weight-chart">
           <canvas data-weight-chart-target="canvas" role="img" aria-label="Evolução do peso por data. Valores disponíveis na tabela abaixo."></canvas>
         </div>
       </div>
-      <p class="progress-empty">Somente medições registradas. Passe sobre os pontos para ver data e peso.<%= " Linha tracejada: peso desejado." if @health_weight_goal %></p>
+      <p class="progress-empty">Somente medições registradas. Passe sobre os pontos para ver data e peso.<%= " Linha tracejada: peso desejado." if @final_health_weight_goal %></p>
       <details>
         <summary>Ver valores do gráfico</summary>
         <ul class="progress-history">

@@ -1,15 +1,15 @@
 <div id="health-weight-goals-table">
-  <% if @health_weight_goal && @milestones.any? %>
+  <% if @health_weight_goals.any? %>
     <div class="expenses-cards-list" id="health-weight-goals-list">
-      <% @milestones.each do |milestone| %>
-        <%= render partial: "milestone_row", locals: { milestone: milestone } %>
+      <% @health_weight_goals.each do |health_weight_goal| %>
+        <%= render partial: "health_weight_goal_row", locals: { health_weight_goal: health_weight_goal } %>
       <% end %>
     </div>
   <% else %>
     <div class="dashboard-empty-state">
       <span class="material-symbols-rounded">flag</span>
-      <strong><%= @health_weight_goal ? "Nenhuma etapa encontrada" : "Objetivo ainda não definido" %></strong>
-      <small><%= @health_weight_goal ? "Ajuste os filtros para ver outras etapas." : "Configure seu peso desejado e marcos intermediários." %></small>
+      <strong>Nenhuma meta encontrada</strong>
+      <small>Ajuste os filtros ou cadastre uma nova meta.</small>
     </div>
   <% end %>
 

@@ -4,7 +4,7 @@
   eyebrow: "Progresso · segunda a domingo",
   description: "#{@week_start.strftime('%d/%m/%Y')} a #{(@week_start + 6.days).strftime('%d/%m/%Y')}. Registre como você percebeu sua semana.",
   icon: "psychology",
-  back_path: progress_path(week: @week_start.iso8601)
+  back_path: weekly_wellbeings_path
 } do %>
   <%= form_with model: @weekly_wellbeing, url: weekly_wellbeing_path(@week_start.iso8601), method: :patch, local: true, html: { class: "app-form-page__form", data: { turbo: false } } do |f| %>
     <p class="progress-empty" id="wellbeing-scale-hint">Escala pessoal: 1 = muito baixo, 2 = baixo, 3 = intermediário, 4 = alto, 5 = muito alto. Não há nota certa ou errada.</p>
@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="app-form-page__actions">
-      <%= link_to "Cancelar", progress_path(week: @week_start.iso8601), class: "app-btn app-btn--outline" %>
+      <%= link_to "Cancelar", weekly_wellbeings_path, class: "app-btn app-btn--outline" %>
       <%= f.submit "Salvar bem-estar da semana", class: "app-btn app-btn--primary" %>
     </div>
   <% end %>

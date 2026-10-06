@@ -21,12 +21,14 @@ module ApplicationHelper
       controller_name == "weight_entries"
     when :milestones
       controller_name == "health_weight_goals"
+    when :beyond_scale
+      controller_name == "weekly_wellbeings"
     when :goals
       controller_name == "weekly_health_plans"
     when :questions
       controller_name == "weekly_health_reviews"
     when :week_review
-      controller_name == "weekly_wellbeings"
+      false
     when :wins
       controller_name == "health_wins"
     else

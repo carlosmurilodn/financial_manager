@@ -1,0 +1,25 @@
+<div id="weekly-wellbeings-hero-kpis" class="app-expenses-hero-kpis">
+  <div class="stat-card stat-card--warning">
+    <div class="stat-card__icon">
+      <span class="material-symbols-rounded">psychology</span>
+    </div>
+    <div>
+      <span class="stat-card__label">Último registro</span>
+      <strong class="stat-card__value">
+        <%= @latest_weekly_wellbeing ? "#{@latest_weekly_wellbeing.energy}/5" : "Sem registro" %>
+      </strong>
+      <small><%= @latest_weekly_wellbeing ? "Energia em #{@latest_weekly_wellbeing.week_start.strftime("%d/%m/%Y")}" : "Registre sua percepção semanal." %></small>
+    </div>
+  </div>
+
+  <div class="stat-card stat-card--primary">
+    <div class="stat-card__icon">
+      <span class="material-symbols-rounded">format_list_numbered</span>
+    </div>
+    <div>
+      <span class="stat-card__label">Registros filtrados</span>
+      <strong class="stat-card__value"><%= @filtered_count || 0 %></strong>
+      <small><%= @week_from_label.present? ? "Desde #{@week_from_label}" : "Todas as semanas" %></small>
+    </div>
+  </div>
+</div>

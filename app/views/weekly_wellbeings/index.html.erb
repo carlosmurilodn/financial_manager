@@ -3,21 +3,21 @@
     <div class="app-page__hero-top app-page__hero-top--expenses">
       <div class="app-page__hero-unit app-page__hero-copy">
         <span class="app-page__hero-icon">
-          <span class="material-symbols-rounded">flag</span>
+          <span class="material-symbols-rounded">insights</span>
         </span>
         <div>
           <p class="app-page__eyebrow">Saúde e Bem-Estar</p>
-          <h1 class="app-page__title">Objetivos por Etapa</h1>
+          <h1 class="app-page__title">Progresso Além da Balança</h1>
         </div>
       </div>
 
       <div class="app-page__hero-unit app-page__hero-action">
-        <%= link_to edit_health_weight_goal_path, class: "app-expenses-hero-kpis__action", data: { turbo: false } do %>
+        <%= link_to edit_weekly_wellbeing_path(@current_week_start.iso8601), class: "app-expenses-hero-kpis__action", data: { turbo: false } do %>
           <span class="app-expenses-hero-kpis__action-icon">
-            <span class="material-symbols-rounded"><%= @health_weight_goal ? "edit" : "add" %></span>
+            <span class="material-symbols-rounded">add</span>
           </span>
           <span class="app-expenses-hero-kpis__action-copy">
-            <strong><%= @health_weight_goal ? "Editar Objetivo" : "Novo Objetivo" %></strong>
+            <strong>Novo Registro</strong>
           </span>
         <% end %>
       </div>
@@ -27,19 +27,21 @@
       </div>
     </div>
 
-    <%# <p class="app-page__description">Marcos intermediários para acompanhar a tendência com contexto e sem cobrança diária.</p> %>
+    <%# <p class="app-page__description">Indicadores semanais de energia, humor e satisfação com a rotina.</p> %>
   </div>
 
   <div class="app-panel">
     <%= render "shared/filter_accordion" do %>
-      <%= form_with url: health_weight_goal_path, method: :get, local: true, class: "app-filter-form" do |f| %>
+      <%= form_with url: weekly_wellbeings_path, method: :get, local: true, class: "app-filter-form" do |f| %>
         <div class="app-filter-grid app-filter-grid--expenses">
           <div class="app-filter-field">
-            <%= f.label :status, "Status" %>
-            <%= f.select :status,
-                  options_for_select([["Todos", ""], ["Cumpridos", "done"], ["Pendentes", "pending"]], @status_filter),
-                  {},
-                  class: "app-form-select" %>
+            <%= f.label :week_from, "De" %>
+            <%= f.date_field :week_from, value: @week_from_filter, class: "app-form-control", max: Date.current.iso8601 %>
+          </div>
+
+          <div class="app-filter-field">
+            <%= f.label :week_to, "Até" %>
+            <%= f.date_field :week_to, value: @week_to_filter, class: "app-form-control", max: Date.current.iso8601 %>
           </div>
         </div>
 
@@ -48,7 +50,7 @@
             <i class="bi bi-funnel me-1"></i> <%= t("buttons.filter") %>
           <% end %>
 
-          <%= link_to clear_filters_health_weight_goal_path,
+          <%= link_to clear_filters_weekly_wellbeings_path,
                       class: "app-btn app-btn--secondary app-page__secondary-btn",
                       data: { turbo_method: :delete } do %>
             <i class="bi bi-x-circle me-1"></i> Limpar Filtros
@@ -61,6 +63,6 @@
   </div>
 
   <div class="app-panel app-panel--table">
-    <%= render "milestones_list" %>
+    <%= render "weekly_wellbeings_list" %>
   </div>
 </section>

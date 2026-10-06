@@ -139,10 +139,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_170000) do
   create_table "health_weight_goals", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.decimal "target_weight", precision: 5, scale: 2, null: false
-    t.decimal "milestone_weights", precision: 5, scale: 2, default: [], null: false, array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_health_weight_goals_on_user_id", unique: true
+    t.string "goal_type", default: "intermediate", null: false
+    t.integer "position", default: 0, null: false
+    t.index ["user_id", "goal_type"], name: "index_health_weight_goals_on_user_id_final_type", unique: true, where: "((goal_type)::text = 'final'::text)"
+    t.index ["user_id"], name: "index_health_weight_goals_on_user_id"
     t.check_constraint "target_weight > 0::numeric", name: "health_weight_goals_positive_target"
   end
 

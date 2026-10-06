@@ -19,7 +19,7 @@
     <div>
       <span class="stat-card__label">Objetivo final</span>
       <strong class="stat-card__value">
-        <%= @health_weight_goal ? "#{number_with_precision(@health_weight_goal.target_weight, precision: 2, strip_insignificant_zeros: true, separator: ",")} kg" : "Não definido" %>
+        <%= @final_health_weight_goal ? "#{number_with_precision(@final_health_weight_goal.target_weight, precision: 2, strip_insignificant_zeros: true, separator: ",")} kg" : "Não definido" %>
       </strong>
       <small><%= pluralize(@filtered_count || 0, "etapa", "etapas") %> exibidas</small>
     </div>

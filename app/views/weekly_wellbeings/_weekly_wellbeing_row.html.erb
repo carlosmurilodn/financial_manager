@@ -1,0 +1,61 @@
+<div
+  id="<%= dom_id(weekly_wellbeing) %>"
+  class="expense-card expense-card--expense"
+  style="--expense-category-color: #5c6df2;"
+>
+  <div class="expense-card__content">
+    <div class="expense-card__identity-block">
+      <div class="expense-card__identity-main">
+        <div class="expense-card__icon-wrapper">
+          <span class="material-symbols-rounded expense-card__icon">insights</span>
+        </div>
+
+        <div class="expense-card__description-link">
+          <h3 class="expense-card__title">Semana de <%= weekly_wellbeing.week_start.strftime("%d/%m/%Y") %></h3>
+        </div>
+      </div>
+
+      <div class="expense-card__amount-area">
+        <strong class="expense-card__amount">
+          <%= ((weekly_wellbeing.energy + weekly_wellbeing.mood + weekly_wellbeing.routine_satisfaction) / 3.0).round(1).to_s.tr(".", ",") %>/5
+        </strong>
+
+        <span class="expense-card__status expense-card__status--paid">
+          <span class="material-symbols-rounded expense-card__status-state-icon">check</span>
+          <span class="expense-card__status-label">Registrado</span>
+          <span class="material-symbols-rounded expense-card__status-mobile-icon" aria-hidden="true">psychology</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="expense-card__badges">
+      <% WeeklyWellbeing::METRICS.each do |attribute, label| %>
+        <span class="expense-card__pill"><%= label %>: <%= weekly_wellbeing.public_send(attribute) %>/5</span>
+      <% end %>
+    </div>
+
+    <div class="expense-card__footer">
+      <div class="expense-card__information">
+        <span class="expense-card__meta-item">
+          <span class="material-symbols-rounded">calendar_month</span>
+          <span><small>Semana</small><strong><%= weekly_wellbeing.week_start.strftime("%d/%m/%Y") %> a <%= (weekly_wellbeing.week_start + 6.days).strftime("%d/%m/%Y") %></strong></span>
+        </span>
+
+        <span class="expense-card__meta-item">
+          <span class="material-symbols-rounded">notes</span>
+          <span><small>Observação</small><strong><%= weekly_wellbeing.notes.present? ? "Preenchida" : "Sem observação" %></strong></span>
+        </span>
+      </div>
+
+      <div class="expense-card__actions">
+        <%= link_to edit_weekly_wellbeing_path(weekly_wellbeing.week_start.iso8601),
+                    class: "expense-card__action",
+                    title: "Editar bem-estar",
+                    aria: { label: "Editar bem-estar da semana de #{weekly_wellbeing.week_start.strftime("%d/%m/%Y")}" } do %>
+          <span class="material-symbols-rounded">edit</span>
+          <span class="expense-card__action-label">Editar</span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -9,7 +9,7 @@
   <div class="dashboard-card__body dashboard-card__body--calendar">
     <turbo-frame id="calendar">
       <div class="dashboard-card__pill dashboard-card__pill--period dashboard-card__pill--period-full">
-        <%= link_to root_path(month: @month - 1 == 0 ? 12 : @month - 1,
+        <%= link_to financial_dashboard_path(month: @month - 1 == 0 ? 12 : @month - 1,
                       year: @month - 1 == 0 ? @year - 1 : @year),
             class: "dashboard-card__period-button",
             aria: { label: "Mês anterior" },
@@ -22,7 +22,7 @@
           <span><%= I18n.l(Date.new(@year, @month, 1), format: "%B de %Y").sub(/\A./, &:upcase) %></span>
         </span>
 
-        <%= link_to root_path(month: @month + 1 == 13 ? 1 : @month + 1,
+        <%= link_to financial_dashboard_path(month: @month + 1 == 13 ? 1 : @month + 1,
                       year: @month + 1 == 13 ? @year + 1 : @year),
             class: "dashboard-card__period-button",
             aria: { label: "Próximo mês" },

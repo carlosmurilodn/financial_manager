@@ -41,8 +41,8 @@
   <%= render "shared/calculator_modal" %>
 
   <body>
-    <div id="wrapper" class="app-shell">
-      <%= render "shared/sidebar" %>
+    <div id="wrapper" class="app-shell <%= "app-shell--entry" if controller_name == "entry" %>">
+      <%= render "shared/sidebar" unless controller_name == "entry" %>
 
       <main id="page-content-wrapper" class="app-content">
         <div class="app-content__inner">
@@ -52,27 +52,29 @@
 
           <%= yield %>
 
-          <footer class="app-footer">
-            <div class="app-footer__brand">
-              <span class="material-symbols-rounded app-footer__icon">finance_mode</span>
-              <div>
-                <strong>Dashboard Financeiro</strong>
-                <small>Controle receitas, despesas e previsoes em um unico painel.</small>
+          <% unless controller_name == "entry" %>
+            <footer class="app-footer">
+              <div class="app-footer__brand">
+                <span class="material-symbols-rounded app-footer__icon">finance_mode</span>
+                <div>
+                  <strong>Dashboard Financeiro</strong>
+                  <small>Controle receitas, despesas e previsoes em um unico painel.</small>
+                </div>
               </div>
-            </div>
 
-            <div class="app-footer__meta">
-              <span class="app-footer__chip">Agenda Mensal</span>
-              <span class="app-footer__chip">Planejamento Anual</span>
-              <span class="app-footer__chip">Visao Consolidada</span>
-            </div>
+              <div class="app-footer__meta">
+                <span class="app-footer__chip">Agenda Mensal</span>
+                <span class="app-footer__chip">Planejamento Anual</span>
+                <span class="app-footer__chip">Visao Consolidada</span>
+              </div>
 
-            <div class="app-footer__credit">
-              <small>Desenvolvido por</small>
-              <strong>Carlos Murilo Duarte Novais</strong>
-              <span><%= Date.current.year %></span>
-            </div>
-          </footer>
+              <div class="app-footer__credit">
+                <small>Desenvolvido por</small>
+                <strong>Carlos Murilo Duarte Novais</strong>
+                <span><%= Date.current.year %></span>
+              </div>
+            </footer>
+          <% end %>
         </div>
       </main>
     </div>

@@ -8,7 +8,7 @@
   </div>
 
   <div class="dashboard-card__pill dashboard-card__pill--period dashboard-card__pill--period-full">
-    <%= link_to root_path(category_month: @previous_category_expense_date.month, category_year: @previous_category_expense_date.year),
+    <%= link_to financial_dashboard_path(category_month: @previous_category_expense_date.month, category_year: @previous_category_expense_date.year),
                 class: "dashboard-card__period-button",
                 aria: { label: "Mês anterior" },
                 data: { turbo_frame: "category-expense-summary", turbo_prefetch: "false" } do %>
@@ -18,7 +18,7 @@
       <span class="material-symbols-rounded">pie_chart</span>
       <span><%= I18n.l(@category_expense_date, format: "%B de %Y") %></span>
     </span>
-    <%= link_to root_path(category_month: @next_category_expense_date.month, category_year: @next_category_expense_date.year),
+    <%= link_to financial_dashboard_path(category_month: @next_category_expense_date.month, category_year: @next_category_expense_date.year),
                 class: "dashboard-card__period-button",
                 aria: { label: "Próximo mês" },
                 data: { turbo_frame: "category-expense-summary", turbo_prefetch: "false" } do %>

@@ -3,7 +3,8 @@ Rails.application.routes.draw do
     sessions: "users/sessions"
   }
 
-  root "home#index"
+  root "entry#index"
+  get "financeiro", to: "home#index", as: :financial_dashboard
   get "progresso", to: "progress#index", as: :progress
   resources :weight_entries, path: "progresso/pesagens", only: %i[new create edit update destroy]
   resources :weekly_health_plans, path: "progresso/semanas", param: :week_start, only: %i[edit update]

@@ -1,0 +1,434 @@
+.app-page__hero-top--health-goals,
+.app-page__hero-top--weekly-wellbeings,
+.app-page__hero-top--weekly-health-plans {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.app-page__hero-top > .app-page__hero-kpis > .app-health-goals-hero-kpis,
+.app-page__hero-top > .app-page__hero-kpis > .app-weekly-wellbeings-hero-kpis,
+.app-page__hero-top > .app-page__hero-kpis > .app-weekly-health-plans-hero-kpis {
+  display: contents;
+}
+
+.app-health-goals-hero-kpis,
+.app-weekly-wellbeings-hero-kpis,
+.app-weekly-health-plans-hero-kpis {
+  display: contents;
+}
+
+.app-health-goals-hero-kpis .stat-card,
+.app-weekly-wellbeings-hero-kpis .stat-card,
+.app-weekly-health-plans-hero-kpis .stat-card {
+  min-width: 0;
+  padding: 8px 10px;
+}
+
+.app-health-goals-hero-kpis .stat-card__icon,
+.app-weekly-wellbeings-hero-kpis .stat-card__icon,
+.app-weekly-health-plans-hero-kpis .stat-card__icon {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+}
+
+.app-health-goals-hero-kpis .stat-card__icon .material-symbols-rounded,
+.app-weekly-wellbeings-hero-kpis .stat-card__icon .material-symbols-rounded,
+.app-weekly-health-plans-hero-kpis .stat-card__icon .material-symbols-rounded {
+  font-size: 1rem;
+}
+
+.app-health-goals-hero-kpis .stat-card__label,
+.app-weekly-wellbeings-hero-kpis .stat-card__label,
+.app-weekly-health-plans-hero-kpis .stat-card__label {
+  margin-bottom: 3px;
+  font-size: 0.72rem;
+  line-height: 1.15;
+}
+
+.app-health-goals-hero-kpis .stat-card__value,
+.app-weekly-wellbeings-hero-kpis .stat-card__value,
+.app-weekly-health-plans-hero-kpis .stat-card__value {
+  font-size: clamp(0.82rem, 1.05vw, 1rem);
+}
+
+.health-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  border-left: 5px solid var(--health-card-accent, var(--nav-active-bar));
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.health-card__content {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(180px, auto) minmax(280px, auto) auto;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+  padding: 14px 18px 14px 22px;
+}
+
+.health-card__identity-block {
+  display: contents;
+}
+
+.health-card__identity-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.health-card__icon-wrapper {
+  display: grid;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--health-card-accent, var(--nav-active-bar)) 12%, var(--surface));
+}
+
+.health-card__icon {
+  color: var(--health-card-accent, var(--nav-active-bar));
+  font-size: 1.6rem;
+}
+
+.health-card__description {
+  min-width: 0;
+}
+
+.health-card__title {
+  margin: 0;
+  color: var(--text-main);
+  font-size: 0.96rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.health-card__progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.health-card__amount {
+  color: var(--text-main);
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.health-card__status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 34px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.health-card__status--success {
+  background: color-mix(in srgb, var(--success) 13%, var(--surface));
+  color: var(--success);
+}
+
+.health-card__status--pending {
+  background: color-mix(in srgb, #d99a34 16%, var(--surface));
+  color: #d99a34;
+}
+
+.health-card__status .material-symbols-rounded {
+  font-size: 0.95rem;
+}
+
+.health-card__status-mobile-icon {
+  display: none;
+}
+
+.health-card__footer {
+  display: contents;
+}
+
+.health-card__information {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 3vw, 42px);
+  min-width: 0;
+}
+
+.health-card__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: var(--text-soft);
+}
+
+.health-card__meta-item > .material-symbols-rounded {
+  flex: 0 0 auto;
+  font-size: 1rem;
+}
+
+.health-card__meta-item > span:last-child {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.health-card__meta-item small {
+  color: var(--text-soft);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.health-card__meta-item strong {
+  color: var(--text-main);
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.health-card__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: max-content;
+}
+
+.health-card__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 8px 13px;
+  border: 0;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--nav-active-bar) 10%, var(--surface));
+  color: var(--nav-active-bar);
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.health-card__action:hover,
+.health-card__action:focus-visible {
+  color: var(--nav-active-bar);
+  filter: brightness(0.98);
+  transform: translateY(-1px);
+}
+
+.health-card__action--danger {
+  background: color-mix(in srgb, var(--danger) 11%, var(--surface));
+  color: var(--danger);
+}
+
+.health-card__action--danger:hover,
+.health-card__action--danger:focus-visible {
+  color: var(--danger);
+}
+
+.health-card__action .material-symbols-rounded {
+  font-size: 1.15rem;
+}
+
+.weekly-health-plan-days {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+  align-items: start;
+  justify-content: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.weekly-health-plan-days__goal {
+  display: grid;
+  flex: 1 1 calc((100% - 30px) / 4);
+  gap: 8px;
+  min-width: 260px;
+  max-width: calc((100% - 30px) / 4);
+  padding: 10px;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--surface-muted) 70%, transparent);
+}
+
+.weekly-health-plan-days__goal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--text-main);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.weekly-health-plan-days__goal-header span {
+  color: var(--text-soft);
+}
+
+.weekly-health-plan-days__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.weekly-health-plan-days__day-form {
+  min-width: 0;
+}
+
+.weekly-health-plan-days__day {
+  display: grid;
+  min-width: 0;
+  width: 100%;
+  min-height: 62px;
+  place-items: center;
+  gap: 2px;
+  padding: 6px 4px;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-soft);
+  font: inherit;
+}
+
+.weekly-health-plan-days__day span:first-child {
+  font-size: 0.66rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.weekly-health-plan-days__day strong {
+  color: var(--text-main);
+  font-size: 0.88rem;
+}
+
+.weekly-health-plan-days__day .material-symbols-rounded {
+  font-size: 1rem;
+}
+
+.weekly-health-plan-days__day.is-checked {
+  border-color: color-mix(in srgb, var(--success) 45%, transparent);
+  background: color-mix(in srgb, var(--success) 12%, var(--surface));
+  color: var(--success);
+}
+
+.weekly-health-plan-days__day:hover,
+.weekly-health-plan-days__day:focus-visible {
+  border-color: color-mix(in srgb, var(--nav-active-bar) 45%, transparent);
+  color: var(--nav-active-bar);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 1199px) {
+  .health-card__content {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .health-card__progress,
+  .health-card__information {
+    justify-content: flex-start;
+  }
+
+  .health-card__footer {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .weekly-health-plan-days__goal {
+    flex-basis: calc((100% - 10px) / 2);
+    max-width: calc((100% - 10px) / 2);
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1440px) {
+  .app-page__hero-top > .app-page__hero-kpis > :is(
+    .app-health-goals-hero-kpis,
+    .app-weekly-wellbeings-hero-kpis,
+    .app-weekly-health-plans-hero-kpis
+  ) {
+    display: contents;
+  }
+
+  .app-page__hero-top--health-goals,
+  .app-page__hero-top--weekly-wellbeings,
+  .app-page__hero-top--weekly-health-plans {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: 1fr;
+  }
+
+  .app-page__hero-top--health-goals > .app-page__hero-copy,
+  .app-page__hero-top--health-goals > .app-page__hero-action,
+  .app-page__hero-top--weekly-wellbeings > .app-page__hero-copy,
+  .app-page__hero-top--weekly-wellbeings > .app-page__hero-action,
+  .app-page__hero-top--weekly-health-plans > .app-page__hero-copy,
+  .app-page__hero-top--weekly-health-plans > .app-page__hero-action {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 991px) {
+  .app-page__hero-top--health-goals,
+  .app-page__hero-top--weekly-wellbeings,
+  .app-page__hero-top--weekly-health-plans {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .app-health-goals-hero-kpis,
+  .app-weekly-wellbeings-hero-kpis,
+  .app-weekly-health-plans-hero-kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .app-page__hero-top > .app-page__hero-kpis > .app-health-goals-hero-kpis,
+  .app-page__hero-top > .app-page__hero-kpis > .app-weekly-wellbeings-hero-kpis,
+  .app-page__hero-top > .app-page__hero-kpis > .app-weekly-health-plans-hero-kpis {
+    display: grid;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .health-card__content,
+  .health-card__footer {
+    grid-template-columns: 1fr;
+  }
+
+  .health-card__actions {
+    justify-content: stretch;
+    min-width: 0;
+  }
+
+  .health-card__action {
+    flex: 1 1 0;
+  }
+
+  .weekly-health-plan-days__goal {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+}

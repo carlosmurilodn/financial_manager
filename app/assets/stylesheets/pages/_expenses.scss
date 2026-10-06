@@ -2,7 +2,8 @@
 .app-incomes-hero-kpis,
 .app-cards-hero-kpis,
 .app-categories-hero-kpis,
-.app-financial-goals-hero-kpis {
+.app-financial-goals-hero-kpis,
+.app-health-goals-hero-kpis {
   display: contents;
 }
 
@@ -73,7 +74,8 @@
 .app-incomes-hero-kpis .stat-card,
 .app-cards-hero-kpis .stat-card,
 .app-categories-hero-kpis .stat-card,
-.app-financial-goals-hero-kpis .stat-card {
+.app-financial-goals-hero-kpis .stat-card,
+.app-health-goals-hero-kpis .stat-card {
   min-width: 0;
   padding: 8px 10px;
 }
@@ -82,7 +84,8 @@
 .app-incomes-hero-kpis .stat-card__icon,
 .app-cards-hero-kpis .stat-card__icon,
 .app-categories-hero-kpis .stat-card__icon,
-.app-financial-goals-hero-kpis .stat-card__icon {
+.app-financial-goals-hero-kpis .stat-card__icon,
+.app-health-goals-hero-kpis .stat-card__icon {
   width: 32px;
   height: 32px;
   min-width: 32px;
@@ -92,7 +95,8 @@
 .app-incomes-hero-kpis .stat-card__icon .material-symbols-rounded,
 .app-cards-hero-kpis .stat-card__icon .material-symbols-rounded,
 .app-categories-hero-kpis .stat-card__icon .material-symbols-rounded,
-.app-financial-goals-hero-kpis .stat-card__icon .material-symbols-rounded {
+.app-financial-goals-hero-kpis .stat-card__icon .material-symbols-rounded,
+.app-health-goals-hero-kpis .stat-card__icon .material-symbols-rounded {
   font-size: 1rem;
 }
 
@@ -100,7 +104,8 @@
 .app-incomes-hero-kpis .stat-card__label,
 .app-cards-hero-kpis .stat-card__label,
 .app-categories-hero-kpis .stat-card__label,
-.app-financial-goals-hero-kpis .stat-card__label {
+.app-financial-goals-hero-kpis .stat-card__label,
+.app-health-goals-hero-kpis .stat-card__label {
   margin-bottom: 3px;
   font-size: 0.72rem;
   line-height: 1.15;
@@ -110,7 +115,8 @@
 .app-incomes-hero-kpis .stat-card__value,
 .app-cards-hero-kpis .stat-card__value,
 .app-categories-hero-kpis .stat-card__value,
-.app-financial-goals-hero-kpis .stat-card__value {
+.app-financial-goals-hero-kpis .stat-card__value,
+.app-health-goals-hero-kpis .stat-card__value {
   font-size: clamp(0.82rem, 1.05vw, 1rem);
 }
 

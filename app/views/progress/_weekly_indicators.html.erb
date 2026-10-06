@@ -63,5 +63,20 @@
         <small>Nenhuma vitória registrada nesta semana.</small>
       <% end %>
     </div>
+    <div class="progress-indicator">
+      <span class="material-symbols-rounded">psychology</span>
+      <strong>Bem-estar</strong>
+      <% if @weekly_wellbeing %>
+        <ul class="progress-indicator__goals">
+          <% WeeklyWellbeing::METRICS.each do |attribute, label| %>
+            <li><span><%= label %></span><strong><%= @weekly_wellbeing.public_send(attribute) %>/5</strong></li>
+          <% end %>
+        </ul>
+        <small>Percepção pessoal na escala de 1 a 5.</small>
+      <% else %>
+        <span class="progress-indicator__value">Sem registros</span>
+        <small>Bem-estar ainda não registrado nesta semana.</small>
+      <% end %>
+    </div>
   </div>
 </article>

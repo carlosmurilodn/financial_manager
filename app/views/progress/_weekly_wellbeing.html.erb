@@ -1,0 +1,26 @@
+<article class="app-panel progress-panel">
+  <div class="progress-history__header">
+    <div class="progress-panel__header">
+      <span class="material-symbols-rounded">psychology</span>
+      <div>
+        <p class="app-page__eyebrow">Bem-estar · segunda a domingo</p>
+        <h2>Como foi sua semana?</h2>
+      </div>
+    </div>
+    <%= link_to @weekly_wellbeing ? "Editar bem-estar" : "Registrar bem-estar", edit_weekly_wellbeing_path(@week_start.iso8601), class: "app-btn app-btn--outline", data: { turbo_frame: "_top" } %>
+  </div>
+  <p class="progress-empty"><%= @week_start.strftime("%d/%m/%Y") %> a <%= (@week_start + 6.days).strftime("%d/%m/%Y") %></p>
+  <% if @weekly_wellbeing %>
+    <ul class="progress-indicator__goals">
+      <% WeeklyWellbeing::METRICS.each do |attribute, label| %>
+        <li><span><%= label %></span><strong><%= @weekly_wellbeing.public_send(attribute) %>/5</strong></li>
+      <% end %>
+    </ul>
+    <p class="progress-empty">Escala pessoal: 1 = muito baixo · 5 = muito alto.</p>
+    <% if @weekly_wellbeing.notes.present? %>
+      <div><strong>Observação</strong><p class="progress-review-answer"><%= @weekly_wellbeing.notes %></p></div>
+    <% end %>
+  <% else %>
+    <p class="progress-empty">Sem registros de bem-estar nesta semana. Registre sua percepção de energia, humor e satisfação com a rotina.</p>
+  <% end %>
+</article>

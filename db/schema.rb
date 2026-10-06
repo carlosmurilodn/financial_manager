@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_06_160000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_06_170000) do
   create_schema "auth"
   create_schema "extensions"
   create_schema "graphql"
@@ -233,6 +233,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_160000) do
     t.check_constraint "EXTRACT(isodow FROM week_start) = 1::numeric", name: "weekly_health_reviews_start_on_monday"
   end
 
+  create_table "weekly_wellbeings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "week_start", null: false
+    t.integer "energy", null: false
+    t.integer "mood", null: false
+    t.integer "routine_satisfaction", null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "week_start"], name: "index_weekly_wellbeings_on_user_id_and_week_start", unique: true
+    t.index ["user_id"], name: "index_weekly_wellbeings_on_user_id"
+    t.check_constraint "EXTRACT(isodow FROM week_start) = 1::numeric", name: "weekly_wellbeings_start_on_monday"
+    t.check_constraint "energy >= 1 AND energy <= 5 AND mood >= 1 AND mood <= 5 AND routine_satisfaction >= 1 AND routine_satisfaction <= 5", name: "weekly_wellbeings_valid_scores"
+  end
+
   create_table "weight_entries", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.date "measured_on", null: false
@@ -262,5 +277,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_160000) do
   add_foreign_key "weekly_health_goals", "weekly_health_plans"
   add_foreign_key "weekly_health_plans", "users"
   add_foreign_key "weekly_health_reviews", "users"
+  add_foreign_key "weekly_wellbeings", "users"
   add_foreign_key "weight_entries", "users"
 end

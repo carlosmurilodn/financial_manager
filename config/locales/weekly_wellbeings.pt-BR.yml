@@ -1,0 +1,11 @@
+pt-BR:
+  activerecord:
+    models:
+      weekly_wellbeing: "Bem-estar semanal"
+    attributes:
+      weekly_wellbeing:
+        week_start: "Início da semana"
+        energy: "Energia"
+        mood: "Humor"
+        routine_satisfaction: "Satisfação com a rotina"
+        notes: "Observação"

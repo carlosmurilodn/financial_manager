@@ -4,7 +4,7 @@
   eyebrow: "Progresso",
   description: "Defina seu peso desejado e os marcos intermediários. O foco continua na rotina e na consistência.",
   icon: "flag",
-  back_path: progress_path
+  back_path: health_weight_goal_path
 } do %>
   <%= form_with model: @health_weight_goal, url: health_weight_goal_path, method: :patch, local: true, html: { class: "app-form-page__form", data: { turbo: false } } do |f| %>
     <div class="progress-review-form">
@@ -21,7 +21,7 @@
       <p class="progress-empty">Peso inicial vem da primeira medição registrada. Alterar o objetivo não modifica seu histórico de peso, metas semanais ou revisões.</p>
     </div>
     <div class="app-form-page__actions">
-      <%= link_to "Cancelar", progress_path, class: "app-btn app-btn--outline" %>
+      <%= link_to "Cancelar", health_weight_goal_path, class: "app-btn app-btn--outline" %>
       <%= f.submit "Salvar objetivo", class: "app-btn app-btn--primary" %>
     </div>
   <% end %>

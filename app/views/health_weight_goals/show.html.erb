@@ -1,0 +1,115 @@
+<section class="app-page">
+  <div class="app-page__hero">
+    <div class="app-page__hero-top app-page__hero-top--progress">
+      <div class="app-page__hero-unit app-page__hero-copy">
+        <span class="app-page__hero-icon">
+          <span class="material-symbols-rounded">flag</span>
+        </span>
+        <div>
+          <p class="app-page__eyebrow">Saúde e Bem-Estar</p>
+          <h1 class="app-page__title">Objetivos por Etapa</h1>
+          <p class="app-page__description">Marcos intermediários para acompanhar a tendência com contexto e sem cobrança diária.</p>
+        </div>
+      </div>
+
+      <div class="app-page__hero-unit app-page__hero-action">
+        <%= link_to edit_health_weight_goal_path, class: "app-expenses-hero-kpis__action", data: { turbo: false } do %>
+          <span class="app-expenses-hero-kpis__action-icon">
+            <span class="material-symbols-rounded"><%= @health_weight_goal ? "edit" : "add" %></span>
+          </span>
+          <span class="app-expenses-hero-kpis__action-copy">
+            <strong><%= @health_weight_goal ? "Editar Objetivo" : "Novo Objetivo" %></strong>
+          </span>
+        <% end %>
+      </div>
+
+      <div class="app-page__hero-unit">
+        <div class="stat-card">
+          <span class="stat-card__label">Peso atual</span>
+          <strong class="stat-card__value">
+            <%= @latest_weight_entry ? "#{number_with_precision(@latest_weight_entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ",")} kg" : "Sem registro" %>
+          </strong>
+          <small><%= @latest_weight_entry ? @latest_weight_entry.measured_on.strftime("%d/%m/%Y") : "Registre um peso para calcular os marcos." %></small>
+        </div>
+      </div>
+
+      <div class="app-page__hero-unit">
+        <div class="stat-card">
+          <span class="stat-card__label">Objetivo final</span>
+          <strong class="stat-card__value">
+            <%= @health_weight_goal ? "#{number_with_precision(@health_weight_goal.target_weight, precision: 2, strip_insignificant_zeros: true, separator: ",")} kg" : "Não definido" %>
+          </strong>
+          <small><%= pluralize(@milestones.size, "etapa", "etapas") %> exibidas</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-panel">
+    <%= render "shared/filter_accordion" do %>
+      <%= form_with url: health_weight_goal_path, method: :get, local: true, class: "app-filter-form" do |f| %>
+        <div class="app-filter-grid">
+          <div class="app-filter-field">
+            <%= f.label :status, "Status" %>
+            <%= f.select :status,
+                  options_for_select([["Todos", ""], ["Cumpridos", "done"], ["Pendentes", "pending"]], @status_filter),
+                  {},
+                  class: "app-form-select" %>
+          </div>
+        </div>
+
+        <div class="app-filter-actions">
+          <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>
+            <i class="bi bi-funnel app-me-1"></i> Filtrar
+          <% end %>
+
+          <%= link_to health_weight_goal_path, class: "app-btn app-btn--secondary app-page__secondary-btn" do %>
+            <i class="bi bi-x-circle app-me-1"></i> Limpar Filtros
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="app-panel app-panel--table">
+    <% if @health_weight_goal && @milestones.any? %>
+      <div class="app-table-responsive">
+        <table class="table app-table app-table--records align-middle">
+          <thead>
+            <tr>
+              <th>Etapa</th>
+              <th>Peso</th>
+              <th>Status</th>
+              <th class="text-end">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @milestones.each do |milestone| %>
+              <tr>
+                <td data-label="Etapa"><%= milestone[:kind] %></td>
+                <td data-label="Peso"><strong><%= number_with_precision(milestone[:weight], precision: 2, strip_insignificant_zeros: true, separator: ",") %> kg</strong></td>
+                <td data-label="Status">
+                  <span class="dashboard-goal-item__status dashboard-goal-item__status--<%= milestone[:status] == "done" ? "completed" : "planned" %>"><%= milestone[:status_label] %></span>
+                </td>
+                <td data-label="Ações">
+                  <div class="app-record-actions">
+                    <%= link_to edit_health_weight_goal_path, class: "app-btn app-btn--outline", data: { turbo: false } do %>
+                      <span class="material-symbols-rounded">edit</span>
+                      Editar
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="dashboard-empty-state">
+        <span class="material-symbols-rounded">flag</span>
+        <strong><%= @health_weight_goal ? "Nenhuma etapa encontrada" : "Objetivo ainda não definido" %></strong>
+        <small><%= @health_weight_goal ? "Ajuste os filtros para ver outras etapas." : "Configure seu peso desejado e marcos intermediários." %></small>
+      </div>
+    <% end %>
+  </div>
+</section>

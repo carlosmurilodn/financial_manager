@@ -32,7 +32,7 @@
           <span class="link-text">Histórico de Peso</span>
         <% end %>
 
-        <%= link_to progress_path(anchor: "objetivos-etapa"), class: "app-nav-link #{'active-menu' if health_nav_active?(:milestones)}", id: "link-health-milestones", title: "Objetivos por Etapa", aria: { label: "Objetivos por Etapa" }, data: { turbo: false } do %>
+        <%= link_to health_weight_goal_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:milestones)}", id: "link-health-milestones", title: "Objetivos por Etapa", aria: { label: "Objetivos por Etapa" }, data: { turbo: false } do %>
           <span class="material-symbols-rounded app-nav-link__icon">flag</span>
           <span class="link-text">Objetivos por Etapa</span>
         <% end %>

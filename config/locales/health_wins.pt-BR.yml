@@ -1,0 +1,8 @@
+pt-BR:
+  activerecord:
+    models:
+      health_win: "Vitória"
+    attributes:
+      health_win:
+        achieved_on: "Data da conquista"
+        description: "Descrição"

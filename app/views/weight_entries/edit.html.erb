@@ -1,0 +1,10 @@
+<%= render layout: "shared/form_page", locals: {
+  resource: @weight_entry,
+  title: "Editar medição",
+  eyebrow: "Progresso",
+  description: "Corrija a data ou o peso registrado.",
+  icon: "edit_note",
+  back_path: progress_path
+} do %>
+  <%= render "form", weight_entry: @weight_entry %>
+<% end %>

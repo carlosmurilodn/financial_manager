@@ -4,6 +4,13 @@ Rails.application.routes.draw do
   }
 
   root "home#index"
+  get "progresso", to: "progress#index", as: :progress
+  resources :weight_entries, path: "progresso/pesagens", only: %i[new create edit update destroy]
+  resources :weekly_health_plans, path: "progresso/semanas", param: :week_start, only: %i[edit update]
+  resources :weekly_health_reviews, path: "progresso/revisoes", param: :week_start, only: %i[edit update]
+  resources :health_wins, path: "progresso/vitorias", only: %i[new create edit update destroy]
+  resource :health_weight_goal, path: "progresso/objetivo", only: %i[edit update]
+  resources :weekly_wellbeings, path: "progresso/bem-estar", param: :week_start, only: %i[edit update]
 
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker

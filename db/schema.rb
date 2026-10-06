@@ -10,9 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_07_100000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_06_170000) do
+  create_schema "auth"
+  create_schema "extensions"
+  create_schema "graphql"
+  create_schema "graphql_public"
+  create_schema "pgbouncer"
+  create_schema "realtime"
+  create_schema "storage"
+  create_schema "vault"
+
   # These are extensions that must be enabled in order to support this database
+  enable_extension "extensions.pg_stat_statements"
+  enable_extension "extensions.pgcrypto"
+  enable_extension "extensions.uuid-ossp"
   enable_extension "pg_catalog.plpgsql"
+  enable_extension "vault.supabase_vault"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -89,7 +102,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_07_100000) do
   end
 
   create_table "financial_goal_resources", force: :cascade do |t|
-    t.bigint "financial_goal_id", null: false
+    t.integer "financial_goal_id", null: false
     t.integer "resource_type", default: 0, null: false
     t.string "description", null: false
     t.decimal "amount", precision: 12, scale: 2, default: "0.0", null: false
@@ -114,7 +127,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_07_100000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "current_amount", precision: 12, scale: 2, default: "0.0", null: false
-    t.bigint "category_id"
+    t.integer "category_id"
     t.bigint "user_id"
     t.string "color"
     t.index ["category_id"], name: "index_financial_goals_on_category_id"
@@ -122,6 +135,26 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_07_100000) do
     t.index ["priority"], name: "index_financial_goals_on_priority"
     t.index ["status"], name: "index_financial_goals_on_status"
     t.index ["user_id"], name: "index_financial_goals_on_user_id"
+  end
+
+  create_table "health_weight_goals", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.decimal "target_weight", precision: 5, scale: 2, null: false
+    t.decimal "milestone_weights", precision: 5, scale: 2, default: [], null: false, array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_health_weight_goals_on_user_id", unique: true
+    t.check_constraint "target_weight > 0::numeric", name: "health_weight_goals_positive_target"
+  end
+
+  create_table "health_wins", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "achieved_on", null: false
+    t.text "description", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "achieved_on"], name: "index_health_wins_on_user_id_and_achieved_on"
+    t.index ["user_id"], name: "index_health_wins_on_user_id"
   end
 
   create_table "incomes", force: :cascade do |t|
@@ -163,6 +196,69 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_07_100000) do
     t.index ["webauthn_id"], name: "index_users_on_webauthn_id", unique: true
   end
 
+  create_table "weekly_health_goals", force: :cascade do |t|
+    t.bigint "weekly_health_plan_id", null: false
+    t.string "name", null: false
+    t.integer "target_count", null: false
+    t.integer "completed_count", default: 0, null: false
+    t.string "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["weekly_health_plan_id"], name: "index_weekly_health_goals_on_weekly_health_plan_id"
+    t.check_constraint "target_count > 0 AND completed_count >= 0", name: "weekly_health_goals_valid_counts"
+  end
+
+  create_table "weekly_health_plans", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "week_start", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "week_start"], name: "index_weekly_health_plans_on_user_id_and_week_start", unique: true
+    t.index ["user_id"], name: "index_weekly_health_plans_on_user_id"
+    t.check_constraint "EXTRACT(isodow FROM week_start) = 1::numeric", name: "weekly_health_plans_start_on_monday"
+  end
+
+  create_table "weekly_health_reviews", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "week_start", null: false
+    t.text "worked_well"
+    t.text "obstacles"
+    t.text "within_control"
+    t.text "next_adjustments"
+    t.text "minimum_goal"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "week_start"], name: "index_weekly_health_reviews_on_user_id_and_week_start", unique: true
+    t.index ["user_id"], name: "index_weekly_health_reviews_on_user_id"
+    t.check_constraint "EXTRACT(isodow FROM week_start) = 1::numeric", name: "weekly_health_reviews_start_on_monday"
+  end
+
+  create_table "weekly_wellbeings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "week_start", null: false
+    t.integer "energy", null: false
+    t.integer "mood", null: false
+    t.integer "routine_satisfaction", null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "week_start"], name: "index_weekly_wellbeings_on_user_id_and_week_start", unique: true
+    t.index ["user_id"], name: "index_weekly_wellbeings_on_user_id"
+    t.check_constraint "EXTRACT(isodow FROM week_start) = 1::numeric", name: "weekly_wellbeings_start_on_monday"
+    t.check_constraint "energy >= 1 AND energy <= 5 AND mood >= 1 AND mood <= 5 AND routine_satisfaction >= 1 AND routine_satisfaction <= 5", name: "weekly_wellbeings_valid_scores"
+  end
+
+  create_table "weight_entries", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "measured_on", null: false
+    t.decimal "weight_kg", precision: 5, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "measured_on"], name: "index_weight_entries_on_user_id_and_measured_on", unique: true
+    t.index ["user_id"], name: "index_weight_entries_on_user_id"
+    t.check_constraint "weight_kg > 0::numeric", name: "weight_entries_positive_weight"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cards", "users"
@@ -173,7 +269,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_07_100000) do
   add_foreign_key "financial_goal_resources", "financial_goals"
   add_foreign_key "financial_goals", "categories"
   add_foreign_key "financial_goals", "users"
+  add_foreign_key "health_weight_goals", "users"
+  add_foreign_key "health_wins", "users"
   add_foreign_key "incomes", "categories"
   add_foreign_key "incomes", "users"
   add_foreign_key "passkey_credentials", "users"
+  add_foreign_key "weekly_health_goals", "weekly_health_plans"
+  add_foreign_key "weekly_health_plans", "users"
+  add_foreign_key "weekly_health_reviews", "users"
+  add_foreign_key "weekly_wellbeings", "users"
+  add_foreign_key "weight_entries", "users"
 end

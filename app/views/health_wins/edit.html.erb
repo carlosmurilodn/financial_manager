@@ -1,0 +1,13 @@
+<%= render layout: "shared/form_page", locals: {
+  resource: @health_win,
+  title: "Editar vitória",
+  eyebrow: "Progresso",
+  description: "Atualize a data ou a descrição da sua conquista.",
+  icon: "edit_note",
+  back_path: progress_path(week: @return_week.iso8601)
+} do %>
+  <%= render "form", health_win: @health_win %>
+  <div class="app-form-page__actions">
+    <%= button_to "Excluir vitória", health_win_path(@health_win, week: @return_week.iso8601), method: :delete, class: "app-btn app-btn--outline", form: { data: { turbo_confirm: "Excluir esta vitória de #{@health_win.achieved_on.strftime('%d/%m/%Y')}?" } } %>
+  </div>
+<% end %>

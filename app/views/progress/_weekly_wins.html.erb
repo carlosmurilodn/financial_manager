@@ -1,0 +1,38 @@
+<article class="app-panel progress-panel">
+  <div class="progress-history__header">
+    <div class="progress-panel__header">
+      <span class="material-symbols-rounded">workspace_premium</span>
+      <div>
+        <p class="app-page__eyebrow">Histórico humano · segunda a domingo</p>
+        <h2>Vitórias que a balança não mostra</h2>
+      </div>
+    </div>
+    <%= link_to "Registrar vitória", new_health_win_path(week: @week_start.iso8601), class: "app-btn app-btn--primary", data: { turbo_frame: "_top" } %>
+  </div>
+
+  <% if @health_wins.any? %>
+    <ul class="progress-win-pills">
+      <% @health_wins.each do |win| %>
+        <li>
+          <%= link_to edit_health_win_path(win, week: @week_start.iso8601), class: "progress-win-pill", data: { turbo_frame: "_top" }, title: "Editar vitória", aria: { label: "Editar vitória de #{win.achieved_on.strftime('%d/%m/%Y')}: #{win.description}" } do %>
+            <span><%= win.description %></span>
+            <time datetime="<%= win.achieved_on.iso8601 %>"><%= win.achieved_on.strftime("%d/%m/%Y") %></time>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+    <% if @wins_total_pages > 1 %>
+      <nav class="app-pagination" aria-label="Vitórias da semana">
+        <% if @wins_current_page > 1 %>
+          <%= link_to "Anterior", progress_path(week: @week_start.iso8601, wins_page: @wins_current_page - 1), class: "app-pagination__link", data: { turbo_frame: "progress-weekly-goals", turbo_prefetch: false } %>
+        <% end %>
+        <span>Página <%= @wins_current_page %> de <%= @wins_total_pages %></span>
+        <% if @wins_current_page < @wins_total_pages %>
+          <%= link_to "Próxima", progress_path(week: @week_start.iso8601, wins_page: @wins_current_page + 1), class: "app-pagination__link", data: { turbo_frame: "progress-weekly-goals", turbo_prefetch: false } %>
+        <% end %>
+      </nav>
+    <% end %>
+  <% else %>
+    <p class="progress-empty">Nenhuma vitória registrada nesta semana. Reconheça uma ação que fez diferença na sua rotina, por menor que pareça.</p>
+  <% end %>
+</article>

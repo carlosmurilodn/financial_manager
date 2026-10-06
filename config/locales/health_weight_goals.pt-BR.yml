@@ -1,0 +1,9 @@
+pt-BR:
+  activerecord:
+    models:
+      health_weight_goal: "Objetivo de peso"
+    attributes:
+      health_weight_goal:
+        target_weight: "Peso desejado"
+        milestone_weights: "Marcos intermediários"
+        milestones_text: "Marcos intermediários"

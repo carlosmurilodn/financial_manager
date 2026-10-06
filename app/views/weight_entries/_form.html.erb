@@ -1,0 +1,17 @@
+<%= form_with model: weight_entry, local: true, html: { class: "app-form-page__form", data: { turbo: false } } do |f| %>
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <%= f.label :measured_on, "Data da medição" %>
+      <%= f.date_field :measured_on, class: "app-form-control", required: true, max: Date.current.iso8601 %>
+    </div>
+    <div class="col-md-6">
+      <%= f.label :weight_kg, "Peso (kg)" %>
+      <%= f.text_field :weight_kg, class: "app-form-control", required: true, inputmode: "decimal", placeholder: "Ex.: 115,5", aria: { describedby: "weight-entry-hint" } %>
+      <small id="weight-entry-hint">Use vírgula ou ponto. Uma medição por dia; você pode corrigir depois.</small>
+    </div>
+  </div>
+  <div class="app-form-page__actions">
+    <%= link_to "Cancelar", progress_path, class: "app-btn app-btn--outline" %>
+    <%= f.submit "Salvar medição", class: "app-btn app-btn--primary" %>
+  </div>
+<% end %>

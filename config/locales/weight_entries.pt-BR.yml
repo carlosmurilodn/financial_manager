@@ -1,0 +1,8 @@
+pt-BR:
+  activerecord:
+    models:
+      weight_entry: "Medição de peso"
+    attributes:
+      weight_entry:
+        measured_on: "Data da medição"
+        weight_kg: "Peso"

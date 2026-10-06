@@ -1,0 +1,25 @@
+<article class="app-panel progress-panel">
+  <div class="progress-panel__header">
+    <span class="material-symbols-rounded">compare_arrows</span>
+    <div>
+      <p class="app-page__eyebrow">Semanas de segunda a domingo</p>
+      <h2>Comparação semanal</h2>
+    </div>
+  </div>
+  <p class="progress-empty">Semana selecionada: <%= @week_start.strftime("%d/%m/%Y") %> a <%= (@week_start + 6.days).strftime("%d/%m/%Y") %>. Anterior: <%= (@week_start - 7.days).strftime("%d/%m/%Y") %> a <%= (@week_start - 1.day).strftime("%d/%m/%Y") %>.</p>
+  <table class="progress-comparison">
+    <caption class="progress-empty">Variações dos registros, sem classificação de bom ou ruim.</caption>
+    <thead><tr><th scope="col">Indicador</th><th scope="col">Semana anterior</th><th scope="col">Selecionada</th><th scope="col">Variação</th></tr></thead>
+    <tbody>
+      <% @weekly_comparison_rows.each do |row| %>
+        <tr>
+          <th scope="row"><%= row[:label] %></th>
+          <td data-label="Semana anterior"><%= weekly_comparison_value(row, :previous) %></td>
+          <td data-label="Selecionada"><%= weekly_comparison_value(row, :current) %></td>
+          <td data-label="Variação"><%= weekly_comparison_delta(row) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <p class="progress-empty">Metas mostram realizado/planejado. Comparação pelo nome, ignorando maiúsculas e espaços extras. Metas sem correspondência ou com nomes repetidos mostram “Sem comparação”.</p>
+</article>

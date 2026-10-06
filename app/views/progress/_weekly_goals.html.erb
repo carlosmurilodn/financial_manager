@@ -1,0 +1,41 @@
+  <article class="app-panel progress-panel progress-week-fixed-panel">
+    <div class="progress-history__header">
+      <div class="progress-panel__header">
+        <span class="material-symbols-rounded">task_alt</span>
+        <div>
+          <p class="app-page__eyebrow">Semana · segunda a domingo</p>
+          <h2>Metas que dependem de você</h2>
+        </div>
+      </div>
+      <%= link_to "Editar metas", edit_weekly_health_plan_path(@week_start.iso8601), class: "app-btn app-btn--outline", data: { turbo_frame: "_top" } %>
+    </div>
+
+    <div class="progress-week-scroll" tabindex="0" role="region" aria-label="Metas da semana">
+    <% unless @weekly_health_plan.persisted? %>
+      <p class="progress-empty">Planejamento sugerido, ainda não salvo. Ajuste as Metas e registre o realizado em “Editar Metas”.</p>
+    <% end %>
+
+    <ul class="progress-week-goals">
+      <% @weekly_health_plan.weekly_health_goals.each do |goal| %>
+        <li class="progress-week-goal">
+          <div class="progress-history__header">
+            <strong><%= goal.name %></strong>
+            <span><%= goal.completed_count %>/<%= goal.target_count %></span>
+          </div>
+          <% if goal.notes.present? %>
+            <p class="progress-empty"><%= goal.notes %></p>
+          <% end %>
+          <div class="progress-week-goal__bar" role="progressbar" aria-label="<%= goal.name %>" aria-valuemin="0" aria-valuemax="<%= goal.target_count %>" aria-valuenow="<%= [goal.completed_count, goal.target_count].min %>" aria-valuetext="<%= goal.completed_count %> de <%= goal.target_count %> realizados">
+            <span style="width: <%= goal.progress_percent %>%;"></span>
+          </div>
+          <% if goal.completed_count >= goal.target_count %>
+            <small class="progress-empty">Meta cumprida</small>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+    <% if @weekly_health_plan.weekly_health_goals.empty? %>
+      <p class="progress-empty">Nenhuma Meta nesta semana. Use “Editar Metas” para adicionar.</p>
+    <% end %>
+    </div>
+  </article>

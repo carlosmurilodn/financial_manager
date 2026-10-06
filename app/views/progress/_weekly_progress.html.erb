@@ -1,0 +1,13 @@
+<%= turbo_frame_tag "progress-weekly-goals", class: "progress-weekly-frame" do %>
+  <%= render "weekly_indicators" %>
+  <%= render "weekly_period" %>
+  <div class="progress-grid">
+    <%= render "weekly_goals" %>
+    <%= render "weekly_review" %>
+  </div>
+  <div class="progress-grid progress-grid--wellbeing">
+    <%= render "weekly_wellbeing" %>
+    <%= render "weekly_wins" %>
+  </div>
+  <%= render "weekly_comparison" %>
+<% end %>

@@ -51,7 +51,7 @@
         <span class="link-text">Objetivos</span>
       <% end %>
 
-      <%= link_to progress_path, class: "app-nav-link #{'active-menu' if controller_name.in?(%w[progress weight_entries weekly_health_plans weekly_health_reviews health_wins])}", id: "link-progress", title: "Progresso", aria: { label: "Progresso" }, data: { turbo: false } do %>
+      <%= link_to progress_path, class: "app-nav-link #{'active-menu' if controller_name.in?(%w[progress weight_entries weekly_health_plans weekly_health_reviews health_wins health_weight_goals])}", id: "link-progress", title: "Progresso", aria: { label: "Progresso" }, data: { turbo: false } do %>
         <span class="material-symbols-rounded app-nav-link__icon">monitoring</span>
         <span class="link-text">Progresso</span>
       <% end %>

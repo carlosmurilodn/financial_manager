@@ -27,8 +27,9 @@
 
       <div class="progress-hero-card progress-hero-card--accent">
         <span class="progress-hero-card__label">Objetivo maior</span>
-        <strong>Abaixo de 100 kg</strong>
+        <strong><%= @health_weight_goal ? "#{number_with_precision(@health_weight_goal.target_weight, precision: 2, strip_insignificant_zeros: true, separator: ',')} kg" : "Defina seu objetivo" %></strong>
         <small>Foco em processo, nao em julgamento diario.</small>
+        <%= link_to @health_weight_goal ? "Editar objetivo" : "Configurar objetivo", edit_health_weight_goal_path, data: { turbo: false } %>
       </div>
     </div>
   </div>
@@ -67,12 +68,15 @@
   </article>
 
     <article class="app-panel progress-panel progress-panel--milestones">
-      <div class="progress-panel__header">
-        <span class="material-symbols-rounded">flag</span>
-        <div>
-          <p class="app-page__eyebrow">Marcos</p>
-          <h2>Objetivo por etapas</h2>
+      <div class="progress-history__header">
+        <div class="progress-panel__header">
+          <span class="material-symbols-rounded">flag</span>
+          <div>
+            <p class="app-page__eyebrow">Marcos</p>
+            <h2>Objetivo por etapas</h2>
+          </div>
         </div>
+        <%= link_to @health_weight_goal ? "Editar objetivo" : "Configurar objetivo", edit_health_weight_goal_path, class: "app-btn app-btn--outline", data: { turbo: false } %>
       </div>
 
       <div class="progress-milestones" aria-label="Marcos de peso">
@@ -84,19 +88,24 @@
           <span><%= @latest_weight_entry ? "#{number_with_precision(@latest_weight_entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ',')} kg" : "Sem registro" %></span>
           <strong>Atual</strong>
         </div>
-        <div class="progress-milestone <%= 'is-done' if @latest_weight_entry && @latest_weight_entry.weight_kg <= 110 %>">
-          <span>110 kg</span>
-          <strong>Marco</strong>
-        </div>
-        <div class="progress-milestone <%= 'is-done' if @latest_weight_entry && @latest_weight_entry.weight_kg <= 105 %>">
-          <span>105 kg</span>
-          <strong>Marco</strong>
-        </div>
-        <div class="progress-milestone <%= 'is-done' if @latest_weight_entry && @latest_weight_entry.weight_kg <= 99.9 %>">
-          <span>99,9 kg</span>
-          <strong>Meta</strong>
-        </div>
+        <% if @health_weight_goal %>
+          <% @health_weight_goal.ordered_milestones.each do |weight| %>
+            <% reached = @latest_weight_entry && @latest_weight_entry.weight_kg <= weight %>
+            <div class="progress-milestone <%= 'is-done' if reached %>">
+              <span><%= number_with_precision(weight, precision: 2, strip_insignificant_zeros: true, separator: ",") %> kg</span>
+              <strong><%= reached ? "Cumprido" : "Marco" %></strong>
+            </div>
+          <% end %>
+          <% target_reached = @latest_weight_entry && @latest_weight_entry.weight_kg <= @health_weight_goal.target_weight %>
+          <div class="progress-milestone <%= 'is-done' if target_reached %>">
+            <span><%= number_with_precision(@health_weight_goal.target_weight, precision: 2, strip_insignificant_zeros: true, separator: ",") %> kg</span>
+            <strong><%= target_reached ? "Meta cumprida" : "Meta" %></strong>
+          </div>
+        <% end %>
       </div>
+      <% unless @health_weight_goal %>
+        <p class="progress-empty">Configure seu peso desejado para acompanhar sua meta e os marcos intermediários.</p>
+      <% end %>
     </article>
 
   <%= render "weekly_progress" %>

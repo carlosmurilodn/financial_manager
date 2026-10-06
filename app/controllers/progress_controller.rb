@@ -1,5 +1,6 @@
 class ProgressController < ApplicationController
   def index
+    @health_weight_goal = current_user.health_weight_goal
     entries = current_user.weight_entries.recent
     @latest_weight_entry = entries.first
     @initial_weight_entry = entries.reorder(measured_on: :asc).first

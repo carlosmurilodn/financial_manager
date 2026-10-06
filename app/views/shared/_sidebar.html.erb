@@ -27,7 +27,7 @@
           <span class="link-text">Progresso</span>
         <% end %>
 
-        <%= link_to progress_path(anchor: "historico-peso"), class: "app-nav-link #{'active-menu' if health_nav_active?(:weight)}", id: "link-health-weight", title: "Histórico de Peso", aria: { label: "Histórico de Peso" }, data: { turbo: false } do %>
+        <%= link_to weight_entries_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:weight)}", id: "link-health-weight", title: "Histórico de Peso", aria: { label: "Histórico de Peso" }, data: { turbo: false } do %>
           <span class="material-symbols-rounded app-nav-link__icon">monitor_weight</span>
           <span class="link-text">Histórico de Peso</span>
         <% end %>

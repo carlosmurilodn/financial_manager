@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   root "entry#index"
   get "financeiro", to: "home#index", as: :financial_dashboard
   get "progresso", to: "progress#index", as: :progress
-  resources :weight_entries, path: "progresso/pesagens", only: %i[new create edit update destroy]
+  resources :weight_entries, path: "progresso/pesagens", only: %i[index new create edit update destroy]
   resources :weekly_health_plans, path: "progresso/semanas", param: :week_start, only: %i[edit update]
   resources :weekly_health_reviews, path: "progresso/revisoes", param: :week_start, only: %i[edit update]
   resources :health_wins, path: "progresso/vitorias", only: %i[new create edit update destroy]

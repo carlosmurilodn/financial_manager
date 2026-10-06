@@ -6,11 +6,17 @@ Rails.application.routes.draw do
   root "entry#index"
   get "financeiro", to: "home#index", as: :financial_dashboard
   get "progresso", to: "progress#index", as: :progress
-  resources :weight_entries, path: "progresso/pesagens", only: %i[index new create edit update destroy]
+  resources :weight_entries, path: "progresso/pesagens", only: %i[index new create edit update destroy] do
+    collection do
+      delete :clear_filters
+    end
+  end
   resources :weekly_health_plans, path: "progresso/semanas", param: :week_start, only: %i[edit update]
   resources :weekly_health_reviews, path: "progresso/revisoes", param: :week_start, only: %i[edit update]
   resources :health_wins, path: "progresso/vitorias", only: %i[new create edit update destroy]
-  resource :health_weight_goal, path: "progresso/objetivo", only: %i[show edit update]
+  resource :health_weight_goal, path: "progresso/objetivo", only: %i[show edit update] do
+    delete :clear_filters
+  end
   resources :weekly_wellbeings, path: "progresso/bem-estar", param: :week_start, only: %i[edit update]
 
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest

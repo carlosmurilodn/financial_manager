@@ -1,6 +1,6 @@
 <section class="app-page">
   <div class="app-page__hero">
-    <div class="app-page__hero-top app-page__hero-top--financial-goals">
+    <div class="app-page__hero-top app-page__hero-top--expenses">
       <div class="app-page__hero-unit app-page__hero-copy">
         <span class="app-page__hero-icon">
           <span class="material-symbols-rounded">monitor_weight</span>
@@ -8,7 +8,6 @@
         <div>
           <p class="app-page__eyebrow">Saúde e Bem-Estar</p>
           <h1 class="app-page__title">Histórico de Peso</h1>
-          <p class="app-page__description">Registros de peso para acompanhar tendência, sem transformar uma medição isolada em julgamento.</p>
         </div>
       </div>
 
@@ -24,43 +23,17 @@
       </div>
 
       <div class="app-page__hero-kpis">
-        <div class="app-financial-goals-hero-kpis">
-          <div class="app-page__hero-unit">
-            <div class="stat-card stat-card--warning">
-              <div class="stat-card__icon">
-                <span class="material-symbols-rounded">monitor_weight</span>
-              </div>
-              <div>
-                <span class="stat-card__label">Última medição</span>
-                <strong class="stat-card__value">
-                  <%= @latest_weight_entry ? "#{number_with_precision(@latest_weight_entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ",")} kg" : "Sem registro" %>
-                </strong>
-                <small class="stat-card__meta"><%= @latest_weight_entry ? @latest_weight_entry.measured_on.strftime("%d/%m/%Y") : "Registre seu primeiro peso." %></small>
-              </div>
-            </div>
-          </div>
-
-          <div class="app-page__hero-unit">
-            <div class="stat-card stat-card--primary">
-              <div class="stat-card__icon">
-                <span class="material-symbols-rounded">format_list_numbered</span>
-              </div>
-              <div>
-                <span class="stat-card__label">Registros filtrados</span>
-                <strong class="stat-card__value"><%= @filtered_count %></strong>
-                <small class="stat-card__meta"><%= @initial_weight_entry ? "Desde #{@initial_weight_entry.measured_on.strftime("%d/%m/%Y")}" : "Nenhum histórico disponível." %></small>
-              </div>
-            </div>
-          </div>
-        </div>
+        <%= render "hero_kpis" %>
       </div>
     </div>
+
+    <%# <p class="app-page__description">Registros de peso para acompanhar tendência, sem transformar uma medição isolada em julgamento.</p> %>
   </div>
 
   <div class="app-panel">
     <%= render "shared/filter_accordion" do %>
       <%= form_with url: weight_entries_path, method: :get, local: true, class: "app-filter-form" do |f| %>
-        <div class="app-filter-grid app-filter-grid--health-weight">
+        <div class="app-filter-grid app-filter-grid--expenses">
           <div class="app-filter-field">
             <%= f.label :measured_from, "De" %>
             <%= f.date_field :measured_from, value: @measured_from_filter, class: "app-form-control", max: Date.current.iso8601 %>
@@ -74,61 +47,22 @@
 
         <div class="app-filter-actions">
           <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>
-            <i class="bi bi-funnel app-me-1"></i> Filtrar
+            <i class="bi bi-funnel me-1"></i> <%= t("buttons.filter") %>
           <% end %>
 
-          <%= link_to weight_entries_path, class: "app-btn app-btn--secondary app-page__secondary-btn" do %>
-            <i class="bi bi-x-circle app-me-1"></i> Limpar Filtros
+          <%= link_to clear_filters_weight_entries_path,
+                      class: "app-btn app-btn--secondary app-page__secondary-btn",
+                      data: { turbo_method: :delete } do %>
+            <i class="bi bi-x-circle me-1"></i> Limpar Filtros
           <% end %>
+
+          <%= render "shared/per_page_select" %>
         </div>
       <% end %>
     <% end %>
   </div>
 
   <div class="app-panel app-panel--table">
-    <% if @weight_entries.any? %>
-      <div class="app-table-responsive">
-        <table class="table app-table app-table--records align-middle">
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Peso</th>
-              <th class="text-end">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @weight_entries.each do |entry| %>
-              <tr>
-                <td data-label="Data"><%= entry.measured_on.strftime("%d/%m/%Y") %></td>
-                <td data-label="Peso"><strong><%= number_with_precision(entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ",") %> kg</strong></td>
-                <td class="text-end" data-label="Ações">
-                  <div class="app-record-actions">
-                    <%= link_to edit_weight_entry_path(entry), class: "app-btn app-btn--outline", data: { turbo: false }, aria: { label: "Editar medição de #{entry.measured_on.strftime("%d/%m/%Y")}" } do %>
-                      <span class="material-symbols-rounded">edit</span>
-                      Editar
-                    <% end %>
-
-                    <%= button_to weight_entry_path(entry),
-                          method: :delete,
-                          class: "app-btn app-btn--outline",
-                          form: { data: { turbo_confirm: "Excluir a medição de #{entry.measured_on.strftime("%d/%m/%Y")}?" } },
-                          aria: { label: "Excluir medição de #{entry.measured_on.strftime("%d/%m/%Y")}" } do %>
-                      <span class="material-symbols-rounded">delete</span>
-                      Excluir
-                    <% end %>
-                  </div>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    <% else %>
-      <div class="dashboard-empty-state">
-        <span class="material-symbols-rounded">monitor_weight</span>
-        <strong>Nenhuma medição encontrada</strong>
-        <small>Ajuste os filtros ou registre um novo peso.</small>
-      </div>
-    <% end %>
+    <%= render "weight_entries_table" %>
   </div>
 </section>

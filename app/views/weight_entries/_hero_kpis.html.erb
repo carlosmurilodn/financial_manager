@@ -1,0 +1,29 @@
+<div id="weight-entries-hero-kpis" class="app-expenses-hero-kpis">
+  <div class="app-page__hero-unit">
+    <div class="stat-card stat-card--warning">
+      <div class="stat-card__icon">
+        <span class="material-symbols-rounded">monitor_weight</span>
+      </div>
+      <div>
+        <span class="stat-card__label">Última medição</span>
+        <strong class="stat-card__value">
+          <%= @latest_weight_entry ? "#{number_with_precision(@latest_weight_entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ",")} kg" : "Sem registro" %>
+        </strong>
+        <span class="stat-card__meta"><%= @latest_weight_entry ? @latest_weight_entry.measured_on.strftime("%d/%m/%Y") : "Registre seu primeiro peso." %></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-page__hero-unit">
+    <div class="stat-card stat-card--primary">
+      <div class="stat-card__icon">
+        <span class="material-symbols-rounded">format_list_numbered</span>
+      </div>
+      <div>
+        <span class="stat-card__label">Registros filtrados</span>
+        <strong class="stat-card__value"><%= @filtered_count %></strong>
+        <span class="stat-card__meta"><%= @initial_weight_entry ? "Desde #{@initial_weight_entry.measured_on.strftime("%d/%m/%Y")}" : "Nenhum histórico disponível." %></span>
+      </div>
+    </div>
+  </div>
+</div>

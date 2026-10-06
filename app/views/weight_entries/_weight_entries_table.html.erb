@@ -1,0 +1,21 @@
+<div id="weight-entries-table">
+  <% if @weight_entries.any? %>
+    <div class="expenses-cards-list" id="weight-entries-list">
+      <% @weight_entries.each do |weight_entry| %>
+        <%= render partial: "weight_entry_row", locals: { weight_entry: weight_entry } %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="dashboard-empty-state">
+      <span class="material-symbols-rounded">monitor_weight</span>
+      <strong>Nenhuma medição encontrada</strong>
+      <small>Ajuste os filtros ou registre um novo peso.</small>
+    </div>
+  <% end %>
+
+  <%= render "shared/pagination",
+             current_page: @current_page,
+             total_pages: @total_pages,
+             base_params: request.query_parameters.except(:page),
+             aria_label: "Paginacao de pesagens" %>
+</div>

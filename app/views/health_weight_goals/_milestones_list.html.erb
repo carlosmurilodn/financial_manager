@@ -1,0 +1,21 @@
+<div id="health-weight-goals-table">
+  <% if @health_weight_goal && @milestones.any? %>
+    <div class="expenses-cards-list" id="health-weight-goals-list">
+      <% @milestones.each do |milestone| %>
+        <%= render partial: "milestone_row", locals: { milestone: milestone } %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="dashboard-empty-state">
+      <span class="material-symbols-rounded">flag</span>
+      <strong><%= @health_weight_goal ? "Nenhuma etapa encontrada" : "Objetivo ainda não definido" %></strong>
+      <small><%= @health_weight_goal ? "Ajuste os filtros para ver outras etapas." : "Configure seu peso desejado e marcos intermediários." %></small>
+    </div>
+  <% end %>
+
+  <%= render "shared/pagination",
+             current_page: @current_page,
+             total_pages: @total_pages,
+             base_params: request.query_parameters.except(:page),
+             aria_label: "Paginacao de objetivos por etapa" %>
+</div>

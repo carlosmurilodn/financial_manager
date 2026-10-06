@@ -2,16 +2,7 @@ class WeightEntriesController < ApplicationController
   before_action :set_weight_entry, only: %i[edit update destroy]
 
   def index
-    @measured_from_filter = params[:measured_from].to_s.strip
-    @measured_to_filter = params[:measured_to].to_s.strip
-
-    @weight_entries = current_user.weight_entries.recent
-    @weight_entries = @weight_entries.where(measured_on: measured_from..) if measured_from
-    @weight_entries = @weight_entries.where(measured_on: ..measured_to) if measured_to
-
-    @latest_weight_entry = current_user.weight_entries.recent.first
-    @initial_weight_entry = current_user.weight_entries.order(:measured_on).first
-    @filtered_count = @weight_entries.count
+    load_weight_entries
   end
 
   def new
@@ -36,7 +27,31 @@ class WeightEntriesController < ApplicationController
     redirect_to weight_entries_path, notice: "Medição excluída com sucesso!", status: :see_other
   end
 
+  def clear_filters
+    session.delete(:weight_entries_measured_from)
+    session.delete(:weight_entries_measured_to)
+
+    redirect_to weight_entries_path, notice: "Filtros limpos com sucesso!"
+  end
+
   private
+
+  def load_weight_entries
+    session[:weight_entries_measured_from] = params[:measured_from].to_s.strip if params.key?(:measured_from)
+    session[:weight_entries_measured_to] = params[:measured_to].to_s.strip if params.key?(:measured_to)
+
+    @measured_from_filter = session[:weight_entries_measured_from].presence
+    @measured_to_filter = session[:weight_entries_measured_to].presence
+
+    entries = current_user.weight_entries.recent
+    entries = entries.where(measured_on: measured_from..) if measured_from
+    entries = entries.where(measured_on: ..measured_to) if measured_to
+
+    @latest_weight_entry = current_user.weight_entries.recent.first
+    @initial_weight_entry = current_user.weight_entries.order(:measured_on).first
+    @filtered_count = entries.count
+    @weight_entries = paginate_collection(entries.to_a, per_page: pagination_per_page(:weight_entries_per_page))
+  end
 
   def set_weight_entry
     @weight_entry = current_user.weight_entries.find(params[:id])

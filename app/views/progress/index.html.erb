@@ -60,7 +60,7 @@
           </li>
         <% end %>
       </ul>
-      <%= render "shared/pagination", current_page: @current_page, total_pages: @total_pages, base_params: { controller: "progress", action: "index" }, aria_label: "Histórico de peso" %>
+      <%= render "shared/pagination", current_page: @current_page, total_pages: @total_pages, base_params: { controller: "progress", action: "index", week: @week_start.iso8601 }, aria_label: "Histórico de Peso" %>
     <% else %>
       <p class="progress-empty">Nenhum peso registrado ainda. Comece quando fizer sentido para você; consistência vale mais que uma medição isolada.</p>
     <% end %>
@@ -100,35 +100,7 @@
       </div>
     </article>
 
-    <article class="app-panel progress-panel">
-      <div class="progress-panel__header">
-        <span class="material-symbols-rounded">task_alt</span>
-        <div>
-          <p class="app-page__eyebrow">Semana</p>
-          <h2>Metas que dependem de voce</h2>
-        </div>
-      </div>
-
-      <p class="progress-empty">Sugestões de planejamento. Treinos, alimentação e revisão ainda não possuem registros salvos.</p>
-      <div class="progress-checklist">
-        <div>
-          <span>Treinos planejados</span>
-          <strong>3</strong>
-        </div>
-        <div>
-          <span>Alimentacao planejada</span>
-          <strong>5/7</strong>
-        </div>
-        <div>
-          <span>Marmitas preparadas</span>
-          <strong>Sim</strong>
-        </div>
-        <div>
-          <span>Registro da semana</span>
-          <strong>Pendente</strong>
-        </div>
-      </div>
-    </article>
+    <%= render "weekly_goals" %>
   </div>
 
   <div class="progress-grid">

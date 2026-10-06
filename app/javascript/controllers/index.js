@@ -3,3 +3,6 @@
 // ./bin/rails generate stimulus controllerName
 
 import { application } from "./application"
+import WeeklyGoalsController from "./weekly_goals_controller"
+
+application.register("weekly-goals", WeeklyGoalsController)

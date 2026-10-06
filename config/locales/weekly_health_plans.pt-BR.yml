@@ -1,0 +1,18 @@
+pt-BR:
+  activerecord:
+    models:
+      weekly_health_plan: "Planejamento Semanal"
+      weekly_health_goal: "Meta Semanal"
+    attributes:
+      weekly_health_plan:
+        week_start: "Início da Semana"
+        weekly_health_goals: "Metas"
+        weekly_health_goals/name: "Nome da Meta"
+        weekly_health_goals/target_count: "Quantidade Planejada"
+        weekly_health_goals/completed_count: "Quantidade Realizada"
+        weekly_health_goals/notes: "Observações"
+      weekly_health_goal:
+        name: "Nome da Meta"
+        target_count: "Quantidade Planejada"
+        completed_count: "Quantidade Realizada"
+        notes: "Observações"

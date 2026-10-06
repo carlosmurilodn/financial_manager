@@ -1,0 +1,24 @@
+<fieldset class="progress-week-form__goal" data-weekly-goal-row <%= 'hidden' if goal_fields.object.marked_for_destruction? %>>
+  <legend>Meta semanal</legend>
+  <%= goal_fields.hidden_field :id %>
+  <%= goal_fields.hidden_field :_destroy, value: goal_fields.object.marked_for_destruction? ? "1" : "0", data: { weekly_goal_destroy: true } %>
+  <div class="progress-week-form__fields">
+    <div>
+      <%= goal_fields.label :name, "Nome da meta" %>
+      <%= goal_fields.text_field :name, class: "app-form-control", required: !goal_fields.object.marked_for_destruction?, maxlength: 80, placeholder: "Ex.: Treino" %>
+    </div>
+    <div>
+      <%= goal_fields.label :target_count, "Planejado" %>
+      <%= goal_fields.number_field :target_count, class: "app-form-control", required: !goal_fields.object.marked_for_destruction?, min: 1, max: 10000, step: 1 %>
+    </div>
+    <div>
+      <%= goal_fields.label :completed_count, "Realizado" %>
+      <%= goal_fields.number_field :completed_count, class: "app-form-control", required: !goal_fields.object.marked_for_destruction?, min: 0, max: 10000, step: 1 %>
+    </div>
+  </div>
+  <div>
+    <%= goal_fields.label :notes, "Observações (opcional)" %>
+    <%= goal_fields.text_field :notes, class: "app-form-control", maxlength: 500, placeholder: "Ex.: Dias com alimentação planejada" %>
+  </div>
+  <button type="button" class="app-btn app-btn--outline" data-action="weekly-goals#remove">Remover meta</button>
+</fieldset>

@@ -45,7 +45,8 @@
   align-items: stretch;
 }
 
-.app-page__hero-top--health-goals {
+.app-page__hero-top--health-goals,
+.app-page__hero-top--weekly-wellbeings {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: stretch;
@@ -120,7 +121,8 @@
 .app-page__hero-top > .app-page__hero-kpis > .app-cards-hero-kpis,
 .app-page__hero-top > .app-page__hero-kpis > .app-categories-hero-kpis,
 .app-page__hero-top > .app-page__hero-kpis > .app-financial-goals-hero-kpis,
-.app-page__hero-top > .app-page__hero-kpis > .app-health-goals-hero-kpis {
+.app-page__hero-top > .app-page__hero-kpis > .app-health-goals-hero-kpis,
+.app-page__hero-top > .app-page__hero-kpis > .app-weekly-wellbeings-hero-kpis {
   display: contents;
 }
 

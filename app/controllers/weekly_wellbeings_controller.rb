@@ -1,8 +1,28 @@
 class WeeklyWellbeingsController < ApplicationController
   before_action :set_week_start, only: %i[edit update]
+  before_action :load_week_options, only: %i[new create]
 
   def index
     load_weekly_wellbeings
+  end
+
+  def new
+    @selected_week_number = current_week_number
+    @week_start = week_start_for_number(@selected_week_number)
+    @weekly_wellbeing = current_user.weekly_wellbeings.find_or_initialize_by(week_start: @week_start)
+  end
+
+  def create
+    @selected_week_number = selected_week_number
+    @week_start = week_start_for_number(@selected_week_number)
+    @weekly_wellbeing = current_user.weekly_wellbeings.find_or_initialize_by(week_start: @week_start)
+    @weekly_wellbeing.assign_attributes(weekly_wellbeing_params)
+
+    if @weekly_wellbeing.save
+      redirect_to weekly_wellbeings_path, notice: "Bem-estar da semana salvo com sucesso!", status: :see_other
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def edit
@@ -47,6 +67,27 @@ class WeeklyWellbeingsController < ApplicationController
     @weekly_wellbeings = paginate_collection(wellbeings.to_a, per_page: pagination_per_page(:weekly_wellbeings_per_page))
     @current_week_start = Health::WeeklyPlan.week_start(Date.current)
     @week_from_label = week_from&.strftime("%d/%m/%Y")
+  end
+
+  def load_week_options
+    @week_options = (1..52).map do |week_number|
+      week_start = week_start_for_number(week_number)
+      week_end = week_start + 6.days
+      [ "Semana #{week_number} - De #{week_start.strftime("%d/%m/%Y")} a #{week_end.strftime("%d/%m/%Y")}", week_number ]
+    end
+  end
+
+  def selected_week_number
+    week_number = params[:week_number].to_i
+    week_number.between?(1, 52) ? week_number : current_week_number
+  end
+
+  def current_week_number
+    [[ Date.current.cweek, 1 ].max, 52 ].min
+  end
+
+  def week_start_for_number(week_number)
+    Date.commercial(Date.current.cwyear, week_number, 1)
   end
 
   def set_week_start

@@ -19,7 +19,7 @@ Rails.application.routes.draw do
       delete :clear_filters
     end
   end
-  resources :weekly_wellbeings, path: "progresso/bem-estar", param: :week_start, only: %i[index edit update] do
+  resources :weekly_wellbeings, path: "progresso/bem-estar", param: :week_start, only: %i[index new create edit update] do
     collection do
       delete :clear_filters
     end

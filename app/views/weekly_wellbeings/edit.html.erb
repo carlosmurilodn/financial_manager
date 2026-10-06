@@ -6,24 +6,9 @@
   icon: "psychology",
   back_path: weekly_wellbeings_path
 } do %>
-  <%= form_with model: @weekly_wellbeing, url: weekly_wellbeing_path(@week_start.iso8601), method: :patch, local: true, html: { class: "app-form-page__form", data: { turbo: false } } do |f| %>
-    <p class="progress-empty" id="wellbeing-scale-hint">Escala pessoal: 1 = muito baixo, 2 = baixo, 3 = intermediário, 4 = alto, 5 = muito alto. Não há nota certa ou errada.</p>
-    <div class="progress-review-form">
-      <% WeeklyWellbeing::METRICS.each do |attribute, label| %>
-        <div>
-          <%= f.label attribute, label %>
-          <%= f.select attribute, [["1 — Muito baixo", 1], ["2 — Baixo", 2], ["3 — Intermediário", 3], ["4 — Alto", 4], ["5 — Muito alto", 5]], { include_blank: "Selecione" }, class: "app-form-select", required: true, aria: { describedby: "wellbeing-scale-hint" } %>
-        </div>
-      <% end %>
-      <div>
-        <%= f.label :notes, "Observação (opcional)" %>
-        <%= f.text_area :notes, class: "app-form-control", rows: 4, maxlength: 2000, placeholder: "O que influenciou seu bem-estar nesta semana?" %>
-        <small>Até 2.000 caracteres. Você pode editar este registro depois.</small>
-      </div>
-    </div>
-    <div class="app-form-page__actions">
-      <%= link_to "Cancelar", weekly_wellbeings_path, class: "app-btn app-btn--outline" %>
-      <%= f.submit "Salvar bem-estar da semana", class: "app-btn app-btn--primary" %>
-    </div>
-  <% end %>
+  <%= render "form",
+             weekly_wellbeing: @weekly_wellbeing,
+             form_url: weekly_wellbeing_path(@week_start.iso8601),
+             form_method: :patch,
+             show_week_select: false %>
 <% end %>

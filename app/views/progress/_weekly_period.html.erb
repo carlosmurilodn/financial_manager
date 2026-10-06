@@ -1,0 +1,22 @@
+<article class="app-panel progress-panel" aria-label="Período dos registros semanais">
+  <div class="progress-history__header">
+    <strong>Semana · segunda a domingo</strong>
+    <% if @week_start == Date.current.beginning_of_week(:monday) %>
+      <span class="progress-empty">Semana atual</span>
+    <% else %>
+      <%= link_to "Voltar à semana atual", progress_path, class: "progress-week-current", data: { turbo_frame: "progress-weekly-goals", turbo_prefetch: false } %>
+    <% end %>
+  </div>
+  <div class="dashboard-card__pill dashboard-card__pill--period dashboard-card__pill--period-full progress-week-period">
+    <%= link_to progress_path(week: (@week_start - 7.days).iso8601), class: "dashboard-card__period-button", aria: { label: "Semana anterior" }, data: { turbo_frame: "progress-weekly-goals", turbo_prefetch: false } do %>
+      <span class="material-symbols-rounded">chevron_left</span>
+    <% end %>
+    <span class="dashboard-card__period-label">
+      <span class="material-symbols-rounded">date_range</span>
+      <span><%= @week_start.strftime("%d/%m/%Y") %> a <%= (@week_start + 6.days).strftime("%d/%m/%Y") %></span>
+    </span>
+    <%= link_to progress_path(week: (@week_start + 7.days).iso8601), class: "dashboard-card__period-button", aria: { label: "Próxima semana" }, data: { turbo_frame: "progress-weekly-goals", turbo_prefetch: false } do %>
+      <span class="material-symbols-rounded">chevron_right</span>
+    <% end %>
+  </div>
+</article>

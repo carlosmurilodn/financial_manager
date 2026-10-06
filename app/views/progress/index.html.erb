@@ -34,9 +34,8 @@
     </div>
   </div>
 
-  <%= render "weight_chart" %>
-
-  <article class="app-panel progress-panel">
+  <div class="progress-weight-overview">
+  <article class="app-panel progress-panel progress-weight-panel">
     <div class="progress-history__header">
       <div class="progress-panel__header">
         <span class="material-symbols-rounded">monitor_weight</span>
@@ -48,6 +47,7 @@
       <%= link_to "Registrar peso", new_weight_entry_path, class: "app-btn app-btn--primary", data: { turbo: false } %>
     </div>
 
+    <div class="progress-weight-scroll" tabindex="0" role="region" aria-label="Registros de peso">
     <% if @weight_entries.any? %>
       <ul class="progress-history">
         <% @weight_entries.each do |entry| %>
@@ -63,11 +63,13 @@
           </li>
         <% end %>
       </ul>
-      <%= render "shared/pagination", current_page: @current_page, total_pages: @total_pages, base_params: { controller: "progress", action: "index", week: @week_start.iso8601 }, aria_label: "Histórico de Peso" %>
     <% else %>
       <p class="progress-empty">Nenhum peso registrado ainda. Comece quando fizer sentido para você; consistência vale mais que uma medição isolada.</p>
     <% end %>
+    </div>
   </article>
+  <%= render "weight_chart" %>
+  </div>
 
     <article class="app-panel progress-panel progress-panel--milestones">
       <div class="progress-history__header">

@@ -1,4 +1,4 @@
-<article class="app-panel progress-panel">
+<article class="app-panel progress-panel progress-week-fixed-panel">
   <div class="progress-history__header">
     <div class="progress-panel__header">
       <span class="material-symbols-rounded">edit_note</span>
@@ -10,7 +10,6 @@
     <%= link_to @weekly_health_review ? "Editar revisão" : "Responder revisão", edit_weekly_health_review_path(@week_start.iso8601), class: "app-btn app-btn--outline", data: { turbo_frame: "_top" } %>
   </div>
 
-  <p class="progress-empty"><%= @week_start.strftime("%d/%m/%Y") %> a <%= (@week_start + 6.days).strftime("%d/%m/%Y") %></p>
   <p class="progress-review-status" role="status">
     <% if @weekly_health_review&.complete? %>
       Revisão preenchida · 5/5 respostas
@@ -21,6 +20,7 @@
     <% end %>
   </p>
 
+  <div class="progress-week-scroll" tabindex="0" role="region" aria-label="Respostas da revisão semanal">
   <ol class="progress-review progress-review--answers">
     <% WeeklyHealthReview::QUESTIONS.each do |attribute, question| %>
       <li>
@@ -30,4 +30,5 @@
       </li>
     <% end %>
   </ol>
+  </div>
 </article>

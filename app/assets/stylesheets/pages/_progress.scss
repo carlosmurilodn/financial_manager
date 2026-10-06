@@ -49,10 +49,112 @@
   gap: 20px;
 }
 
+.progress-comparison {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text-main);
+  table-layout: fixed;
+}
+
+.progress-comparison caption {
+  caption-side: bottom;
+  padding-top: 12px;
+  text-align: left;
+}
+
+.progress-comparison th,
+.progress-comparison td {
+  padding: 12px;
+  border-bottom: 1px solid var(--table-border-color);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 575px) {
+  .progress-comparison thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .progress-comparison tbody,
+  .progress-comparison tr,
+  .progress-comparison th,
+  .progress-comparison td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .progress-comparison tr {
+    margin-bottom: 16px;
+    border: 1px solid var(--table-border-color);
+    border-radius: var(--radius-md);
+  }
+
+  .progress-comparison td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 4px;
+    color: var(--text-soft);
+    font-size: 0.8rem;
+  }
+
+  .progress-comparison td:last-child {
+    border-bottom: 0;
+  }
+}
+
 .progress-weight-chart {
   position: relative;
   height: 300px;
   min-width: 0;
+}
+
+.progress-weight-overview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  min-width: 0;
+}
+
+.progress-weight-overview > turbo-frame {
+  display: block;
+  min-width: 0;
+}
+
+.progress-weight-overview .progress-weight-panel {
+  display: flex;
+  flex-direction: column;
+  height: 520px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.progress-weight-panel > .progress-history__header {
+  flex-shrink: 0;
+}
+
+.progress-weight-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+}
+
+.progress-weight-scroll > .progress-empty,
+.progress-weight-scroll > details {
+  margin-top: 12px;
+}
+
+@media (max-width: 767px) {
+  .progress-weight-overview {
+    grid-template-columns: 1fr;
+  }
 }
 
 .progress-chart-filters {
@@ -317,12 +419,17 @@
 
 .progress-indicator {
   display: grid;
+  align-content: start;
   gap: 6px;
   min-width: 0;
   padding: 14px;
   border: 1px solid var(--table-border-color);
   border-radius: var(--radius-md);
   background: var(--app-bg-soft);
+}
+
+.progress-indicators--summary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .progress-indicator .material-symbols-rounded {
@@ -390,6 +497,79 @@
   align-items: start;
 }
 
+.progress-weekly-frame > .progress-grid--wellbeing {
+  align-items: stretch;
+}
+
+.progress-grid--wellbeing > .progress-panel {
+  align-content: start;
+}
+
+.progress-win-pills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.progress-win-pills > li {
+  max-width: 100%;
+}
+
+.progress-win-pill {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--table-border-color);
+  border-radius: 24px;
+  background: var(--app-bg-soft);
+  color: var(--text-main);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.progress-win-pill:hover,
+.progress-win-pill:focus-visible {
+  border-color: var(--primary);
+  background: var(--hero-badge-icon-bg);
+}
+
+.progress-win-pill time {
+  color: var(--text-soft);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.progress-panel.progress-week-fixed-panel {
+  display: flex;
+  flex-direction: column;
+  height: 460px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.progress-week-fixed-panel > .progress-history__header,
+.progress-week-fixed-panel > .progress-review-status {
+  flex-shrink: 0;
+}
+
+.progress-week-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+}
+
+.progress-week-scroll > .progress-empty {
+  margin-bottom: 16px;
+}
+
 .progress-review-status {
   margin: 0;
   color: var(--text-main);
@@ -454,8 +634,7 @@
     grid-template-columns: 1fr;
   }
 
-  .progress-milestones,
-  .progress-indicators {
+  .progress-milestones {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

@@ -9,7 +9,6 @@
     </div>
     <%= link_to @weekly_wellbeing ? "Editar bem-estar" : "Registrar bem-estar", edit_weekly_wellbeing_path(@week_start.iso8601), class: "app-btn app-btn--outline", data: { turbo_frame: "_top" } %>
   </div>
-  <p class="progress-empty"><%= @week_start.strftime("%d/%m/%Y") %> a <%= (@week_start + 6.days).strftime("%d/%m/%Y") %></p>
   <% if @weekly_wellbeing %>
     <ul class="progress-indicator__goals">
       <% WeeklyWellbeing::METRICS.each do |attribute, label| %>

@@ -4,9 +4,7 @@ class ProgressController < ApplicationController
     entries = current_user.weight_entries.recent
     @latest_weight_entry = entries.first
     @initial_weight_entry = entries.reorder(measured_on: :asc).first
-    @total_pages = [ (entries.count / 10.0).ceil, 1 ].max
-    @current_page = params[:page].to_i.clamp(1, @total_pages)
-    @weight_entries = entries.offset((@current_page - 1) * 10).limit(10)
+    @weight_entries = entries
     @weight_period = %w[30 90 all].include?(params[:weight_period]) ? params[:weight_period] : "30"
     chart_entries = current_user.weight_entries.where("measured_on <= ?", Date.current)
     chart_entries = chart_entries.where(measured_on: (Date.current - (@weight_period.to_i - 1).days)..Date.current) unless @weight_period == "all"
@@ -23,5 +21,16 @@ class ProgressController < ApplicationController
     @wins_total_pages = [ (@weekly_wins_count / 10.0).ceil, 1 ].max
     @wins_current_page = params[:wins_page].to_i.clamp(1, @wins_total_pages)
     @health_wins = wins.offset((@wins_current_page - 1) * 10).limit(10)
+    @weekly_comparison_rows = Health::WeeklyComparisonQuery.new(
+      user: current_user,
+      week_start: @week_start,
+      current: {
+        average_weight: @weekly_average_weight,
+        weight_count: @weekly_weight_count,
+        goals: @weekly_health_plan.persisted? ? @weekly_health_plan.weekly_health_goals.to_a : [],
+        wellbeing: @weekly_wellbeing,
+        wins_count: @weekly_wins_count
+      }
+    ).call
   end
 end

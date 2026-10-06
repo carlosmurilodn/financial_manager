@@ -8,7 +8,7 @@
   </div>
   <p class="progress-empty"><%= @week_start.strftime("%d/%m/%Y") %> a <%= (@week_start + 6.days).strftime("%d/%m/%Y") %></p>
 
-  <div class="progress-indicators">
+  <div class="progress-indicators progress-indicators--summary">
     <div class="progress-indicator">
       <span class="material-symbols-rounded">monitor_weight</span>
       <strong>Corpo</strong>
@@ -18,25 +18,6 @@
       <% else %>
         <span class="progress-indicator__value">Sem registros</span>
         <small>Nenhuma medição de peso nesta semana.</small>
-      <% end %>
-    </div>
-
-    <div class="progress-indicator">
-      <span class="material-symbols-rounded">task_alt</span>
-      <strong>Rotina</strong>
-      <% if @weekly_health_plan.persisted? && @weekly_health_plan.weekly_health_goals.any? %>
-        <ul class="progress-indicator__goals">
-          <% @weekly_health_plan.weekly_health_goals.each do |goal| %>
-            <li>
-              <span><%= goal.name %></span>
-              <strong><%= goal.completed_count %>/<%= goal.target_count %></strong>
-            </li>
-          <% end %>
-        </ul>
-        <small>Realizado/planejado em cada meta da semana.</small>
-      <% else %>
-        <span class="progress-indicator__value">Sem registros</span>
-        <small>Nenhuma meta salva nesta semana.</small>
       <% end %>
     </div>
 
@@ -61,6 +42,27 @@
       <% else %>
         <span class="progress-indicator__value">Sem registros</span>
         <small>Nenhuma vitória registrada nesta semana.</small>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="progress-indicators">
+    <div class="progress-indicator">
+      <span class="material-symbols-rounded">task_alt</span>
+      <strong>Rotina</strong>
+      <% if @weekly_health_plan.persisted? && @weekly_health_plan.weekly_health_goals.any? %>
+        <ul class="progress-indicator__goals">
+          <% @weekly_health_plan.weekly_health_goals.each do |goal| %>
+            <li>
+              <span><%= goal.name %></span>
+              <strong><%= goal.completed_count %>/<%= goal.target_count %></strong>
+            </li>
+          <% end %>
+        </ul>
+        <small>Realizado/planejado em cada meta da semana.</small>
+      <% else %>
+        <span class="progress-indicator__value">Sem registros</span>
+        <small>Nenhuma meta salva nesta semana.</small>
       <% end %>
     </div>
     <div class="progress-indicator">

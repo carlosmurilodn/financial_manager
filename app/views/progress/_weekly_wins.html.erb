@@ -9,20 +9,15 @@
     </div>
     <%= link_to "Registrar vitória", new_health_win_path(week: @week_start.iso8601), class: "app-btn app-btn--primary", data: { turbo_frame: "_top" } %>
   </div>
-  <p class="progress-empty"><%= @week_start.strftime("%d/%m/%Y") %> a <%= (@week_start + 6.days).strftime("%d/%m/%Y") %></p>
 
   <% if @health_wins.any? %>
-    <ul class="progress-history">
+    <ul class="progress-win-pills">
       <% @health_wins.each do |win| %>
-        <li class="progress-history__row progress-win-row">
-          <div class="progress-win-row__copy">
+        <li>
+          <%= link_to edit_health_win_path(win, week: @week_start.iso8601), class: "progress-win-pill", data: { turbo_frame: "_top" }, title: "Editar vitória", aria: { label: "Editar vitória de #{win.achieved_on.strftime('%d/%m/%Y')}: #{win.description}" } do %>
+            <span><%= win.description %></span>
             <time datetime="<%= win.achieved_on.iso8601 %>"><%= win.achieved_on.strftime("%d/%m/%Y") %></time>
-            <p class="progress-review-answer"><%= win.description %></p>
-          </div>
-          <div class="progress-history__actions">
-            <%= link_to "Editar", edit_health_win_path(win, week: @week_start.iso8601), class: "app-btn app-btn--outline", data: { turbo_frame: "_top" }, aria: { label: "Editar vitória de #{win.achieved_on.strftime('%d/%m/%Y')}" } %>
-            <%= button_to "Excluir", health_win_path(win, week: @week_start.iso8601), method: :delete, class: "app-btn app-btn--outline", form: { data: { turbo_frame: "_top", turbo_confirm: "Excluir esta vitória de #{win.achieved_on.strftime('%d/%m/%Y')}?" } }, aria: { label: "Excluir vitória de #{win.achieved_on.strftime('%d/%m/%Y')}" } %>
-          </div>
+          <% end %>
         </li>
       <% end %>
     </ul>

@@ -1,5 +1,5 @@
 <%= turbo_frame_tag "progress-weight-chart" do %>
-  <article class="app-panel progress-panel">
+  <article class="app-panel progress-panel progress-weight-panel">
     <div class="progress-history__header">
       <div class="progress-panel__header">
         <span class="material-symbols-rounded">show_chart</span>
@@ -14,6 +14,7 @@
         <% end %>
       </nav>
     </div>
+    <div class="progress-weight-scroll" tabindex="0" role="region" aria-label="Gráfico e valores de peso">
     <% if @weight_chart_points.any? %>
       <div data-controller="weight-chart" data-weight-chart-points-value="<%= @weight_chart_points.to_json %>" data-weight-chart-goal-value="<%= @health_weight_goal&.target_weight || 0 %>" data-action="turbo:before-cache@document->weight-chart#destroyChart">
         <div class="progress-weight-chart">
@@ -35,5 +36,6 @@
     <% else %>
       <p class="progress-empty">Nenhuma medição neste período. Registre seu peso ou selecione outro período.</p>
     <% end %>
+    </div>
   </article>
 <% end %>

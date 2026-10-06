@@ -1,0 +1,12 @@
+pt-BR:
+  activerecord:
+    models:
+      weekly_health_review: "Revisão Semanal"
+    attributes:
+      weekly_health_review:
+        week_start: "Início da semana"
+        worked_well: "O que funcionou"
+        obstacles: "O que atrapalhou"
+        within_control: "O que estava sob meu controle"
+        next_adjustments: "Mudanças para a próxima semana"
+        minimum_goal: "Meta mínima da próxima semana"

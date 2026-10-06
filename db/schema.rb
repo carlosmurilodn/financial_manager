@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_06_130000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_06_140000) do
   create_schema "auth"
   create_schema "extensions"
   create_schema "graphql"
@@ -198,6 +198,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_130000) do
     t.check_constraint "EXTRACT(isodow FROM week_start) = 1::numeric", name: "weekly_health_plans_start_on_monday"
   end
 
+  create_table "weekly_health_reviews", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "week_start", null: false
+    t.text "worked_well"
+    t.text "obstacles"
+    t.text "within_control"
+    t.text "next_adjustments"
+    t.text "minimum_goal"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "week_start"], name: "index_weekly_health_reviews_on_user_id_and_week_start", unique: true
+    t.index ["user_id"], name: "index_weekly_health_reviews_on_user_id"
+    t.check_constraint "EXTRACT(isodow FROM week_start) = 1::numeric", name: "weekly_health_reviews_start_on_monday"
+  end
+
   create_table "weight_entries", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.date "measured_on", null: false
@@ -224,5 +239,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_130000) do
   add_foreign_key "passkey_credentials", "users"
   add_foreign_key "weekly_health_goals", "weekly_health_plans"
   add_foreign_key "weekly_health_plans", "users"
+  add_foreign_key "weekly_health_reviews", "users"
   add_foreign_key "weight_entries", "users"
 end

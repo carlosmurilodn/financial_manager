@@ -100,10 +100,6 @@
       </div>
     </article>
 
-    <%= render "weekly_goals" %>
-  </div>
-
-  <div class="progress-grid">
     <article class="app-panel progress-panel">
       <div class="progress-panel__header">
         <span class="material-symbols-rounded">insights</span>
@@ -137,24 +133,9 @@
       </div>
     </article>
 
-    <article class="app-panel progress-panel">
-      <div class="progress-panel__header">
-        <span class="material-symbols-rounded">edit_note</span>
-        <div>
-          <p class="app-page__eyebrow">Revisao</p>
-          <h2>Perguntas da semana</h2>
-        </div>
-      </div>
-
-      <ol class="progress-review">
-        <li>O que funcionou esta semana?</li>
-        <li>O que atrapalhou?</li>
-        <li>Isso estava sob meu controle?</li>
-        <li>Existe alguma mudanca util para a proxima semana?</li>
-        <li>Qual e a meta minima da proxima semana?</li>
-      </ol>
-    </article>
   </div>
+
+  <%= render "weekly_progress" %>
 
   <article class="app-panel progress-panel">
     <div class="progress-panel__header">

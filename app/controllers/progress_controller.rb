@@ -8,5 +8,6 @@ class ProgressController < ApplicationController
     @weight_entries = entries.offset((@current_page - 1) * 10).limit(10)
     @week_start = Health::WeeklyPlan.week_start(params[:week])
     @weekly_health_plan = Health::WeeklyPlan.build(user: current_user, week_start: @week_start)
+    @weekly_health_review = current_user.weekly_health_reviews.find_by(week_start: @week_start)
   end
 end

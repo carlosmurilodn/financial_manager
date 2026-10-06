@@ -1,4 +1,4 @@
-<% goals = weekly_health_plan.weekly_health_goals.to_a %>
+<% goals = weekly_health_plan.weekly_health_goals.to_a.sort_by { |goal| goal.name.to_s.parameterize } %>
 <% total_target = goals.sum(&:target_count) %>
 <% total_completed = goals.sum(&:completed_count) %>
 <% progress = total_target.positive? ? (total_completed.to_f / total_target * 100).round : 0 %>

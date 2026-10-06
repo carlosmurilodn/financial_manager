@@ -11,21 +11,20 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.0].define(version: 2026_10_06_170000) do
-  create_schema "auth"
-  create_schema "extensions"
-  create_schema "graphql"
-  create_schema "graphql_public"
-  create_schema "pgbouncer"
-  create_schema "realtime"
-  create_schema "storage"
-  create_schema "vault"
+  create_schema "auth", if_not_exists: true
+  create_schema "extensions", if_not_exists: true
+  create_schema "graphql", if_not_exists: true
+  create_schema "graphql_public", if_not_exists: true
+  create_schema "pgbouncer", if_not_exists: true
+  create_schema "realtime", if_not_exists: true
+  create_schema "storage", if_not_exists: true
+  create_schema "vault", if_not_exists: true
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "extensions.pg_stat_statements"
   enable_extension "extensions.pgcrypto"
   enable_extension "extensions.uuid-ossp"
   enable_extension "pg_catalog.plpgsql"
-  enable_extension "vault.supabase_vault"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false

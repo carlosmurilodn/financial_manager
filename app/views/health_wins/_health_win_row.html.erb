@@ -1,0 +1,47 @@
+<div
+  id="<%= dom_id(health_win) %>"
+  class="expense-card expense-card--expense"
+  style="--expense-category-color: #5c6df2;"
+>
+  <div class="expense-card__content">
+    <div class="expense-card__identity-block">
+      <div class="expense-card__identity-main">
+        <div class="expense-card__icon-wrapper">
+          <span class="material-symbols-rounded expense-card__icon">workspace_premium</span>
+        </div>
+
+        <div class="expense-card__description-link">
+          <h3 class="expense-card__title"><%= health_win.description %></h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="expense-card__footer">
+      <div class="expense-card__information">
+        <span class="expense-card__meta-item">
+          <span class="material-symbols-rounded">calendar_month</span>
+          <span><small>Data</small><strong><%= health_win.achieved_on.strftime("%d/%m/%Y") %></strong></span>
+        </span>
+      </div>
+
+      <div class="expense-card__actions">
+        <%= link_to edit_health_win_path(health_win, week: health_win.achieved_on.beginning_of_week(:monday).iso8601),
+                    class: "expense-card__action",
+                    title: "Editar vitória",
+                    aria: { label: "Editar vitória de #{health_win.achieved_on.strftime("%d/%m/%Y")}" } do %>
+          <span class="material-symbols-rounded">edit</span>
+          <span class="expense-card__action-label">Editar</span>
+        <% end %>
+
+        <%= link_to health_win_path(health_win, week: health_win.achieved_on.beginning_of_week(:monday).iso8601),
+                    data: { turbo_method: :delete, turbo_confirm: "Excluir esta vitória de #{health_win.achieved_on.strftime("%d/%m/%Y")}?" },
+                    class: "expense-card__action expense-card__action--danger",
+                    title: "Excluir vitória",
+                    aria: { label: "Excluir vitória de #{health_win.achieved_on.strftime("%d/%m/%Y")}" } do %>
+          <span class="material-symbols-rounded">delete</span>
+          <span class="expense-card__action-label">Excluir</span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

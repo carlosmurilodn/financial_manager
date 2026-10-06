@@ -52,12 +52,7 @@
           <span class="link-text">Perguntas</span>
         <% end %>
 
-        <%= link_to progress_path(anchor: "como-foi-semana"), class: "app-nav-link #{'active-menu' if health_nav_active?(:week_review)}", id: "link-health-week-review", title: "Como Foi sua Semana?", aria: { label: "Como Foi sua Semana?" }, data: { turbo: false } do %>
-          <span class="material-symbols-rounded app-nav-link__icon">psychology</span>
-          <span class="link-text">Como Foi?</span>
-        <% end %>
-
-        <%= link_to progress_path(anchor: "vitorias-balanca"), class: "app-nav-link #{'active-menu' if health_nav_active?(:wins)}", id: "link-health-wins", title: "Vitórias que a Balança Não Mostra", aria: { label: "Vitórias que a Balança Não Mostra" }, data: { turbo: false } do %>
+        <%= link_to health_wins_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:wins)}", id: "link-health-wins", title: "Vitórias que a Balança Não Mostra", aria: { label: "Vitórias que a Balança Não Mostra" }, data: { turbo: false } do %>
           <span class="material-symbols-rounded app-nav-link__icon">workspace_premium</span>
           <span class="link-text">Vitórias</span>
         <% end %>

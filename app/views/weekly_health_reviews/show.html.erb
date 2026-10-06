@@ -1,4 +1,12 @@
 <section class="app-page health-review-show">
+  <% question_icons = {
+    worked_well: "thumb_up",
+    obstacles: "block",
+    within_control: "tune",
+    next_adjustments: "build",
+    minimum_goal: "flag"
+  } %>
+
   <div class="health-review-show__hero">
     <div class="health-review-show__title-group">
       <span class="health-review-show__icon">
@@ -38,9 +46,10 @@
 
   <div class="health-review-show__answers">
     <% WeeklyHealthReview::QUESTIONS.each do |attribute, question| %>
+      <% answered = @weekly_health_review.public_send(attribute).present? %>
       <article class="health-review-show__answer">
-        <span class="health-review-show__answer-icon">
-          <span class="material-symbols-rounded"><%= @weekly_health_review.public_send(attribute).present? ? "check" : "remove" %></span>
+        <span class="health-review-show__answer-icon <%= "is-empty" unless answered %>">
+          <span class="material-symbols-rounded"><%= question_icons.fetch(attribute, "edit_note") %></span>
         </span>
         <div>
           <h2><%= question %></h2>

@@ -3,7 +3,7 @@
   <div class="progress-review-form">
     <div>
       <%= f.label :achieved_on, "Data da conquista" %>
-      <%= f.date_field :achieved_on, class: "app-form-control", required: true, max: Date.current.iso8601 %>
+      <%= f.text_field :achieved_on, value: health_win.achieved_on&.strftime("%d/%m/%Y"), class: "app-form-control custom-date", autocomplete: "off", placeholder: "Selecione a data", required: true %>
     </div>
     <div>
       <%= f.label :description, "Descrição da vitória" %>
@@ -20,7 +20,7 @@
     </div>
   </div>
   <div class="app-form-page__actions">
-    <%= link_to "Cancelar", progress_path(week: @return_week.iso8601), class: "app-btn app-btn--outline" %>
+    <%= link_to "Cancelar", health_wins_path, class: "app-btn app-btn--outline" %>
     <%= f.submit "Salvar vitória", class: "app-btn app-btn--primary" %>
   </div>
 <% end %>

@@ -1,7 +1,8 @@
 .app-page__hero-top--health-goals,
 .app-page__hero-top--weekly-wellbeings,
 .app-page__hero-top--weekly-health-plans,
-.app-page__hero-top--weekly-health-reviews {
+.app-page__hero-top--weekly-health-reviews,
+.app-page__hero-top--health-wins {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: stretch;
@@ -10,21 +11,24 @@
 .app-page__hero-top > .app-page__hero-kpis > .app-health-goals-hero-kpis,
 .app-page__hero-top > .app-page__hero-kpis > .app-weekly-wellbeings-hero-kpis,
 .app-page__hero-top > .app-page__hero-kpis > .app-weekly-health-plans-hero-kpis,
-.app-page__hero-top > .app-page__hero-kpis > .app-weekly-health-reviews-hero-kpis {
+.app-page__hero-top > .app-page__hero-kpis > .app-weekly-health-reviews-hero-kpis,
+.app-page__hero-top > .app-page__hero-kpis > .app-health-wins-hero-kpis {
   display: contents;
 }
 
 .app-health-goals-hero-kpis,
 .app-weekly-wellbeings-hero-kpis,
 .app-weekly-health-plans-hero-kpis,
-.app-weekly-health-reviews-hero-kpis {
+.app-weekly-health-reviews-hero-kpis,
+.app-health-wins-hero-kpis {
   display: contents;
 }
 
 .app-health-goals-hero-kpis .stat-card,
 .app-weekly-wellbeings-hero-kpis .stat-card,
 .app-weekly-health-plans-hero-kpis .stat-card,
-.app-weekly-health-reviews-hero-kpis .stat-card {
+.app-weekly-health-reviews-hero-kpis .stat-card,
+.app-health-wins-hero-kpis .stat-card {
   min-width: 0;
   padding: 8px 10px;
 }
@@ -32,7 +36,8 @@
 .app-health-goals-hero-kpis .stat-card__icon,
 .app-weekly-wellbeings-hero-kpis .stat-card__icon,
 .app-weekly-health-plans-hero-kpis .stat-card__icon,
-.app-weekly-health-reviews-hero-kpis .stat-card__icon {
+.app-weekly-health-reviews-hero-kpis .stat-card__icon,
+.app-health-wins-hero-kpis .stat-card__icon {
   width: 32px;
   height: 32px;
   min-width: 32px;
@@ -41,14 +46,16 @@
 .app-health-goals-hero-kpis .stat-card__icon .material-symbols-rounded,
 .app-weekly-wellbeings-hero-kpis .stat-card__icon .material-symbols-rounded,
 .app-weekly-health-plans-hero-kpis .stat-card__icon .material-symbols-rounded,
-.app-weekly-health-reviews-hero-kpis .stat-card__icon .material-symbols-rounded {
+.app-weekly-health-reviews-hero-kpis .stat-card__icon .material-symbols-rounded,
+.app-health-wins-hero-kpis .stat-card__icon .material-symbols-rounded {
   font-size: 1rem;
 }
 
 .app-health-goals-hero-kpis .stat-card__label,
 .app-weekly-wellbeings-hero-kpis .stat-card__label,
 .app-weekly-health-plans-hero-kpis .stat-card__label,
-.app-weekly-health-reviews-hero-kpis .stat-card__label {
+.app-weekly-health-reviews-hero-kpis .stat-card__label,
+.app-health-wins-hero-kpis .stat-card__label {
   margin-bottom: 3px;
   font-size: 0.72rem;
   line-height: 1.15;
@@ -57,7 +64,8 @@
 .app-health-goals-hero-kpis .stat-card__value,
 .app-weekly-wellbeings-hero-kpis .stat-card__value,
 .app-weekly-health-plans-hero-kpis .stat-card__value,
-.app-weekly-health-reviews-hero-kpis .stat-card__value {
+.app-weekly-health-reviews-hero-kpis .stat-card__value,
+.app-health-wins-hero-kpis .stat-card__value {
   font-size: clamp(0.82rem, 1.05vw, 1rem);
 }
 
@@ -380,6 +388,11 @@
   width: 34px;
   height: 34px;
   border-radius: 10px;
+}
+
+.health-review-show__answer-icon.is-empty {
+  color: var(--text-soft);
+  background: color-mix(in srgb, var(--text-soft) 10%, var(--surface));
 }
 
 .health-review-show__answer-icon .material-symbols-rounded {
@@ -717,7 +730,8 @@
     .app-health-goals-hero-kpis,
     .app-weekly-wellbeings-hero-kpis,
     .app-weekly-health-plans-hero-kpis,
-    .app-weekly-health-reviews-hero-kpis
+    .app-weekly-health-reviews-hero-kpis,
+    .app-health-wins-hero-kpis
   ) {
     display: contents;
   }
@@ -725,7 +739,8 @@
   .app-page__hero-top--health-goals,
   .app-page__hero-top--weekly-wellbeings,
   .app-page__hero-top--weekly-health-plans,
-  .app-page__hero-top--weekly-health-reviews {
+  .app-page__hero-top--weekly-health-reviews,
+  .app-page__hero-top--health-wins {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-template-rows: 1fr;
   }
@@ -737,7 +752,9 @@
   .app-page__hero-top--weekly-health-plans > .app-page__hero-copy,
   .app-page__hero-top--weekly-health-plans > .app-page__hero-action,
   .app-page__hero-top--weekly-health-reviews > .app-page__hero-copy,
-  .app-page__hero-top--weekly-health-reviews > .app-page__hero-action {
+  .app-page__hero-top--weekly-health-reviews > .app-page__hero-action,
+  .app-page__hero-top--health-wins > .app-page__hero-copy,
+  .app-page__hero-top--health-wins > .app-page__hero-action {
     grid-column: auto;
     grid-row: auto;
   }
@@ -747,7 +764,8 @@
   .app-page__hero-top--health-goals,
   .app-page__hero-top--weekly-wellbeings,
   .app-page__hero-top--weekly-health-plans,
-  .app-page__hero-top--weekly-health-reviews {
+  .app-page__hero-top--weekly-health-reviews,
+  .app-page__hero-top--health-wins {
     display: grid;
     grid-template-columns: 1fr;
   }
@@ -755,14 +773,16 @@
   .app-health-goals-hero-kpis,
   .app-weekly-wellbeings-hero-kpis,
   .app-weekly-health-plans-hero-kpis,
-  .app-weekly-health-reviews-hero-kpis {
+  .app-weekly-health-reviews-hero-kpis,
+  .app-health-wins-hero-kpis {
     grid-template-columns: 1fr;
   }
 
   .app-page__hero-top > .app-page__hero-kpis > .app-health-goals-hero-kpis,
   .app-page__hero-top > .app-page__hero-kpis > .app-weekly-wellbeings-hero-kpis,
   .app-page__hero-top > .app-page__hero-kpis > .app-weekly-health-plans-hero-kpis,
-  .app-page__hero-top > .app-page__hero-kpis > .app-weekly-health-reviews-hero-kpis {
+  .app-page__hero-top > .app-page__hero-kpis > .app-weekly-health-reviews-hero-kpis,
+  .app-page__hero-top > .app-page__hero-kpis > .app-health-wins-hero-kpis {
     display: grid;
     gap: 10px;
   }

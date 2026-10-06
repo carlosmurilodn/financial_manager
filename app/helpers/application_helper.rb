@@ -27,8 +27,6 @@ module ApplicationHelper
       controller_name == "weekly_health_plans"
     when :questions
       controller_name == "weekly_health_reviews"
-    when :week_review
-      false
     when :wins
       controller_name == "health_wins"
     else

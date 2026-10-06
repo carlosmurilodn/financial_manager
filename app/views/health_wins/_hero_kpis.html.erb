@@ -1,0 +1,25 @@
+<div id="health-wins-hero-kpis" class="app-health-wins-hero-kpis">
+  <div class="stat-card stat-card--warning">
+    <div class="stat-card__icon">
+      <span class="material-symbols-rounded">workspace_premium</span>
+    </div>
+    <div>
+      <span class="stat-card__label">Última vitória</span>
+      <strong class="stat-card__value">
+        <%= @latest_health_win ? @latest_health_win.achieved_on.strftime("%d/%m/%Y") : "Sem vitória" %>
+      </strong>
+      <small><%= @latest_health_win ? truncate(@latest_health_win.description, length: 42) : "Registre uma conquista." %></small>
+    </div>
+  </div>
+
+  <div class="stat-card stat-card--primary">
+    <div class="stat-card__icon">
+      <span class="material-symbols-rounded">format_list_numbered</span>
+    </div>
+    <div>
+      <span class="stat-card__label">Registros filtrados</span>
+      <strong class="stat-card__value"><%= @filtered_count || 0 %></strong>
+      <small><%= @date_from_label.present? ? "Desde #{@date_from_label}" : "Todas as datas" %></small>
+    </div>
+  </div>
+</div>

@@ -26,7 +26,11 @@ Rails.application.routes.draw do
       delete :clear_filters
     end
   end
-  resources :health_wins, path: "progresso/vitorias", only: %i[new create edit update destroy]
+  resources :health_wins, path: "progresso/vitorias", only: %i[index new create edit update destroy] do
+    collection do
+      delete :clear_filters
+    end
+  end
   resources :health_weight_goals, path: "progresso/objetivos", only: %i[index new create edit update destroy] do
     collection do
       delete :clear_filters

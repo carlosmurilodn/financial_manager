@@ -1,0 +1,21 @@
+<div id="health-wins-table">
+  <% if @health_wins.any? %>
+    <div class="expenses-cards-list" id="health-wins-list">
+      <% @health_wins.each do |health_win| %>
+        <%= render partial: "health_win_row", locals: { health_win: health_win } %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="dashboard-empty-state">
+      <span class="material-symbols-rounded">workspace_premium</span>
+      <strong>Nenhuma vitória encontrada</strong>
+      <small>Ajuste os filtros ou registre uma conquista da sua rotina.</small>
+    </div>
+  <% end %>
+
+  <%= render "shared/pagination",
+             current_page: @current_page,
+             total_pages: @total_pages,
+             base_params: request.query_parameters.except(:page),
+             aria_label: "Paginacao de vitorias de saude" %>
+</div>

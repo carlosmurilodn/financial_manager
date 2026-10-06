@@ -87,7 +87,8 @@
 }
 
 .progress-weekly-frame {
-  display: block;
+  display: grid;
+  gap: 20px;
   min-width: 0;
 }
 
@@ -367,6 +368,30 @@
   background: var(--pill-bg);
   color: var(--text-main);
   font-weight: 700;
+}
+
+.progress-win-row {
+  align-items: start;
+}
+
+.progress-win-row__copy {
+  flex: 1 1 240px;
+  min-width: 0;
+  color: var(--text-main);
+}
+
+.progress-win-row__copy time {
+  color: var(--text-soft);
+  font-size: 0.85rem;
+}
+
+.progress-win-suggestions {
+  margin-top: 12px;
+}
+
+.progress-win-suggestions button {
+  white-space: normal;
+  text-align: left;
 }
 
 @media (max-width: 1199px) {

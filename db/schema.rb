@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_06_140000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_06_150000) do
   create_schema "auth"
   create_schema "extensions"
   create_schema "graphql"
@@ -137,6 +137,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_140000) do
     t.index ["user_id"], name: "index_financial_goals_on_user_id"
   end
 
+  create_table "health_wins", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "achieved_on", null: false
+    t.text "description", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "achieved_on"], name: "index_health_wins_on_user_id_and_achieved_on"
+    t.index ["user_id"], name: "index_health_wins_on_user_id"
+  end
+
   create_table "incomes", force: :cascade do |t|
     t.decimal "amount"
     t.date "date"
@@ -234,6 +244,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_140000) do
   add_foreign_key "financial_goal_resources", "financial_goals"
   add_foreign_key "financial_goals", "categories"
   add_foreign_key "financial_goals", "users"
+  add_foreign_key "health_wins", "users"
   add_foreign_key "incomes", "categories"
   add_foreign_key "incomes", "users"
   add_foreign_key "passkey_credentials", "users"

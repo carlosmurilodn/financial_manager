@@ -1,0 +1,26 @@
+<%= form_with model: health_win, local: true, html: { class: "app-form-page__form", data: { turbo: false, controller: "health-win-form" } } do |f| %>
+  <%= hidden_field_tag :week, @return_week.iso8601 %>
+  <div class="progress-review-form">
+    <div>
+      <%= f.label :achieved_on, "Data da conquista" %>
+      <%= f.date_field :achieved_on, class: "app-form-control", required: true, max: Date.current.iso8601 %>
+    </div>
+    <div>
+      <%= f.label :description, "Descrição da vitória" %>
+      <%= f.text_area :description, class: "app-form-control", required: true, maxlength: 500, rows: 4, data: { health_win_form_target: "description" }, aria: { describedby: "health-win-description-hint" } %>
+      <small id="health-win-description-hint">Até 500 caracteres. Você pode registrar várias conquistas no mesmo dia.</small>
+    </div>
+    <div>
+      <p class="progress-empty">Sugestões: clique para preencher a descrição e ajuste como preferir.</p>
+      <div class="progress-wins progress-win-suggestions">
+        <% HealthWin::SUGGESTIONS.each do |suggestion| %>
+          <button type="button" class="app-btn app-btn--outline" data-action="health-win-form#useSuggestion"><%= suggestion %></button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="app-form-page__actions">
+    <%= link_to "Cancelar", progress_path(week: @return_week.iso8601), class: "app-btn app-btn--outline" %>
+    <%= f.submit "Salvar vitória", class: "app-btn app-btn--primary" %>
+  </div>
+<% end %>

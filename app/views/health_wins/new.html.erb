@@ -1,0 +1,10 @@
+<%= render layout: "shared/form_page", locals: {
+  resource: @health_win,
+  title: "Registrar vitória",
+  eyebrow: "Progresso",
+  description: "Reconheça uma conquista da sua rotina, além do peso.",
+  icon: "workspace_premium",
+  back_path: progress_path(week: @return_week.iso8601)
+} do %>
+  <%= render "form", health_win: @health_win %>
+<% end %>

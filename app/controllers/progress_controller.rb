@@ -9,5 +9,9 @@ class ProgressController < ApplicationController
     @week_start = Health::WeeklyPlan.week_start(params[:week])
     @weekly_health_plan = Health::WeeklyPlan.build(user: current_user, week_start: @week_start)
     @weekly_health_review = current_user.weekly_health_reviews.find_by(week_start: @week_start)
+    wins = current_user.health_wins.where(achieved_on: @week_start..(@week_start + 6.days)).recent
+    @wins_total_pages = [ (wins.count / 10.0).ceil, 1 ].max
+    @wins_current_page = params[:wins_page].to_i.clamp(1, @wins_total_pages)
+    @health_wins = wins.offset((@wins_current_page - 1) * 10).limit(10)
   end
 end

@@ -4,5 +4,7 @@
 
 import { application } from "./application"
 import WeeklyGoalsController from "./weekly_goals_controller"
+import HealthWinFormController from "./health_win_form_controller"
 
 application.register("weekly-goals", WeeklyGoalsController)
+application.register("health-win-form", HealthWinFormController)

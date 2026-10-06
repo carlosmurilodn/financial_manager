@@ -16,8 +16,13 @@
 
       <div class="progress-hero-card">
         <span class="progress-hero-card__label">Marco atual</span>
-        <strong>115 kg</strong>
-        <small>Trabalhando no proximo passo: 110 kg</small>
+        <% if @latest_weight_entry %>
+          <strong><%= number_with_precision(@latest_weight_entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ",") %> kg</strong>
+          <small>Medição de <%= @latest_weight_entry.measured_on.strftime("%d/%m/%Y") %></small>
+        <% else %>
+          <strong>Sem medição</strong>
+          <small>Registre seu primeiro peso para começar.</small>
+        <% end %>
       </div>
 
       <div class="progress-hero-card progress-hero-card--accent">
@@ -27,6 +32,39 @@
       </div>
     </div>
   </div>
+
+  <article class="app-panel progress-panel">
+    <div class="progress-history__header">
+      <div class="progress-panel__header">
+        <span class="material-symbols-rounded">monitor_weight</span>
+        <div>
+          <p class="app-page__eyebrow">Seus registros</p>
+          <h2>Histórico de peso</h2>
+        </div>
+      </div>
+      <%= link_to "Registrar peso", new_weight_entry_path, class: "app-btn app-btn--primary", data: { turbo: false } %>
+    </div>
+
+    <% if @weight_entries.any? %>
+      <ul class="progress-history">
+        <% @weight_entries.each do |entry| %>
+          <li class="progress-history__row">
+            <div class="progress-history__measurement">
+              <time datetime="<%= entry.measured_on.iso8601 %>"><%= entry.measured_on.strftime("%d/%m/%Y") %></time>
+              <strong><%= number_with_precision(entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ",") %> kg</strong>
+            </div>
+            <div class="progress-history__actions">
+              <%= link_to "Editar", edit_weight_entry_path(entry), class: "app-btn app-btn--outline", data: { turbo: false }, aria: { label: "Editar medição de #{entry.measured_on.strftime('%d/%m/%Y')}" } %>
+              <%= button_to "Excluir", weight_entry_path(entry), method: :delete, class: "app-btn app-btn--outline", form: { data: { turbo_confirm: "Excluir a medição de #{entry.measured_on.strftime('%d/%m/%Y')}?" } }, aria: { label: "Excluir medição de #{entry.measured_on.strftime('%d/%m/%Y')}" } %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+      <%= render "shared/pagination", current_page: @current_page, total_pages: @total_pages, base_params: { controller: "progress", action: "index" }, aria_label: "Histórico de peso" %>
+    <% else %>
+      <p class="progress-empty">Nenhum peso registrado ainda. Comece quando fizer sentido para você; consistência vale mais que uma medição isolada.</p>
+    <% end %>
+  </article>
 
   <div class="progress-grid progress-grid--summary">
     <article class="app-panel progress-panel progress-panel--milestones">
@@ -39,23 +77,23 @@
       </div>
 
       <div class="progress-milestones" aria-label="Marcos de peso">
-        <div class="progress-milestone is-done">
-          <span>120 kg</span>
+        <div class="progress-milestone">
+          <span><%= @initial_weight_entry ? "#{number_with_precision(@initial_weight_entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ',')} kg" : "Sem registro" %></span>
           <strong>Referencia</strong>
         </div>
-        <div class="progress-milestone is-current">
-          <span>115 kg</span>
+        <div class="progress-milestone <%= 'is-current' if @latest_weight_entry %>">
+          <span><%= @latest_weight_entry ? "#{number_with_precision(@latest_weight_entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ',')} kg" : "Sem registro" %></span>
           <strong>Atual</strong>
         </div>
-        <div class="progress-milestone">
+        <div class="progress-milestone <%= 'is-done' if @latest_weight_entry && @latest_weight_entry.weight_kg <= 110 %>">
           <span>110 kg</span>
-          <strong>Proximo</strong>
+          <strong>Marco</strong>
         </div>
-        <div class="progress-milestone">
+        <div class="progress-milestone <%= 'is-done' if @latest_weight_entry && @latest_weight_entry.weight_kg <= 105 %>">
           <span>105 kg</span>
-          <strong>Depois</strong>
+          <strong>Marco</strong>
         </div>
-        <div class="progress-milestone">
+        <div class="progress-milestone <%= 'is-done' if @latest_weight_entry && @latest_weight_entry.weight_kg <= 99.9 %>">
           <span>99,9 kg</span>
           <strong>Meta</strong>
         </div>
@@ -71,6 +109,7 @@
         </div>
       </div>
 
+      <p class="progress-empty">Sugestões de planejamento. Treinos, alimentação e revisão ainda não possuem registros salvos.</p>
       <div class="progress-checklist">
         <div>
           <span>Treinos planejados</span>

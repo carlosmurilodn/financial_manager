@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   root "home#index"
   get "progresso", to: "progress#index", as: :progress
+  resources :weight_entries, path: "progresso/pesagens", only: %i[new create edit update destroy]
 
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker

@@ -44,6 +44,44 @@
   gap: 20px;
 }
 
+.progress-history__header,
+.progress-history__row,
+.progress-history__measurement,
+.progress-history__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.progress-history {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.progress-history__row {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--table-border-color);
+}
+
+.progress-history__measurement {
+  color: var(--text-main);
+}
+
+.progress-history__actions form {
+  margin: 0;
+}
+
+.progress-empty {
+  margin: 0;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
 .progress-grid--summary {
   align-items: stretch;
 }

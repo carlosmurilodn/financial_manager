@@ -1,0 +1,10 @@
+<%= render layout: "shared/form_page", locals: {
+  resource: @weight_entry,
+  title: "Registrar peso",
+  eyebrow: "Progresso",
+  description: "O peso é um indicador dentro da sua rotina, sem julgamento diário.",
+  icon: "monitor_weight",
+  back_path: progress_path
+} do %>
+  <%= render "form", weight_entry: @weight_entry %>
+<% end %>

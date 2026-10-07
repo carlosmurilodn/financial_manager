@@ -601,6 +601,22 @@
   transform: translateY(-1px);
 }
 
+.weekly-health-plan-days__day:not(.is-checked) {
+  border-color: color-mix(in srgb, var(--danger) 40%, var(--surface));
+  background: color-mix(in srgb, var(--danger) 10%, var(--surface));
+  color: var(--danger);
+}
+
+.weekly-health-plan-days__day:not(.is-checked) strong {
+  color: var(--danger);
+}
+
+.weekly-health-plan-days__day:not(.is-checked):hover,
+.weekly-health-plan-days__day:not(.is-checked):focus-visible {
+  border-color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 18%, var(--surface));
+}
+
 @media (max-width: 1199px) {
   .health-card__summary {
     flex-wrap: wrap;

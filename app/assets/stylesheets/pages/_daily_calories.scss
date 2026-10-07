@@ -24,3 +24,19 @@
 .weekly-health-plan-show__header > .app-page__hero-copy { flex: 1 1 280px; }
 .weekly-health-plan-show .app-page__hero-icon { display: flex; align-items: center; justify-content: center; }
 .weekly-health-plan-card .health-card__actions { flex-wrap: wrap; }
+
+.weekly-health-plan-card__week-link {
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 12px;
+}
+
+.weekly-health-plan-card__week-link:hover .health-card__title {
+  color: var(--nav-active-bar);
+}
+
+.weekly-health-plan-card__week-link:focus-visible {
+  outline: 2px solid var(--nav-active-bar);
+  outline-offset: 4px;
+}

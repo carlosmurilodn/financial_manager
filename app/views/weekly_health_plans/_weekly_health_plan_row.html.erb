@@ -11,7 +11,7 @@
   <div class="health-card__content">
     <div class="health-card__summary">
       <div class="health-card__identity-block">
-        <div class="health-card__identity-main">
+        <%= link_to weekly_health_plan_path(weekly_health_plan.week_start.iso8601), class: "health-card__identity-main weekly-health-plan-card__week-link", data: { turbo: false }, aria: { label: "Ver semana de #{weekly_health_plan.week_start.strftime('%d/%m/%Y')} a #{weekly_health_plan.week_end.strftime('%d/%m/%Y')}" } do %>
           <div class="health-card__icon-wrapper">
             <span class="material-symbols-rounded health-card__icon">task_alt</span>
           </div>
@@ -19,7 +19,7 @@
           <div class="health-card__description">
             <h3 class="health-card__title">Semana de <%= weekly_health_plan.week_start.strftime("%d/%m/%Y") %> a <%= weekly_health_plan.week_end.strftime("%d/%m/%Y") %></h3>
           </div>
-        </div>
+        <% end %>
       </div>
 
       <div class="health-card__progress">

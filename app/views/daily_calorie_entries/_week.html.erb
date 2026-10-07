@@ -1,0 +1,18 @@
+<section id="calories-<%= week_start.iso8601 %>" class="calorie-week" aria-label="Calorias da semana de <%= week_start.strftime('%d/%m/%Y') %>">
+  <div class="calorie-week__header">
+    <div>
+      <h3>Calorias da semana</h3>
+      <p>Informe o consumo de cada dia. Os resultados são estimativas com base no perfil, peso e atividades marcadas.</p>
+    </div>
+    <% unless health_profile %>
+      <%= link_to "Configurar perfil", health_profile_path, class: "app-btn app-btn--outline", data: { turbo_frame: "_top" } %>
+    <% end %>
+  </div>
+  <div class="calorie-week__days">
+    <% 7.times do |offset| %>
+      <% date = week_start + offset.days %>
+      <% entry = entries_by_date[date] || DailyCalorieEntry.new(occurred_on: date) %>
+      <%= render "daily_calorie_entries/day", entry: entry %>
+    <% end %>
+  </div>
+</section>

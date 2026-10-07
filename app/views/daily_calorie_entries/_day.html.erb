@@ -1,0 +1,52 @@
+<%= turbo_frame_tag "calories-day-#{entry.occurred_on.iso8601}", class: "calorie-day" do %>
+  <div class="calorie-day__header">
+    <strong><%= %w[Dom Seg Ter Qua Qui Sex Sáb][entry.occurred_on.wday] %></strong>
+    <time datetime="<%= entry.occurred_on.iso8601 %>"><%= entry.occurred_on.strftime("%d/%m/%Y") %></time>
+  </div>
+  <% if entry.future_estimate? %>
+    <span class="calorie-day__notice">Estimativa futura</span>
+  <% end %>
+  <% if entry.errors.any? %>
+    <div class="calorie-day__errors" role="alert">
+      <% entry.errors.full_messages.each do |message| %>
+        <p><%= message %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= form_with scope: :daily_calorie_entry, url: daily_calorie_entries_path, method: :post, html: { class: "calorie-day__form" } do |f| %>
+    <%= f.hidden_field :occurred_on, value: entry.occurred_on.iso8601 %>
+    <% input_id = "calorie-consumption-#{entry.occurred_on.iso8601}" %>
+    <%= f.label :consumed_calories, "Consumo (kcal)", for: input_id %>
+    <%= f.text_field :consumed_calories, id: input_id, value: (entry.errors.any? ? entry.consumed_calories_before_type_cast : (number_with_precision(entry.consumed_calories, precision: 2, strip_insignificant_zeros: true, separator: ",") if entry.consumed_calories)), class: "app-form-control", inputmode: "decimal", placeholder: "Sem registro", aria: { describedby: "calorie-help-#{entry.occurred_on.iso8601}" } %>
+    <small id="calorie-help-<%= entry.occurred_on.iso8601 %>">Vazio = sem registro. Aceita vírgula ou ponto.</small>
+    <%= f.submit "Salvar", class: "app-btn app-btn--primary", data: { turbo_submits_with: "Salvando…" } %>
+  <% end %>
+
+  <% if entry.persisted? && entry.errors.empty? %>
+    <dl class="calorie-day__metrics">
+      <div><dt>Peso usado</dt><dd><%= entry.reference_weight_kg ? "#{number_with_precision(entry.reference_weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ',')} kg" : "Sem pesagem" %></dd></div>
+      <% if entry.reference_weight_date %>
+        <div><dt>Pesagem de</dt><dd><%= entry.reference_weight_date.strftime("%d/%m/%Y") %></dd></div>
+      <% end %>
+      <div><dt>Atividades</dt><dd><%= [ ("Treino" if entry.trained?), ("Caminhada" if entry.walked?) ].compact.join(" + ").presence || "Nenhuma marcada" %></dd></div>
+      <div><dt>Fator</dt><dd><%= number_with_precision(entry.activity_factor, precision: 3, strip_insignificant_zeros: true, separator: ",") %></dd></div>
+      <div><dt>Basal estimado</dt><dd><%= entry.bmr ? "#{number_with_precision(entry.bmr, precision: 0)} kcal" : "Pendente" %></dd></div>
+      <div><dt>Gasto total estimado</dt><dd><%= entry.tdee ? "#{number_with_precision(entry.tdee, precision: 0)} kcal" : "Pendente" %></dd></div>
+      <% if entry.calculation_status == "calculated" %>
+        <% label = entry.calorie_deficit.positive? ? "Déficit estimado" : (entry.calorie_deficit.negative? ? "Superávit estimado" : "Equilíbrio estimado") %>
+        <div class="calorie-day__balance"><dt><%= label %></dt><dd><%= number_with_precision(entry.calorie_deficit.abs, precision: 0) %> kcal</dd></div>
+      <% end %>
+    </dl>
+    <% messages = { "missing_consumption" => "Sem registro de consumo.", "missing_profile" => "Configure seu Perfil de Saúde para calcular.", "missing_weight" => "Registre uma pesagem nesta data ou em data anterior.", "invalid_profile" => "Revise o perfil: dados incompatíveis com esta data." } %>
+    <% if messages[entry.calculation_status] %>
+      <p class="calorie-day__notice"><%= messages[entry.calculation_status] %></p>
+      <% if %w[missing_profile invalid_profile].include?(entry.calculation_status) %>
+        <%= link_to "Configurar perfil", health_profile_path, data: { turbo_frame: "_top" } %>
+      <% end %>
+    <% end %>
+    <small class="calorie-day__saved" role="status">Registro salvo.</small>
+  <% elsif entry.errors.empty? %>
+    <p class="calorie-day__notice">Sem registro</p>
+  <% end %>
+<% end %>

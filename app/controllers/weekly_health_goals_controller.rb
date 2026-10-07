@@ -11,7 +11,7 @@ class WeeklyHealthGoalsController < ApplicationController
       goal.sync_completed_count!
     end
 
-    redirect_to weekly_health_plans_path, notice: "Meta atualizada com sucesso!", status: :see_other
+    redirect_to weekly_health_plan_path(goal.weekly_health_plan.week_start.iso8601), notice: "Meta atualizada com sucesso!", status: :see_other
   rescue ArgumentError
     redirect_to weekly_health_plans_path, alert: "Dia inválido.", status: :see_other
   end

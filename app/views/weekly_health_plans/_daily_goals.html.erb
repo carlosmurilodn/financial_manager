@@ -1,0 +1,30 @@
+<% goals = weekly_health_plan.weekly_health_goals.to_a.sort_by { |goal| goal.name.to_s.parameterize } %>
+<% week_days = (weekly_health_plan.week_start..weekly_health_plan.week_end).to_a %>
+<% weekday_labels = %w[Seg Ter Qua Qui Sex Sáb Dom] %>
+
+    <div class="weekly-health-plan-days">
+      <% goals.each do |goal| %>
+        <div class="weekly-health-plan-days__goal">
+          <div class="weekly-health-plan-days__goal-header">
+            <strong><%= goal.name %></strong>
+            <span><%= goal.completed_count %>/<%= goal.target_count %></span>
+          </div>
+
+          <div class="weekly-health-plan-days__week">
+            <% week_days.each_with_index do |day, day_index| %>
+              <% completed = goal.completed_on?(day) %>
+              <%= button_to toggle_day_weekly_health_goal_path(goal, occurred_on: day.iso8601),
+                            method: :patch,
+                            class: "weekly-health-plan-days__day #{'is-checked' if completed}",
+                            form: { class: "weekly-health-plan-days__day-form" },
+                            title: "#{completed ? 'Desmarcar' : 'Marcar'} #{goal.name} em #{day.strftime("%d/%m/%Y")}",
+                            aria: { label: "#{completed ? 'Desmarcar' : 'Marcar'} #{goal.name} em #{day.strftime("%d/%m/%Y")}" } do %>
+                <span><%= weekday_labels[day_index] %></span>
+                <strong><%= day.strftime("%d") %></strong>
+                <span class="material-symbols-rounded"><%= completed ? "check" : "add" %></span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>

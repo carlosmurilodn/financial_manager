@@ -1,0 +1,16 @@
+<section class="app-page weekly-health-plan-show">
+  <div class="app-page__hero">
+    <div class="weekly-health-plan-show__header">
+      <div class="app-page__hero-copy">
+        <span class="app-page__hero-icon"><span class="material-symbols-rounded" aria-hidden="true">calendar_month</span></span>
+        <div>
+          <p class="app-page__eyebrow">Saúde e Bem-Estar</p>
+          <h1 class="app-page__title">Sua semana</h1>
+          <p class="app-page__description">Marque atividades e acompanhe calorias de <%= @weekly_health_plan.week_start.strftime("%d/%m/%Y") %> a <%= @weekly_health_plan.week_end.strftime("%d/%m/%Y") %>.</p>
+        </div>
+      </div>
+      <%= link_to "Voltar às semanas", weekly_health_plans_path, class: "app-btn app-btn--outline", data: { turbo: false } %>
+    </div>
+  </div>
+  <%= render "weekly_health_plan_row", weekly_health_plan: @weekly_health_plan, show_details: true %>
+</section>

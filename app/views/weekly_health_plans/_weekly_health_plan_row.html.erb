@@ -2,8 +2,6 @@
 <% total_target = goals.sum(&:target_count) %>
 <% total_completed = goals.sum(&:completed_count) %>
 <% progress = total_target.positive? ? (total_completed.to_f / total_target * 100).round : 0 %>
-<% week_days = (weekly_health_plan.week_start..weekly_health_plan.week_end).to_a %>
-<% weekday_labels = %w[Seg Ter Qua Qui Sex Sab Dom] %>
 
 <div
   id="<%= dom_id(weekly_health_plan) %>"
@@ -40,6 +38,12 @@
       </div>
 
       <div class="health-card__actions">
+        <% unless local_assigns[:show_details] %>
+          <%= link_to weekly_health_plan_path(weekly_health_plan.week_start.iso8601), class: "health-card__action", data: { turbo: false }, aria: { label: "Ver semana de #{weekly_health_plan.week_start.strftime('%d/%m/%Y')}" } do %>
+            <span class="material-symbols-rounded">visibility</span>
+            <span>Ver semana</span>
+          <% end %>
+        <% end %>
         <%= link_to edit_weekly_health_plan_path(weekly_health_plan.week_start.iso8601),
                     class: "health-card__action",
                     title: "Editar metas",
@@ -59,31 +63,9 @@
       </div>
     </div>
 
-    <div class="weekly-health-plan-days">
-      <% goals.each do |goal| %>
-        <div class="weekly-health-plan-days__goal">
-          <div class="weekly-health-plan-days__goal-header">
-            <strong><%= goal.name %></strong>
-            <span><%= goal.completed_count %>/<%= goal.target_count %></span>
-          </div>
-
-          <div class="weekly-health-plan-days__week">
-            <% week_days.each_with_index do |day, day_index| %>
-              <% completed = goal.completed_on?(day) %>
-              <%= button_to toggle_day_weekly_health_goal_path(goal, occurred_on: day.iso8601),
-                            method: :patch,
-                            class: "weekly-health-plan-days__day #{'is-checked' if completed}",
-                            form: { class: "weekly-health-plan-days__day-form" },
-                            title: "#{completed ? 'Desmarcar' : 'Marcar'} #{goal.name} em #{day.strftime("%d/%m/%Y")}",
-                            aria: { label: "#{completed ? 'Desmarcar' : 'Marcar'} #{goal.name} em #{day.strftime("%d/%m/%Y")}" } do %>
-                <span><%= weekday_labels[day_index] %></span>
-                <strong><%= day.strftime("%d") %></strong>
-                <span class="material-symbols-rounded"><%= completed ? "check" : "add" %></span>
-              <% end %>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-    </div>
+    <% if local_assigns[:show_details] %>
+      <%= render "daily_goals", weekly_health_plan: weekly_health_plan %>
+      <%= render "daily_calorie_entries/week", week_start: weekly_health_plan.week_start, entries_by_date: @daily_calorie_entries_by_date, health_profile: @health_profile %>
+    <% end %>
   </div>
 </div>

@@ -7,12 +7,13 @@ Rails.application.routes.draw do
   get "financeiro", to: "home#index", as: :financial_dashboard
   get "progresso", to: "progress#index", as: :progress
   resource :health_profile, path: "progresso/perfil", only: %i[show create update]
+  resources :daily_calorie_entries, path: "progresso/calorias", param: :occurred_on, only: %i[show create]
   resources :weight_entries, path: "progresso/pesagens", only: %i[index new create edit update destroy] do
     collection do
       delete :clear_filters
     end
   end
-  resources :weekly_health_plans, path: "progresso/semanas", param: :week_start, only: %i[index new create edit update destroy] do
+  resources :weekly_health_plans, path: "progresso/semanas", param: :week_start, only: %i[index show new create edit update destroy] do
     collection do
       delete :clear_filters
     end

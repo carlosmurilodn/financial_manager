@@ -1,0 +1,26 @@
+.calorie-week { display: flex; flex-direction: column; gap: 16px; min-width: 0; width: 100%; border-top: 1px solid var(--card-border); padding-top: 18px; }
+.calorie-week__header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.calorie-week__header h3 { margin: 0; color: var(--text-main); font-size: 1rem; font-weight: 800; }
+.calorie-week__header p { margin: 6px 0 0; color: var(--text-soft); font-size: 0.82rem; line-height: 1.5; }
+.calorie-week__days { display: flex; flex-wrap: wrap; gap: 12px; min-width: 0; }
+.calorie-day { display: flex; flex-direction: column; flex: 1 1 200px; gap: 12px; min-width: 0; padding: 14px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); color: var(--text-main); }
+.calorie-day__header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 0.85rem; }
+.calorie-day__form { display: flex; flex-direction: column; gap: 8px; }
+.calorie-day__form small, .calorie-day__notice, .calorie-day__saved { color: var(--text-soft); font-size: 0.75rem; line-height: 1.4; }
+.calorie-day__notice { margin: 0; }
+.calorie-day__metrics { display: flex; flex-direction: column; gap: 8px; margin: 0; }
+.calorie-day__metrics > div { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 8px; }
+.calorie-day__metrics dt { color: var(--text-soft); font-size: 0.72rem; font-weight: 600; }
+.calorie-day__metrics dd { margin: 0; font-size: 0.78rem; font-weight: 800; overflow-wrap: anywhere; }
+.calorie-day__balance { border-top: 1px solid var(--card-border); padding-top: 8px; }
+.calorie-day__errors { color: var(--danger); font-size: 0.8rem; overflow-wrap: anywhere; }
+.calorie-day__errors p { margin: 0; }
+.calorie-entry-page { display: flex; flex-direction: column; }
+.calorie-day__form .app-btn { min-height: 44px; }
+@media (max-width: 640px) { .calorie-day { flex-basis: 100%; } }
+
+.weekly-health-plan-show { display: flex; flex-direction: column; min-width: 0; }
+.weekly-health-plan-show__header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+.weekly-health-plan-show__header > .app-page__hero-copy { flex: 1 1 280px; }
+.weekly-health-plan-show .app-page__hero-icon { display: flex; align-items: center; justify-content: center; }
+.weekly-health-plan-card .health-card__actions { flex-wrap: wrap; }

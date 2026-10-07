@@ -1,9 +1,15 @@
 class WeeklyHealthPlansController < ApplicationController
-  before_action :set_week_start, only: %i[edit update destroy]
+  before_action :set_week_start, only: %i[show edit update destroy]
   before_action :load_week_options, only: %i[new create edit update]
 
   def index
     load_weekly_health_plans
+  end
+
+  def show
+    @weekly_health_plan = current_user.weekly_health_plans.includes(weekly_health_goals: :weekly_health_goal_days).find_by!(week_start: @week_start)
+    @daily_calorie_entries_by_date = current_user.daily_calorie_entries.where(occurred_on: @week_start..(@week_start + 6.days)).index_by(&:occurred_on)
+    @health_profile = current_user.health_profile
   end
 
   def new

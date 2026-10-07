@@ -192,15 +192,24 @@ export function initializeDatepicker() {
       `;
 
       const tbody = picker.querySelector("tbody");
-      let html = "<tr>";
-      for (let i = 0; i < firstDay; i++) html += "<td></td>";
+      const today = new Date();
+      const cellCount = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+      let html = "";
 
-      for (let d = 1; d <= daysInMonth; d++) {
-        const dayOfWeek = new Date(year, month, d).getDay();
-        const formatted = formatDateDisplay(year, month, d);
+      for (let i = 0; i < cellCount; i++) {
+        if (i % 7 === 0) html += "<tr>";
+        const cellDate = new Date(year, month, i - firstDay + 1);
+        const d = cellDate.getDate();
+        const dayOfWeek = cellDate.getDay();
+        const formatted = formatDateDisplay(cellDate.getFullYear(), cellDate.getMonth(), d);
         const shortDate = formatted.slice(0, 5);
-        let cls = "";
+        const outsideMonth = cellDate.getMonth() !== month;
+        const isToday = cellDate.getFullYear() === today.getFullYear() &&
+          cellDate.getMonth() === today.getMonth() && d === today.getDate();
+        let cls = outsideMonth ? "outside-month " : "";
         let title = "";
+
+        if (isToday) cls += "today ";
 
         if (dayOfWeek === 0) cls += "sunday ";
         if (dayOfWeek === 6) cls += "saturday ";
@@ -209,14 +218,13 @@ export function initializeDatepicker() {
           title = holidays[shortDate];
         }
 
-        html += `<td data-date="${formatted}" class="${cls.trim()}" ${
+        html += `<td data-date="${formatted}" class="${cls.trim()}" ${isToday ? 'aria-current="date"' : ""} ${
           title ? `title="${title}"` : ""
         }>${d}</td>`;
 
-        if ((firstDay + d) % 7 === 0) html += "</tr><tr>";
+        if ((i + 1) % 7 === 0) html += "</tr>";
       }
 
-      html += "</tr>";
       tbody.innerHTML = html;
 
       picker.querySelectorAll("td[data-date]").forEach((td) => {

@@ -1,7 +1,7 @@
 <section class="app-page health-index-page self-knowledge-page">
   <%= render "self_knowledge/header" %>
   <div class="app-panel"><%= render "shared/filter_accordion" do %>
-    <%= form_with url: collection_path, method: :get, local: true, class: "app-filter-form" do |f| %>
+    <%= form_with url: collection_path, method: :get, local: true, class: "app-filter-form self-knowledge-record-filters" do |f| %>
       <div class="health-index-filters">
         <div class="app-filter-field">
           <%= f.label :date_from, weekly? ? "Da semana" : "De" %>

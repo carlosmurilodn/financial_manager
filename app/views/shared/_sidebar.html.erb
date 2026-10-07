@@ -2,9 +2,9 @@
   <div class="app-sidebar__inner">
     <div class="app-sidebar__brand">
       <div class="app-sidebar__brand-main">
-        <div class="app-sidebar__logo" aria-hidden="true">
-          <span class="material-symbols-rounded"><%= health_section? ? "self_improvement" : "account_balance_wallet" %></span>
-        </div>
+        <%= link_to root_path, class: "app-sidebar__logo", title: "Voltar ao Gerenciador Pessoal", aria: { label: "Voltar à escolha de Financeiro ou Saúde e Bem-Estar" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded" aria-hidden="true"><%= health_section? ? "self_improvement" : "account_balance_wallet" %></span>
+        <% end %>
         <div class="app-sidebar__brand-copy">
           <span class="sidebar-title"><%= health_section? ? "Saúde e Bem-Estar" : "Gerenciador Financeiro" %></span>
         </div>

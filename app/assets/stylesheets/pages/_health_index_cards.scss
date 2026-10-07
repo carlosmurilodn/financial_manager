@@ -288,7 +288,6 @@
 }
 
 // Data-specific arrangements can evolve without touching financial cards.
-.health-win-card__identity-block { flex-basis: 50%; }
 .health-win-card__title { font-weight: 700; }
 
 .progress-page .app-page__hero-top--progress {
@@ -510,4 +509,94 @@
 
 @container (max-width: 600px) {
   @include health-record-mobile;
+}
+
+// Wins: description, date and actions own their flex groups.
+.health-win-card {
+  container-type: inline-size;
+}
+
+.health-win-card__content {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 20px;
+}
+
+.health-win-card__content > .health-win-card__identity-main {
+  flex: 1 1 0;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.health-win-card__date,
+.health-win-card__actions {
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+}
+
+.health-win-card__actions {
+  width: auto;
+}
+
+.health-win-card__action {
+  flex: 0 0 auto;
+}
+
+@mixin health-win-compact {
+  .health-win-card__content {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .health-win-card__content > .health-win-card__identity-main {
+    flex-basis: 100%;
+  }
+
+  .health-win-card__date {
+    flex: 1 1 120px;
+  }
+
+  .health-win-card__actions {
+    flex-wrap: wrap;
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+@mixin health-win-mobile {
+  .health-win-card__content {
+    padding: 14px;
+    gap: 14px;
+  }
+
+  .health-win-card__title {
+    font-size: 0.9rem;
+  }
+
+  .health-win-card__actions {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .health-win-card__action {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 991px) {
+  @include health-win-compact;
+}
+
+@container (max-width: 800px) {
+  @include health-win-compact;
+}
+
+@media (max-width: 640px) {
+  @include health-win-mobile;
+}
+
+@container (max-width: 600px) {
+  @include health-win-mobile;
 }

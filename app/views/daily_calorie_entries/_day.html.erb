@@ -1,4 +1,4 @@
-<%= turbo_frame_tag "calories-day-#{entry.occurred_on.iso8601}", class: "calorie-day" do %>
+<%= turbo_frame_tag "calories-day-#{entry.occurred_on.iso8601}", class: "calorie-day", data: { controller: "calorie-status", calorie_status_persisted_value: entry.persisted?, calorie_status_saved_value: entry.consumed_calories_in_database&.to_s("F") } do %>
   <div class="calorie-day__header">
     <strong><%= %w[Dom Seg Ter Qua Qui Sex Sáb][entry.occurred_on.wday] %></strong>
     <time datetime="<%= entry.occurred_on.iso8601 %>"><%= entry.occurred_on.strftime("%d/%m/%Y") %></time>
@@ -15,7 +15,7 @@
     <%= f.hidden_field :occurred_on, value: entry.occurred_on.iso8601 %>
     <% input_id = "calorie-consumption-#{entry.occurred_on.iso8601}" %>
     <%= f.label :consumed_calories, "Consumo (kcal)", for: input_id %>
-    <%= f.text_field :consumed_calories, id: input_id, value: (entry.errors.any? ? entry.consumed_calories_before_type_cast : (number_with_precision(entry.consumed_calories, precision: 2, strip_insignificant_zeros: true, separator: ",") if entry.consumed_calories)), class: "app-form-control", inputmode: "decimal", placeholder: "Sem registro" %>
+    <%= f.text_field :consumed_calories, id: input_id, value: (entry.errors.any? ? entry.consumed_calories_before_type_cast : (number_with_precision(entry.consumed_calories, precision: 2, strip_insignificant_zeros: true, separator: ",") if entry.consumed_calories)), class: "app-form-control", inputmode: "decimal", placeholder: "Sem registro", data: { calorie_status_target: "input", action: "input->calorie-status#update change->calorie-status#update" } %>
     <%= f.submit "Salvar", class: "app-btn app-btn--primary", data: { turbo_submits_with: "Salvando…" } %>
   <% end %>
 
@@ -41,8 +41,8 @@
         <%= link_to "Configurar perfil", health_profile_path, data: { turbo_frame: "_top" } %>
       <% end %>
     <% end %>
-    <small class="calorie-day__saved" role="status">Registro salvo.</small>
   <% elsif entry.errors.empty? %>
     <p class="calorie-day__notice">Sem registro</p>
   <% end %>
+  <small class="calorie-day__saved" role="status" aria-live="polite" data-calorie-status-target="status"><%= entry.persisted? && entry.errors.empty? ? "Registro salvo ✅" : "Registro pendente ❌" %></small>
 <% end %>

@@ -21,7 +21,7 @@
                             aria: { label: "#{completed ? 'Desmarcar' : 'Marcar'} #{goal.name} em #{day.strftime("%d/%m/%Y")}" } do %>
                 <span><%= weekday_labels[day_index] %></span>
                 <strong><%= day.strftime("%d") %></strong>
-                <span class="material-symbols-rounded"><%= completed ? "check" : "add" %></span>
+                <span class="material-symbols-rounded" aria-hidden="true"><%= completed ? "check" : "close" %></span>
               <% end %>
             <% end %>
           </div>

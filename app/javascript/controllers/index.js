@@ -6,7 +6,9 @@ import { application } from "./application"
 import WeeklyGoalsController from "./weekly_goals_controller"
 import HealthWinFormController from "./health_win_form_controller"
 import WeightChartController from "./weight_chart_controller"
+import CalorieStatusController from "./calorie_status_controller"
 
 application.register("weekly-goals", WeeklyGoalsController)
 application.register("health-win-form", HealthWinFormController)
 application.register("weight-chart", WeightChartController)
+application.register("calorie-status", CalorieStatusController)

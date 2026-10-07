@@ -4,6 +4,8 @@ class ConvertHealthWeightGoalsToIndividualGoals < ActiveRecord::Migration[8.0]
   end
 
   def up
+    return if original_version_applied?
+
     add_column :health_weight_goals, :goal_type, :string, null: false, default: "intermediate"
     add_column :health_weight_goals, :position, :integer, null: false, default: 0
 
@@ -35,6 +37,8 @@ class ConvertHealthWeightGoalsToIndividualGoals < ActiveRecord::Migration[8.0]
   end
 
   def down
+    return if original_version_applied?
+
     add_column :health_weight_goals, :milestone_weights, :decimal,
                precision: 5,
                scale: 2,
@@ -61,5 +65,12 @@ class ConvertHealthWeightGoalsToIndividualGoals < ActiveRecord::Migration[8.0]
     remove_column :health_weight_goals, :goal_type
 
     add_index :health_weight_goals, :user_id, unique: true
+  end
+
+  private
+
+  # Preserve databases that already ran this migration under its original timestamp.
+  def original_version_applied?
+    connection.select_value("SELECT 1 FROM schema_migrations WHERE version = '20261006143832'").present?
   end
 end

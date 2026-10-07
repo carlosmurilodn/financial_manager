@@ -19,7 +19,8 @@ class HealthProfile < ApplicationRecord
   end
 
   def height_format
-    value = height_cm_before_type_cast.to_s
+    raw_value = height_cm_before_type_cast
+    value = raw_value.is_a?(BigDecimal) ? raw_value.to_s("F") : raw_value.to_s
     return if value.blank? || value.match?(/\A\d+(?:\.\d{1,2})?\z/)
 
     errors.add(:height_cm, "deve ser um número positivo com até duas casas decimais")

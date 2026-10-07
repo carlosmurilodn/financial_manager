@@ -25,9 +25,18 @@ class HealthProfilesController < ApplicationController
   end
 
   def save_profile
-    @health_profile.assign_attributes(health_profile_params)
+    saved = current_user.with_lock do
+      set_health_profile
+      @health_profile.assign_attributes(health_profile_params)
+      if @health_profile.save
+        Health::RecalculateDailyCalories.new(user: current_user).call
+        true
+      else
+        false
+      end
+    end
 
-    if @health_profile.save
+    if saved
       redirect_to health_profile_path, notice: "Perfil de Saúde salvo com sucesso!", status: :see_other
     else
       render :show, status: :unprocessable_entity

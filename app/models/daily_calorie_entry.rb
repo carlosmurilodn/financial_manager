@@ -18,7 +18,8 @@ class DailyCalorieEntry < ApplicationRecord
   private
 
   def consumption_format
-    value = consumed_calories_before_type_cast.to_s
+    raw_value = consumed_calories_before_type_cast
+    value = raw_value.is_a?(BigDecimal) ? raw_value.to_s("F") : raw_value.to_s
     return if value.blank? || value.match?(/\A\d+(?:\.\d{1,2})?\z/)
 
     errors.add(:consumed_calories, "deve ser um número não negativo com até duas casas decimais")

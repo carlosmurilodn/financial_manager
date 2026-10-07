@@ -23,7 +23,11 @@ class WeightEntriesController < ApplicationController
   end
 
   def destroy
-    @weight_entry.destroy!
+    current_user.with_lock do
+      @weight_entry.reload
+      @weight_entry.destroy!
+      Health::RecalculateDailyCalories.new(user: current_user, from: @weight_entry.measured_on).call
+    end
     redirect_to weight_entries_path, notice: "Medição excluída com sucesso!", status: :see_other
   end
 
@@ -80,7 +84,18 @@ class WeightEntriesController < ApplicationController
   end
 
   def persist_weight_entry(template, notice)
-    if @weight_entry.save
+    saved = current_user.with_lock do
+      previous_date = current_user.weight_entries.where(id: @weight_entry.id).pick(:measured_on) if @weight_entry.persisted?
+      if @weight_entry.save
+        first_affected_date = [ previous_date, @weight_entry.measured_on ].compact.min
+        Health::RecalculateDailyCalories.new(user: current_user, from: first_affected_date).call
+        true
+      else
+        false
+      end
+    end
+
+    if saved
       redirect_to weight_entries_path, notice: notice, status: :see_other
     else
       render template, status: :unprocessable_entity

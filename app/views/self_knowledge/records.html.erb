@@ -1,9 +1,25 @@
 <section class="app-page health-index-page self-knowledge-page">
-  <%= render "self_knowledge/header", title: weekly? ? "Revisão Semanal" : "Diário", description: weekly? ? "O que esta semana está me mostrando sobre mim?" : "O que aconteceu comigo hoje?" %>
-  <%= link_to weekly? ? "Revisar esta semana" : "Registrar meu dia", weekly? ? new_health_weekly_reflection_path : new_health_journal_entry_path, class: "diary-entry-card__action self-knowledge-new" %>
+  <%= render "self_knowledge/header" %>
   <div class="app-panel"><%= render "shared/filter_accordion" do %>
     <%= form_with url: collection_path, method: :get, local: true, class: "app-filter-form" do |f| %>
-      <div class="health-index-filters"><div class="app-filter-field"><%= f.label :date_from, "De" %><%= f.date_field :date_from, value: @date_from, class: "app-form-control" %></div><div class="app-filter-field"><%= f.label :date_to, "Até" %><%= f.date_field :date_to, value: @date_to, class: "app-form-control" %></div></div>
+      <div class="health-index-filters">
+        <div class="app-filter-field">
+          <%= f.label :date_from, weekly? ? "Da semana" : "De" %>
+          <% if weekly? %>
+            <%= f.select :date_from, options_for_select(@week_options, @date_from&.iso8601), { include_blank: "Todas as semanas" }, class: "app-form-select" %>
+          <% else %>
+            <%= f.date_field :date_from, value: @date_from, class: "app-form-control" %>
+          <% end %>
+        </div>
+        <div class="app-filter-field">
+          <%= f.label :date_to, weekly? ? "Até a semana" : "Até" %>
+          <% if weekly? %>
+            <%= f.select :date_to, options_for_select(@week_options, @date_to&.iso8601), { include_blank: "Todas as semanas" }, class: "app-form-select" %>
+          <% else %>
+            <%= f.date_field :date_to, value: @date_to, class: "app-form-control" %>
+          <% end %>
+        </div>
+      </div>
       <div class="app-filter-actions"><%= f.submit "Filtrar", class: "app-btn app-btn--primary" %><%= link_to "Limpar filtros", collection_path, class: "app-btn app-btn--secondary" %><%= render "shared/per_page_select" %></div>
     <% end %>
   <% end %></div>

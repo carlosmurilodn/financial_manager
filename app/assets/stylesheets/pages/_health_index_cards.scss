@@ -627,3 +627,33 @@
   .diary-entry-card__actions { width: 100%; margin-left: 0; justify-content: flex-start; }
   .diary-entry-card__excerpts { grid-template-columns: 1fr; padding: 14px; }
 }
+
+// Abertura de Autoconhecimento: quatro blocos iguais dentro do hero.
+.self-knowledge-page .app-page__hero-top.self-knowledge-hero {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  align-items: stretch;
+}
+.self-knowledge-hero > .app-page__hero-unit { min-width: 0; padding: 12px; }
+.self-knowledge-hero .app-page__hero-copy { gap: 10px; align-items: flex-start; }
+.self-knowledge-hero .app-page__hero-copy > div { min-width: 0; }
+.self-knowledge-hero .app-page__hero-icon,
+.self-knowledge-hero .diary-entry-card__icon-wrapper { flex: 0 0 34px; width: 34px; height: 34px; border-radius: 10px; }
+.self-knowledge-hero .material-symbols-rounded { font-size: 21px; }
+.self-knowledge-hero .app-page__eyebrow { font-size: .6rem; margin-bottom: 6px; }
+.self-knowledge-hero .app-page__title { font-size: 1.02rem; line-height: 1.35; overflow-wrap: anywhere; }
+.self-knowledge-hero__description { margin: 8px 0 0; font-size: 1rem; line-height: 1.6; color: var(--text-soft); }
+.self-knowledge-hero__card { display: flex; flex-direction: column; gap: 12px; }
+.self-knowledge-hero__card .diary-entry-card__content { padding: 0; flex-wrap: nowrap; align-items: flex-start; gap: 10px; }
+.self-knowledge-hero__card .diary-entry-card__content > div { min-width: 0; }
+.self-knowledge-hero__card h2 { margin: 0 0 6px; font-size: .9rem; font-weight: 800; line-height: 1.4; color: var(--text-main); }
+.self-knowledge-hero__card p { margin: 4px 0 0; font-size: 1rem; line-height: 1.5; color: var(--text-soft); }
+.self-knowledge-hero__card .self-knowledge-home__actions { padding: 0; margin-top: auto; gap: 6px; }
+.self-knowledge-hero__card .diary-entry-card__action { min-height: 32px; padding: 7px 10px; font-size: .8rem; }
+@media (max-width: 1199px) {
+  .self-knowledge-page .app-page__hero-top.self-knowledge-hero { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 575px) {
+  .self-knowledge-page .app-page__hero-top.self-knowledge-hero { grid-template-columns: 1fr; }
+}

@@ -1,8 +1,9 @@
 class SelfKnowledgeController < ApplicationController
+  include SelfKnowledgeHero
+  before_action :load_self_knowledge_hero, only: :evolution
+
   def index
-    @area = "home"
-    @today = current_user.health_journal_entries.find_by(entry_date: Date.current)
-    @this_week = current_user.health_weekly_reflections.find_by(week_start: Date.current.beginning_of_week)
+    redirect_to health_journal_entries_path
   end
 
   def week_summary

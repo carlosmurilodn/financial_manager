@@ -1,6 +1,6 @@
 <section class="app-page health-index-page self-knowledge-page">
-  <%= render 'self_knowledge/header', title: 'Minha Evolução', description: 'O que vem mudando ao longo do tempo?' %>
-  <div class="app-panel"><%= form_with url: self_knowledge_evolution_path, method: :get, local: true do |f| %><%= f.label :period, 'Período' %><%= f.select :period, [['30 dias', '30'], ['3 meses', '90'], ['6 meses', '180'], ['1 ano', '365'], ['Tudo', 'all']], { selected: @evolution.period }, class: 'app-form-select' %><%= f.submit 'Atualizar', class: 'app-btn app-btn--primary' %><% end %></div>
+  <%= render "self_knowledge/header" %>
+  <div class="app-panel"><%= form_with url: self_knowledge_evolution_path, method: :get, local: true do |f| %><%= f.label :period, 'Período' %><%= f.select :period, [['30 dias', '30'], ['3 meses', '90'], ['6 meses', '180'], ['1 ano', '365'], ['Tudo', 'all']], { selected: @evolution.period }, class: 'app-form-select', onchange: 'this.form.requestSubmit()' %><% end %></div>
   <div class="self-knowledge-evolution-kpis"><% Health::SelfKnowledgeContent::METRICS.each do |field, (label, *)| %><% value = @evolution.averages.fetch(field) %><article class="health-kpi-card"><div><small><%= label %> médio</small><h2><%= value[:mean] ? number_with_precision(value[:mean], precision: 1) : 'Sem registro' %></h2><small><%= value[:count] %> respostas diárias</small></div></article><% end %><article class="health-kpi-card"><div><small>Dias registrados</small><h2><%= @evolution.days.size %></h2></div></article></div>
   <% Health::SelfKnowledgeContent::METRICS.each do |field, (label, *)| %>
     <section class="app-panel"><h2><%= label %></h2><% if field == :tension %><p>Quanto maior, maior a tensão.</p><% end %>

@@ -55,17 +55,17 @@
           <% unless controller_name == "entry" %>
             <footer class="app-footer">
               <div class="app-footer__brand">
-                <span class="material-symbols-rounded app-footer__icon">finance_mode</span>
+                <span class="material-symbols-rounded app-footer__icon"><%= health_section? ? "self_improvement" : "finance_mode" %></span>
                 <div>
-                  <strong>Dashboard Financeiro</strong>
-                  <small>Controle receitas, despesas e previsoes em um unico painel.</small>
+                  <strong><%= health_section? ? "Saúde e Bem-Estar" : "Dashboard Financeiro" %></strong>
+                  <small><%= health_section? ? "Acompanhe sua saúde, cuide da rotina e reconheça suas conquistas." : "Controle receitas, despesas e previsoes em um unico painel." %></small>
                 </div>
               </div>
 
               <div class="app-footer__meta">
-                <span class="app-footer__chip">Agenda Mensal</span>
-                <span class="app-footer__chip">Planejamento Anual</span>
-                <span class="app-footer__chip">Visao Consolidada</span>
+                <% (health_section? ? ["Autoconhecimento", "Metas Semanais", "Minha Evolução"] : ["Agenda Mensal", "Planejamento Anual", "Visao Consolidada"]).each do |label| %>
+                  <span class="app-footer__chip"><%= label %></span>
+                <% end %>
               </div>
 
               <div class="app-footer__credit">

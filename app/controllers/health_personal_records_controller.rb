@@ -1,4 +1,6 @@
 class HealthPersonalRecordsController < ApplicationController
+  include SelfKnowledgeHero
+  before_action :load_self_knowledge_hero, only: :index
   rescue_from ActiveRecord::RecordNotFound, with: -> { head :not_found }
   before_action :set_area
   before_action :set_record, only: %i[show edit update destroy]
@@ -8,6 +10,11 @@ class HealthPersonalRecordsController < ApplicationController
     records = collection.order(date_field => :desc)
     @date_from = valid_iso_date(params[:date_from])
     @date_to = valid_iso_date(params[:date_to])
+    if weekly?
+      @date_from = @date_from&.beginning_of_week
+      @date_to = @date_to&.beginning_of_week
+      load_week_options
+    end
     records = records.where(date_field => @date_from..) if @date_from
     records = records.where(date_field => ..@date_to) if @date_to
     @records = paginate_collection(records.to_a, per_page: pagination_per_page)
@@ -103,7 +110,12 @@ class HealthPersonalRecordsController < ApplicationController
   def load_week_options
     return unless weekly?
     reference = @record&.week_start || valid_iso_date(params[:selected_week]) || valid_iso_date(params[:date]) || Date.current
-    @week_options = [Date.current.cwyear, reference.cwyear].uniq.sort.flat_map do |year|
+    years = [Date.current.cwyear, reference.cwyear]
+    if action_name == "index"
+      years.concat(collection.distinct.pluck(:week_start).map(&:cwyear))
+      years.concat([@date_from, @date_to].compact.map(&:cwyear))
+    end
+    @week_options = years.uniq.sort.flat_map do |year|
       (1..Date.new(year, 12, 28).cweek).map do |number|
         start = Date.commercial(year, number, 1)
         ["Semana #{number} - De #{start.strftime('%d/%m/%Y')} a #{(start + 6.days).strftime('%d/%m/%Y')}", start.iso8601]

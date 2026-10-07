@@ -1,24 +1,24 @@
 <div id="health-weight-goals-hero-kpis" class="app-health-goals-hero-kpis">
-  <div class="stat-card stat-card--warning">
-    <div class="stat-card__icon">
+  <div class="health-kpi-card health-kpi-card--warning">
+    <div class="health-kpi-card__icon">
       <span class="material-symbols-rounded">monitor_weight</span>
     </div>
     <div>
-      <span class="stat-card__label">Peso atual</span>
-      <strong class="stat-card__value">
+      <span class="health-kpi-card__label">Peso atual</span>
+      <strong class="health-kpi-card__value">
         <%= @latest_weight_entry ? "#{number_with_precision(@latest_weight_entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ",")} kg" : "Sem registro" %>
       </strong>
       <small><%= @latest_weight_entry ? @latest_weight_entry.measured_on.strftime("%d/%m/%Y") : "Registre um peso para calcular os marcos." %></small>
     </div>
   </div>
 
-  <div class="stat-card stat-card--primary">
-    <div class="stat-card__icon">
+  <div class="health-kpi-card health-kpi-card--primary">
+    <div class="health-kpi-card__icon">
       <span class="material-symbols-rounded">flag</span>
     </div>
     <div>
-      <span class="stat-card__label">Objetivo final</span>
-      <strong class="stat-card__value">
+      <span class="health-kpi-card__label">Objetivo final</span>
+      <strong class="health-kpi-card__value">
         <%= @final_health_weight_goal ? "#{number_with_precision(@final_health_weight_goal.target_weight, precision: 2, strip_insignificant_zeros: true, separator: ",")} kg" : "Não definido" %>
       </strong>
       <small><%= pluralize(@filtered_count || 0, "etapa", "etapas") %> exibidas</small>

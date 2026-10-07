@@ -1,6 +1,6 @@
-<section class="app-page">
+<section class="app-page health-index-page">
   <div class="app-page__hero">
-    <div class="app-page__hero-top app-page__hero-top--expenses">
+    <div class="app-page__hero-top app-page__hero-top--weight-entries">
       <div class="app-page__hero-unit app-page__hero-copy">
         <span class="app-page__hero-icon">
           <span class="material-symbols-rounded">monitor_weight</span>
@@ -12,11 +12,11 @@
       </div>
 
       <div class="app-page__hero-unit app-page__hero-action">
-        <%= link_to new_weight_entry_path, class: "app-expenses-hero-kpis__action", data: { turbo: false } do %>
-          <span class="app-expenses-hero-kpis__action-icon">
+        <%= link_to new_weight_entry_path, class: "health-index-action", data: { turbo: false } do %>
+          <span class="health-index-action-icon">
             <span class="material-symbols-rounded">add</span>
           </span>
-          <span class="app-expenses-hero-kpis__action-copy">
+          <span class="health-index-action-copy">
             <strong>Novo Peso</strong>
           </span>
         <% end %>
@@ -33,7 +33,7 @@
   <div class="app-panel">
     <%= render "shared/filter_accordion" do %>
       <%= form_with url: weight_entries_path, method: :get, local: true, class: "app-filter-form" do |f| %>
-        <div class="app-filter-grid app-filter-grid--expenses">
+        <div class="health-index-filters">
           <div class="app-filter-field">
             <%= f.label :measured_from, "De" %>
             <%= f.date_field :measured_from, value: @measured_from_filter, class: "app-form-control", max: Date.current.iso8601 %>

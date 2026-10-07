@@ -1,4 +1,4 @@
-<section class="app-page">
+<section class="app-page health-index-page">
   <div class="app-page__hero">
     <div class="app-page__hero-top app-page__hero-top--health-goals">
       <div class="app-page__hero-unit app-page__hero-copy">
@@ -12,11 +12,11 @@
       </div>
 
       <div class="app-page__hero-unit app-page__hero-action">
-        <%= link_to new_health_weight_goal_path, class: "app-expenses-hero-kpis__action", data: { turbo: false } do %>
-          <span class="app-expenses-hero-kpis__action-icon">
+        <%= link_to new_health_weight_goal_path, class: "health-index-action", data: { turbo: false } do %>
+          <span class="health-index-action-icon">
             <span class="material-symbols-rounded">add</span>
           </span>
-          <span class="app-expenses-hero-kpis__action-copy">
+          <span class="health-index-action-copy">
             <strong>Nova Meta</strong>
           </span>
         <% end %>
@@ -33,7 +33,7 @@
   <div class="app-panel">
     <%= render "shared/filter_accordion" do %>
       <%= form_with url: health_weight_goals_path, method: :get, local: true, class: "app-filter-form" do |f| %>
-        <div class="app-filter-grid app-filter-grid--expenses">
+        <div class="health-index-filters">
           <div class="app-filter-field">
             <%= f.label :status, "Status" %>
             <%= f.select :status,

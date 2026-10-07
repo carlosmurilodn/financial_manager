@@ -1,6 +1,6 @@
 <div id="weekly-wellbeings-table">
   <% if @weekly_wellbeings.any? %>
-    <div class="expenses-cards-list" id="weekly-wellbeings-list">
+    <div class="weekly-wellbeing-list" id="weekly-wellbeings-list">
       <% @weekly_wellbeings.each do |weekly_wellbeing| %>
         <%= render partial: "weekly_wellbeing_row", locals: { weekly_wellbeing: weekly_wellbeing } %>
       <% end %>

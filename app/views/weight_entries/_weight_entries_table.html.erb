@@ -1,6 +1,6 @@
 <div id="weight-entries-table">
   <% if @weight_entries.any? %>
-    <div class="expenses-cards-list" id="weight-entries-list">
+    <div class="weight-entry-list" id="weight-entries-list">
       <% @weight_entries.each do |weight_entry| %>
         <%= render partial: "weight_entry_row", locals: { weight_entry: weight_entry } %>
       <% end %>

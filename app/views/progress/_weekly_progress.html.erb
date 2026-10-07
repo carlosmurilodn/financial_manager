@@ -1,11 +1,11 @@
 <%= turbo_frame_tag "progress-weekly-goals", class: "progress-weekly-frame" do %>
   <%= render "weekly_indicators" %>
   <%= render "weekly_period" %>
-  <div class="progress-grid">
+  <div class="progress-panels">
     <%= render "weekly_goals" %>
     <%= render "weekly_review" %>
   </div>
-  <div class="progress-grid progress-grid--wellbeing">
+  <div class="progress-panels progress-panels--wellbeing">
     <%= render "weekly_wellbeing" %>
     <%= render "weekly_wins" %>
   </div>

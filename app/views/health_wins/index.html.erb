@@ -1,4 +1,4 @@
-<section class="app-page">
+<section class="app-page health-index-page">
   <div class="app-page__hero">
     <div class="app-page__hero-top app-page__hero-top--health-wins">
       <div class="app-page__hero-unit app-page__hero-copy">
@@ -12,11 +12,11 @@
       </div>
 
       <div class="app-page__hero-unit app-page__hero-action">
-        <%= link_to new_health_win_path, class: "app-expenses-hero-kpis__action", data: { turbo: false } do %>
-          <span class="app-expenses-hero-kpis__action-icon">
+        <%= link_to new_health_win_path, class: "health-index-action", data: { turbo: false } do %>
+          <span class="health-index-action-icon">
             <span class="material-symbols-rounded">add</span>
           </span>
-          <span class="app-expenses-hero-kpis__action-copy">
+          <span class="health-index-action-copy">
             <strong>Nova Vitória</strong>
           </span>
         <% end %>
@@ -31,7 +31,7 @@
   <div class="app-panel">
     <%= render "shared/filter_accordion" do %>
       <%= form_with url: health_wins_path, method: :get, local: true, class: "app-filter-form" do |f| %>
-        <div class="app-filter-grid app-filter-grid--expenses">
+        <div class="health-index-filters">
           <div class="app-filter-field">
             <%= f.label :date_from, "De" %>
             <%= f.date_field :date_from, value: @date_from_filter, class: "app-form-control", max: Date.current.iso8601 %>

@@ -67,7 +67,7 @@
             <span><%= goal.completed_count %>/<%= goal.target_count %></span>
           </div>
 
-          <div class="weekly-health-plan-days__grid">
+          <div class="weekly-health-plan-days__week">
             <% week_days.each_with_index do |day, day_index| %>
               <% completed = goal.completed_on?(day) %>
               <%= button_to toggle_day_weekly_health_goal_path(goal, occurred_on: day.iso8601),

@@ -1,6 +1,6 @@
 <div id="health-weight-goals-table">
   <% if @health_weight_goals.any? %>
-    <div class="expenses-cards-list" id="health-weight-goals-list">
+    <div class="health-weight-goal-list" id="health-weight-goals-list">
       <% @health_weight_goals.each do |health_weight_goal| %>
         <%= render partial: "health_weight_goal_row", locals: { health_weight_goal: health_weight_goal } %>
       <% end %>

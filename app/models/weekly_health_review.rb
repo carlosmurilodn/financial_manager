@@ -27,6 +27,14 @@ class WeeklyHealthReview < ApplicationRecord
     minimum_goal: "Qual é a meta mínima da próxima semana?"
   }.freeze
 
+  DAILY_QUESTIONS = {
+    worked_well: "O que funcionou neste dia?",
+    obstacles: "O que atrapalhou neste dia?",
+    within_control: "Isso estava sob meu controle neste dia?",
+    next_adjustments: "Existe alguma mudança útil para o próximo dia?",
+    minimum_goal: "Qual é a meta mínima do próximo dia?"
+  }.freeze
+
   belongs_to :user
 
   validates :review_kind, presence: true, inclusion: { in: REVIEW_KINDS.keys.map(&:to_s) }
@@ -45,6 +53,10 @@ class WeeklyHealthReview < ApplicationRecord
 
   def daily?
     review_kind == "daily"
+  end
+
+  def questions
+    daily? ? DAILY_QUESTIONS : QUESTIONS
   end
 
   def weekly?

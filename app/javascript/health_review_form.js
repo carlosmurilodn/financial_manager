@@ -8,15 +8,21 @@ function initializeHealthReviewForm() {
     const dailyField = form.querySelector("[data-health-review-daily-field]");
     const weeklyField = form.querySelector("[data-health-review-weekly-field]");
 
-    if (!kindSelect || !dailyField || !weeklyField) return;
+    if (!kindSelect) return;
 
     const toggleFields = () => {
       const daily = kindSelect.value === "daily";
 
-      dailyField.hidden = !daily;
-      weeklyField.hidden = daily;
-      dailyField.querySelector("input")?.toggleAttribute("required", daily);
-      weeklyField.querySelector("select")?.toggleAttribute("required", !daily);
+      if (dailyField) dailyField.hidden = !daily;
+      if (weeklyField) weeklyField.hidden = daily;
+      dailyField?.querySelector("input")?.toggleAttribute("required", daily);
+      weeklyField?.querySelector("select")?.toggleAttribute("required", !daily);
+
+      form.querySelectorAll("[data-health-review-question]").forEach((label) => {
+        label.textContent = daily ? label.dataset.daily : label.dataset.weekly;
+      });
+      const submit = form.closest("form").querySelector("[data-health-review-submit]");
+      if (submit) submit.value = daily ? "Salvar perguntas do dia" : "Salvar perguntas da semana";
     };
 
     kindSelect.addEventListener("change", toggleFields);

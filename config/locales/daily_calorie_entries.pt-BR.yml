@@ -1,0 +1,9 @@
+pt-BR:
+  activerecord:
+    models:
+      daily_calorie_entry: "Registro diário de calorias"
+    attributes:
+      daily_calorie_entry:
+        occurred_on: "Data"
+        consumed_calories: "Calorias consumidas"
+        calculation_status: "Situação do cálculo"

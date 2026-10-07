@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_06_180000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_07_130000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -78,6 +78,35 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_180000) do
     t.index ["user_id"], name: "index_categories_on_user_id"
   end
 
+  create_table "daily_calorie_entries", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "occurred_on", null: false
+    t.decimal "consumed_calories", precision: 12, scale: 2
+    t.decimal "reference_weight_kg", precision: 5, scale: 2
+    t.date "reference_weight_date"
+    t.decimal "height_cm", precision: 5, scale: 2
+    t.date "birth_date"
+    t.integer "age"
+    t.string "formula_sex"
+    t.boolean "trained", default: false, null: false
+    t.boolean "walked", default: false, null: false
+    t.decimal "activity_factor", precision: 4, scale: 3, default: "1.2", null: false
+    t.decimal "bmr", precision: 14, scale: 4
+    t.decimal "tdee", precision: 18, scale: 7
+    t.decimal "calorie_deficit", precision: 18, scale: 7
+    t.string "calculation_status", default: "missing_consumption", null: false
+    t.datetime "calculated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "occurred_on"], name: "index_daily_calorie_entries_on_user_id_and_occurred_on", unique: true
+    t.index ["user_id"], name: "index_daily_calorie_entries_on_user_id"
+    t.check_constraint "(bmr IS NULL OR bmr > 0::numeric) AND (tdee IS NULL OR tdee > 0::numeric)", name: "daily_calorie_entries_positive_expenditure"
+    t.check_constraint "activity_factor = ANY (ARRAY[1.2, 1.375, 1.55, 1.725])", name: "daily_calorie_entries_valid_factor"
+    t.check_constraint "calculation_status::text = ANY (ARRAY['calculated'::character varying, 'missing_consumption'::character varying, 'missing_profile'::character varying, 'missing_weight'::character varying, 'invalid_profile'::character varying]::text[])", name: "daily_calorie_entries_valid_status"
+    t.check_constraint "consumed_calories IS NULL OR consumed_calories >= 0::numeric", name: "daily_calorie_entries_nonnegative_consumption"
+    t.check_constraint "reference_weight_date IS NULL OR reference_weight_date <= occurred_on", name: "daily_calorie_entries_reference_not_later"
+  end
+
   create_table "expenses", force: :cascade do |t|
     t.decimal "amount"
     t.date "date"
@@ -135,6 +164,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_180000) do
     t.index ["priority"], name: "index_financial_goals_on_priority"
     t.index ["status"], name: "index_financial_goals_on_status"
     t.index ["user_id"], name: "index_financial_goals_on_user_id"
+  end
+
+  create_table "health_profiles", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.decimal "height_cm", precision: 5, scale: 2, null: false
+    t.date "birth_date", null: false
+    t.string "formula_sex", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_health_profiles_on_user_id", unique: true
+    t.check_constraint "formula_sex::text = ANY (ARRAY['male'::character varying, 'female'::character varying]::text[])", name: "health_profiles_valid_formula_sex"
+    t.check_constraint "height_cm > 0::numeric AND height_cm < 1000::numeric", name: "health_profiles_valid_height"
   end
 
   create_table "health_weight_goals", force: :cascade do |t|
@@ -275,12 +316,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_180000) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cards", "users"
   add_foreign_key "categories", "users"
+  add_foreign_key "daily_calorie_entries", "users"
   add_foreign_key "expenses", "cards"
   add_foreign_key "expenses", "categories"
   add_foreign_key "expenses", "users"
   add_foreign_key "financial_goal_resources", "financial_goals"
   add_foreign_key "financial_goals", "categories"
   add_foreign_key "financial_goals", "users"
+  add_foreign_key "health_profiles", "users"
   add_foreign_key "health_weight_goals", "users"
   add_foreign_key "health_wins", "users"
   add_foreign_key "incomes", "categories"

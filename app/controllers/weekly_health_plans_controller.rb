@@ -1,9 +1,15 @@
 class WeeklyHealthPlansController < ApplicationController
-  before_action :set_week_start, only: %i[edit update destroy]
+  before_action :set_week_start, only: %i[show edit update destroy]
   before_action :load_week_options, only: %i[new create edit update]
 
   def index
     load_weekly_health_plans
+  end
+
+  def show
+    @weekly_health_plan = current_user.weekly_health_plans.includes(weekly_health_goals: :weekly_health_goal_days).find_by!(week_start: @week_start)
+    @daily_calorie_entries_by_date = current_user.daily_calorie_entries.where(occurred_on: @week_start..(@week_start + 6.days)).index_by(&:occurred_on)
+    @health_profile = current_user.health_profile
   end
 
   def new
@@ -18,7 +24,16 @@ class WeeklyHealthPlansController < ApplicationController
     @weekly_health_plan = current_user.weekly_health_plans.find_or_initialize_by(week_start: @week_start)
     @weekly_health_plan.assign_attributes(weekly_health_plan_params)
 
-    if @weekly_health_plan.save
+    saved = current_user.with_lock do
+      if @weekly_health_plan.save
+        recalculate_week_calories(@weekly_health_plan.week_start)
+        true
+      else
+        false
+      end
+    end
+
+    if saved
       redirect_to weekly_health_plans_path, notice: "Metas da semana salvas com sucesso!", status: :see_other
     else
       render :new, status: :unprocessable_entity
@@ -34,9 +49,15 @@ class WeeklyHealthPlansController < ApplicationController
     saved = current_user.with_lock do
       @weekly_health_plan = current_user.weekly_health_plans.find_or_initialize_by(week_start: @week_start)
       @selected_week_number = selected_week_number
+      previous_week_start = @weekly_health_plan.week_start
       @weekly_health_plan.week_start = week_start_for_number(@selected_week_number)
       @weekly_health_plan.assign_attributes(weekly_health_plan_params)
-      @weekly_health_plan.save
+      if @weekly_health_plan.save
+        recalculate_week_calories(previous_week_start, @weekly_health_plan.week_start)
+        true
+      else
+        false
+      end
     end
 
     if saved
@@ -50,8 +71,11 @@ class WeeklyHealthPlansController < ApplicationController
   end
 
   def destroy
-    weekly_health_plan = current_user.weekly_health_plans.find_by!(week_start: @week_start)
-    weekly_health_plan.destroy!
+    current_user.with_lock do
+      weekly_health_plan = current_user.weekly_health_plans.find_by!(week_start: @week_start)
+      weekly_health_plan.destroy!
+      recalculate_week_calories(@week_start)
+    end
 
     redirect_to weekly_health_plans_path, notice: "Metas da semana excluídas com sucesso!", status: :see_other
   end
@@ -64,6 +88,11 @@ class WeeklyHealthPlansController < ApplicationController
   end
 
   private
+
+  def recalculate_week_calories(*week_starts)
+    dates = week_starts.uniq.flat_map { |start| (start..(start + 6.days)).to_a }
+    Health::RecalculateDailyCalories.new(user: current_user, dates: dates).call
+  end
 
   def load_weekly_health_plans
     session[:weekly_health_plans_week_from] = params[:week_from].to_s.strip if params.key?(:week_from)

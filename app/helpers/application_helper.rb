@@ -7,6 +7,8 @@ module ApplicationHelper
     weekly_health_reviews
     weekly_wellbeings
     health_wins
+    health_profiles
+    daily_calorie_entries
   ].freeze
 
   def health_section?
@@ -24,11 +26,13 @@ module ApplicationHelper
     when :beyond_scale
       controller_name == "weekly_wellbeings"
     when :goals
-      controller_name == "weekly_health_plans"
+      controller_name.in?(%w[weekly_health_plans daily_calorie_entries])
     when :questions
       controller_name == "weekly_health_reviews"
     when :wins
       controller_name == "health_wins"
+    when :profile
+      controller_name == "health_profiles"
     else
       false
     end

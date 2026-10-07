@@ -42,9 +42,9 @@
           <span class="link-text">Além da Balança</span>
         <% end %>
 
-        <%= link_to weekly_health_plans_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:goals)}", id: "link-health-goals", title: "Metas que Dependem de Você", aria: { label: "Metas que Dependem de Você" }, data: { turbo: false } do %>
+        <%= link_to weekly_health_plans_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:goals)}", id: "link-health-goals", title: "Metas Semanais", aria: { label: "Metas Semanais" }, data: { turbo: false } do %>
           <span class="material-symbols-rounded app-nav-link__icon">task_alt</span>
-          <span class="link-text">Metas</span>
+          <span class="link-text">Metas Semanais</span>
         <% end %>
 
         <%= link_to weekly_health_reviews_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:questions)}", id: "link-health-questions", title: "Perguntas da Semana", aria: { label: "Perguntas da Semana" }, data: { turbo: false } do %>
@@ -55,6 +55,10 @@
         <%= link_to health_wins_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:wins)}", id: "link-health-wins", title: "Vitórias que a Balança Não Mostra", aria: { label: "Vitórias que a Balança Não Mostra" }, data: { turbo: false } do %>
           <span class="material-symbols-rounded app-nav-link__icon">workspace_premium</span>
           <span class="link-text">Vitórias</span>
+        <% end %>
+        <%= link_to health_profile_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:profile)}", id: "link-health-profile", title: "Perfil de Saúde", aria: { label: "Perfil de Saúde" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded app-nav-link__icon">person</span>
+          <span class="link-text">Perfil de Saúde</span>
         <% end %>
       <% else %>
         <%= link_to financial_dashboard_path, class: "app-nav-link #{'active-menu' if current_page?(financial_dashboard_path)}", id: "link-home", title: "Dashboard", aria: { label: "Dashboard" }, data: { turbo: false } do %>

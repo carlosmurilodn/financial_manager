@@ -1,0 +1,57 @@
+<section class="app-page health-profile-page">
+  <div class="app-page__hero">
+    <div class="health-profile-page__hero">
+      <div class="app-page__hero-copy">
+        <span class="app-page__hero-icon"><span class="material-symbols-rounded" aria-hidden="true">person</span></span>
+        <div>
+          <p class="app-page__eyebrow">Saúde e Bem-Estar</p>
+          <h1 class="app-page__title">Perfil de Saúde</h1>
+          <p class="app-page__description">Seus dados de referência para acompanhar saúde e estimar o gasto de calorias.</p>
+        </div>
+      </div>
+      <%= link_to "Voltar ao Progresso", progress_path, class: "app-btn app-btn--outline", data: { turbo: false } %>
+    </div>
+  </div>
+
+  <div class="app-panel">
+    <% if @health_profile.errors.any? %>
+      <div class="app-alert app-alert--danger app-form-page__errors" role="alert">
+        <strong>Revise os campos abaixo:</strong>
+        <ul>
+          <% @health_profile.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <p class="health-profile-page__intro"><%= @health_profile.persisted? ? "Atualize seus dados quando precisar." : "Preencha seu perfil para preparar o acompanhamento de calorias." %> O peso continua sendo registrado no Histórico de Peso.</p>
+
+    <%= form_with model: @health_profile, url: health_profile_path, local: true, html: { class: "app-form-page__form", data: { turbo: false } } do |f| %>
+      <div class="health-profile-fields">
+        <div class="health-profile-fields__field">
+          <%= f.label :height_cm, "Altura (cm)" %>
+          <%= f.text_field :height_cm, class: "app-form-control", required: true, inputmode: "decimal", placeholder: "Ex.: 175,5", aria: { describedby: "health-profile-height-help" } %>
+          <small id="health-profile-height-help">Informe em centímetros, com vírgula ou ponto e até duas casas decimais.</small>
+        </div>
+
+        <div class="health-profile-fields__field">
+          <%= f.label :birth_date, "Data de nascimento" %>
+          <%= f.date_field :birth_date, class: "app-form-control", required: true, max: Date.current.iso8601, aria: { describedby: "health-profile-birth-help" } %>
+          <small id="health-profile-birth-help">A idade será calculada na data de cada registro de calorias.</small>
+        </div>
+
+        <div class="health-profile-fields__field">
+          <%= f.label :formula_sex, "Sexo para cálculo" %>
+          <%= f.select :formula_sex, HealthProfile::FORMULA_SEXES.to_a, { prompt: "Selecione" }, class: "app-form-select", required: true, aria: { describedby: "health-profile-sex-help" } %>
+          <small id="health-profile-sex-help">Define a opção masculina ou feminina da fórmula de gasto basal.</small>
+        </div>
+      </div>
+
+      <div class="app-form-page__actions">
+        <%= link_to "Cancelar", progress_path, class: "app-btn app-btn--outline", data: { turbo: false } %>
+        <%= f.submit "Salvar perfil", class: "app-btn app-btn--primary" %>
+      </div>
+    <% end %>
+  </div>
+</section>

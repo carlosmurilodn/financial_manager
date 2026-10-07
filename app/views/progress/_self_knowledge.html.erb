@@ -1,0 +1,7 @@
+<article class="app-panel progress-panel">
+  <div class="progress-panel__header"><span class="material-symbols-rounded">psychology_alt</span><div><p class="app-page__eyebrow">Esta semana</p><h2>Autoconhecimento</h2></div></div>
+  <div class="diary-metrics"><% Health::SelfKnowledgeContent::METRICS.each do |field, (label, *)| %><% average = @self_knowledge_week.averages.fetch(field) %><div><strong><%= label %> médio</strong><p><%= average[:mean] ? number_with_precision(average[:mean], precision: 1) : "Sem registro" %></p></div><% end %></div>
+  <p>Diários: <%= @self_knowledge_week.days.size %> de 7 dias · quantidade registrada, sem obrigação de preencher todos os dias.</p>
+  <p>Revisão semanal: <%= @self_knowledge_reflection ? "Registrada" : "Ainda não realizada" %></p>
+  <div class="app-form-page__actions"><%= link_to "Registrar hoje", new_health_journal_entry_path, class: "app-btn app-btn--outline", data: { turbo_frame: "_top" } %><%= link_to "Revisar semana", @self_knowledge_reflection ? edit_health_weekly_reflection_path(@self_knowledge_reflection) : new_health_weekly_reflection_path(date: @week_start.iso8601), class: "app-btn app-btn--outline", data: { turbo_frame: "_top" } %><%= link_to "Minha evolução", self_knowledge_evolution_path, class: "app-btn app-btn--outline", data: { turbo_frame: "_top" } %></div>
+</article>

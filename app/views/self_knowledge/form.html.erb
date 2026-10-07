@@ -1,0 +1,34 @@
+<%= render "self_knowledge/navigation" %>
+<%= render layout: "shared/form_page", locals: { resource: @record, title: weekly? ? "Revisão Semanal" : "Diário", eyebrow: "Autoconhecimento", description: weekly? ? "Olhe para a semana como um todo. A ideia não é julgar se ela foi boa ou ruim, mas perceber o que ela pode ensinar sobre você." : "Um espaço para registrar como foi o seu dia. Não existe resposta certa e você não precisa responder tudo.", icon: weekly? ? "event_note" : "edit_note", back_path: collection_path } do %>
+  <% saved_date = @record.persisted? ? @record.attribute_in_database(weekly? ? 'week_start' : 'entry_date').iso8601 : nil %>
+  <% destination = @record.persisted? ? (weekly? ? health_weekly_reflection_path(saved_date) : health_journal_entry_path(saved_date)) : collection_path %>
+  <%= form_with model: @record, url: destination, method: @record.persisted? ? :patch : :post, local: true, html: { class: "app-form-page__form self-knowledge-form", data: { turbo: false, self_knowledge_form: true, initial_step: params[:step].to_i } } do |f| %>
+    <% if weekly? %>
+      <div><%= label_tag :selected_week, "Semana do lançamento" %><%= select_tag :selected_week, options_for_select(@week_options, params[:selected_week].presence || (@record.week_start || Date.current.beginning_of_week).iso8601), class: "app-form-select", required: true, data: { self_knowledge_week: true, summary_url: self_knowledge_week_summary_path } %><small class="self-knowledge-help">Segunda-feira a domingo.</small></div>
+      <div class="self-knowledge-week-summary" data-week-summary><%= render "self_knowledge/week_summary", summary: Health::SelfKnowledgeWeek.new(current_user, @record.week_start || Date.current) %></div>
+      <%= render "self_knowledge/rating", f: f, record: @record, field: :routine_satisfaction, label: "Como você avalia sua satisfação com a rotina desta semana?", labels: ["Muito insatisfeito", "Insatisfeito", "Intermediário", "Satisfeito", "Muito satisfeito"], help: "Pense na sua rotina como um todo: organização, ritmo, obrigações, descanso e espaço para coisas importantes para você." %>
+      <div class="self-knowledge-stages" data-self-stages aria-label="Etapas da revisão"></div><p data-self-position aria-live="polite"></p>
+      <% Health::SelfKnowledgeContent::STAGES.each_with_index do |(title, fields), i| %>
+        <section class="self-knowledge-stage" data-self-stage><h2><%= title %></h2>
+          <% fields.each do |field| %>
+            <% question, help = Health::SelfKnowledgeContent::WEEKLY.fetch(field) %>
+            <% if field == :weekly_needs %>
+              <fieldset><legend><%= question %></legend><small class="self-knowledge-help"><%= help %></small><%= render "self_knowledge/needs", f: f, record: @record, field: :weekly_needs %><%= render "self_knowledge/question", f: f, field: :weekly_needs_notes, question: "O que quero registrar sobre essas necessidades?", help: help %></fieldset>
+            <% else %><%= render "self_knowledge/question", f: f, field: field, question: question, help: help %><% end %>
+          <% end %>
+        </section>
+      <% end %>
+      <div class="app-form-page__actions"><button type="button" data-self-prev class="app-btn app-btn--outline">← Voltar</button><button type="submit" name="continue" value="1" data-self-continue class="app-btn app-btn--primary">Salvar e continuar →</button></div>
+    <% else %>
+      <p class="app-page__eyebrow"><%= "Hoje, " if @record.entry_date == Date.current %><%= record_title(@record) %></p>
+      <div><%= f.label :entry_date, "Dia do registro" %><%= f.text_field :entry_date, value: params.dig(:health_journal_entry, :entry_date).presence || (@record.entry_date || Date.current).strftime("%d/%m/%Y"), class: "app-form-control custom-date", required: true, autocomplete: "off", data: { journal_date: true, prompt_url: prompt_health_journal_entries_path } %></div>
+      <h2>Como estou hoje?</h2><div class="diary-metrics"><% Health::SelfKnowledgeContent::METRICS.each do |field, (label, help, labels)| %><%= render "self_knowledge/rating", f: f, record: @record, field: field, label: label, help: help, labels: labels %><% end %></div>
+      <% Health::SelfKnowledgeContent::DAILY.each do |field, (question, help, placeholder)| %><%= render "self_knowledge/question", f: f, field: field, question: question, help: help, placeholder: placeholder %><% end %>
+      <fieldset><legend>Do que eu mais precisei hoje?</legend><%= render "self_knowledge/needs", f: f, record: @record, field: :needs %><%= render "self_knowledge/question", f: f, field: :needs_notes, question: "Consegui atender essa necessidade?", help: "Você não precisa ter conseguido. A intenção aqui é perceber do que estava precisando e o que facilitou ou dificultou conseguir isso." %></fieldset>
+      <section class="self-knowledge-rotating"><h2>Uma pergunta para pensar</h2><label for="health_journal_entry_reflection_answer" data-rotating-question><%= @record.reflection_prompt.first %></label><small id="rotating-help" class="self-knowledge-help" data-rotating-help><%= @record.reflection_prompt.last %></small><%= f.text_area :reflection_answer, rows: 4, maxlength: 2000, class: "app-form-control", aria: { describedby: "rotating-help" } %></section>
+      <%= render "self_knowledge/question", f: f, field: :notes, question: "Quer deixar mais alguma coisa registrada?", help: "Este espaço é livre. Use para registrar alguma coisa que não coube nas perguntas anteriores ou simplesmente escrever sobre o seu dia." %>
+    <% end %>
+    <% if @record.legacy_content.present? %><%= render "self_knowledge/legacy", record: @record %><% end %>
+    <div class="app-form-page__actions"><%= link_to "Cancelar", collection_path, class: "app-btn app-btn--outline" %><%= f.submit weekly? ? "Salvar revisão" : "Salvar Diário", class: "app-btn app-btn--primary" %></div>
+  <% end %>
+<% end %>

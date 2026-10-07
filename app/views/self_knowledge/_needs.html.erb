@@ -1,0 +1,6 @@
+<div class="diary-needs">
+  <%= hidden_field_tag "#{f.object_name}[#{field}][]", "" %>
+  <% Health::SelfKnowledgeContent::NEEDS.each_with_index do |need, i| %>
+    <label for="need-<%= i %>"><%= check_box_tag "#{f.object_name}[#{field}][]", need, record.public_send(field).include?(need), id: "need-#{i}" %> <%= need %></label>
+  <% end %>
+</div>

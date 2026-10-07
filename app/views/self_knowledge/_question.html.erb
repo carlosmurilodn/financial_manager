@@ -1,0 +1,5 @@
+<div class="self-knowledge-question <%= 'self-knowledge-question--next' if field == :next_small_step %>">
+  <%= f.label field, question %>
+  <small id="help-<%= field %>" class="self-knowledge-help"><%= help %></small>
+  <%= f.text_area field, rows: 4, maxlength: 2000, placeholder: local_assigns[:placeholder], class: "app-form-control", aria: { describedby: "help-#{field}" } %>
+</div>

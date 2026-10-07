@@ -1,0 +1,23 @@
+<% record = @record %>
+<section class="app-page diary-show self-knowledge-page">
+  <%= render "self_knowledge/navigation" %>
+  <header class="diary-show__hero"><div class="diary-show__identity"><span class="diary-show__hero-icon material-symbols-rounded"><%= weekly? ? 'event_note' : 'auto_stories' %></span><div><p class="app-page__eyebrow">Autoconhecimento · <%= weekly? ? 'Revisão Semanal' : 'Diário' %></p><h1><%= record_title(record) %></h1></div></div><div class="diary-show__actions"><%= link_to 'Voltar', collection_path, class: 'diary-entry-card__action' %><%= link_to 'Editar', edit_record_path(record), class: 'diary-entry-card__action' %><%= button_to 'Excluir', record_path(record), method: :delete, form: { data: { turbo_confirm: 'Excluir este registro?' } }, class: 'diary-entry-card__action diary-entry-card__action--danger' %></div></header>
+  <% if weekly? %>
+    <%= render 'self_knowledge/week_summary', summary: Health::SelfKnowledgeWeek.new(current_user, record.week_start) %>
+    <% if record.routine_satisfaction.present? %><div class="app-panel"><h2>Satisfação com a rotina</h2><p><%= record.routine_satisfaction %> / 5</p></div><% end %>
+    <% Health::SelfKnowledgeContent::STAGES.each do |title, fields| %>
+      <% visible = fields.reject { |field| field == :next_small_step }.select { |field| field == :weekly_needs ? record.weekly_needs.any? || record.weekly_needs_notes.present? : record.public_send(field).present? } %>
+      <% if visible.any? %><section><div class="diary-show__section-heading"><h2><%= title %></h2></div><div class="diary-show__reflections">
+        <% visible.each do |field| %><article class="diary-show__reflection"><div class="diary-show__reflection-heading"><h3><%= Health::SelfKnowledgeContent::WEEKLY.fetch(field).first %></h3></div><% if field == :weekly_needs %><div class="diary-show__needs"><% record.weekly_needs.each do |need| %><span><%= need %></span><% end %></div><div class="diary-show__text"><%= simple_format(record.weekly_needs_notes) %></div><% else %><div class="diary-show__text"><%= simple_format(record.public_send(field)) %></div><% end %></article><% end %>
+      </div></section><% end %>
+    <% end %>
+    <% if record.next_small_step.present? %><article class="diary-show__reflection diary-show__next-step"><div class="diary-show__reflection-heading"><span class="material-symbols-rounded">flag</span><h2>Meu próximo pequeno passo</h2></div><div class="diary-show__text"><%= simple_format(record.next_small_step) %></div></article><% end %>
+  <% else %>
+    <div class="diary-show__metrics self-knowledge-metrics"><% Health::SelfKnowledgeContent::METRICS.each do |field, (label, *)| %><article class="diary-show__metric"><h3><%= label %></h3><p class="diary-show__metric-value"><%= record.public_send(field) || '—' %><small>/5</small></p><% if field == :tension %><small>Quanto maior, maior a tensão.</small><% end %></article><% end %></div>
+    <div class="diary-show__reflections"><% Health::SelfKnowledgeContent::DAILY.each do |field, (question, *)| %><% if record.public_send(field).present? %><article class="diary-show__reflection"><div class="diary-show__reflection-heading"><h3><%= question %></h3></div><div class="diary-show__text"><%= simple_format(record.public_send(field)) %></div></article><% end %><% end %></div>
+    <% if record.needs.any? || record.needs_notes.present? %><article class="diary-show__reflection"><h2>Do que eu precisei</h2><div class="diary-show__needs"><% record.needs.each do |need| %><span><%= need %></span><% end %></div><div class="diary-show__text"><%= simple_format(record.needs_notes) %></div></article><% end %>
+    <% if record.reflection_answer.present? %><article class="diary-show__reflection"><div class="diary-show__reflection-heading"><h2><%= record.reflection_prompt.first %></h2></div><div class="diary-show__text"><%= simple_format(record.reflection_answer) %></div></article><% end %>
+    <% if record.notes.present? %><article class="diary-show__reflection"><h2>Meu espaço livre</h2><div class="diary-show__text"><%= simple_format(record.notes) %></div></article><% end %>
+  <% end %>
+  <% if record.legacy_content.present? %><%= render 'self_knowledge/legacy', record: record %><% end %>
+</section>

@@ -1,9 +1,9 @@
-<article id="alem-da-balanca" class="app-panel progress-panel">
+<article id="resumo-da-semana" class="app-panel progress-panel">
   <div class="progress-panel__header">
     <span class="material-symbols-rounded">insights</span>
     <div>
       <p class="app-page__eyebrow">Indicadores · segunda a domingo</p>
-      <h2>Progresso além da balança</h2>
+      <h2>Resumo da semana</h2>
     </div>
   </div>
   <p class="progress-empty"><%= @week_start.strftime("%d/%m/%Y") %> a <%= (@week_start + 6.days).strftime("%d/%m/%Y") %></p>
@@ -18,18 +18,6 @@
       <% else %>
         <span class="progress-indicator__value">Sem registros</span>
         <small>Nenhuma medição de peso nesta semana.</small>
-      <% end %>
-    </div>
-
-    <div class="progress-indicator">
-      <span class="material-symbols-rounded">edit_note</span>
-      <strong>Revisão</strong>
-      <% if @weekly_health_review %>
-        <span class="progress-indicator__value"><%= @weekly_health_review.answered_count %>/<%= WeeklyHealthReview::QUESTIONS.size %> respostas</span>
-        <small><%= @weekly_health_review.complete? ? "Revisão preenchida." : "Revisão em andamento." %></small>
-      <% else %>
-        <span class="progress-indicator__value">Sem registros</span>
-        <small>Revisão pendente nesta semana.</small>
       <% end %>
     </div>
 
@@ -63,21 +51,6 @@
       <% else %>
         <span class="progress-indicator__value">Sem registros</span>
         <small>Nenhuma meta salva nesta semana.</small>
-      <% end %>
-    </div>
-    <div class="progress-indicator">
-      <span class="material-symbols-rounded">psychology</span>
-      <strong>Bem-estar</strong>
-      <% if @weekly_wellbeing %>
-        <ul class="progress-indicator__goals">
-          <% WeeklyWellbeing::METRICS.each do |attribute, label| %>
-            <li><span><%= label %></span><strong><%= @weekly_wellbeing.public_send(attribute) %>/5</strong></li>
-          <% end %>
-        </ul>
-        <small>Percepção pessoal na escala de 1 a 5.</small>
-      <% else %>
-        <span class="progress-indicator__value">Sem registros</span>
-        <small>Bem-estar ainda não registrado nesta semana.</small>
       <% end %>
     </div>
   </div>

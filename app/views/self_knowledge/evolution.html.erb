@@ -1,0 +1,21 @@
+<section class="app-page health-index-page self-knowledge-page">
+  <%= render 'self_knowledge/header', title: 'Minha Evolução', description: 'O que vem mudando ao longo do tempo?' %>
+  <div class="app-panel"><%= form_with url: self_knowledge_evolution_path, method: :get, local: true do |f| %><%= f.label :period, 'Período' %><%= f.select :period, [['30 dias', '30'], ['3 meses', '90'], ['6 meses', '180'], ['1 ano', '365'], ['Tudo', 'all']], { selected: @evolution.period }, class: 'app-form-select' %><%= f.submit 'Atualizar', class: 'app-btn app-btn--primary' %><% end %></div>
+  <div class="self-knowledge-evolution-kpis"><% Health::SelfKnowledgeContent::METRICS.each do |field, (label, *)| %><% value = @evolution.averages.fetch(field) %><article class="health-kpi-card"><div><small><%= label %> médio</small><h2><%= value[:mean] ? number_with_precision(value[:mean], precision: 1) : 'Sem registro' %></h2><small><%= value[:count] %> respostas diárias</small></div></article><% end %><article class="health-kpi-card"><div><small>Dias registrados</small><h2><%= @evolution.days.size %></h2></div></article></div>
+  <% Health::SelfKnowledgeContent::METRICS.each do |field, (label, *)| %>
+    <section class="app-panel"><h2><%= label %></h2><% if field == :tension %><p>Quanto maior, maior a tensão.</p><% end %>
+      <% points = @evolution.days.map { |day| { date: day.entry_date.iso8601, value: day.public_send(field) } } %>
+      <% if points.any? { |point| point[:value] } %>
+        <%= tag.div class: 'self-knowledge-chart', data: { controller: 'self-knowledge-chart', self_knowledge_chart_points_value: points.to_json, self_knowledge_chart_label_value: label } do %><canvas data-self-knowledge-chart-target="canvas" role="img" aria-label="Evolução de <%= label %>, de 1 a 5"></canvas><% end %>
+        <details><summary>Ver valores registrados</summary><ul><% points.each do |point| %><li><%= Date.iso8601(point[:date]).strftime('%d/%m/%Y') %>: <%= point[:value] || 'Sem registro' %></li><% end %></ul></details>
+      <% else %><p>Nenhum indicador preenchido neste período.</p><% end %>
+    </section>
+  <% end %>
+  <section class="app-panel"><h2>Do que tenho precisado?</h2><p>Contagem das necessidades selecionadas em diários e revisões do período.</p><div class="diary-show__needs"><% @evolution.needs.each do |name, count| %><span><%= name %> · <%= count %></span><% end %></div><% if @evolution.needs.empty? %><p>Sem necessidades selecionadas.</p><% end %></section>
+  <section class="app-panel"><h2>Passos que eu escolhi</h2><% @evolution.steps.each do |week| %><article class="self-knowledge-step-history"><%= link_to "#{week.week_start.strftime('%d/%m/%Y')} a #{(week.week_start + 6.days).strftime('%d/%m/%Y')}", health_weekly_reflection_path(week), class: 'diary-entry-card__action' %><%= simple_format(week.next_small_step) %></article><% end %><% if @evolution.steps.empty? %><p>Ainda não há próximos passos neste período.</p><% end %></section>
+  <section class="app-panel"><h2>Satisfação com a rotina</h2><% @evolution.routines.each do |week| %><p><%= week.week_start.strftime('%d/%m/%Y') %> · <%= week.routine_satisfaction %> / 5</p><% end %><% if @evolution.routines.empty? %><p>Sem avaliações semanais neste período.</p><% end %></section>
+  <% if @evolution.legacy_weeks.any? %><section class="app-panel"><h2>Histórico semanal anterior</h2><p>Registros semanais legados, apresentados separadamente das médias e gráficos diários.</p><% @evolution.legacy_weeks.each do |week| %><details><summary>Registro semanal legado · <%= week.week_start.strftime('%d/%m/%Y') %></summary><div class="diary-metrics"><% HealthDiaryContent::METRICS.each do |field, label| %><% if week.public_send(field).present? %><p><strong><%= label %>:</strong> <%= week.public_send(field) %> / 5</p><% end %><% end %></div><% if week.notes.present? %><%= simple_format(week.notes) %><% end %>
+      <% original = @evolution.legacy_originals[week.legacy_wellbeing_id] %>
+      <% if original %><details><summary>Registro original de bem-estar</summary><% WeeklyWellbeing::METRICS.each do |field, label| %><p><strong><%= label %>:</strong> <%= original.public_send(field) %> / 5</p><% end %><%= simple_format(original.notes) %></details><% end %>
+    </details><% end %></section><% end %>
+</section>

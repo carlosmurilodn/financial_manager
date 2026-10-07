@@ -33,3 +33,10 @@
 @import "pages/health_profile";
 
 @import "pages/daily_calories";
+
+// Diário pessoal e fechamento semanal
+.diary-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
+.diary-needs { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 1rem; }
+[data-diary-form] [hidden] { display: none !important; }
+[data-diary-step] label { font-size: 1.15rem; font-weight: 600; }
+[data-diary-form] fieldset { min-width: 0; padding: 1rem; border: 1px solid var(--card-border); border-radius: .75rem; }

@@ -1,0 +1,12 @@
+<section class="app-page health-index-page self-knowledge-page">
+  <%= render "self_knowledge/header" %>
+  <div class="self-knowledge-home">
+    <article class="diary-entry-card"><div class="diary-entry-card__content"><span class="diary-entry-card__icon-wrapper"><span class="material-symbols-rounded">edit_note</span></span><div><h2>Diário</h2><p>Registre como foi seu dia.</p><p>Hoje: <%= @today ? "registrado" : "ainda não preenchido" %></p></div></div><div class="self-knowledge-home__actions">
+      <% if @today %><%= link_to "Ver diário", health_journal_entry_path(@today), class: "diary-entry-card__action" %><%= link_to "Editar", edit_health_journal_entry_path(@today), class: "diary-entry-card__action" %><% else %><%= link_to "Registrar hoje", new_health_journal_entry_path, class: "diary-entry-card__action" %><% end %>
+    </div></article>
+    <article class="diary-entry-card"><div class="diary-entry-card__content"><span class="diary-entry-card__icon-wrapper"><span class="material-symbols-rounded">event_note</span></span><div><h2>Revisão Semanal</h2><p>Olhe para os padrões da sua semana.</p><p>Semana atual: <%= @this_week ? "revisada" : "ainda não preenchida" %></p></div></div><div class="self-knowledge-home__actions">
+      <% if @this_week %><%= link_to "Ver revisão", health_weekly_reflection_path(@this_week), class: "diary-entry-card__action" %><%= link_to "Editar", edit_health_weekly_reflection_path(@this_week), class: "diary-entry-card__action" %><% else %><%= link_to "Revisar semana", new_health_weekly_reflection_path, class: "diary-entry-card__action" %><% end %>
+    </div></article>
+    <article class="diary-entry-card"><div class="diary-entry-card__content"><span class="diary-entry-card__icon-wrapper"><span class="material-symbols-rounded">show_chart</span></span><div><h2>Minha Evolução</h2><p>Veja como humor, energia e tensão vêm mudando.</p></div></div><div class="self-knowledge-home__actions"><%= link_to "Ver minha evolução", self_knowledge_evolution_path, class: "diary-entry-card__action" %></div></article>
+  </div>
+</section>

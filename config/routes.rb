@@ -23,6 +23,13 @@ Rails.application.routes.draw do
       patch :toggle_day
     end
   end
+  get "progresso/autoconhecimento", to: "self_knowledge#index", as: :self_knowledge
+  get "progresso/autoconhecimento/resumo-semanal", to: "self_knowledge#week_summary", as: :self_knowledge_week_summary
+  get "progresso/autoconhecimento/evolucao", to: "self_knowledge#evolution", as: :self_knowledge_evolution
+  resources :health_journal_entries, path: "progresso/autoconhecimento/diario", param: :entry_date do
+    collection { get :prompt, path: "pergunta" }
+  end
+  resources :health_weekly_reflections, path: "progresso/autoconhecimento/semanas", param: :week_start
   resources :weekly_health_reviews, path: "progresso/perguntas", param: :week_start, only: %i[index show new create edit update destroy] do
     collection do
       delete :clear_filters

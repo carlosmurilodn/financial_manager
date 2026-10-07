@@ -5,6 +5,9 @@ module ApplicationHelper
     health_weight_goals
     weekly_health_plans
     weekly_health_reviews
+    self_knowledge
+    health_journal_entries
+    health_weekly_reflections
     weekly_wellbeings
     health_wins
     health_profiles
@@ -24,7 +27,7 @@ module ApplicationHelper
     when :milestones
       controller_name == "health_weight_goals"
     when :beyond_scale
-      controller_name == "weekly_wellbeings"
+      controller_name.in?(%w[self_knowledge health_journal_entries health_weekly_reflections weekly_wellbeings weekly_health_reviews])
     when :goals
       controller_name.in?(%w[weekly_health_plans daily_calorie_entries])
     when :questions

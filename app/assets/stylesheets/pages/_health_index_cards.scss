@@ -148,7 +148,7 @@
 }
 
 // Each record owns its selectors; shared declarations only cover visual foundations.
-@each $type in weight-entry, health-weight-goal, weekly-wellbeing, health-win {
+@each $type in weight-entry, health-weight-goal, weekly-wellbeing, health-win, diary-entry {
   .#{$type}-card {
     min-width: 0;
     border: 1px solid var(--card-border);
@@ -599,4 +599,31 @@
 
 @container (max-width: 600px) {
   @include health-win-mobile;
+}
+
+// Diário: cards seguem as mesmas bases dos índices de Saúde.
+.diary-week-list, .diary-week__entries { display: grid; gap: 14px; min-width: 0; }
+.diary-week { min-width: 0; padding: 20px; border: 1px solid var(--card-border); border-radius: var(--radius-lg); background: var(--surface); }
+.diary-week__header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 16px; }
+.diary-week__header h2 { margin: 0; color: var(--text-main); font-size: 1.1rem; font-weight: 800; }
+.diary-summary { margin-bottom: 16px; color: var(--text-main); }
+.diary-summary__title { margin: 0 0 14px; font-size: .88rem; font-weight: 700; color: var(--text-soft); }
+.diary-summary__empty { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--text-soft); font-size: .85rem; }
+.diary-summary .diary-metrics { padding: 14px; border: 1px solid var(--card-border); border-radius: var(--radius-md); background: color-mix(in srgb, var(--nav-active-bar) 3%, var(--surface)); }
+.diary-summary .diary-metrics p { margin: 6px 0 0; }
+.diary-summary .diary-metrics small { display: block; margin-top: 4px; color: var(--text-soft); }
+.diary-entry-card { --health-card-accent: var(--nav-active-bar); }
+.diary-entry-card--weekly { --health-card-accent: var(--success); }
+.diary-entry-card__identity-main { color: var(--text-main); text-decoration: none; }
+.diary-entry-card__identity-main:hover { color: var(--nav-active-bar); }
+.diary-entry-card__subtitle { margin: 5px 0 0; font-size: .8rem; color: var(--text-soft); }
+.diary-entry-card__actions { margin-left: auto; }
+.diary-entry-card__excerpts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; padding: 16px 18px; border-top: 1px solid var(--card-border); }
+.diary-entry-card__excerpt-label { font-size: .75rem; font-weight: 800; color: var(--text-soft); }
+.diary-entry-card__excerpts p { margin: 5px 0 0; font-size: .88rem; line-height: 1.6; color: var(--text-main); overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+  .diary-week { padding: 14px; }
+  .diary-entry-card__content { padding: 14px; }
+  .diary-entry-card__actions { width: 100%; margin-left: 0; justify-content: flex-start; }
+  .diary-entry-card__excerpts { grid-template-columns: 1fr; padding: 14px; }
 }

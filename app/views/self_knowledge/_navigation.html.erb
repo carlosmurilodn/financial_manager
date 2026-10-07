@@ -1,0 +1,5 @@
+<nav class="self-knowledge-tabs" aria-label="Áreas de Autoconhecimento">
+  <% [["Diário", health_journal_entries_path, "daily", "edit_note"], ["Revisão Semanal", health_weekly_reflections_path, "weekly", "event_note"], ["Minha Evolução", self_knowledge_evolution_path, "evolution", "show_chart"]].each do |label, path, area, icon| %>
+    <%= link_to path, class: "self-knowledge-tabs__link #{'is-active' if @area == area}", aria: { current: @area == area ? "page" : nil } do %><span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span><%= label %><% end %>
+  <% end %>
+</nav>

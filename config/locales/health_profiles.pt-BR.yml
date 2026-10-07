@@ -1,0 +1,10 @@
+pt-BR:
+  activerecord:
+    models:
+      health_profile: "Perfil de Saúde"
+    attributes:
+      health_profile:
+        user_id: "Usuário"
+        height_cm: "Altura"
+        birth_date: "Data de nascimento"
+        formula_sex: "Sexo para cálculo"

@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   root "entry#index"
   get "financeiro", to: "home#index", as: :financial_dashboard
   get "progresso", to: "progress#index", as: :progress
+  resource :health_profile, path: "progresso/perfil", only: %i[show create update]
   resources :weight_entries, path: "progresso/pesagens", only: %i[index new create edit update destroy] do
     collection do
       delete :clear_filters

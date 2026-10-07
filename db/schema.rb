@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_06_180000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_07_120000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -135,6 +135,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_180000) do
     t.index ["priority"], name: "index_financial_goals_on_priority"
     t.index ["status"], name: "index_financial_goals_on_status"
     t.index ["user_id"], name: "index_financial_goals_on_user_id"
+  end
+
+  create_table "health_profiles", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.decimal "height_cm", precision: 5, scale: 2, null: false
+    t.date "birth_date", null: false
+    t.string "formula_sex", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_health_profiles_on_user_id", unique: true
+    t.check_constraint "formula_sex::text = ANY (ARRAY['male'::character varying, 'female'::character varying]::text[])", name: "health_profiles_valid_formula_sex"
+    t.check_constraint "height_cm > 0::numeric AND height_cm < 1000::numeric", name: "health_profiles_valid_height"
   end
 
   create_table "health_weight_goals", force: :cascade do |t|
@@ -281,6 +293,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_180000) do
   add_foreign_key "financial_goal_resources", "financial_goals"
   add_foreign_key "financial_goals", "categories"
   add_foreign_key "financial_goals", "users"
+  add_foreign_key "health_profiles", "users"
   add_foreign_key "health_weight_goals", "users"
   add_foreign_key "health_wins", "users"
   add_foreign_key "incomes", "categories"

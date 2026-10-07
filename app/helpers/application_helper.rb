@@ -7,6 +7,7 @@ module ApplicationHelper
     weekly_health_reviews
     weekly_wellbeings
     health_wins
+    health_profiles
   ].freeze
 
   def health_section?
@@ -29,6 +30,8 @@ module ApplicationHelper
       controller_name == "weekly_health_reviews"
     when :wins
       controller_name == "health_wins"
+    when :profile
+      controller_name == "health_profiles"
     else
       false
     end

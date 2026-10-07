@@ -288,10 +288,6 @@
 }
 
 // Data-specific arrangements can evolve without touching financial cards.
-.weekly-wellbeing-card__content { flex-direction: column; align-items: stretch; }
-.weekly-wellbeing-card__identity-block,
-.weekly-wellbeing-card__footer { flex: 0 1 auto; }
-.weekly-wellbeing-card__badges > span { flex: 1 1 140px; justify-content: center; }
 .health-win-card__identity-block { flex-basis: 50%; }
 .health-win-card__title { font-weight: 700; }
 
@@ -375,4 +371,143 @@
 
 .health-weight-goal-card__action {
   flex: 0 0 auto;
+}
+
+// Wellbeing: independent groups on a single flex row.
+.weekly-wellbeing-card {
+  overflow-x: auto;
+}
+
+.weekly-wellbeing-card__content {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: max-content;
+  min-width: 100%;
+}
+
+.weekly-wellbeing-card__content > div {
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+}
+
+.weekly-wellbeing-card__identity-main {
+  min-width: 210px;
+}
+
+.weekly-wellbeing-card__badges > span {
+  flex: 0 0 auto;
+}
+
+.weekly-wellbeing-card__actions {
+  width: auto;
+}
+
+.weekly-wellbeing-card__action {
+  flex: 0 0 auto;
+}
+
+.health-weight-goal-card,
+.weekly-wellbeing-card {
+  container-type: inline-size;
+}
+
+@mixin health-record-compact {
+  .health-weight-goal-card__content,
+  .weekly-wellbeing-card__content {
+    width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 16px;
+  }
+
+  .health-weight-goal-card__content > div,
+  .weekly-wellbeing-card__content > div {
+    flex: 1 1 160px;
+    min-width: 0;
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .health-weight-goal-card__content > .health-weight-goal-card__identity-main,
+  .weekly-wellbeing-card__content > .weekly-wellbeing-card__identity-main {
+    flex-basis: 240px;
+    flex-wrap: nowrap;
+  }
+
+  .weekly-wellbeing-card__content > .weekly-wellbeing-card__badges {
+    flex-basis: 360px;
+  }
+
+  .health-weight-goal-card__actions,
+  .weekly-wellbeing-card__actions {
+    justify-content: flex-end;
+  }
+}
+
+@mixin health-record-mobile {
+  .health-weight-goal-card__content,
+  .weekly-wellbeing-card__content {
+    padding: 14px;
+    gap: 14px;
+    align-items: stretch;
+  }
+
+  .health-weight-goal-card__content > div,
+  .weekly-wellbeing-card__content > div {
+    flex: 1 1 100%;
+  }
+
+  .health-weight-goal-card__content > .health-weight-goal-card__identity-main,
+  .weekly-wellbeing-card__content > .weekly-wellbeing-card__identity-main,
+  .weekly-wellbeing-card__content > .weekly-wellbeing-card__badges {
+    flex-basis: 100%;
+  }
+
+  .health-weight-goal-card__content > .health-weight-goal-card__target,
+  .health-weight-goal-card__content > .health-weight-goal-card__position {
+    flex-basis: calc((100% - 14px) / 2);
+  }
+
+  .health-weight-goal-card__title,
+  .weekly-wellbeing-card__title {
+    font-size: 0.9rem;
+  }
+
+  .health-weight-goal-card__amount-area,
+  .weekly-wellbeing-card__amount-area {
+    justify-content: space-between;
+  }
+
+  .weekly-wellbeing-card__badges > span {
+    flex: 1 1 110px;
+    justify-content: center;
+    overflow-wrap: anywhere;
+  }
+
+  .health-weight-goal-card__action,
+  .weekly-wellbeing-card__action {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 1440px) {
+  @include health-record-compact;
+}
+
+@container (max-width: 1200px) {
+  @include health-record-compact;
+}
+
+@media (max-width: 640px) {
+  @include health-record-mobile;
+}
+
+@container (max-width: 600px) {
+  @include health-record-mobile;
 }

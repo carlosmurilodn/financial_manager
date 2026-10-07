@@ -32,9 +32,9 @@
       </div>
     <% end %>
 
-    <% WeeklyHealthReview::QUESTIONS.each do |attribute, question| %>
+    <% weekly_health_review.questions.each do |attribute, question| %>
       <div>
-        <%= f.label attribute, question %>
+        <%= f.label attribute, question, data: { health_review_question: true, daily: WeeklyHealthReview::DAILY_QUESTIONS.fetch(attribute), weekly: WeeklyHealthReview::QUESTIONS.fetch(attribute) } %>
         <%= f.text_area attribute, class: "app-form-control", rows: 4, maxlength: 2000 %>
       </div>
     <% end %>
@@ -42,6 +42,6 @@
 
   <div class="app-form-page__actions">
     <%= link_to "Cancelar", weekly_health_reviews_path, class: "app-btn app-btn--outline" %>
-    <%= f.submit "Salvar perguntas da semana", class: "app-btn app-btn--primary" %>
+    <%= f.submit "Salvar perguntas #{weekly_health_review.daily? ? 'do dia' : 'da semana'}", class: "app-btn app-btn--primary", data: { health_review_submit: true } %>
   </div>
 <% end %>

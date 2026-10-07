@@ -1,6 +1,8 @@
 class ProgressController < ApplicationController
   def index
-    @health_weight_goal = current_user.health_weight_goal
+    @health_weight_goals = current_user.health_weight_goals.ordered
+    @final_health_weight_goal = @health_weight_goals.final_goal.first
+    @intermediate_health_weight_goals = @health_weight_goals.intermediate
     entries = current_user.weight_entries.recent
     @latest_weight_entry = entries.first
     @initial_weight_entry = entries.reorder(measured_on: :asc).first
@@ -11,7 +13,7 @@ class ProgressController < ApplicationController
     @weight_chart_points = chart_entries.order(:measured_on).pluck(:measured_on, :weight_kg).map { |date, weight| { date: date.iso8601, weight: weight.to_f } }
     @week_start = Health::WeeklyPlan.week_start(params[:week])
     @weekly_health_plan = Health::WeeklyPlan.build(user: current_user, week_start: @week_start)
-    @weekly_health_review = current_user.weekly_health_reviews.find_by(week_start: @week_start)
+    @weekly_health_review = current_user.weekly_health_reviews.find_by(review_kind: "weekly", week_start: @week_start)
     @weekly_wellbeing = current_user.weekly_wellbeings.find_by(week_start: @week_start)
     weekly_weights = current_user.weight_entries.where(measured_on: @week_start..(@week_start + 6.days))
     @weekly_weight_count = weekly_weights.count

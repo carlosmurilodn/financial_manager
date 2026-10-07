@@ -1,26 +1,32 @@
 class HealthWeightGoal < ApplicationRecord
+  GOAL_TYPES = %w[intermediate final].freeze
+
   belongs_to :user
 
-  validates :user_id, uniqueness: true
   validates :target_weight, presence: true, numericality: { greater_than: 0, less_than: 1000 }
-  validates :milestone_weights, length: { maximum: 10 }
+  validates :goal_type, presence: true, inclusion: { in: GOAL_TYPES }
+  validates :position, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :user_id, uniqueness: { conditions: -> { where(goal_type: "final") }, if: :final? }
   validate :weights_have_valid_format
-  validate :milestones_are_intermediate
 
-  def milestones_text
-    return @milestones_text if defined?(@milestones_text)
+  scope :ordered, -> { order(:position, target_weight: :desc).order(:id) }
+  scope :intermediate, -> { where(goal_type: "intermediate") }
+  scope :final_goal, -> { where(goal_type: "final") }
 
-    milestone_weights.map { |weight| weight.to_s("F").tr(".", ",") }.join("\n")
+  def intermediate?
+    goal_type == "intermediate"
   end
 
-  def milestones_text=(value)
-    @milestones_text = value.to_s
-    @raw_milestones = @milestones_text.split(/[;\r\n]+/).map(&:strip).reject(&:blank?).map { |weight| weight.tr(",", ".") }
-    self.milestone_weights = @raw_milestones
+  def final?
+    goal_type == "final"
   end
 
-  def ordered_milestones
-    milestone_weights.sort.reverse
+  def kind_label
+    final? ? "Meta final" : "Marco intermediário"
+  end
+
+  def reached_by?(weight_entry)
+    weight_entry.present? && weight_entry.weight_kg <= target_weight
   end
 
   private
@@ -31,24 +37,9 @@ class HealthWeightGoal < ApplicationRecord
     if target.present? && !valid_weight_format?(target)
       errors.add(:target_weight, "deve ter até duas casas decimais")
     end
-    if @raw_milestones&.any? { |weight| !valid_weight_format?(weight) }
-      errors.add(:milestones_text, "devem ser números positivos com até duas casas decimais, um por linha")
-    end
   end
 
   def valid_weight_format?(value)
     value.match?(/\A\d+(?:\.\d{1,2})?\z/)
-  end
-
-  def milestones_are_intermediate
-    if milestone_weights.any? { |weight| weight.nil? || weight <= 0 || weight >= 1000 }
-      errors.add(:milestones_text, "devem ser maiores que zero e menores que 1.000 kg")
-    end
-    if milestone_weights.uniq.size != milestone_weights.size
-      errors.add(:milestones_text, "não podem se repetir")
-    end
-    if target_weight.present? && milestone_weights.compact.any? { |weight| weight <= target_weight }
-      errors.add(:milestones_text, "devem ser maiores que o peso desejado")
-    end
   end
 end

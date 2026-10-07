@@ -1,0 +1,30 @@
+<%= form_with model: health_weight_goal, local: true, html: { class: "app-form-page__form", data: { turbo: false } } do |f| %>
+  <div class="progress-review-form">
+    <div>
+      <%= f.label :goal_type, "Tipo da meta" %>
+      <%= f.select :goal_type,
+            options_for_select([["Intermediária", "intermediate"], ["Final", "final"]], health_weight_goal.goal_type),
+            {},
+            class: "app-form-select",
+            required: true %>
+      <small>A meta final é única. As intermediárias representam etapas antes dela.</small>
+    </div>
+
+    <div>
+      <%= f.label :target_weight, "Peso alvo (kg)" %>
+      <%= f.text_field :target_weight, class: "app-form-control", required: true, inputmode: "decimal", placeholder: "Ex.: 99,9" %>
+      <small>Use vírgula ou ponto, com até duas casas decimais.</small>
+    </div>
+
+    <div>
+      <%= f.label :position, "Ordem" %>
+      <%= f.number_field :position, class: "app-form-control", min: 0, step: 1, placeholder: "Ex.: 1" %>
+      <small>Menor número aparece primeiro. Se deixar zero em uma nova meta, a ordem será preenchida automaticamente.</small>
+    </div>
+  </div>
+
+  <div class="app-form-page__actions">
+    <%= link_to "Cancelar", health_weight_goals_path, class: "app-btn app-btn--outline" %>
+    <%= f.submit "Salvar meta", class: "app-btn app-btn--primary" %>
+  </div>
+<% end %>

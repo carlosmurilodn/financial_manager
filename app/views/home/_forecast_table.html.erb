@@ -17,7 +17,7 @@
       <% critical_month, critical_data = @forecast_data.find { |month, data| month >= critical_start_month && data[:saldo] < 0 } %>
 
       <div class="dashboard-card__pill dashboard-card__pill--period dashboard-card__pill--period-full">
-        <%= link_to root_path(year: prev_year),
+        <%= link_to financial_dashboard_path(year: prev_year),
             class: "dashboard-card__period-button",
             aria: { label: "Ano anterior" },
             data: { turbo_frame: "forecast-table", turbo_prefetch: "false" } do %>
@@ -29,7 +29,7 @@
           <span>Previsao Financeira - <%= year %></span>
         </span>
 
-        <%= link_to root_path(year: next_year),
+        <%= link_to financial_dashboard_path(year: next_year),
             class: "dashboard-card__period-button",
             aria: { label: "Próximo ano" },
             data: { turbo_frame: "forecast-table", turbo_prefetch: "false" } do %>

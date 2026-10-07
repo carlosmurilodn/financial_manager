@@ -1,0 +1,21 @@
+<div id="weekly-health-plans-table">
+  <% if @weekly_health_plans.any? %>
+    <div class="weekly-health-plan-list" id="weekly-health-plans-list">
+      <% @weekly_health_plans.each do |weekly_health_plan| %>
+        <%= render partial: "weekly_health_plan_row", locals: { weekly_health_plan: weekly_health_plan } %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="dashboard-empty-state">
+      <span class="material-symbols-rounded">task_alt</span>
+      <strong>Nenhuma meta encontrada</strong>
+      <small>Ajuste os filtros ou cadastre suas metas da semana.</small>
+    </div>
+  <% end %>
+
+  <%= render "shared/pagination",
+             current_page: @current_page,
+             total_pages: @total_pages,
+             base_params: request.query_parameters.except(:page),
+             aria_label: "Paginacao de metas semanais" %>
+</div>

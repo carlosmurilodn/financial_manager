@@ -1,0 +1,41 @@
+<div
+  id="<%= dom_id(health_win) %>"
+  class="health-win-card"
+  style="--health-card-accent: #5c6df2;"
+>
+  <div class="health-win-card__content">
+    <div class="health-win-card__identity-main">
+      <div class="health-win-card__icon-wrapper">
+        <span class="material-symbols-rounded health-win-card__icon">workspace_premium</span>
+      </div>
+
+      <div class="health-win-card__description-link">
+        <h3 class="health-win-card__title"><%= health_win.description %></h3>
+      </div>
+    </div>
+
+    <div class="health-win-card__meta-item health-win-card__date">
+      <span class="material-symbols-rounded">calendar_month</span>
+      <span><small>Data</small><strong><%= health_win.achieved_on.strftime("%d/%m/%Y") %></strong></span>
+    </div>
+
+    <div class="health-win-card__actions">
+      <%= link_to edit_health_win_path(health_win, week: health_win.achieved_on.beginning_of_week(:monday).iso8601),
+                  class: "health-win-card__action",
+                  title: "Editar vitória",
+                  aria: { label: "Editar vitória de #{health_win.achieved_on.strftime("%d/%m/%Y")}" } do %>
+        <span class="material-symbols-rounded">edit</span>
+        <span class="health-win-card__action-label">Editar</span>
+      <% end %>
+
+      <%= link_to health_win_path(health_win, week: health_win.achieved_on.beginning_of_week(:monday).iso8601),
+                  data: { turbo_method: :delete, turbo_confirm: "Excluir esta vitória de #{health_win.achieved_on.strftime("%d/%m/%Y")}?" },
+                  class: "health-win-card__action health-win-card__action--danger",
+                  title: "Excluir vitória",
+                  aria: { label: "Excluir vitória de #{health_win.achieved_on.strftime("%d/%m/%Y")}" } do %>
+        <span class="material-symbols-rounded">delete</span>
+        <span class="health-win-card__action-label">Excluir</span>
+      <% end %>
+    </div>
+  </div>
+</div>

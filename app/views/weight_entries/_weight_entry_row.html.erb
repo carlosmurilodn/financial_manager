@@ -1,0 +1,69 @@
+<div
+  id="<%= dom_id(weight_entry) %>"
+  class="weight-entry-card "
+  style="--health-card-accent: #5c6df2;"
+>
+  <div class="weight-entry-card__content">
+    <div class="weight-entry-card__identity-block">
+      <div class="weight-entry-card__identity-main">
+        <div class="weight-entry-card__icon-wrapper">
+          <span class="material-symbols-rounded weight-entry-card__icon">monitor_weight</span>
+        </div>
+
+        <div class="weight-entry-card__description-link">
+          <h3 class="weight-entry-card__title">Medição de peso</h3>
+        </div>
+      </div>
+
+      <div class="weight-entry-card__amount-area">
+        <strong class="weight-entry-card__amount">
+          <%= number_with_precision(weight_entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ",") %> kg
+        </strong>
+
+        <span class="weight-entry-card__status weight-entry-card__status--success">
+          <span class="material-symbols-rounded weight-entry-card__status-state-icon">check</span>
+          <span class="weight-entry-card__status-label">Registrado</span>
+          <span class="material-symbols-rounded weight-entry-card__status-mobile-icon" aria-hidden="true">monitor_weight</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="weight-entry-card__badges">
+      <span class="weight-entry-card__pill">Saúde</span>
+      <span class="weight-entry-card__pill">Histórico de Peso</span>
+    </div>
+
+    <div class="weight-entry-card__footer">
+      <div class="weight-entry-card__information">
+        <span class="weight-entry-card__meta-item">
+          <span class="material-symbols-rounded">calendar_month</span>
+          <span><small>Data</small><strong><%= weight_entry.measured_on.strftime("%d/%m/%Y") %></strong></span>
+        </span>
+
+        <span class="weight-entry-card__meta-item">
+          <span class="material-symbols-rounded">event_available</span>
+          <span><small>Cadastro</small><strong><%= weight_entry.created_at.strftime("%d/%m/%Y") %></strong></span>
+        </span>
+      </div>
+
+      <div class="weight-entry-card__actions">
+        <%= link_to edit_weight_entry_path(weight_entry),
+                    class: "weight-entry-card__action",
+                    title: "Editar medição",
+                    aria: { label: "Editar medição de #{weight_entry.measured_on.strftime("%d/%m/%Y")}" } do %>
+          <span class="material-symbols-rounded">edit</span>
+          <span class="weight-entry-card__action-label">Editar</span>
+        <% end %>
+
+        <%= link_to weight_entry_path(weight_entry),
+                    data: { turbo_method: :delete, turbo_confirm: "Excluir a medição de #{weight_entry.measured_on.strftime("%d/%m/%Y")}?" },
+                    class: "weight-entry-card__action weight-entry-card__action--danger",
+                    title: "Excluir medição",
+                    aria: { label: "Excluir medição de #{weight_entry.measured_on.strftime("%d/%m/%Y")}" } do %>
+          <span class="material-symbols-rounded">delete</span>
+          <span class="weight-entry-card__action-label">Excluir</span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

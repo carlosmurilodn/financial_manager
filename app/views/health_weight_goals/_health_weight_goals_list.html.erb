@@ -1,0 +1,21 @@
+<div id="health-weight-goals-table">
+  <% if @health_weight_goals.any? %>
+    <div class="health-weight-goal-list" id="health-weight-goals-list">
+      <% @health_weight_goals.each do |health_weight_goal| %>
+        <%= render partial: "health_weight_goal_row", locals: { health_weight_goal: health_weight_goal } %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="dashboard-empty-state">
+      <span class="material-symbols-rounded">flag</span>
+      <strong>Nenhuma meta encontrada</strong>
+      <small>Ajuste os filtros ou cadastre uma nova meta.</small>
+    </div>
+  <% end %>
+
+  <%= render "shared/pagination",
+             current_page: @current_page,
+             total_pages: @total_pages,
+             base_params: request.query_parameters.except(:page),
+             aria_label: "Paginacao de objetivos por etapa" %>
+</div>

@@ -12,12 +12,14 @@
 @import "components/utilities";
 
 @import "pages/app_pages";
+@import "pages/entry";
 @import "dashboard/hero";
 @import "dashboard/layout_and_kpis";
 @import "dashboard/cards_categories_movements";
 @import "pages/auth";
 @import "pages/expenses";
 @import "pages/progress";
+@import "pages/health";
 @import "components/cards_tables_buttons";
 @import "pages/calendar_forecast";
 @import "pages/horizontal_overflow_fixes";
@@ -25,3 +27,5 @@
 @import "themes/overrides";
 @import "compat/bootstrap_replacements";
 @import "responsive/responsive";
+
+@import "pages/health_index_cards";

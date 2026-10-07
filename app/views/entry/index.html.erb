@@ -1,0 +1,27 @@
+<section class="entry-page">
+  <div class="entry-page__hero">
+    <span class="entry-page__eyebrow">Finanças, saúde e bem-estar</span>
+    <h1>Gerenciador Pessoal</h1>
+    <p>Escolha sua área para acompanhar finanças, cuidar da rotina e celebrar seu progresso.</p>
+  </div>
+
+  <div class="entry-page__cards" aria-label="Áreas do sistema">
+    <%= link_to financial_dashboard_path, class: "entry-card entry-card--finance", data: { turbo: false } do %>
+      <span class="entry-card__icon material-symbols-rounded" aria-hidden="true">account_balance_wallet</span>
+      <span class="entry-card__copy">
+        <strong>Gerenciador Financeiro</strong>
+        <small>Dashboard, despesas, receitas, cartões, objetivos e relatórios.</small>
+      </span>
+      <span class="entry-card__action material-symbols-rounded" aria-hidden="true">arrow_forward</span>
+    <% end %>
+
+    <%= link_to progress_path, class: "entry-card entry-card--health", data: { turbo: false } do %>
+      <span class="entry-card__icon material-symbols-rounded" aria-hidden="true">self_improvement</span>
+      <span class="entry-card__copy">
+        <strong>Saúde e Bem-Estar</strong>
+        <small>Progresso, histórico de peso, metas de processo e revisão semanal.</small>
+      </span>
+      <span class="entry-card__action material-symbols-rounded" aria-hidden="true">arrow_forward</span>
+    <% end %>
+  </div>
+</section>

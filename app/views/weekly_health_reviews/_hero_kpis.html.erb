@@ -1,0 +1,25 @@
+<div id="weekly-health-reviews-hero-kpis" class="app-weekly-health-reviews-hero-kpis">
+  <div class="health-kpi-card health-kpi-card--warning">
+    <div class="health-kpi-card__icon">
+      <span class="material-symbols-rounded">edit_note</span>
+    </div>
+    <div>
+      <span class="health-kpi-card__label">Última resposta</span>
+      <strong class="health-kpi-card__value">
+        <%= @latest_weekly_health_review ? "#{@latest_weekly_health_review.answered_count}/#{WeeklyHealthReview::QUESTIONS.size}" : "Sem resposta" %>
+      </strong>
+      <small><%= @latest_weekly_health_review ? @latest_weekly_health_review.week_start.strftime("%d/%m/%Y") : "Responda sua primeira semana." %></small>
+    </div>
+  </div>
+
+  <div class="health-kpi-card health-kpi-card--primary">
+    <div class="health-kpi-card__icon">
+      <span class="material-symbols-rounded">format_list_numbered</span>
+    </div>
+    <div>
+      <span class="health-kpi-card__label">Registros filtrados</span>
+      <strong class="health-kpi-card__value"><%= @filtered_count || 0 %></strong>
+      <small><%= @week_from_label.present? ? "Desde #{@week_from_label}" : "Todas as semanas" %></small>
+    </div>
+  </div>
+</div>

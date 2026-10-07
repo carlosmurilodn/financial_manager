@@ -2,11 +2,11 @@
   <div class="app-sidebar__inner">
     <div class="app-sidebar__brand">
       <div class="app-sidebar__brand-main">
-        <div class="app-sidebar__logo" aria-hidden="true">
-          <span class="material-symbols-rounded">account_balance_wallet</span>
-        </div>
+        <%= link_to root_path, class: "app-sidebar__logo", title: "Voltar ao Gerenciador Pessoal", aria: { label: "Voltar à escolha de Financeiro ou Saúde e Bem-Estar" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded" aria-hidden="true"><%= health_section? ? "self_improvement" : "account_balance_wallet" %></span>
+        <% end %>
         <div class="app-sidebar__brand-copy">
-          <span class="sidebar-title">Gerenciador Financeiro</span>
+          <span class="sidebar-title"><%= health_section? ? "Saúde e Bem-Estar" : "Gerenciador Financeiro" %></span>
         </div>
       </div>
 
@@ -21,46 +21,78 @@
     </div>
 
     <nav class="app-sidebar__nav">
-      <%= link_to root_path, class: "app-nav-link #{'active-menu' if current_page?(root_path)}", id: "link-home", title: "Dashboard", aria: { label: "Dashboard" }, data: { turbo: false } do %>
-        <span class="material-symbols-rounded app-nav-link__icon">space_dashboard</span>
-        <span class="link-text">Dashboard</span>
-      <% end %>
+      <% if health_section? %>
+        <%= link_to progress_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:progress)}", id: "link-progress", title: "Progresso", aria: { label: "Progresso" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded app-nav-link__icon">monitoring</span>
+          <span class="link-text">Progresso</span>
+        <% end %>
 
-      <%= link_to expenses_path, class: "app-nav-link #{'active-menu' if current_page?(expenses_path)}", id: "link-expenses", title: "Despesas", aria: { label: "Despesas" }, data: { turbo: false } do %>
-        <span class="material-symbols-rounded app-nav-link__icon">receipt_long</span>
-        <span class="link-text">Despesas</span>
-      <% end %>
+        <%= link_to weight_entries_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:weight)}", id: "link-health-weight", title: "Histórico de Peso", aria: { label: "Histórico de Peso" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded app-nav-link__icon">monitor_weight</span>
+          <span class="link-text">Histórico de Peso</span>
+        <% end %>
 
-      <%= link_to incomes_path, class: "app-nav-link #{'active-menu' if current_page?(incomes_path)}", id: "link-incomes", title: "Receitas", aria: { label: "Receitas" }, data: { turbo: false } do %>
-        <span class="material-symbols-rounded app-nav-link__icon">payments</span>
-        <span class="link-text">Receitas</span>
-      <% end %>
+        <%= link_to health_weight_goals_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:milestones)}", id: "link-health-milestones", title: "Objetivos por Etapa", aria: { label: "Objetivos por Etapa" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded app-nav-link__icon">flag</span>
+          <span class="link-text">Objetivos por Etapa</span>
+        <% end %>
 
-      <%= link_to cards_path, class: "app-nav-link #{'active-menu' if current_page?(cards_path)}", id: "link-cards", title: "Cartões", aria: { label: "Cartões" }, data: { turbo: false } do %>
-        <span class="material-symbols-rounded app-nav-link__icon">credit_card</span>
-        <span class="link-text">Cartoes</span>
-      <% end %>
+        <%= link_to weekly_wellbeings_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:beyond_scale)}", id: "link-health-beyond-scale", title: "Progresso Além da Balança", aria: { label: "Progresso Além da Balança" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded app-nav-link__icon">insights</span>
+          <span class="link-text">Além da Balança</span>
+        <% end %>
 
-      <%= link_to categories_path, class: "app-nav-link #{'active-menu' if current_page?(categories_path)}", id: "link-categories", title: "Categorias", aria: { label: "Categorias" }, data: { turbo: false } do %>
-        <span class="material-symbols-rounded app-nav-link__icon">category</span>
-        <span class="link-text">Categorias</span>
-      <% end %>
+        <%= link_to weekly_health_plans_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:goals)}", id: "link-health-goals", title: "Metas que Dependem de Você", aria: { label: "Metas que Dependem de Você" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded app-nav-link__icon">task_alt</span>
+          <span class="link-text">Metas</span>
+        <% end %>
 
-      <%= link_to financial_goals_path, class: "app-nav-link #{'active-menu' if current_page?(financial_goals_path)}", id: "link-financial-goals", title: "Objetivos", aria: { label: "Objetivos" }, data: { turbo: false } do %>
-        <span class="material-symbols-rounded app-nav-link__icon">flag</span>
-        <span class="link-text">Objetivos</span>
-      <% end %>
+        <%= link_to weekly_health_reviews_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:questions)}", id: "link-health-questions", title: "Perguntas da Semana", aria: { label: "Perguntas da Semana" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded app-nav-link__icon">edit_note</span>
+          <span class="link-text">Perguntas</span>
+        <% end %>
 
-      <%= link_to progress_path, class: "app-nav-link #{'active-menu' if controller_name.in?(%w[progress weight_entries weekly_health_plans weekly_health_reviews health_wins health_weight_goals weekly_wellbeings])}", id: "link-progress", title: "Progresso", aria: { label: "Progresso" }, data: { turbo: false } do %>
-        <span class="material-symbols-rounded app-nav-link__icon">monitoring</span>
-        <span class="link-text">Progresso</span>
-      <% end %>
+        <%= link_to health_wins_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:wins)}", id: "link-health-wins", title: "Vitórias que a Balança Não Mostra", aria: { label: "Vitórias que a Balança Não Mostra" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded app-nav-link__icon">workspace_premium</span>
+          <span class="link-text">Vitórias</span>
+        <% end %>
+      <% else %>
+        <%= link_to financial_dashboard_path, class: "app-nav-link #{'active-menu' if current_page?(financial_dashboard_path)}", id: "link-home", title: "Dashboard", aria: { label: "Dashboard" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded app-nav-link__icon">space_dashboard</span>
+          <span class="link-text">Dashboard</span>
+        <% end %>
 
-      <!-- Calculadora ocultada temporariamente. -->
+        <%= link_to expenses_path, class: "app-nav-link #{'active-menu' if current_page?(expenses_path)}", id: "link-expenses", title: "Despesas", aria: { label: "Despesas" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded app-nav-link__icon">receipt_long</span>
+          <span class="link-text">Despesas</span>
+        <% end %>
 
-      <%= link_to reports_path, class: "app-nav-link #{'active-menu' if current_page?(reports_path)}", id: "link-reports", title: "Relatórios", aria: { label: "Relatórios" }, data: { turbo: false } do %>
-        <span class="material-symbols-rounded app-nav-link__icon">insert_chart</span>
-        <span class="link-text">Relatorios</span>
+        <%= link_to incomes_path, class: "app-nav-link #{'active-menu' if current_page?(incomes_path)}", id: "link-incomes", title: "Receitas", aria: { label: "Receitas" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded app-nav-link__icon">payments</span>
+          <span class="link-text">Receitas</span>
+        <% end %>
+
+        <%= link_to cards_path, class: "app-nav-link #{'active-menu' if current_page?(cards_path)}", id: "link-cards", title: "Cartões", aria: { label: "Cartões" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded app-nav-link__icon">credit_card</span>
+          <span class="link-text">Cartoes</span>
+        <% end %>
+
+        <%= link_to categories_path, class: "app-nav-link #{'active-menu' if current_page?(categories_path)}", id: "link-categories", title: "Categorias", aria: { label: "Categorias" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded app-nav-link__icon">category</span>
+          <span class="link-text">Categorias</span>
+        <% end %>
+
+        <%= link_to financial_goals_path, class: "app-nav-link #{'active-menu' if current_page?(financial_goals_path)}", id: "link-financial-goals", title: "Objetivos", aria: { label: "Objetivos" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded app-nav-link__icon">flag</span>
+          <span class="link-text">Objetivos</span>
+        <% end %>
+
+        <!-- Calculadora ocultada temporariamente. -->
+
+        <%= link_to reports_path, class: "app-nav-link #{'active-menu' if current_page?(reports_path)}", id: "link-reports", title: "Relatórios", aria: { label: "Relatórios" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded app-nav-link__icon">insert_chart</span>
+          <span class="link-text">Relatorios</span>
+        <% end %>
       <% end %>
 
       <button id="themeToggleMobile" class="app-nav-link app-nav-link--theme app-theme-toggle-mobile" type="button" aria-label="Alternar tema">

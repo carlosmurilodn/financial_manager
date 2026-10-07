@@ -1,0 +1,143 @@
+.app-shell--entry {
+  display: block;
+}
+
+.app-shell--entry .app-content {
+  margin-left: 0;
+}
+
+.app-shell--entry .app-content__inner {
+  display: grid;
+  min-height: 100vh;
+  align-content: center;
+  padding: 28px 18px;
+}
+
+.entry-page {
+  display: grid;
+  width: min(100%, 980px);
+  gap: 24px;
+  margin: 0 auto;
+}
+
+.entry-page__hero {
+  display: grid;
+  gap: 10px;
+  text-align: center;
+}
+
+.entry-page__eyebrow {
+  color: var(--text-soft);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.entry-page__hero h1 {
+  margin: 0;
+  color: var(--text-main);
+  font-size: clamp(1.9rem, 4vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.entry-page__hero p {
+  max-width: 680px;
+  margin: 0 auto;
+  color: var(--text-soft);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.entry-page__cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.entry-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  min-height: 170px;
+  padding: 22px;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-main);
+  text-decoration: none;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.entry-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--nav-active-bar);
+  color: var(--text-main);
+}
+
+.entry-card__icon,
+.entry-card__action {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+
+.entry-card__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  background: var(--hero-badge-icon-bg);
+  color: var(--hero-badge-icon-color);
+  font-size: 1.6rem;
+}
+
+.entry-card__copy {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.entry-card__copy strong {
+  font-size: 1.18rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.entry-card__copy small {
+  color: var(--text-soft);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.entry-card__action {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  background: var(--nav-hover-bg);
+  color: var(--nav-icon-color);
+  font-size: 1.15rem;
+}
+
+@media (max-width: 767px) {
+  .app-shell--entry .app-content__inner {
+    align-content: start;
+    padding-top: 38px;
+  }
+
+  .entry-page__cards {
+    grid-template-columns: 1fr;
+  }
+
+  .entry-card {
+    min-height: 150px;
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .entry-card__action {
+    grid-column: 2;
+    justify-self: end;
+  }
+}

@@ -1,24 +1,14 @@
 <%= render layout: "shared/form_page", locals: {
   resource: @weekly_health_review,
-  title: "Revisão da semana",
-  eyebrow: "Progresso · segunda a domingo",
-  description: "#{@week_start.strftime('%d/%m/%Y')} a #{(@week_start + 6.days).strftime('%d/%m/%Y')}. Reflita sobre sua rotina sem julgamento.",
+  title: "Perguntas da semana",
+  eyebrow: "Perguntas · segunda a domingo",
+  description: "#{@weekly_health_review.period_title}. Reflita sobre sua rotina sem julgamento.",
   icon: "edit_note",
-  back_path: progress_path(week: @week_start.iso8601)
+  back_path: weekly_health_reviews_path
 } do %>
-  <%= form_with model: @weekly_health_review, url: weekly_health_review_path(@week_start.iso8601), method: :patch, local: true, html: { class: "app-form-page__form", data: { turbo: false } } do |f| %>
-    <p class="progress-empty">Você pode salvar respostas parciais e completar depois. Cada resposta aceita até 2.000 caracteres; alterações valem apenas para esta semana.</p>
-    <div class="progress-review-form">
-      <% WeeklyHealthReview::QUESTIONS.each do |attribute, question| %>
-        <div>
-          <%= f.label attribute, question %>
-          <%= f.text_area attribute, class: "app-form-control", rows: 4, maxlength: 2000 %>
-        </div>
-      <% end %>
-    </div>
-    <div class="app-form-page__actions">
-      <%= link_to "Cancelar", progress_path(week: @week_start.iso8601), class: "app-btn app-btn--outline" %>
-      <%= f.submit "Salvar revisão da semana", class: "app-btn app-btn--primary" %>
-    </div>
-  <% end %>
+  <%= render "form",
+             weekly_health_review: @weekly_health_review,
+             form_url: weekly_health_review_path(@week_start.iso8601),
+             form_method: :patch,
+             show_week_select: true %>
 <% end %>

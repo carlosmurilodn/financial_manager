@@ -1,0 +1,66 @@
+<section class="app-page health-index-page">
+  <div class="app-page__hero">
+    <div class="app-page__hero-top app-page__hero-top--weekly-health-reviews">
+      <div class="app-page__hero-unit app-page__hero-copy">
+        <span class="app-page__hero-icon">
+          <span class="material-symbols-rounded">edit_note</span>
+        </span>
+        <div>
+          <p class="app-page__eyebrow">Saúde e Bem-Estar</p>
+          <h1 class="app-page__title">Perguntas da Semana</h1>
+        </div>
+      </div>
+
+      <div class="app-page__hero-unit app-page__hero-action">
+        <%= link_to new_weekly_health_review_path, class: "health-index-action", data: { turbo: false } do %>
+          <span class="health-index-action-icon">
+            <span class="material-symbols-rounded">add</span>
+          </span>
+          <span class="health-index-action-copy">
+            <strong>Nova Resposta</strong>
+          </span>
+        <% end %>
+      </div>
+
+      <div class="app-page__hero-kpis">
+        <%= render "hero_kpis" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-panel">
+    <%= render "shared/filter_accordion" do %>
+      <%= form_with url: weekly_health_reviews_path, method: :get, local: true, class: "app-filter-form" do |f| %>
+        <div class="health-index-filters">
+          <div class="app-filter-field">
+            <%= f.label :week_from, "De" %>
+            <%= f.date_field :week_from, value: @week_from_filter, class: "app-form-control", max: Date.current.iso8601 %>
+          </div>
+
+          <div class="app-filter-field">
+            <%= f.label :week_to, "Até" %>
+            <%= f.date_field :week_to, value: @week_to_filter, class: "app-form-control", max: Date.current.iso8601 %>
+          </div>
+        </div>
+
+        <div class="app-filter-actions">
+          <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>
+            <i class="bi bi-funnel me-1"></i> <%= t("buttons.filter") %>
+          <% end %>
+
+          <%= link_to clear_filters_weekly_health_reviews_path,
+                      class: "app-btn app-btn--secondary app-page__secondary-btn",
+                      data: { turbo_method: :delete } do %>
+            <i class="bi bi-x-circle me-1"></i> Limpar Filtros
+          <% end %>
+
+          <%= render "shared/per_page_select" %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="app-panel app-panel--table">
+    <%= render "weekly_health_reviews_list" %>
+  </div>
+</section>

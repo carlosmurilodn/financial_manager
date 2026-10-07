@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_06_170000) do
-  create_schema "auth"
-  create_schema "extensions"
-  create_schema "graphql"
-  create_schema "graphql_public"
-  create_schema "pgbouncer"
-  create_schema "realtime"
-  create_schema "storage"
-  create_schema "vault"
+ActiveRecord::Schema[8.0].define(version: 2026_10_06_180000) do
+  create_schema "auth", if_not_exists: true
+  create_schema "extensions", if_not_exists: true
+  create_schema "graphql", if_not_exists: true
+  create_schema "graphql_public", if_not_exists: true
+  create_schema "pgbouncer", if_not_exists: true
+  create_schema "realtime", if_not_exists: true
+  create_schema "storage", if_not_exists: true
+  create_schema "vault", if_not_exists: true
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "extensions.pg_stat_statements"
@@ -140,10 +140,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_170000) do
   create_table "health_weight_goals", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.decimal "target_weight", precision: 5, scale: 2, null: false
-    t.decimal "milestone_weights", precision: 5, scale: 2, default: [], null: false, array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_health_weight_goals_on_user_id", unique: true
+    t.string "goal_type", default: "intermediate", null: false
+    t.integer "position", default: 0, null: false
+    t.index ["user_id", "goal_type"], name: "index_health_weight_goals_on_user_id_final_type", unique: true, where: "((goal_type)::text = 'final'::text)"
+    t.index ["user_id"], name: "index_health_weight_goals_on_user_id"
     t.check_constraint "target_weight > 0::numeric", name: "health_weight_goals_positive_target"
   end
 
@@ -196,6 +198,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_170000) do
     t.index ["webauthn_id"], name: "index_users_on_webauthn_id", unique: true
   end
 
+  create_table "weekly_health_goal_days", force: :cascade do |t|
+    t.bigint "weekly_health_goal_id", null: false
+    t.date "occurred_on", null: false
+    t.boolean "completed", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["weekly_health_goal_id", "occurred_on"], name: "index_weekly_health_goal_days_on_goal_and_date", unique: true
+    t.index ["weekly_health_goal_id"], name: "index_weekly_health_goal_days_on_weekly_health_goal_id"
+  end
+
   create_table "weekly_health_goals", force: :cascade do |t|
     t.bigint "weekly_health_plan_id", null: false
     t.string "name", null: false
@@ -228,9 +240,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_170000) do
     t.text "minimum_goal"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id", "week_start"], name: "index_weekly_health_reviews_on_user_id_and_week_start", unique: true
+    t.string "review_kind", default: "weekly", null: false
+    t.index ["user_id", "review_kind", "week_start"], name: "index_weekly_health_reviews_on_user_kind_and_start", unique: true
     t.index ["user_id"], name: "index_weekly_health_reviews_on_user_id"
-    t.check_constraint "EXTRACT(isodow FROM week_start) = 1::numeric", name: "weekly_health_reviews_start_on_monday"
   end
 
   create_table "weekly_wellbeings", force: :cascade do |t|
@@ -274,6 +286,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_06_170000) do
   add_foreign_key "incomes", "categories"
   add_foreign_key "incomes", "users"
   add_foreign_key "passkey_credentials", "users"
+  add_foreign_key "weekly_health_goal_days", "weekly_health_goals"
   add_foreign_key "weekly_health_goals", "weekly_health_plans"
   add_foreign_key "weekly_health_plans", "users"
   add_foreign_key "weekly_health_reviews", "users"

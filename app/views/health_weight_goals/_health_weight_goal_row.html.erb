@@ -1,0 +1,65 @@
+<% reached = health_weight_goal.reached_by?(@latest_weight_entry) %>
+
+<div
+  id="<%= dom_id(health_weight_goal) %>"
+  class="health-weight-goal-card <%= reached ? "health-weight-goal-card--success" : "health-weight-goal-card--pending" %>"
+  style="--health-card-accent: #5c6df2;"
+>
+  <div class="health-weight-goal-card__content">
+    <div class="health-weight-goal-card__identity-main">
+      <div class="health-weight-goal-card__icon-wrapper">
+        <span class="material-symbols-rounded health-weight-goal-card__icon"><%= reached ? "task_alt" : "flag" %></span>
+      </div>
+
+      <div class="health-weight-goal-card__description-link">
+        <h3 class="health-weight-goal-card__title"><%= health_weight_goal.kind_label %></h3>
+      </div>
+    </div>
+
+    <div class="health-weight-goal-card__badges">
+      <span class="health-weight-goal-card__pill">Saúde</span>
+      <span class="health-weight-goal-card__pill"><%= health_weight_goal.final? ? "Final" : "Intermediária" %></span>
+    </div>
+
+    <div class="health-weight-goal-card__amount-area">
+      <strong class="health-weight-goal-card__amount">
+        <%= number_with_precision(health_weight_goal.target_weight, precision: 2, strip_insignificant_zeros: true, separator: ",") %> kg
+      </strong>
+
+      <span class="health-weight-goal-card__status <%= reached ? "health-weight-goal-card__status--success" : "health-weight-goal-card__status--pending" %>">
+        <span class="material-symbols-rounded health-weight-goal-card__status-state-icon"><%= reached ? "check" : "schedule" %></span>
+        <span class="health-weight-goal-card__status-label"><%= reached ? "Cumprida" : "Pendente" %></span>
+        <span class="material-symbols-rounded health-weight-goal-card__status-mobile-icon" aria-hidden="true">flag</span>
+      </span>
+    </div>
+
+    <div class="health-weight-goal-card__meta-item health-weight-goal-card__target">
+      <span class="material-symbols-rounded">monitor_weight</span>
+      <span><small>Peso alvo</small><strong><%= number_with_precision(health_weight_goal.target_weight, precision: 2, strip_insignificant_zeros: true, separator: ",") %> kg</strong></span>
+    </div>
+
+    <div class="health-weight-goal-card__meta-item health-weight-goal-card__position">
+      <span class="material-symbols-rounded">sort</span>
+      <span><small>Ordem</small><strong><%= health_weight_goal.position %></strong></span>
+    </div>
+
+    <div class="health-weight-goal-card__actions">
+      <%= link_to edit_health_weight_goal_path(health_weight_goal),
+                  class: "health-weight-goal-card__action",
+                  title: "Editar meta",
+                  aria: { label: "Editar meta de #{number_with_precision(health_weight_goal.target_weight, precision: 2, strip_insignificant_zeros: true, separator: ",")} kg" } do %>
+        <span class="material-symbols-rounded">edit</span>
+        <span class="health-weight-goal-card__action-label">Editar</span>
+      <% end %>
+
+      <%= link_to health_weight_goal_path(health_weight_goal),
+                  data: { turbo_method: :delete, turbo_confirm: "Excluir esta meta?" },
+                  class: "health-weight-goal-card__action health-weight-goal-card__action--danger",
+                  title: "Excluir meta",
+                  aria: { label: "Excluir meta de #{number_with_precision(health_weight_goal.target_weight, precision: 2, strip_insignificant_zeros: true, separator: ",")} kg" } do %>
+        <span class="material-symbols-rounded">delete</span>
+        <span class="health-weight-goal-card__action-label">Excluir</span>
+      <% end %>
+    </div>
+  </div>
+</div>

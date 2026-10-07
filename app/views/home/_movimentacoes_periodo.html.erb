@@ -8,7 +8,7 @@
   </div>
 
   <div class="dashboard-card__pill dashboard-card__pill--period dashboard-card__pill--period-full">
-    <%= link_to root_path(movement_month: @previous_movement_date.month, movement_year: @previous_movement_date.year),
+    <%= link_to financial_dashboard_path(movement_month: @previous_movement_date.month, movement_year: @previous_movement_date.year),
                 class: "dashboard-card__period-button",
                 aria: { label: "Mês anterior" },
                 data: { turbo_frame: "movements-period-summary", turbo_prefetch: "false" } do %>
@@ -18,7 +18,7 @@
       <span class="material-symbols-rounded">swap_vert</span>
       <span><%= I18n.l(@movement_date, format: "%B de %Y") %></span>
     </span>
-    <%= link_to root_path(movement_month: @next_movement_date.month, movement_year: @next_movement_date.year),
+    <%= link_to financial_dashboard_path(movement_month: @next_movement_date.month, movement_year: @next_movement_date.year),
                 class: "dashboard-card__period-button",
                 aria: { label: "Próximo mês" },
                 data: { turbo_frame: "movements-period-summary", turbo_prefetch: "false" } do %>

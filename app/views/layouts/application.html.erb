@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Gerenciador Financeiro</title>
+    <title>Gerenciador Pessoal</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= favicon_link_tag "/icon.png", type: "image/png" %>
+    <%= favicon_link_tag "/icon.png?v=personal-3", type: "image/png" %>
     <link rel="manifest" href="<%= pwa_manifest_path(format: :json) %>">
-    <meta name="theme-color" content="#828282">
+    <meta name="theme-color" content="#5871e7">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -41,8 +41,8 @@
   <%= render "shared/calculator_modal" %>
 
   <body>
-    <div id="wrapper" class="app-shell">
-      <%= render "shared/sidebar" %>
+    <div id="wrapper" class="app-shell <%= "app-shell--entry" if controller_name == "entry" %>">
+      <%= render "shared/sidebar" unless controller_name == "entry" %>
 
       <main id="page-content-wrapper" class="app-content">
         <div class="app-content__inner">
@@ -52,27 +52,29 @@
 
           <%= yield %>
 
-          <footer class="app-footer">
-            <div class="app-footer__brand">
-              <span class="material-symbols-rounded app-footer__icon">finance_mode</span>
-              <div>
-                <strong>Dashboard Financeiro</strong>
-                <small>Controle receitas, despesas e previsoes em um unico painel.</small>
+          <% unless controller_name == "entry" %>
+            <footer class="app-footer">
+              <div class="app-footer__brand">
+                <span class="material-symbols-rounded app-footer__icon">finance_mode</span>
+                <div>
+                  <strong>Dashboard Financeiro</strong>
+                  <small>Controle receitas, despesas e previsoes em um unico painel.</small>
+                </div>
               </div>
-            </div>
 
-            <div class="app-footer__meta">
-              <span class="app-footer__chip">Agenda Mensal</span>
-              <span class="app-footer__chip">Planejamento Anual</span>
-              <span class="app-footer__chip">Visao Consolidada</span>
-            </div>
+              <div class="app-footer__meta">
+                <span class="app-footer__chip">Agenda Mensal</span>
+                <span class="app-footer__chip">Planejamento Anual</span>
+                <span class="app-footer__chip">Visao Consolidada</span>
+              </div>
 
-            <div class="app-footer__credit">
-              <small>Desenvolvido por</small>
-              <strong>Carlos Murilo Duarte Novais</strong>
-              <span><%= Date.current.year %></span>
-            </div>
-          </footer>
+              <div class="app-footer__credit">
+                <small>Desenvolvido por</small>
+                <strong>Carlos Murilo Duarte Novais</strong>
+                <span><%= Date.current.year %></span>
+              </div>
+            </footer>
+          <% end %>
         </div>
       </main>
     </div>

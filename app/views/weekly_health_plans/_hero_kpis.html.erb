@@ -1,0 +1,25 @@
+<div id="weekly-health-plans-hero-kpis" class="app-weekly-health-plans-hero-kpis">
+  <div class="health-kpi-card health-kpi-card--warning">
+    <div class="health-kpi-card__icon">
+      <span class="material-symbols-rounded">task_alt</span>
+    </div>
+    <div>
+      <span class="health-kpi-card__label">Última semana</span>
+      <strong class="health-kpi-card__value">
+        <%= @latest_weekly_health_plan ? pluralize(@latest_weekly_health_plan.weekly_health_goals.size, "meta", "metas") : "Sem registro" %>
+      </strong>
+      <small><%= @latest_weekly_health_plan ? @latest_weekly_health_plan.week_start.strftime("%d/%m/%Y") : "Cadastre suas metas semanais." %></small>
+    </div>
+  </div>
+
+  <div class="health-kpi-card health-kpi-card--primary">
+    <div class="health-kpi-card__icon">
+      <span class="material-symbols-rounded">format_list_numbered</span>
+    </div>
+    <div>
+      <span class="health-kpi-card__label">Registros filtrados</span>
+      <strong class="health-kpi-card__value"><%= @filtered_count || 0 %></strong>
+      <small><%= @week_from_label.present? ? "Desde #{@week_from_label}" : "Todas as semanas" %></small>
+    </div>
+  </div>
+</div>

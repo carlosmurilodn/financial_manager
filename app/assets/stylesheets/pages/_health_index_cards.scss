@@ -288,10 +288,7 @@
 }
 
 // Data-specific arrangements can evolve without touching financial cards.
-.health-weight-goal-card__content,
 .weekly-wellbeing-card__content { flex-direction: column; align-items: stretch; }
-.health-weight-goal-card__identity-block,
-.health-weight-goal-card__footer,
 .weekly-wellbeing-card__identity-block,
 .weekly-wellbeing-card__footer { flex: 0 1 auto; }
 .weekly-wellbeing-card__badges > span { flex: 1 1 140px; justify-content: center; }
@@ -346,4 +343,36 @@
   .health-index-page .health-card__information { flex: 0 1 auto; }
   .progress-panels > *,
   .progress-weight-overview > * { flex-basis: 100%; }
+}
+
+// Objectives: six independent groups on a single flex row.
+.health-weight-goal-card {
+  overflow-x: auto;
+}
+
+.health-weight-goal-card__content {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: max-content;
+  min-width: 100%;
+}
+
+.health-weight-goal-card__content > div {
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+}
+
+.health-weight-goal-card__identity-main {
+  min-width: 210px;
+}
+
+.health-weight-goal-card__actions {
+  width: auto;
+}
+
+.health-weight-goal-card__action {
+  flex: 0 0 auto;
 }

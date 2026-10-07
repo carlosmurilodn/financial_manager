@@ -1,16 +1,40 @@
-  <div class="app-page__hero">
-    <div class="app-page__hero-top self-knowledge-hero">
-      <div class="app-page__hero-unit app-page__hero-copy self-knowledge-hero__intro">
-        <span class="app-page__hero-icon"><span class="material-symbols-rounded">psychology_alt</span></span>
-        <div><p class="app-page__eyebrow">Saúde e Bem-Estar</p><h1 class="app-page__title">Autoconhecimento</h1><p class="self-knowledge-hero__description">Registre seu dia, entenda sua semana e acompanhe mudanças.</p></div>
-      </div>
-    <div class="app-page__hero-unit diary-entry-card self-knowledge-hero__card"><div class="diary-entry-card__content"><span class="diary-entry-card__icon-wrapper"><span class="material-symbols-rounded">edit_note</span></span><div><h2>Diário</h2><p>Registre como foi seu dia.</p><p>Hoje: <%= @today ? "registrado" : "ainda não preenchido" %></p></div></div><div class="self-knowledge-home__actions">
-      <% if @today %><%= link_to "Ver diário", health_journal_entry_path(@today), class: "diary-entry-card__action" %><%= link_to "Editar", edit_health_journal_entry_path(@today), class: "diary-entry-card__action" %><% else %><%= link_to "Registrar hoje", new_health_journal_entry_path, class: "diary-entry-card__action" %><% end %>
-    </div></div>
-    <div class="app-page__hero-unit diary-entry-card self-knowledge-hero__card"><div class="diary-entry-card__content"><span class="diary-entry-card__icon-wrapper"><span class="material-symbols-rounded">event_note</span></span><div><h2>Revisão Semanal</h2><p>Olhe para os padrões da sua semana.</p><p>Semana atual: <%= @this_week ? "revisada" : "ainda não preenchida" %></p></div></div><div class="self-knowledge-home__actions">
-      <% if @this_week %><%= link_to "Ver revisão", health_weekly_reflection_path(@this_week), class: "diary-entry-card__action" %><%= link_to "Editar", edit_health_weekly_reflection_path(@this_week), class: "diary-entry-card__action" %><% else %><%= link_to "Revisar semana", new_health_weekly_reflection_path, class: "diary-entry-card__action" %><% end %>
-    </div></div>
-    <div class="app-page__hero-unit diary-entry-card self-knowledge-hero__card"><div class="diary-entry-card__content"><span class="diary-entry-card__icon-wrapper"><span class="material-symbols-rounded">show_chart</span></span><div><h2>Minha Evolução</h2><p>Veja como humor, energia e tensão vêm mudando.</p></div></div><div class="self-knowledge-home__actions"><%= link_to "Ver minha evolução", self_knowledge_evolution_path, class: "diary-entry-card__action" %></div></div>
+<% title, icon = case @area
+   when "daily" then ["Acompanhamento Diário", "edit_note"]
+   when "weekly" then ["Revisão Semanal", "event_note"]
+   else ["Autoconhecimento", "show_chart"]
+   end %>
+<div class="app-page__hero">
+  <div class="app-page__hero-top self-knowledge-section-hero">
+    <div class="app-page__hero-unit app-page__hero-copy self-knowledge-section-hero__heading">
+      <span class="app-page__hero-icon"><span class="material-symbols-rounded"><%= icon %></span></span>
+      <div><p class="app-page__eyebrow">Saúde Mental</p><h1 class="app-page__title"><%= title %></h1></div>
     </div>
+    <% if @area == "daily" %>
+      <div class="self-knowledge-page-actions">
+        <%= link_to new_health_journal_entry_path, class: "app-btn app-btn--primary" do %>
+          <span class="material-symbols-rounded" aria-hidden="true">edit_note</span>
+          <span>Registrar Meu Dia</span>
+        <% end %>
+      </div>
+    <% elsif @area == "weekly" %>
+      <div class="self-knowledge-page-actions">
+        <%= link_to new_health_weekly_reflection_path, class: "app-btn app-btn--primary" do %>
+          <span class="material-symbols-rounded" aria-hidden="true">event_note</span>
+          <span>Revisar Semana</span>
+        <% end %>
+      </div>
+    <% else %>
+      <div aria-hidden="true"></div>
+    <% end %>
+    <% @hero_kpis.each_with_index do |kpi, index| %>
+      <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--<%= %w[green yellow purple][index] %>">
+        <span class="material-symbols-rounded" aria-hidden="true"><%= kpi[:icon] %></span>
+        <div>
+          <p><%= kpi[:label] %></p>
+          <strong><%= kpi[:value].nil? ? "Sem registro" : kpi[:scale] ? "#{number_with_precision(kpi[:value], precision: 1)} / 5" : kpi[:value] %></strong>
+          <small>No período selecionado</small>
+        </div>
+      </article>
+    <% end %>
   </div>
-  <%= render "self_knowledge/navigation" %>
+</div>

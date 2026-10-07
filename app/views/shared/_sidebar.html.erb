@@ -27,34 +27,54 @@
           <span class="link-text">Progresso</span>
         <% end %>
 
-        <%= link_to weight_entries_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:weight)}", id: "link-health-weight", title: "Histórico de Peso", aria: { label: "Histórico de Peso" }, data: { turbo: false } do %>
-          <span class="material-symbols-rounded app-nav-link__icon">monitor_weight</span>
-          <span class="link-text">Histórico de Peso</span>
-        <% end %>
+        <details class="app-nav-group" <%= "open" if %i[profile weight milestones goals].any? { |item| health_nav_active?(item) } %>>
+          <summary class="app-nav-link" title="Saúde Física">
+            <span class="material-symbols-rounded app-nav-link__icon">fitness_center</span>
+            <span class="link-text">Saúde Física</span>
+            <span class="material-symbols-rounded app-nav-group__arrow" aria-hidden="true">expand_more</span>
+          </summary>
+          <div class="app-nav-group__items">
+            <%= link_to health_profile_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:profile)}", id: "link-health-profile", title: "Perfil de Saúde", data: { turbo: false } do %>
+              <span class="material-symbols-rounded app-nav-link__icon">person</span>
+              <span class="link-text">Perfil de Saúde</span>
+            <% end %>
+            <%= link_to weight_entries_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:weight)}", id: "link-health-weight", title: "Histórico de Peso", data: { turbo: false } do %>
+              <span class="material-symbols-rounded app-nav-link__icon">monitor_weight</span>
+              <span class="link-text">Histórico de Peso</span>
+            <% end %>
+            <%= link_to health_weight_goals_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:milestones)}", id: "link-health-milestones", title: "Marcos de Peso", data: { turbo: false } do %>
+              <span class="material-symbols-rounded app-nav-link__icon">flag</span>
+              <span class="link-text">Marcos de Peso</span>
+            <% end %>
+            <%= link_to weekly_health_plans_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:goals)}", id: "link-health-goals", title: "Metas Semanais", aria: { label: "Metas Semanais" }, data: { turbo: false } do %>
+              <span class="material-symbols-rounded app-nav-link__icon">task_alt</span>
+              <span class="link-text">Metas Semanais</span>
+            <% end %>
+          </div>
+        </details>
 
-        <%= link_to health_weight_goals_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:milestones)}", id: "link-health-milestones", title: "Objetivos por Etapa", aria: { label: "Objetivos por Etapa" }, data: { turbo: false } do %>
-          <span class="material-symbols-rounded app-nav-link__icon">flag</span>
-          <span class="link-text">Objetivos por Etapa</span>
-        <% end %>
+        <details class="app-nav-group" <%= "open" if health_nav_active?(:beyond_scale) %>>
+          <summary class="app-nav-link" title="Saúde Mental">
+            <span class="material-symbols-rounded app-nav-link__icon">psychology</span>
+            <span class="link-text">Saúde Mental</span>
+            <span class="material-symbols-rounded app-nav-group__arrow" aria-hidden="true">expand_more</span>
+          </summary>
+          <div class="app-nav-group__items">
+            <%= link_to health_journal_entries_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:daily)}", id: "link-health-daily", title: "Acompanhamento Diário", data: { turbo: false } do %>
+              <span class="material-symbols-rounded app-nav-link__icon">edit_note</span>
+              <span class="link-text">Acompanhamento Diário</span>
+            <% end %>
+            <%= link_to health_weekly_reflections_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:weekly)}", id: "link-health-weekly", title: "Revisão Semanal", data: { turbo: false } do %>
+              <span class="material-symbols-rounded app-nav-link__icon">event_note</span>
+              <span class="link-text">Revisão Semanal</span>
+            <% end %>
+            <%= link_to self_knowledge_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:self_knowledge)}", id: "link-health-beyond-scale", title: "Autoconhecimento", data: { turbo: false } do %>
+              <span class="material-symbols-rounded app-nav-link__icon">psychology_alt</span>
+              <span class="link-text">Autoconhecimento</span>
+            <% end %>
+          </div>
+        </details>
 
-        <%= link_to self_knowledge_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:beyond_scale)}", id: "link-health-beyond-scale", title: "Autoconhecimento", aria: { label: "Autoconhecimento" }, data: { turbo: false } do %>
-          <span class="material-symbols-rounded app-nav-link__icon">psychology_alt</span>
-          <span class="link-text">Autoconhecimento</span>
-        <% end %>
-
-        <%= link_to weekly_health_plans_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:goals)}", id: "link-health-goals", title: "Metas Semanais", aria: { label: "Metas Semanais" }, data: { turbo: false } do %>
-          <span class="material-symbols-rounded app-nav-link__icon">task_alt</span>
-          <span class="link-text">Metas Semanais</span>
-        <% end %>
-
-        <%= link_to health_wins_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:wins)}", id: "link-health-wins", title: "Vitórias que a Balança Não Mostra", aria: { label: "Vitórias que a Balança Não Mostra" }, data: { turbo: false } do %>
-          <span class="material-symbols-rounded app-nav-link__icon">workspace_premium</span>
-          <span class="link-text">Vitórias</span>
-        <% end %>
-        <%= link_to health_profile_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:profile)}", id: "link-health-profile", title: "Perfil de Saúde", aria: { label: "Perfil de Saúde" }, data: { turbo: false } do %>
-          <span class="material-symbols-rounded app-nav-link__icon">person</span>
-          <span class="link-text">Perfil de Saúde</span>
-        <% end %>
       <% else %>
         <%= link_to financial_dashboard_path, class: "app-nav-link #{'active-menu' if current_page?(financial_dashboard_path)}", id: "link-home", title: "Dashboard", aria: { label: "Dashboard" }, data: { turbo: false } do %>
           <span class="material-symbols-rounded app-nav-link__icon">space_dashboard</span>

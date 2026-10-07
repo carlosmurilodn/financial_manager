@@ -809,9 +809,34 @@
 
 // Autoconhecimento: diário, revisão e evolução.
 .self-knowledge-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+.self-knowledge-page .app-page__hero-top.self-knowledge-section-hero { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: stretch; gap: 12px; }
+.self-knowledge-section-hero__heading { grid-column: span 2; }
+.self-knowledge-page-actions { display: flex; min-width: 0; }
+.self-knowledge-page-actions .app-btn { width: 100%; height: 100%; min-height: 48px; min-width: 0; white-space: normal; text-align: center; font-size: 1rem; gap: 10px; }
+.self-knowledge-page-actions .material-symbols-rounded { font-size: 28px; }
+.self-knowledge-hero-kpi { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 12px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--mental-kpi-tint); border-left: 3px solid var(--mental-kpi-color); }
+.self-knowledge-hero-kpi--green { --mental-kpi-color: #16836b; --mental-kpi-tint: rgba(45, 190, 148, .1); }
+.self-knowledge-hero-kpi--yellow { --mental-kpi-color: #a76c08; --mental-kpi-tint: rgba(234, 179, 8, .12); }
+.self-knowledge-hero-kpi--purple { --mental-kpi-color: #8054ca; --mental-kpi-tint: rgba(139, 92, 246, .1); }
+.self-knowledge-hero-kpi > .material-symbols-rounded { font-size: 28px; color: var(--mental-kpi-color); }
+.self-knowledge-hero-kpi p { margin: 0 0 4px; font-size: .8rem; color: var(--text-soft); }
+.self-knowledge-hero-kpi strong { display: block; font-size: 1.1rem; color: var(--mental-kpi-color); }
+.self-knowledge-hero-kpi small { display: block; margin-top: 4px; font-size: .7rem; color: var(--text-soft); }
+html[data-theme="night"] .self-knowledge-hero-kpi--green { --mental-kpi-color: #5edbb6; }
+html[data-theme="night"] .self-knowledge-hero-kpi--yellow { --mental-kpi-color: #f3cf63; }
+html[data-theme="night"] .self-knowledge-hero-kpi--purple { --mental-kpi-color: #bd9af5; }
+@media (min-width: 768px) and (max-width: 1199px) {
+  .self-knowledge-page .app-page__hero-top.self-knowledge-section-hero { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 767px) {
+  .self-knowledge-page .app-page__hero-top.self-knowledge-section-hero { grid-template-columns: 1fr; }
+  .self-knowledge-section-hero__heading { grid-column: auto; }
+  .self-knowledge-section-hero__empty { display: none; }
+}
 .self-knowledge-record-filters { display: flex; align-items: flex-end; gap: 12px; }
 .self-knowledge-record-filters .health-index-filters { flex: 1; min-width: 0; margin-bottom: 0; flex-wrap: nowrap; }
 .self-knowledge-record-filters .app-filter-actions { flex: 0 0 auto; margin-top: 0; flex-wrap: nowrap; }
+.self-knowledge-record-filters .app-filter-actions > .app-btn { min-width: 152px; flex-shrink: 0; }
 @media (max-width: 1199px) {
   .self-knowledge-record-filters { flex-wrap: wrap; }
   .self-knowledge-record-filters .health-index-filters { flex-basis: 100%; flex-wrap: wrap; }

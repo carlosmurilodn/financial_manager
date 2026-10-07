@@ -1,6 +1,4 @@
 class HealthPersonalRecordsController < ApplicationController
-  include SelfKnowledgeHero
-  before_action :load_self_knowledge_hero, only: :index
   rescue_from ActiveRecord::RecordNotFound, with: -> { head :not_found }
   before_action :set_area
   before_action :set_record, only: %i[show edit update destroy]
@@ -17,6 +15,19 @@ class HealthPersonalRecordsController < ApplicationController
     end
     records = records.where(date_field => @date_from..) if @date_from
     records = records.where(date_field => ..@date_to) if @date_to
+    @hero_kpis = if weekly?
+      [
+        { label: "Semanas Revisadas", value: records.count, icon: "event_available" },
+        { label: "Satisfação Média", value: records.average(:routine_satisfaction), scale: true, icon: "sentiment_satisfied" },
+        { label: "Próximos Passos", value: records.where.not(next_small_step: [nil, ""]).count, icon: "footprint" }
+      ]
+    else
+      [
+        { label: "Dias Registrados", value: records.count, icon: "calendar_today" },
+        { label: "Humor Médio", value: records.average(:mood), scale: true, icon: "sentiment_satisfied" },
+        { label: "Energia Média", value: records.average(:energy), scale: true, icon: "bolt" }
+      ]
+    end
     @records = paginate_collection(records.to_a, per_page: pagination_per_page)
     render "self_knowledge/records"
   end

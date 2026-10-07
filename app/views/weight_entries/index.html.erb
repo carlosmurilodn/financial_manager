@@ -1,22 +1,22 @@
-<section class="app-page health-index-page">
+<section class="app-page health-index-page self-knowledge-page">
   <div class="app-page__hero">
-    <div class="app-page__hero-top app-page__hero-top--weight-entries">
-      <div class="app-page__hero-unit app-page__hero-copy">
+    <div class="app-page__hero-top self-knowledge-section-hero app-page__hero-top--weight-entries">
+      <div class="app-page__hero-unit app-page__hero-copy self-knowledge-section-hero__heading">
         <span class="app-page__hero-icon">
           <span class="material-symbols-rounded">monitor_weight</span>
         </span>
         <div>
-          <p class="app-page__eyebrow">Saúde e Bem-Estar</p>
+          <p class="app-page__eyebrow">Saúde Física</p>
           <h1 class="app-page__title">Histórico de Peso</h1>
         </div>
       </div>
 
-      <div class="app-page__hero-unit app-page__hero-action">
-        <%= link_to new_weight_entry_path, class: "health-index-action", data: { turbo: false } do %>
-          <span class="health-index-action-icon">
+      <div class="app-page__hero-unit self-knowledge-page-actions">
+        <%= link_to new_weight_entry_path, class: "app-btn app-btn--primary", data: { turbo: false } do %>
+          <span>
             <span class="material-symbols-rounded">add</span>
           </span>
-          <span class="health-index-action-copy">
+          <span>
             <strong>Novo Peso</strong>
           </span>
         <% end %>

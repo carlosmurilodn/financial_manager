@@ -1,27 +1,14 @@
-<div id="health-weight-goals-hero-kpis" class="app-health-goals-hero-kpis">
-  <div class="health-kpi-card health-kpi-card--warning">
-    <div class="health-kpi-card__icon">
-      <span class="material-symbols-rounded">monitor_weight</span>
-    </div>
-    <div>
-      <span class="health-kpi-card__label">Peso atual</span>
-      <strong class="health-kpi-card__value">
-        <%= @latest_weight_entry ? "#{number_with_precision(@latest_weight_entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ",")} kg" : "Sem registro" %>
-      </strong>
-      <small><%= @latest_weight_entry ? @latest_weight_entry.measured_on.strftime("%d/%m/%Y") : "Registre um peso para calcular os marcos." %></small>
-    </div>
-  </div>
-
-  <div class="health-kpi-card health-kpi-card--primary">
-    <div class="health-kpi-card__icon">
-      <span class="material-symbols-rounded">flag</span>
-    </div>
-    <div>
-      <span class="health-kpi-card__label">Objetivo final</span>
-      <strong class="health-kpi-card__value">
-        <%= @final_health_weight_goal ? "#{number_with_precision(@final_health_weight_goal.target_weight, precision: 2, strip_insignificant_zeros: true, separator: ",")} kg" : "Não definido" %>
-      </strong>
-      <small><%= pluralize(@filtered_count || 0, "etapa", "etapas") %> exibidas</small>
-    </div>
-  </div>
+<div id="health-weight-goals-hero-kpis" class="physical-health-hero-kpis">
+  <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--green">
+    <span class="material-symbols-rounded" aria-hidden="true">monitor_weight</span>
+    <div><p>Peso Atual</p><strong><%= @latest_weight_entry ? "#{number_with_precision(@latest_weight_entry.weight_kg, precision: 2)} kg" : "Sem registro" %></strong><small><%= @latest_weight_entry&.measured_on&.strftime("%d/%m/%Y") %></small></div>
+  </article>
+  <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--yellow">
+    <span class="material-symbols-rounded" aria-hidden="true">flag</span>
+    <div><p>Objetivo Final</p><strong><%= @final_health_weight_goal ? "#{number_with_precision(@final_health_weight_goal.target_weight, precision: 2)} kg" : "Não definido" %></strong><small><%= "Meta final cadastrada" %></small></div>
+  </article>
+  <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--purple">
+    <span class="material-symbols-rounded" aria-hidden="true">format_list_numbered</span>
+    <div><p>Marcos Filtrados</p><strong><%= @filtered_count || 0 %></strong><small><%= "Conforme os filtros selecionados" %></small></div>
+  </article>
 </div>

@@ -1,9 +1,6 @@
 class SelfKnowledgeController < ApplicationController
-  include SelfKnowledgeHero
-  before_action :load_self_knowledge_hero, only: :evolution
-
   def index
-    redirect_to health_journal_entries_path
+    redirect_to self_knowledge_evolution_path
   end
 
   def week_summary
@@ -16,5 +13,8 @@ class SelfKnowledgeController < ApplicationController
   def evolution
     @area = "evolution"
     @evolution = Health::SelfKnowledgeEvolution.new(current_user, params[:period])
+    @hero_kpis = [[:mood, "Humor Médio", "sentiment_satisfied"], [:energy, "Energia Média", "bolt"], [:tension, "Tensão Média", "psychology"]].map do |field, label, icon|
+      { label: label, value: @evolution.averages.fetch(field)[:mean], scale: true, icon: icon }
+    end
   end
 end

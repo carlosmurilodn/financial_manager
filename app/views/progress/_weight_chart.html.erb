@@ -10,7 +10,7 @@
       </div>
       <nav class="progress-chart-filters" aria-label="Período do gráfico de peso">
         <% { "30" => "30 dias", "90" => "90 dias", "all" => "Todo histórico" }.each do |period, label| %>
-          <%= link_to label, progress_path(weight_period: period), class: "app-btn app-btn--outline #{'is-selected' if @weight_period == period}", aria: { current: (@weight_period == period ? "true" : nil) }, data: { turbo_frame: "progress-weight-chart", turbo_prefetch: false } %>
+          <%= link_to label, progress_path(weight_period: period, week: @week_start.iso8601), class: "app-btn app-btn--outline #{'is-selected' if @weight_period == period}", aria: { current: (@weight_period == period ? "true" : nil) }, data: { turbo_frame: "progress-weight-chart", turbo_prefetch: false } %>
         <% end %>
       </nav>
     </div>

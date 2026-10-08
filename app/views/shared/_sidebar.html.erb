@@ -290,6 +290,19 @@
     });
 
     if (title) title.style.display = collapsed ? "none" : "flex";
+    updateSidebarGroups();
+  }
+
+  function updateSidebarGroups() {
+    document.querySelectorAll(".app-nav-group").forEach((group) => {
+      if (APP_MOBILE_MEDIA.matches) {
+        if (group.dataset.desktopOpen === undefined) group.dataset.desktopOpen = String(group.open);
+        group.open = true;
+      } else if (group.dataset.desktopOpen !== undefined) {
+        group.open = group.dataset.desktopOpen === "true";
+        delete group.dataset.desktopOpen;
+      }
+    });
   }
 
   function getCurrentTheme() {
@@ -360,6 +373,7 @@
   });
 
   APP_THEME_MEDIA.addEventListener("change", refreshSystemTheme);
+  APP_MOBILE_MEDIA.addEventListener("change", updateSidebarGroups);
 
   setInterval(updateClock, 1000);
 </script>

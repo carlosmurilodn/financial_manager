@@ -15,6 +15,10 @@ class ProgressController < ApplicationController
     @weekly_health_plan = Health::WeeklyPlan.build(user: current_user, week_start: @week_start)
     @self_knowledge_week = Health::SelfKnowledgeWeek.new(current_user, @week_start)
     @self_knowledge_reflection = current_user.health_weekly_reflections.find_by(week_start: @week_start)
+    @saved_weekly_goals = @weekly_health_plan.persisted? ? @weekly_health_plan.weekly_health_goals.to_a : []
+    ActiveRecord::Associations::Preloader.new(records: @saved_weekly_goals, associations: :weekly_health_goal_days).call
+    @completed_weekly_goals_count = @saved_weekly_goals.count { |goal| goal.completed_count >= goal.target_count }
+
     weekly_weights = current_user.weight_entries.where(measured_on: @week_start..(@week_start + 6.days))
     @weekly_weight_count = weekly_weights.count
     @weekly_average_weight = weekly_weights.average(:weight_kg)
@@ -34,6 +38,6 @@ class ProgressController < ApplicationController
         self_knowledge: @self_knowledge_week,
         wins_count: @weekly_wins_count
       }
-    ).call
+    ).call.reject { |row| row[:kind] == :wins }
   end
 end

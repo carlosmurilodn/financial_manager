@@ -1,21 +1,20 @@
-<article class="app-panel progress-panel" aria-label="Período dos registros semanais">
+<article class="progress-week-selector" aria-label="Período dos registros semanais">
   <div class="progress-history__header">
-    <strong>Semana · segunda a domingo</strong>
+    <strong>Semana <%= @week_start.cweek %></strong>
     <% if @week_start == Date.current.beginning_of_week(:monday) %>
       <span class="progress-empty">Semana atual</span>
     <% else %>
-      <%= link_to "Voltar à semana atual", progress_path, class: "progress-week-current", data: { turbo_frame: "progress-weekly-goals", turbo_prefetch: false } %>
+      <%= link_to "Voltar à semana atual", progress_path(weight_period: @weight_period), class: "progress-week-current", data: { turbo_frame: "progress-weekly-goals", turbo_prefetch: false } %>
     <% end %>
   </div>
   <div class="progress-week-period">
-    <%= link_to progress_path(week: (@week_start - 7.days).iso8601), class: "progress-week-period__button", aria: { label: "Semana anterior" }, data: { turbo_frame: "progress-weekly-goals", turbo_prefetch: false } do %>
+    <%= link_to progress_path(week: (@week_start - 7.days).iso8601, weight_period: @weight_period), class: "progress-week-period__button", aria: { label: "Semana anterior" }, data: { turbo_frame: "progress-weekly-goals", turbo_prefetch: false } do %>
       <span class="material-symbols-rounded">chevron_left</span>
     <% end %>
     <span class="progress-week-period__label">
-      <span class="material-symbols-rounded">date_range</span>
-      <span><%= @week_start.strftime("%d/%m/%Y") %> a <%= (@week_start + 6.days).strftime("%d/%m/%Y") %></span>
+      <span><%= @week_start.strftime("%d/%m/%Y") %><br>a <%= (@week_start + 6.days).strftime("%d/%m/%Y") %></span>
     </span>
-    <%= link_to progress_path(week: (@week_start + 7.days).iso8601), class: "progress-week-period__button", aria: { label: "Próxima semana" }, data: { turbo_frame: "progress-weekly-goals", turbo_prefetch: false } do %>
+    <%= link_to progress_path(week: (@week_start + 7.days).iso8601, weight_period: @weight_period), class: "progress-week-period__button", aria: { label: "Próxima semana" }, data: { turbo_frame: "progress-weekly-goals", turbo_prefetch: false } do %>
       <span class="material-symbols-rounded">chevron_right</span>
     <% end %>
   </div>

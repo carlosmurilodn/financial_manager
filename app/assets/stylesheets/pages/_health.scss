@@ -808,6 +808,39 @@
 @media (max-width: 640px) { .diary-guide__question { padding: 16px; } }
 
 // Autoconhecimento: diário, revisão e evolução.
+.progress-page .app-page__hero-top--progress { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+.progress-page .app-page__hero-top--progress > .app-page__hero-copy { grid-column: span 1; }
+.progress-week-selector { grid-column: span 2; }
+.progress-week-selector { min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 12px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); }
+.progress-week-selector .progress-history__header { flex-wrap: wrap; gap: 4px; font-size: .8rem; }
+.progress-week-selector .progress-empty { margin: 0; font-size: .75rem; }
+.progress-week-selector .progress-week-period { display: grid; grid-template-columns: 28px minmax(0, 1fr) 28px; align-items: center; gap: 4px; }
+.progress-week-selector .progress-week-period__button { display: flex; align-items: center; justify-content: center; width: 28px; height: 32px; padding: 0; }
+.progress-week-selector .progress-week-period__label { font-size: .8rem; line-height: 1.4; color: var(--text-soft); font-weight: 700; }
+.progress-page .progress-panels--activity { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+@media (max-width: 991px) { .progress-page .progress-panels--activity { grid-template-columns: minmax(0, 1fr); } }
+.progress-diary-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin: 16px 0; }
+.progress-diary-day { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px; border: 1px solid var(--card-border); border-radius: 10px; color: var(--text-soft); text-decoration: none; background: var(--surface); }
+.progress-diary-day.is-done { color: var(--nav-active-bar); background: var(--hero-badge-icon-bg); }
+.progress-diary-day:focus-visible { outline: 2px solid var(--nav-active-bar); outline-offset: 2px; }
+.progress-week-reflection { margin: 14px 0; padding: 12px; border-left: 3px solid var(--nav-active-bar); background: var(--hero-badge-icon-bg); border-radius: 8px; overflow-wrap: anywhere; }
+.progress-activity-scroll { overflow-x: auto; margin-top: 16px; }
+.progress-activity-table { width: 100%; min-width: 600px; table-layout: fixed; border-collapse: collapse; font-size: .85rem; }
+.progress-activity-table th, .progress-activity-table td { padding: 12px 4px; border-bottom: 1px solid var(--card-border); text-align: center; }
+.progress-activity-table th:first-child { text-align: left; width: 24%; overflow-wrap: anywhere; }
+.progress-activity-table th:last-child { width: 15%; }
+.progress-activity-table small { display: block; margin-top: 4px; color: var(--text-soft); font-size: .75rem; font-weight: 400; }
+.progress-activity-day { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: var(--hero-badge-icon-bg); color: var(--text-soft); }
+.progress-activity-day.is-done { background: rgba(45, 190, 148, .16); color: #16836b; }
+html[data-theme="night"] .progress-activity-day.is-done { color: #5edbb6; }
+@media (max-width: 1199px) {
+  .progress-page .app-page__hero-top--progress { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .progress-page .app-page__hero-top--progress > .app-page__hero-copy { grid-column: 1 / -1; }
+  .progress-week-selector { grid-column: 1 / -1; }
+}
+@media (max-width: 767px) {
+  .progress-page .app-page__hero-top--progress { grid-template-columns: 1fr; }
+}
 .self-knowledge-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
 .self-knowledge-page .app-page__hero-top.self-knowledge-section-hero { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: stretch; gap: 12px; }
 .self-knowledge-section-hero__heading { grid-column: span 2; }

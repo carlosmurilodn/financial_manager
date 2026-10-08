@@ -1,0 +1,10 @@
+<% [
+  ["green", "Metas Cumpridas", "task_alt", "#{@completed_weekly_goals_count} / #{@saved_weekly_goals.size}", @saved_weekly_goals.empty? ? "Sem planejamento salvo" : "Metas realizadas / planejadas"],
+  ["yellow", "Dias Com Diário", "edit_note", "#{@self_knowledge_week.days.size} / 7", "Dias registrados na semana"],
+  ["purple", "Revisão Semanal", "event_note", @self_knowledge_reflection ? "Registrada" : "Sem registro", "Fechamento da semana selecionada"]
+].each do |color, label, icon, value, detail| %>
+  <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--<%= color %>">
+    <span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span>
+    <div><p><%= label %></p><strong><%= value %></strong><small><%= detail %></small></div>
+  </article>
+<% end %>

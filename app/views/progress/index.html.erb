@@ -1,3 +1,4 @@
+<%= turbo_frame_tag "progress-weekly-goals", class: "progress-weekly-frame" do %>
 <section class="app-page progress-page">
   <div class="app-page__hero">
     <div class="app-page__hero-top app-page__hero-top--progress">
@@ -9,39 +10,17 @@
           <p class="app-page__eyebrow">Rotina e saude</p>
           <h1 class="app-page__title">Progresso</h1>
           <p class="app-page__description">
-            Painel leve para acompanhar marcos, consistencia semanal e vitorias que a balanca nao mostra.
+            Acompanhe o que foi planejado, realizado e registrado na semana selecionada.
           </p>
         </div>
       </div>
 
-      <div class="progress-hero-card progress-hero-card--warning">
-        <div class="progress-hero-card__main">
-          <span class="progress-hero-card__weight-icon material-symbols-rounded" aria-hidden="true">monitor_weight</span>
-          <div class="progress-hero-card__weight-copy">
-        <span class="progress-hero-card__label">Marco atual</span>
-        <% if @latest_weight_entry %>
-          <strong><%= number_with_precision(@latest_weight_entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ",") %> kg</strong>
-          <small>Medição de <%= @latest_weight_entry.measured_on.strftime("%d/%m/%Y") %></small>
-        <% else %>
-          <strong>Sem medição</strong>
-          <small>Registre seu primeiro peso para começar.</small>
-        <% end %>
-          </div>
-        </div>
-      </div>
-
-      <div class="progress-hero-card progress-hero-card--success">
-        <div class="progress-hero-card__main">
-          <span class="progress-hero-card__goal-icon material-symbols-rounded" aria-hidden="true">flag</span>
-          <div class="progress-hero-card__weight-copy">
-        <span class="progress-hero-card__label">Objetivo maior</span>
-        <strong><%= @final_health_weight_goal ? "#{number_with_precision(@final_health_weight_goal.target_weight, precision: 2, strip_insignificant_zeros: true, separator: ',')} kg" : "Defina sua meta" %></strong>
-        <small>Foco em processo, nao em julgamento diario.</small>
-          </div>
-        </div>
-      </div>
+      <%= render "weekly_period" %>
+      <%= render "weekly_kpis" %>
     </div>
   </div>
+
+  <%= render "weekly_progress" %>
 
   <div id="historico-peso" class="progress-weight-overview">
   <article class="app-panel progress-panel progress-weight-panel">
@@ -49,7 +28,7 @@
       <div class="progress-panel__header">
         <span class="material-symbols-rounded">monitor_weight</span>
         <div>
-          <p class="app-page__eyebrow">Seus registros</p>
+          <p class="app-page__eyebrow">Referência geral</p>
           <h2>Histórico de peso</h2>
         </div>
       </div>
@@ -123,6 +102,7 @@
       <% end %>
     </article>
 
-  <%= render "weekly_progress" %>
 
 </section>
+
+<% end %>

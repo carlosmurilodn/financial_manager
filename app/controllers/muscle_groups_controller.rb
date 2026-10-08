@@ -32,6 +32,7 @@ class MuscleGroupsController < ApplicationController
 
   def update
     if @muscle_group.update(muscle_group_params)
+      remove_example_image_attachment_if_requested
       redirect_to muscle_groups_path, notice: "Grupo muscular atualizado com sucesso!", status: :see_other
     else
       render :edit, status: :unprocessable_entity
@@ -65,10 +66,17 @@ class MuscleGroupsController < ApplicationController
   end
 
   def muscle_group_params
-    params.require(:muscle_group).permit(:name, :active, :position)
+    params.require(:muscle_group).permit(:name, :active, :position, :example_image)
   end
 
   def next_position
     current_user.muscle_groups.maximum(:position).to_i + 1
+  end
+
+  def remove_example_image_attachment_if_requested
+    return unless ActiveModel::Type::Boolean.new.cast(params.dig(:muscle_group, :remove_example_image))
+    return if params.dig(:muscle_group, :example_image).present?
+
+    @muscle_group.example_image.purge_later if @muscle_group.example_image.attached?
   end
 end

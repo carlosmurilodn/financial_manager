@@ -37,7 +37,7 @@
             [health_weekly_reflections_path, :weekly, "Revisão Semanal", "event_note"],
             [self_knowledge_path, :self_knowledge, "Autoconhecimento", "psychology_alt"],
             [health_profile_path, :profile, "Perfil de Saúde", "person"],
-            [health_weight_goals_path, :milestones, "Marcos", "flag"],
+            [health_weight_goals_path, :milestones, "Marcos e Metas", "flag"],
             [muscle_groups_path, :muscle_groups, "Grupos Musculares", "accessibility_new"],
             [strength_exercise_catalogs_path, :strength_exercises, "Exercícios de Musculação", "fitness_center"]
           ].each do |path, section, label, icon| %>
@@ -114,9 +114,9 @@
               <span class="material-symbols-rounded app-nav-link__icon">person</span>
               <span class="link-text">Perfil de Saúde</span>
             <% end %>
-            <%= link_to health_weight_goals_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:milestones)}", id: "link-health-milestones", title: "Marcos", data: { turbo: false } do %>
+            <%= link_to health_weight_goals_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:milestones)}", id: "link-health-milestones", title: "Marcos e Metas", data: { turbo: false } do %>
               <span class="material-symbols-rounded app-nav-link__icon">flag</span>
-              <span class="link-text">Marcos</span>
+              <span class="link-text">Marcos e Metas</span>
             <% end %>
             <%= link_to muscle_groups_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:muscle_groups)}", id: "link-health-muscle-groups", title: "Grupos Musculares", data: { turbo: false } do %>
               <span class="material-symbols-rounded app-nav-link__icon">accessibility_new</span>

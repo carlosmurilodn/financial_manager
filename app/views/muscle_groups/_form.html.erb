@@ -12,6 +12,20 @@
     </div>
 
     <div>
+      <%= f.label :example_image, "Imagem de exemplo" %>
+      <%= f.file_field :example_image, class: "app-form-control", accept: "image/*" %>
+      <% if muscle_group.example_image.attached? %>
+        <div class="strength-exercise-image-preview">
+          <%= image_tag muscle_group.example_image, alt: "Imagem de exemplo de #{muscle_group.name}" %>
+          <label class="app-checkbox">
+            <%= check_box_tag "muscle_group[remove_example_image]", "1", false %>
+            <span>Remover imagem atual</span>
+          </label>
+        </div>
+      <% end %>
+    </div>
+
+    <div>
       <label class="app-checkbox">
         <%= f.check_box :active %>
         <span>Ativo</span>

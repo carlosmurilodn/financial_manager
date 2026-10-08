@@ -27,6 +27,11 @@
     </div>
 
     <div class="health-weight-goal-card__actions">
+      <%= link_to duplicate_health_exercise_path(exercise_entry), class: "health-weight-goal-card__action health-weight-goal-card__action--purple", title: "Duplicar exercício", data: { turbo: false } do %>
+        <span class="material-symbols-rounded">content_copy</span>
+        <span class="health-weight-goal-card__action-label">Duplicar</span>
+      <% end %>
+
       <%= link_to edit_health_exercise_path(exercise_entry), class: "health-weight-goal-card__action", title: "Editar exercício" do %>
         <span class="material-symbols-rounded">edit</span>
         <span class="health-weight-goal-card__action-label">Editar</span>

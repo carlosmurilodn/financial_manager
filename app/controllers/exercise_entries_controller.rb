@@ -1,6 +1,6 @@
 class ExerciseEntriesController < ApplicationController
-  before_action :set_exercise_entry, only: %i[edit update destroy]
-  before_action :load_form_options, only: %i[new edit create update]
+  before_action :set_exercise_entry, only: %i[edit update destroy duplicate]
+  before_action :load_form_options, only: %i[new edit create update duplicate]
 
   def index
     load_exercise_entries
@@ -21,6 +21,11 @@ class ExerciseEntriesController < ApplicationController
 
   def edit
     build_missing_strength_logs
+  end
+
+  def duplicate
+    @exercise_entry = duplicated_exercise_entry(@exercise_entry)
+    render :new
   end
 
   def create
@@ -94,6 +99,27 @@ class ExerciseEntriesController < ApplicationController
   def build_default_item
     item = @exercise_entry.exercise_items.build(exercise_type: "training")
     item.strength_exercise_logs.build
+  end
+
+  def duplicated_exercise_entry(source)
+    current_user.exercise_entries.new(performed_on: nil).tap do |entry|
+      source.exercise_items.includes(:strength_exercise_logs).each do |source_item|
+        item = entry.exercise_items.build(
+          exercise_type: source_item.exercise_type,
+          duration_minutes: source_item.duration_minutes,
+          intensity: source_item.intensity,
+          notes: source_item.notes
+        )
+
+        source_item.strength_exercise_logs.each do |source_log|
+          item.strength_exercise_logs.build(
+            muscle_group_id: source_log.muscle_group_id,
+            strength_exercise_catalog_id: source_log.strength_exercise_catalog_id,
+            sets: source_log.sets
+          )
+        end
+      end
+    end
   end
 
   def build_missing_strength_logs

@@ -17,6 +17,10 @@ Rails.application.routes.draw do
   get "progresso/alimentacao/:week_start", to: "physical_health#nutrition_week", as: :health_nutrition_week
   patch "progresso/alimentacao/:week_start/dia", to: "physical_health#toggle_nutrition_day", as: :toggle_health_nutrition_day
   resources :exercise_entries, path: "progresso/exercicios", as: :health_exercises, only: %i[index new create edit update destroy] do
+    member do
+      get :duplicate, path: "duplicar"
+    end
+
     collection do
       delete :clear_filters
     end

@@ -343,7 +343,7 @@ html[data-theme="night"] .nutrition-diet-day--none { --diet-color: #fb8ba1; }
 
 .progress-page .app-page__hero-top--progress {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
 .progress-page .app-page__hero-top--progress > .app-page__hero-copy,

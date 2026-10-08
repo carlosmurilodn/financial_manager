@@ -1015,8 +1015,91 @@ html[data-theme="night"] .progress-activity-day.is-not-done { color: #fb8ba1; }
 }
 
 @media (max-width: 767px) {
+  .exercise-entry-item {
+    padding: 14px;
+    gap: 16px;
+  }
+
+  .exercise-entry-item__header,
+  .exercise-entry-strength__header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .exercise-entry-item__header .app-btn,
+  .exercise-entry-strength__header .app-btn,
+  .exercise-entry-form__add-action .app-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
   .exercise-entry-item__grid,
   .exercise-entry-strength-log {
+    grid-template-columns: 1fr;
+  }
+
+  .exercise-entry-strength {
+    padding: 12px;
+  }
+
+  .exercise-entry-strength-log__remove {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .exercise-entry-card {
+    overflow-x: visible;
+  }
+
+  .exercise-entry-card .health-weight-goal-card__content {
+    width: 100%;
+    min-width: 0;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .exercise-entry-card .health-weight-goal-card__content > div {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .exercise-entry-card .health-weight-goal-card__identity-main {
+    flex-basis: 100%;
+    min-width: 0;
+  }
+
+  .exercise-entry-card__heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .exercise-entry-card .health-weight-goal-card__meta-item {
+    flex: 1 1 calc((100% - 14px) / 2);
+  }
+
+  .exercise-entry-card .health-weight-goal-card__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .exercise-entry-card .health-weight-goal-card__action {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .exercise-entry-card .health-weight-goal-card__meta-item,
+  .exercise-entry-card .health-weight-goal-card__actions {
+    flex-basis: 100%;
+  }
+
+  .exercise-entry-card .health-weight-goal-card__actions {
     grid-template-columns: 1fr;
   }
 }

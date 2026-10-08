@@ -48,14 +48,14 @@ module Health
     private
 
     def activity_snapshot
-      names = @user.weekly_health_goals
-        .joins(:weekly_health_plan, :weekly_health_goal_days)
-        .where(weekly_health_plans: { week_start: @date.beginning_of_week(:monday) })
-        .where(weekly_health_goal_days: { occurred_on: @date, completed: true })
-        .pluck(:name)
-      words = names.flat_map { |name| name.parameterize.split("-") }
-      trained = (words & TRAINING_WORDS).any?
-      walked = (words & WALKING_WORDS).any?
+      exercise_types = @user.exercise_entries
+        .joins(:exercise_items)
+        .where(performed_on: @date)
+        .distinct
+        .pluck("exercise_items.exercise_type")
+
+      trained = exercise_types.any? { |type| %w[training functional].include?(type) }
+      walked = exercise_types.include?("ergometry")
       { trained: trained, walked: walked, activity_factor: FACTORS.fetch([ trained, walked ]) }
     end
 

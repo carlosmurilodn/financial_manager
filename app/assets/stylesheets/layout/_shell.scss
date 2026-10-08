@@ -205,6 +205,17 @@
   transform: translateX(1px);
 }
 
+.app-nav-link--disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.app-nav-link--disabled:hover {
+  color: var(--nav-text);
+  background: transparent;
+  transform: none;
+}
+
 .app-nav-link.active-menu {
   color: var(--nav-active-text);
   background: var(--nav-active-bg);

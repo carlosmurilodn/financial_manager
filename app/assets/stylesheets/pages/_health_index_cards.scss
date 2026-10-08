@@ -38,15 +38,63 @@ html[data-theme="night"] .nutrition-diet-day--none { --diet-color: #fb8ba1; }
 .nutrition-week-card__metric > .material-symbols-rounded { font-size: 24px; color: var(--nav-active-bar); }
 .nutrition-week-card__metric small { display: block; margin-bottom: 4px; color: var(--text-soft); font-size: .8rem; font-weight: 700; }
 .nutrition-week-card__metric strong { display: block; color: var(--text-main); font-size: 1rem; white-space: nowrap; }
-.nutrition-page .nutrition-week-card .health-card__actions { flex: 0 0 auto; margin-left: auto; }
+.nutrition-page .nutrition-week-card .health-card__actions { flex: 1 1 100%; margin-left: 0; }
 .nutrition-week-card__averages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; flex: 1 1 100%; min-width: 0; }
 .nutrition-week-card__averages .self-knowledge-hero-kpi { min-width: 0; }
 @media (max-width: 767px) {
   .nutrition-week-card__averages { grid-template-columns: 1fr; }
   .nutrition-page .nutrition-week-filter { flex-wrap: wrap; }
   .nutrition-page .nutrition-week-filter .app-filter-field { flex-basis: 100%; }
-  .nutrition-page .nutrition-week-card__metrics { flex: 1 1 100%; gap: 16px; }
-  .nutrition-page .nutrition-week-card .health-card__actions { margin-left: 0; }
+  .nutrition-page .nutrition-week-card .health-card__content { padding: 16px; }
+  .nutrition-page .nutrition-week-card__summary {
+    align-items: stretch;
+    gap: 16px;
+  }
+  .nutrition-page .nutrition-week-card .health-card__identity-block {
+    flex: 0 1 auto;
+    width: 100%;
+    min-width: 0;
+  }
+  .nutrition-page .nutrition-week-card .health-card__identity-main {
+    align-items: center;
+    flex-direction: row;
+    gap: 12px;
+  }
+  .nutrition-page .nutrition-week-card .health-card__icon-wrapper {
+    flex-basis: 52px;
+    width: 52px;
+    height: 52px;
+  }
+  .nutrition-page .nutrition-week-card .health-card__title {
+    font-size: .94rem;
+    line-height: 1.25;
+  }
+  .nutrition-page .nutrition-week-card__metrics {
+    display: grid;
+    flex: 0 1 auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+  }
+  .nutrition-week-card__metric {
+    min-width: 0;
+    justify-content: flex-start;
+  }
+  .nutrition-page .nutrition-week-card .health-card__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    margin-left: 0;
+  }
+  .nutrition-page .nutrition-week-card .health-card__action {
+    min-width: 0;
+    padding-inline: 10px;
+  }
+  .nutrition-week-card__averages .self-knowledge-hero-kpi {
+    align-items: center;
+    min-height: auto;
+    padding: 14px;
+  }
 }
 
 .health-index-page,
@@ -428,6 +476,16 @@ html[data-theme="night"] .nutrition-diet-day--none { --diet-color: #fb8ba1; }
   flex: 0 0 auto;
 }
 
+.health-weight-goal-card__action--purple {
+  background: color-mix(in srgb, #8054ca 12%, var(--surface));
+  color: #8054ca;
+}
+
+.health-weight-goal-card__action--purple:hover,
+.health-weight-goal-card__action--purple:focus-visible {
+  color: #8054ca;
+}
+
 // Wellbeing: independent groups on a single flex row.
 .weekly-wellbeing-card {
   overflow-x: auto;
@@ -567,6 +625,82 @@ html[data-theme="night"] .nutrition-diet-day--none { --diet-color: #fb8ba1; }
   @include health-record-mobile;
 }
 
+.health-weight-goal-stage-card .health-weight-goal-card__description-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+}
+
+.health-weight-goal-stage-card .health-weight-goal-card__identity-main {
+  flex: 1 1 280px;
+}
+
+.health-weight-goal-stage-card .health-weight-goal-card__description-link .health-weight-goal-card__amount {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 640px) {
+  .health-weight-goal-stage-card .health-weight-goal-card__identity-main {
+    flex-basis: 100%;
+  }
+
+  .health-weight-goal-stage-card .health-weight-goal-card__content > .health-weight-goal-card__amount-area,
+  .health-weight-goal-stage-card .health-weight-goal-card__content > .health-weight-goal-card__meta-item {
+    flex: 1 1 calc((100% - 28px) / 3);
+    max-width: calc((100% - 28px) / 3);
+  }
+
+  .health-weight-goal-stage-card .health-weight-goal-card__amount-area,
+  .health-weight-goal-stage-card .health-weight-goal-card__meta-item {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .health-weight-goal-stage-card .health-weight-goal-card__meta-item {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .health-weight-goal-stage-card .health-weight-goal-card__meta-item > span:last-child {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+@media (max-width: 640px) {
+  .strength-exercise-catalog-card .health-weight-goal-card__content > .health-weight-goal-card__amount-area,
+  .strength-exercise-catalog-card .health-weight-goal-card__content > .health-weight-goal-card__meta-item,
+  .muscle-group-card .health-weight-goal-card__content > .health-weight-goal-card__amount-area,
+  .muscle-group-card .health-weight-goal-card__content > .health-weight-goal-card__meta-item {
+    flex: 1 1 calc((100% - 28px) / 3);
+    max-width: calc((100% - 28px) / 3);
+  }
+
+  .strength-exercise-catalog-card .health-weight-goal-card__amount-area,
+  .strength-exercise-catalog-card .health-weight-goal-card__meta-item,
+  .muscle-group-card .health-weight-goal-card__amount-area,
+  .muscle-group-card .health-weight-goal-card__meta-item {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .strength-exercise-catalog-card .health-weight-goal-card__meta-item,
+  .muscle-group-card .health-weight-goal-card__meta-item {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .strength-exercise-catalog-card .health-weight-goal-card__meta-item > span:last-child,
+  .muscle-group-card .health-weight-goal-card__meta-item > span:last-child {
+    align-items: center;
+  }
+}
+
 // Wins: description, date and actions own their flex groups.
 .health-win-card {
   container-type: inline-size;
@@ -680,7 +814,33 @@ html[data-theme="night"] .nutrition-diet-day--none { --diet-color: #fb8ba1; }
 @media (max-width: 600px) {
   .diary-week { padding: 14px; }
   .diary-entry-card__content { padding: 14px; }
-  .diary-entry-card__actions { width: 100%; margin-left: 0; justify-content: flex-start; }
+  .diary-entry-card__identity-main {
+    align-items: flex-start;
+  }
+  .diary-entry-card__metrics {
+    flex-wrap: nowrap;
+    gap: 4px;
+    max-width: 100%;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+  .diary-entry-card__metrics .diary-entry-card__pill {
+    flex: 0 0 auto;
+    padding: 4px 8px;
+    font-size: .72rem;
+    white-space: nowrap;
+  }
+  .diary-entry-card__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    margin-left: 0;
+    justify-content: stretch;
+  }
+  .diary-entry-card__action {
+    min-width: 0;
+    justify-content: center;
+  }
   .diary-entry-card__excerpts { grid-template-columns: 1fr; padding: 14px; }
 }
 
@@ -888,7 +1048,244 @@ html[data-theme="night"] .progress-activity-day.is-not-done { color: #fb8ba1; }
 .progress-mental-kpis .self-knowledge-hero-kpi { padding: 10px; gap: 8px; }
 .progress-mental-kpis .self-knowledge-hero-kpi > .material-symbols-rounded { font-size: 24px; }
 @media (max-width: 575px) { .progress-mental-kpis { grid-template-columns: 1fr; } }
+
+.strength-exercise-card__image {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
+.strength-exercise-image-preview {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.strength-exercise-image-preview img {
+  width: 96px;
+  height: 96px;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.exercise-entry-form__items {
+  display: grid;
+  gap: 16px;
+}
+
+.exercise-entry-form__add-action {
+  margin-top: 18px;
+  margin-bottom: 12px;
+}
+
+.exercise-entry-item {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.exercise-entry-item__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.exercise-entry-item__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+}
+
+.exercise-entry-item__grid--ergometry {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.exercise-entry-strength {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.exercise-entry-item [hidden] {
+  display: none !important;
+}
+
+.exercise-entry-strength__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.exercise-entry-strength__logs {
+  display: grid;
+  gap: 10px;
+}
+
+.exercise-entry-strength-log {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr) minmax(120px, .4fr) auto;
+  align-items: end;
+  gap: 12px;
+}
+
+.exercise-entry-strength-log__remove {
+  min-width: 44px;
+  padding-inline: 12px;
+}
+
+.exercise-entry-item__notes textarea {
+  min-height: 48px;
+  resize: vertical;
+}
+
+.exercise-entry-card__heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.exercise-entry-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 0;
+}
+
+.exercise-entry-card__chips span {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--hero-badge-icon-bg);
+  color: var(--nav-active-bar);
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+@media (max-width: 767px) {
+  .exercise-entry-item {
+    padding: 14px;
+    gap: 16px;
+  }
+
+  .exercise-entry-item__header,
+  .exercise-entry-strength__header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .exercise-entry-item__header .app-btn,
+  .exercise-entry-strength__header .app-btn,
+  .exercise-entry-form__add-action .app-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .exercise-entry-item__grid,
+  .exercise-entry-strength-log {
+    grid-template-columns: 1fr;
+  }
+
+  .exercise-entry-strength {
+    padding: 12px;
+  }
+
+  .exercise-entry-strength-log__remove {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .exercise-entry-card {
+    overflow-x: visible;
+  }
+
+  .exercise-entry-card .health-weight-goal-card__content {
+    width: 100%;
+    min-width: 0;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .exercise-entry-card .health-weight-goal-card__content > div {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .exercise-entry-card .health-weight-goal-card__identity-main {
+    flex-basis: 100%;
+    min-width: 0;
+  }
+
+  .exercise-entry-card__heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .exercise-entry-card .health-weight-goal-card__content > .health-weight-goal-card__meta-item {
+    flex: 0 0 calc((100% - 14px) / 2);
+    max-width: calc((100% - 14px) / 2);
+  }
+
+  .exercise-entry-card .health-weight-goal-card__actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .exercise-entry-card .health-weight-goal-card__action {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
 .app-health-mobile-links { display: none; }
+
+.health-index-page .health-card__action,
+.health-index-page .health-weight-goal-card__action,
+.health-index-page .health-win-card__action,
+.health-index-page .diary-entry-card__action,
+.health-index-page .weight-entry-card__action,
+.health-review-card__action,
+.diary-show .diary-entry-card__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 16px;
+  font-size: .86rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.health-index-page .health-card__action .material-symbols-rounded,
+.health-index-page .health-weight-goal-card__action .material-symbols-rounded,
+.health-index-page .health-win-card__action .material-symbols-rounded,
+.health-index-page .diary-entry-card__action .material-symbols-rounded,
+.health-index-page .weight-entry-card__action .material-symbols-rounded,
+.health-review-card__action .material-symbols-rounded,
+.diary-show .diary-entry-card__action .material-symbols-rounded {
+  flex: 0 0 auto;
+  font-size: 24px;
+  line-height: 1;
+}
+
 @media (max-width: 991px) {
   .app-sidebar--health .app-health-mobile-links { display: contents; }
   .app-sidebar--health .app-sidebar__nav > #link-progress,

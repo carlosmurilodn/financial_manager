@@ -1,0 +1,32 @@
+<%= form_with model: exercise_entry, url: exercise_entry.persisted? ? health_exercise_path(exercise_entry) : health_exercises_path, local: true, html: { class: "app-form-page__form", data: { controller: "exercise-entry-form", turbo: false } } do |f| %>
+  <div class="progress-review-form">
+    <div>
+      <%= f.label :performed_on, "Dia do treino" %>
+      <%= f.text_field :performed_on, value: exercise_entry.performed_on&.strftime("%d/%m/%Y"), class: "app-form-control custom-date", autocomplete: "off", placeholder: "Selecione a data", required: true %>
+    </div>
+  </div>
+
+  <div class="exercise-entry-form__items" data-exercise-entry-form-target="items">
+    <%= f.fields_for :exercise_items do |item_form| %>
+      <%= render "exercise_item_fields", f: item_form %>
+    <% end %>
+  </div>
+
+  <template data-exercise-entry-form-target="template">
+    <%= f.fields_for :exercise_items, ExerciseItem.new(exercise_type: "training"), child_index: "NEW_RECORD" do |item_form| %>
+      <%= render "exercise_item_fields", f: item_form %>
+    <% end %>
+  </template>
+
+  <div class="app-filter-actions exercise-entry-form__add-action">
+    <button type="button" class="app-btn app-btn--secondary" data-action="exercise-entry-form#add">
+      <span class="material-symbols-rounded">add</span>
+      <span>Adicionar exercício</span>
+    </button>
+  </div>
+
+  <div class="app-form-page__actions">
+    <%= link_to "Cancelar", health_exercises_path, class: "app-btn app-btn--outline" %>
+    <%= f.submit "Salvar treino", class: "app-btn app-btn--primary" %>
+  </div>
+<% end %>

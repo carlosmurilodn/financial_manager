@@ -1,0 +1,65 @@
+<section class="app-page health-index-page self-knowledge-page">
+  <div class="app-page__hero">
+    <div class="app-page__hero-top self-knowledge-section-hero">
+      <div class="app-page__hero-unit app-page__hero-copy self-knowledge-section-hero__heading">
+        <span class="app-page__hero-icon">
+          <span class="material-symbols-rounded">accessibility_new</span>
+        </span>
+        <div>
+          <p class="app-page__eyebrow">Cadastros Básicos</p>
+          <h1 class="app-page__title">Grupos Musculares</h1>
+        </div>
+      </div>
+
+      <div class="app-page__hero-unit self-knowledge-page-actions">
+        <%= link_to new_muscle_group_path, class: "app-btn app-btn--primary", data: { turbo: false } do %>
+          <span><span class="material-symbols-rounded">add</span></span>
+          <span><strong>Novo Grupo</strong></span>
+        <% end %>
+      </div>
+
+      <div class="app-page__hero-kpis">
+        <%= render "hero_kpis" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-panel">
+    <%= render "shared/filter_accordion" do %>
+      <%= form_with url: muscle_groups_path, method: :get, local: true, class: "app-filter-form" do |f| %>
+        <div class="health-index-filters">
+          <div class="app-filter-field">
+            <%= f.label :name, "Nome" %>
+            <%= f.text_field :name, value: @name_filter, class: "app-form-control", placeholder: "Buscar grupo muscular" %>
+          </div>
+
+          <div class="app-filter-field">
+            <%= f.label :status, "Status" %>
+            <%= f.select :status,
+                  options_for_select([["Todos", ""], ["Ativos", "active"], ["Inativos", "inactive"]], @status_filter),
+                  {},
+                  class: "app-form-select" %>
+          </div>
+        </div>
+
+        <div class="app-filter-actions">
+          <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>
+            <i class="bi bi-funnel me-1"></i> <%= t("buttons.filter") %>
+          <% end %>
+
+          <%= link_to clear_filters_muscle_groups_path,
+                      class: "app-btn app-btn--secondary app-page__secondary-btn",
+                      data: { turbo_method: :delete } do %>
+            <i class="bi bi-x-circle me-1"></i> Limpar Filtros
+          <% end %>
+
+          <%= render "shared/per_page_select" %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="app-panel app-panel--table">
+    <%= render "muscle_groups_list" %>
+  </div>
+</section>

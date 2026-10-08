@@ -1,0 +1,48 @@
+<div id="<%= dom_id(strength_exercise_catalog) %>" class="health-weight-goal-card strength-exercise-catalog-card <%= strength_exercise_catalog.active? ? "health-weight-goal-card--success" : "health-weight-goal-card--pending" %>" style="--health-card-accent: #5c6df2;">
+  <div class="health-weight-goal-card__content">
+    <div class="health-weight-goal-card__identity-main">
+      <div class="health-weight-goal-card__icon-wrapper">
+        <% if strength_exercise_catalog.example_image.attached? %>
+          <%= image_tag strength_exercise_catalog.example_image, class: "strength-exercise-card__image", alt: strength_exercise_catalog.name %>
+        <% else %>
+          <span class="material-symbols-rounded health-weight-goal-card__icon">fitness_center</span>
+        <% end %>
+      </div>
+      <div class="health-weight-goal-card__description-link">
+        <h3 class="health-weight-goal-card__title"><%= strength_exercise_catalog.name %></h3>
+      </div>
+    </div>
+
+    <div class="health-weight-goal-card__amount-area">
+      <span class="health-weight-goal-card__status <%= strength_exercise_catalog.active? ? "health-weight-goal-card__status--success" : "health-weight-goal-card__status--pending" %>">
+        <span class="material-symbols-rounded health-weight-goal-card__status-state-icon"><%= strength_exercise_catalog.active? ? "check" : "visibility_off" %></span>
+        <span class="health-weight-goal-card__status-label"><%= strength_exercise_catalog.active? ? "Ativo" : "Inativo" %></span>
+      </span>
+    </div>
+
+    <div class="health-weight-goal-card__meta-item">
+      <span class="material-symbols-rounded">accessibility_new</span>
+      <span><small>Grupo</small><strong><%= strength_exercise_catalog.muscle_group.name %></strong></span>
+    </div>
+
+    <div class="health-weight-goal-card__meta-item health-weight-goal-card__position">
+      <span class="material-symbols-rounded">sort</span>
+      <span><small>Ordem</small><strong><%= strength_exercise_catalog.position %></strong></span>
+    </div>
+
+    <div class="health-weight-goal-card__actions">
+      <%= link_to edit_strength_exercise_catalog_path(strength_exercise_catalog), class: "health-weight-goal-card__action", title: "Editar exercício" do %>
+        <span class="material-symbols-rounded">edit</span>
+        <span class="health-weight-goal-card__action-label">Editar</span>
+      <% end %>
+
+      <%= link_to strength_exercise_catalog_path(strength_exercise_catalog),
+                  data: { turbo_method: :delete, turbo_confirm: "Excluir este exercício?" },
+                  class: "health-weight-goal-card__action health-weight-goal-card__action--danger",
+                  title: "Excluir exercício" do %>
+        <span class="material-symbols-rounded">delete</span>
+        <span class="health-weight-goal-card__action-label">Excluir</span>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -2,7 +2,7 @@
 
 <div
   id="<%= dom_id(health_weight_goal) %>"
-  class="health-weight-goal-card <%= reached ? "health-weight-goal-card--success" : "health-weight-goal-card--pending" %>"
+  class="health-weight-goal-card health-weight-goal-stage-card <%= reached ? "health-weight-goal-card--success" : "health-weight-goal-card--pending" %>"
   style="--health-card-accent: #5c6df2;"
 >
   <div class="health-weight-goal-card__content">
@@ -13,19 +13,13 @@
 
       <div class="health-weight-goal-card__description-link">
         <h3 class="health-weight-goal-card__title"><%= health_weight_goal.kind_label %></h3>
+        <strong class="health-weight-goal-card__amount">
+          <%= number_with_precision(health_weight_goal.target_weight, precision: 2, strip_insignificant_zeros: true, separator: ",") %> kg
+        </strong>
       </div>
     </div>
 
-    <div class="health-weight-goal-card__badges">
-      <span class="health-weight-goal-card__pill">Saúde</span>
-      <span class="health-weight-goal-card__pill"><%= health_weight_goal.final? ? "Final" : "Intermediária" %></span>
-    </div>
-
     <div class="health-weight-goal-card__amount-area">
-      <strong class="health-weight-goal-card__amount">
-        <%= number_with_precision(health_weight_goal.target_weight, precision: 2, strip_insignificant_zeros: true, separator: ",") %> kg
-      </strong>
-
       <span class="health-weight-goal-card__status <%= reached ? "health-weight-goal-card__status--success" : "health-weight-goal-card__status--pending" %>">
         <span class="material-symbols-rounded health-weight-goal-card__status-state-icon"><%= reached ? "check" : "schedule" %></span>
         <span class="health-weight-goal-card__status-label"><%= reached ? "Cumprida" : "Pendente" %></span>

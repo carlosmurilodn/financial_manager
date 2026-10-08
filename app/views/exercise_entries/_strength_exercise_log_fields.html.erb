@@ -20,7 +20,7 @@
 
   <div>
     <%= f.label :sets, "Séries" %>
-    <%= f.number_field :sets, class: "app-form-control", min: 1, step: 1, placeholder: "Ex.: 4" %>
+    <%= f.number_field :sets, class: "app-form-control", min: 1, step: 1, placeholder: "Ex.: 4", required: true %>
   </div>
 
   <button type="button" class="app-btn app-btn--secondary exercise-entry-strength-log__remove" data-action="exercise-entry-form#removeStrengthLog" title="Remover grupo">

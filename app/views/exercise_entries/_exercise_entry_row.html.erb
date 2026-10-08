@@ -5,11 +5,13 @@
         <span class="material-symbols-rounded health-weight-goal-card__icon">fitness_center</span>
       </div>
       <div class="health-weight-goal-card__description-link">
-        <h3 class="health-weight-goal-card__title">Dia <%= l(exercise_entry.performed_on, format: :long) %></h3>
-        <div class="exercise-entry-card__chips">
-          <% exercise_entry.exercise_items.each do |item| %>
-            <span><%= item.type_label %></span>
-          <% end %>
+        <div class="exercise-entry-card__heading">
+          <h3 class="health-weight-goal-card__title">Dia <%= l(exercise_entry.performed_on, format: :long) %></h3>
+          <div class="exercise-entry-card__chips">
+            <% exercise_entry.exercise_items.each do |item| %>
+              <span><%= item.type_label %></span>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>

@@ -955,7 +955,7 @@ html[data-theme="night"] .progress-activity-day.is-not-done { color: #fb8ba1; }
   padding: 14px;
   border: 1px solid var(--card-border);
   border-radius: 10px;
-  background: var(--app-bg-soft);
+  background: var(--surface);
 }
 
 .exercise-entry-item [hidden] {
@@ -991,11 +991,18 @@ html[data-theme="night"] .progress-activity-day.is-not-done { color: #fb8ba1; }
   resize: vertical;
 }
 
+.exercise-entry-card__heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .exercise-entry-card__chips {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 6px;
+  margin-top: 0;
 }
 
 .exercise-entry-card__chips span {

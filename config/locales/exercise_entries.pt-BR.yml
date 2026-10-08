@@ -1,0 +1,30 @@
+pt-BR:
+  activerecord:
+    models:
+      exercise_entry: "Treino"
+      exercise_item: "Exercício"
+      strength_exercise_log: "Exercício de musculação"
+    attributes:
+      exercise_entry:
+        performed_on: "Dia do treino"
+        exercise_items: "Exercícios"
+      exercise_item:
+        exercise_type: "Tipo"
+        duration_minutes: "Duração"
+        intensity: "Intensidade"
+        notes: "Observação"
+        strength_exercise_logs: "Musculação"
+      strength_exercise_log:
+        muscle_group: "Grupo muscular"
+        muscle_group_id: "Grupo muscular"
+        strength_exercise_catalog: "Exercício"
+        strength_exercise_catalog_id: "Exercício"
+        sets: "Séries"
+    errors:
+      models:
+        strength_exercise_log:
+          attributes:
+            sets:
+              not_a_number: "precisa ser preenchido"
+              greater_than: "deve ser maior que %{count}"
+              less_than_or_equal_to: "deve ser menor ou igual a %{count}"

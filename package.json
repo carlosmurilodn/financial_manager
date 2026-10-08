@@ -19,6 +19,6 @@
   },
   "scripts": {
     "build": "node esbuild.config.js",
-    "watch": "esbuild app/javascript/application.js --bundle --sourcemap --outdir=app/assets/builds --format=esm --watch"
+    "watch": "node esbuild.config.js --watch"
   }
 }

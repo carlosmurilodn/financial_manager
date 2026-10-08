@@ -13,8 +13,14 @@ class ProgressController < ApplicationController
     @weight_chart_points = chart_entries.order(:measured_on).pluck(:measured_on, :weight_kg).map { |date, weight| { date: date.iso8601, weight: weight.to_f } }
     @week_start = Health::WeeklyPlan.week_start(params[:week])
     @weekly_health_plan = Health::WeeklyPlan.build(user: current_user, week_start: @week_start)
-    @weekly_health_review = current_user.weekly_health_reviews.find_by(review_kind: "weekly", week_start: @week_start)
-    @weekly_wellbeing = current_user.weekly_wellbeings.find_by(week_start: @week_start)
+    @self_knowledge_week = Health::SelfKnowledgeWeek.new(current_user, @week_start)
+    @self_knowledge_reflection = current_user.health_weekly_reflections.find_by(week_start: @week_start)
+    @saved_weekly_goals = @weekly_health_plan.persisted? ? @weekly_health_plan.weekly_health_goals.to_a : []
+    ActiveRecord::Associations::Preloader.new(records: @saved_weekly_goals, associations: :weekly_health_goal_days).call
+    @physical_week_rows = Health::PhysicalWeekQuery.new(plan: @weekly_health_plan, week_start: @week_start).call
+    @saved_weekly_goals = @physical_week_rows.map { |row| row[:goal] }
+    @completed_weekly_goals_count = @physical_week_rows.count { |row| row[:completed_count] >= row[:goal].target_count }
+
     weekly_weights = current_user.weight_entries.where(measured_on: @week_start..(@week_start + 6.days))
     @weekly_weight_count = weekly_weights.count
     @weekly_average_weight = weekly_weights.average(:weight_kg)
@@ -30,9 +36,10 @@ class ProgressController < ApplicationController
         average_weight: @weekly_average_weight,
         weight_count: @weekly_weight_count,
         goals: @weekly_health_plan.persisted? ? @weekly_health_plan.weekly_health_goals.to_a : [],
-        wellbeing: @weekly_wellbeing,
+        wellbeing: @self_knowledge_reflection,
+        self_knowledge: @self_knowledge_week,
         wins_count: @weekly_wins_count
       }
-    ).call
+    ).call.reject { |row| row[:kind] == :wins }
   end
 end

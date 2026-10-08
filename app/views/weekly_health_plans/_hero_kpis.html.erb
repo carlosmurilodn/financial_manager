@@ -1,25 +1,14 @@
-<div id="weekly-health-plans-hero-kpis" class="app-weekly-health-plans-hero-kpis">
-  <div class="health-kpi-card health-kpi-card--warning">
-    <div class="health-kpi-card__icon">
-      <span class="material-symbols-rounded">task_alt</span>
-    </div>
-    <div>
-      <span class="health-kpi-card__label">Última semana</span>
-      <strong class="health-kpi-card__value">
-        <%= @latest_weekly_health_plan ? pluralize(@latest_weekly_health_plan.weekly_health_goals.size, "meta", "metas") : "Sem registro" %>
-      </strong>
-      <small><%= @latest_weekly_health_plan ? @latest_weekly_health_plan.week_start.strftime("%d/%m/%Y") : "Cadastre suas metas semanais." %></small>
-    </div>
-  </div>
-
-  <div class="health-kpi-card health-kpi-card--primary">
-    <div class="health-kpi-card__icon">
-      <span class="material-symbols-rounded">format_list_numbered</span>
-    </div>
-    <div>
-      <span class="health-kpi-card__label">Registros filtrados</span>
-      <strong class="health-kpi-card__value"><%= @filtered_count || 0 %></strong>
-      <small><%= @week_from_label.present? ? "Desde #{@week_from_label}" : "Todas as semanas" %></small>
-    </div>
-  </div>
+<div id="weekly-health-plans-hero-kpis" class="physical-health-hero-kpis">
+  <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--green">
+    <span class="material-symbols-rounded" aria-hidden="true">event_note</span>
+    <div><p>Última Semana</p><strong><%= @latest_weekly_health_plan ? @latest_weekly_health_plan.week_start.strftime("%d/%m/%Y") : "Sem registro" %></strong><small><%= "Início da última semana registrada" %></small></div>
+  </article>
+  <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--yellow">
+    <span class="material-symbols-rounded" aria-hidden="true">format_list_numbered</span>
+    <div><p>Semanas Filtradas</p><strong><%= @filtered_count || 0 %></strong><small><%= "No período selecionado" %></small></div>
+  </article>
+  <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--purple">
+    <span class="material-symbols-rounded" aria-hidden="true">task_alt</span>
+    <div><p>Metas da Última Semana</p><strong><%= @latest_weekly_health_plan ? @latest_weekly_health_plan.weekly_health_goals.size : 0 %></strong><small><%= "Na última semana registrada" %></small></div>
+  </article>
 </div>

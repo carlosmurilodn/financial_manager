@@ -1,0 +1,5 @@
+<details class="diary-show__origin self-knowledge-legacy"><summary>Dados importados do formato anterior</summary>
+  <p>Conteúdo original preservado. As perguntas anteriores podem ter outro significado.</p>
+  <% labels = HealthDiaryContent::WEEKLY.transform_values(&:first).transform_keys(&:to_s).merge(HealthDiaryContent::METRICS.transform_keys(&:to_s)).merge('minimum_goal' => 'Meta / próximo passo anterior', 'notes' => 'Observação original', 'other_need' => 'Outra necessidade', 'needs' => 'Necessidades', 'scenario' => 'Cenário') %>
+  <% labels.each do |field, label| %><% value = record.legacy_content[field] %><% if value.present? %><h3><%= label %></h3><%= simple_format(value.is_a?(Array) ? value.join(', ') : value.to_s) %><% end %><% end %>
+</details>

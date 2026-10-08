@@ -1,0 +1,43 @@
+<section class="app-page health-index-page self-knowledge-page">
+  <%= render "self_knowledge/header" %>
+  <div class="app-panel"><%= render "shared/filter_accordion" do %>
+    <%= form_with url: collection_path, method: :get, local: true, class: "app-filter-form self-knowledge-record-filters" do |f| %>
+      <div class="health-index-filters">
+        <div class="app-filter-field">
+          <%= f.label :date_from, weekly? ? "Da semana" : "De" %>
+          <% if weekly? %>
+            <%= f.select :date_from, options_for_select(@week_options, @date_from&.iso8601), { include_blank: "Todas as semanas" }, class: "app-form-select" %>
+          <% else %>
+            <%= f.date_field :date_from, value: @date_from, class: "app-form-control" %>
+          <% end %>
+        </div>
+        <div class="app-filter-field">
+          <%= f.label :date_to, weekly? ? "Até a semana" : "Até" %>
+          <% if weekly? %>
+            <%= f.select :date_to, options_for_select(@week_options, @date_to&.iso8601), { include_blank: "Todas as semanas" }, class: "app-form-select" %>
+          <% else %>
+            <%= f.date_field :date_to, value: @date_to, class: "app-form-control" %>
+          <% end %>
+        </div>
+      </div>
+      <div class="app-filter-actions"><%= f.submit "Filtrar", class: "app-btn app-btn--primary" %><%= link_to "Limpar filtros", collection_path, class: "app-btn app-btn--secondary" %><%= render "shared/per_page_select" %></div>
+    <% end %>
+  <% end %></div>
+  <div class="diary-week__entries">
+    <% @records.each do |record| %>
+      <article class="diary-entry-card <%= 'diary-entry-card--weekly' if weekly? %>"><div class="diary-entry-card__content">
+        <%= link_to record_path(record), class: "diary-entry-card__identity-main" do %><span class="diary-entry-card__icon-wrapper"><span class="material-symbols-rounded"><%= weekly? ? 'event_note' : 'edit_note' %></span></span><div class="diary-entry-card__description-link"><h2 class="diary-entry-card__title"><%= record_title(record) %></h2>
+          <% unless weekly? %><p class="diary-entry-card__subtitle diary-entry-card__metrics"><% Health::SelfKnowledgeContent::METRICS.each do |field, content| %><span class="diary-entry-card__pill"><%= content.first %>: <%= record.public_send(field) || "—" %> </span><% end %></p><% end %>
+        </div><% end %>
+        <div class="diary-entry-card__actions"><%= link_to "Ver registro", record_path(record), class: "diary-entry-card__action" %><%= link_to "Editar", edit_record_path(record), class: "diary-entry-card__action" %><%= link_to "Excluir", record_path(record), class: "diary-entry-card__action diary-entry-card__action--danger", data: { turbo_method: :delete, turbo_confirm: "Excluir este registro?" } %></div>
+      </div>
+      <% if weekly? %>
+        <% excerpt = record.next_small_step.presence || record.weekly_learning %>
+        <% if excerpt.present? %><div class="diary-entry-card__excerpts"><p><%= truncate(excerpt, length: 220) %></p></div><% end %>
+      <% end %>
+      </article>
+    <% end %>
+    <% if @records.empty? %><div class="app-panel"><p>Nenhum registro neste período. Você pode começar com uma frase ou um indicador.</p></div><% end %>
+  </div>
+  <%= render "shared/pagination", current_page: @current_page, total_pages: @total_pages, base_params: request.query_parameters.except(:page) %>
+</section>

@@ -13,14 +13,16 @@ module Health
       previous_count = weights.count
       previous_plan = @user.weekly_health_plans.find_by(week_start: previous_start)
       previous_goals = previous_plan ? previous_plan.weekly_health_goals.to_a : []
-      previous_wellbeing = @user.weekly_wellbeings.find_by(week_start: previous_start)
+      previous_wellbeing = @user.health_weekly_reflections.find_by(week_start: previous_start)
       previous_wins = @user.health_wins.where(achieved_on: previous_start..(previous_start + 6.days)).count
 
       rows = [row("Peso médio", :weight, previous_average, @current[:average_weight]&.round(2)).merge(previous_count: previous_count, current_count: @current[:weight_count])]
       rows.concat(goal_rows(previous_goals, @current[:goals]))
-      WeeklyWellbeing::METRICS.each do |attribute, label|
-        rows << row(label, :score, previous_wellbeing&.public_send(attribute), @current[:wellbeing]&.public_send(attribute))
+      previous_diaries = Health::SelfKnowledgeWeek.new(@user, previous_start)
+      Health::SelfKnowledgeContent::METRICS.each do |attribute, content|
+        rows << row(content.first, :score, previous_diaries.averages.fetch(attribute)[:mean], @current[:self_knowledge]&.averages&.fetch(attribute)&.fetch(:mean))
       end
+      rows << row("Satisfação com a rotina", :score, previous_wellbeing&.routine_satisfaction, @current[:wellbeing]&.routine_satisfaction)
       rows << row("Vitórias", :wins, previous_wins.positive? ? previous_wins : nil, @current[:wins_count].positive? ? @current[:wins_count] : nil)
       rows
     end

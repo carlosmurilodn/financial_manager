@@ -35,20 +35,36 @@ class WeeklyHealthReview < ApplicationRecord
     minimum_goal: "Qual é a meta mínima do próximo dia?"
   }.freeze
 
+  TEXT_FIELDS = (HealthDiaryContent::WEEKLY.keys + QUESTIONS.keys + %i[notes other_need]).uniq.freeze
   belongs_to :user
+  validates(*HealthDiaryContent::METRICS.keys, numericality: { only_integer: true, in: 1..5 }, allow_nil: true)
+  validates(*TEXT_FIELDS, length: { maximum: 2000 })
+  validates :scenario, inclusion: { in: HealthDiaryContent::SCENARIOS.keys }, allow_blank: true
+  validate :valid_needs
+
+  def reflection_prompts
+    daily? ? HealthDiaryContent::DAILY : HealthDiaryContent::WEEKLY
+  end
+
+  def needs=(values)
+    super(values.is_a?(Array) ? values.reject(&:blank?).uniq : values)
+  end
+
+  def valid_needs
+    errors.add(:needs, "contém opções inválidas") unless needs.is_a?(Array) && (needs - HealthDiaryContent::NEEDS).empty?
+  end
 
   validates :review_kind, presence: true, inclusion: { in: REVIEW_KINDS.keys.map(&:to_s) }
   validates :week_start, presence: true, uniqueness: { scope: %i[user_id review_kind] }
-  validates(*QUESTIONS.keys, length: { maximum: 2000 })
   validate :week_starts_on_monday
   validate :at_least_one_answer
 
   def answered_count
-    QUESTIONS.keys.count { |attribute| public_send(attribute).present? }
+    reflection_prompts.keys.count { |attribute| public_send(attribute).present? }
   end
 
   def complete?
-    answered_count == QUESTIONS.size
+    answered_count == reflection_prompts.size
   end
 
   def daily?
@@ -68,6 +84,8 @@ class WeeklyHealthReview < ApplicationRecord
   end
 
   def period_title
+    return "Período inválido" if week_start.blank?
+
     if weekly?
       "Semana de #{week_start.strftime("%d/%m/%Y")} a #{period_end.strftime("%d/%m/%Y")}"
     else
@@ -84,6 +102,7 @@ class WeeklyHealthReview < ApplicationRecord
   end
 
   def at_least_one_answer
-    errors.add(:base, "Preencha pelo menos uma resposta para salvar a revisão.") if answered_count.zero?
+    has_content = TEXT_FIELDS.any? { |attribute| public_send(attribute).present? } || HealthDiaryContent::METRICS.keys.any? { |attribute| public_send(attribute).present? } || needs.present?
+    errors.add(:base, "Registre um indicador, uma resposta ou uma necessidade para salvar.") unless has_content
   end
 end

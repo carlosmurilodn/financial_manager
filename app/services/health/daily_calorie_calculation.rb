@@ -1,6 +1,6 @@
 module Health
   class DailyCalorieCalculation
-    TRAINING_WORDS = %w[treinar treino].freeze
+    TRAINING_WORDS = %w[treinar treino musculacao funcional].freeze
     WALKING_WORDS = %w[caminhar caminhada].freeze
     FACTORS = {
       [ false, false ] => BigDecimal("1.2"),
@@ -53,7 +53,7 @@ module Health
         .where(weekly_health_plans: { week_start: @date.beginning_of_week(:monday) })
         .where(weekly_health_goal_days: { occurred_on: @date, completed: true })
         .pluck(:name)
-      words = names.flat_map { |name| name.downcase.scan(/[[:alnum:]_]+/) }
+      words = names.flat_map { |name| name.parameterize.split("-") }
       trained = (words & TRAINING_WORDS).any?
       walked = (words & WALKING_WORDS).any?
       { trained: trained, walked: walked, activity_factor: FACTORS.fetch([ trained, walked ]) }

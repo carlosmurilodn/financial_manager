@@ -1,0 +1,40 @@
+<% title, icon = case @area
+   when "daily" then ["Acompanhamento Diário", "edit_note"]
+   when "weekly" then ["Revisão Semanal", "event_note"]
+   else ["Autoconhecimento", "show_chart"]
+   end %>
+<div class="app-page__hero">
+  <div class="app-page__hero-top self-knowledge-section-hero">
+    <div class="app-page__hero-unit app-page__hero-copy self-knowledge-section-hero__heading">
+      <span class="app-page__hero-icon"><span class="material-symbols-rounded"><%= icon %></span></span>
+      <div><p class="app-page__eyebrow">Saúde Mental</p><h1 class="app-page__title"><%= title %></h1></div>
+    </div>
+    <% if @area == "daily" %>
+      <div class="self-knowledge-page-actions">
+        <%= link_to new_health_journal_entry_path, class: "app-btn app-btn--primary" do %>
+          <span class="material-symbols-rounded" aria-hidden="true">edit_note</span>
+          <span>Registrar Meu Dia</span>
+        <% end %>
+      </div>
+    <% elsif @area == "weekly" %>
+      <div class="self-knowledge-page-actions">
+        <%= link_to new_health_weekly_reflection_path, class: "app-btn app-btn--primary" do %>
+          <span class="material-symbols-rounded" aria-hidden="true">event_note</span>
+          <span>Revisar Semana</span>
+        <% end %>
+      </div>
+    <% else %>
+      <div aria-hidden="true"></div>
+    <% end %>
+    <% @hero_kpis.each_with_index do |kpi, index| %>
+      <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--<%= kpi[:scale] ? mental_score_color(kpi[:value]) : %w[green yellow purple][index] %>">
+        <span class="material-symbols-rounded" aria-hidden="true"><%= kpi[:icon] %></span>
+        <div>
+          <p><%= kpi[:label] %></p>
+          <strong><%= kpi[:value].nil? ? "Sem registro" : kpi[:scale] ? "#{number_with_precision(kpi[:value], precision: 1)} / 5" : kpi[:value] %></strong>
+          <small>No período selecionado</small>
+        </div>
+      </article>
+    <% end %>
+  </div>
+</div>

@@ -15,7 +15,9 @@ class DailyCalorieEntriesController < ApplicationController
     ).call
 
     if turbo_frame_request?
-      redirect_to daily_calorie_entry_path(@entry.occurred_on.iso8601), status: :see_other
+      redirect_to daily_calorie_entry_path(@entry.occurred_on.iso8601, nutrition_week: params[:nutrition_week] == "1" ? "1" : nil), status: :see_other
+    elsif params[:nutrition_week] == "1"
+      redirect_to health_nutrition_week_path(@entry.occurred_on.beginning_of_week(:monday).iso8601), notice: "Calorias salvas com sucesso!", status: :see_other
     else
       redirect_to weekly_health_plan_path(@entry.occurred_on.beginning_of_week(:monday).iso8601, anchor: "calories-#{@entry.occurred_on.beginning_of_week(:monday).iso8601}"), notice: "Calorias salvas com sucesso!", status: :see_other
     end

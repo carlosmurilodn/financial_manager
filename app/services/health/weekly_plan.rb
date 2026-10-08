@@ -1,7 +1,7 @@
 module Health
   class WeeklyPlan
     DEFAULT_GOALS = [
-      { name: "Treino", target_count: 3 },
+      { name: "Musculação", target_count: 3 },
       { name: "Caminhada", target_count: 3 },
       { name: "Alimentação", target_count: 7, notes: "Dias com alimentação planejada, incluindo marmitas, lanches e outras refeições." }
     ].map(&:freeze).freeze

@@ -1,7 +1,7 @@
 <%= render layout: "shared/form_page", locals: {
   resource: @weekly_health_plan,
   title: "Metas da semana",
-  eyebrow: "Progresso · segunda a domingo",
+  eyebrow: "Saúde Física · segunda a domingo",
   description: "#{@week_start.strftime('%d/%m/%Y')} a #{@weekly_health_plan.week_end.strftime('%d/%m/%Y')}. Alterações valem apenas para esta semana.",
   icon: "task_alt",
   back_path: weekly_health_plans_path

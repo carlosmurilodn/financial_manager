@@ -5,6 +5,14 @@ if gem list --no-installed --exact --silent foreman; then
   gem install foreman
 fi
 
+# Remove generated assets that would override development builds.
+if [ "${RAILS_ENV:-development}" = "development" ] && [ -f public/assets/.manifest.json ]; then
+  bin/rails assets:clobber || exit 1
+fi
+
+# Build once before Rails starts; the watcher handles subsequent changes.
+npm run build || exit 1
+
 # Default to port 3000 if not specified
 export PORT="${PORT:-3000}"
 

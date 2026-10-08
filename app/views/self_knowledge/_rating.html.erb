@@ -1,0 +1,5 @@
+<fieldset class="diary-guide__metric"><legend><%= label %></legend>
+  <div class="diary-guide__rating"><% labels.each_with_index do |text, i| %><label title="<%= text %>"><%= f.radio_button field, i + 1, aria: { label: "#{i + 1} — #{text}" } %><span><%= i + 1 %></span></label><% end %></div>
+  <label class="diary-guide__clear"><%= f.radio_button field, "", checked: record.public_send(field).nil? %> Sem registro</label>
+  <p class="self-knowledge-help"><%= help %></p>
+</fieldset>

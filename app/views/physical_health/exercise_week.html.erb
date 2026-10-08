@@ -1,0 +1,15 @@
+<section class="app-page weekly-health-plan-show">
+  <div class="app-page__hero"><div class="weekly-health-plan-show__header"><div class="app-page__hero-copy"><span class="app-page__hero-icon"><span class="material-symbols-rounded">fitness_center</span></span><div><p class="app-page__eyebrow">Saúde Física</p><h1 class="app-page__title">Exercícios</h1><p class="app-page__description">Semana de <%= @week_start.strftime('%d/%m/%Y') %> a <%= (@week_start + 6.days).strftime('%d/%m/%Y') %></p></div></div><%= link_to "Editar Semana", edit_health_exercise_week_path(@week_start.iso8601), class: "app-btn app-btn--primary", data: { turbo: false } %><%= link_to "Excluir Semana", health_exercise_week_path(@week_start.iso8601), class: "app-btn app-btn--danger", data: { turbo_method: :delete, turbo_confirm: "Excluir as categorias e marcações de exercícios desta semana? As calorias serão preservadas e recalculadas." } %><%= link_to "Voltar às Semanas", health_exercise_path, class: "app-btn app-btn--outline", data: { turbo: false } %></div></div>
+  <article class="health-card weekly-health-plan-card" style="--health-card-accent: #5c6df2;"><div class="health-card__content">
+    <div class="weekly-health-plan-days exercise-week-calendars" data-controller="exercise-week" data-action="submit->exercise-week#save">
+      <% exercise_categories.each do |type, label| %>
+        <% goal = exercise_goal(@plan, type) %>
+        <% next unless goal %>
+        <%= render "exercise_section", goal: goal, type: type, label: label %>
+      <% end %>
+    </div>
+    <% unless exercise_categories.keys.any? { |type| exercise_goal(@plan, type) } %>
+      <p>Nenhuma categoria de exercício cadastrada nesta semana.</p><%= link_to "Selecionar Categorias", new_health_exercise_week_path, class: "app-btn app-btn--primary" %>
+    <% end %>
+  </div></article>
+</section>

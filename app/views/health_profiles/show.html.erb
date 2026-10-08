@@ -1,15 +1,21 @@
-<section class="app-page health-profile-page">
+<section class="app-page health-profile-page self-knowledge-page">
   <div class="app-page__hero">
-    <div class="health-profile-page__hero">
-      <div class="app-page__hero-copy">
+    <div class="app-page__hero-top self-knowledge-section-hero">
+      <div class="app-page__hero-copy self-knowledge-section-hero__heading">
         <span class="app-page__hero-icon"><span class="material-symbols-rounded" aria-hidden="true">person</span></span>
         <div>
-          <p class="app-page__eyebrow">Saúde e Bem-Estar</p>
+          <p class="app-page__eyebrow">Saúde Física</p>
           <h1 class="app-page__title">Perfil de Saúde</h1>
-          <p class="app-page__description">Seus dados de referência para acompanhar saúde e estimar o gasto de calorias.</p>
         </div>
       </div>
-      <%= link_to "Voltar ao Progresso", progress_path, class: "app-btn app-btn--outline", data: { turbo: false } %>
+      <div class="self-knowledge-page-actions"><%= link_to progress_path, class: "app-btn app-btn--primary", data: { turbo: false } do %><span class="material-symbols-rounded" aria-hidden="true">monitoring</span><span>Voltar ao Progresso</span><% end %></div>
+      <% [
+        ["green", "Altura", "height", @health_profile.height_cm ? "#{number_with_precision(@health_profile.height_cm, precision: 1)} cm" : "Sem registro"],
+        ["yellow", "Nascimento", "cake", @health_profile.birth_date&.strftime("%d/%m/%Y") || "Sem registro"],
+        ["purple", "Sexo Para Cálculo", "person", HealthProfile::FORMULA_SEXES.key(@health_profile.formula_sex) || "Sem registro"]
+      ].each do |color, label, icon, value| %>
+        <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--<%= color %>"><span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span><div><p><%= label %></p><strong><%= value %></strong><small>Dados do perfil</small></div></article>
+      <% end %>
     </div>
   </div>
 
@@ -25,7 +31,7 @@
       </div>
     <% end %>
 
-    <p class="health-profile-page__intro"><%= @health_profile.persisted? ? "Atualize seus dados quando precisar." : "Preencha seu perfil para preparar o acompanhamento de calorias." %> O peso continua sendo registrado no Histórico de Peso.</p>
+    <p class="health-profile-page__intro"><%= @health_profile.persisted? ? "Atualize seus dados quando precisar." : "Preencha seu perfil para preparar o acompanhamento de calorias." %> O peso continua sendo registrado no Balança.</p>
 
     <%= form_with model: @health_profile, url: health_profile_path, local: true, html: { class: "app-form-page__form", data: { turbo: false } } do |f| %>
       <div class="health-profile-fields">

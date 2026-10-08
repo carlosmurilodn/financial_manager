@@ -731,3 +731,181 @@
 }
 
 .weekly-health-plan-days__week > form { flex: 1 1 0; min-width: 0; }
+
+// Leitura do diário e fechamento semanal.
+.diary-show { gap: 22px; }
+.diary-show__hero { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; padding: 24px; border: 1px solid var(--card-border); border-radius: var(--radius-lg); background: var(--surface); }
+.diary-show__identity { display: flex; align-items: center; gap: 16px; min-width: 0; flex: 1 1 400px; }
+.diary-show__identity > div { min-width: 0; }
+.diary-show__hero-icon { display: grid; place-items: center; flex: 0 0 54px; height: 54px; border-radius: 16px; background: var(--hero-badge-icon-bg); color: var(--nav-active-bar); font-size: 28px; }
+.diary-show__hero h1 { margin: 0; color: var(--text-main); font-size: clamp(1.2rem, 1.8vw, 1.7rem); font-weight: 800; line-height: 1.35; }
+.diary-show__subtitle { margin: 8px 0 0; color: var(--text-soft); font-size: .85rem; }
+.diary-show__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.diary-show__actions form { margin: 0; }
+.diary-show__actions button { border: 0; font-family: inherit; cursor: pointer; }
+.diary-show__section-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 14px; }
+.diary-show__section-heading h2 { margin: 0; font-size: 1.05rem; font-weight: 800; color: var(--text-main); }
+.diary-show__section-heading p { margin: 0; font-size: .8rem; color: var(--text-soft); }
+.diary-show__metrics { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.diary-show__metric { padding: 18px; border: 1px solid var(--card-border); border-radius: var(--radius-lg); background: var(--surface); }
+.diary-show__metric-icon { color: var(--nav-active-bar); padding: 8px; border-radius: 10px; background: var(--hero-badge-icon-bg); }
+.diary-show__metric h3 { margin: 12px 0 8px; min-height: 2.5em; font-size: .82rem; line-height: 1.3; color: var(--text-main); font-weight: 700; }
+.diary-show__metric-value { margin: 0 0 12px; color: var(--text-main); font-size: 1.8rem; line-height: 1.2; font-weight: 800; }
+.diary-show__metric-value small { font-size: .85rem; font-weight: 500; color: var(--text-soft); margin-left: 4px; }
+.diary-show__metric-value > span { font-size: .82rem; font-weight: 500; color: var(--text-soft); }
+.diary-show__scale { display: flex; gap: 5px; }
+.diary-show__scale span { flex: 1; height: 5px; border-radius: 4px; background: var(--card-border); }
+.diary-show__scale .is-filled { background: var(--nav-active-bar); }
+.diary-show__hint { margin: 10px 0 0; font-size: .75rem; color: var(--text-soft); }
+.diary-show__reflections { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 16px; }
+.diary-show__reflection { min-width: 0; padding: 22px; border: 1px solid var(--card-border); border-radius: var(--radius-lg); background: var(--surface); }
+.diary-show__reflection-heading { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+.diary-show__reflection-heading > .material-symbols-rounded { flex: 0 0 auto; padding: 8px; border-radius: 10px; background: var(--hero-badge-icon-bg); color: var(--nav-active-bar); font-size: 22px; }
+.diary-show__reflection-heading h2, .diary-show__reflection-heading h3 { margin: 5px 0 0; color: var(--text-main); font-size: .98rem; font-weight: 750; line-height: 1.5; }
+.diary-show__text { color: var(--text-main); font-size: .94rem; line-height: 1.8; overflow-wrap: anywhere; }
+.diary-show__text p { margin: 0 0 12px; }
+.diary-show__text p:last-child { margin-bottom: 0; }
+.diary-show__next-step { border-left: 4px solid var(--nav-active-bar); background: color-mix(in srgb, var(--nav-active-bar) 5%, var(--surface)); }
+.diary-show__needs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.diary-show__needs span, .diary-show__scenario { padding: 8px 12px; border-radius: 10px; background: var(--hero-badge-icon-bg); color: var(--nav-active-bar); font-size: .82rem; }
+.diary-show__scenario { display: flex; align-items: center; gap: 8px; align-self: flex-start; margin: 0; }
+.diary-show__origin { color: var(--text-soft); font-size: .8rem; }
+.diary-show__origin summary { cursor: pointer; }
+@media (max-width: 1000px) { .diary-show__metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 640px) {
+  .diary-show__hero, .diary-show__reflection { padding: 16px; }
+  .diary-show__metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .diary-show__reflections { grid-template-columns: 1fr; }
+  .diary-show__actions { width: 100%; }
+  .diary-show__metric { padding: 14px; }
+}
+
+// Reflexão guiada: uma pergunta, gatilhos de escrita e progresso.
+.diary-guide__question { padding: 24px; border: 1px solid var(--card-border); border-radius: var(--radius-lg); background: var(--surface); }
+.diary-guide__theme { margin: 0 0 12px; color: var(--nav-active-bar); font-size: .82rem; font-weight: 800; }
+[data-diary-form] .diary-guide__question > label { display: block; color: var(--text-main); font-size: clamp(1.1rem, 2vw, 1.4rem); line-height: 1.5; font-weight: 750; }
+.diary-guide__question > [data-diary-help] { margin: 12px 0 20px; color: var(--text-soft); font-size: .9rem; line-height: 1.8; max-width: 85ch; }
+.diary-guide__question textarea { line-height: 1.8; }
+.diary-guide__question [data-diary-small-step] { margin-top: 20px; }
+.diary-guide__dots { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.diary-guide__dot { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; }
+.diary-guide__dot::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--card-border); }
+.diary-guide__dot.is-answered::before { background: color-mix(in srgb, var(--nav-active-bar) 45%, var(--surface)); }
+.diary-guide__dot.is-current::before { background: var(--nav-active-bar); box-shadow: 0 0 0 4px var(--hero-badge-icon-bg); }
+.diary-guide__dot:focus-visible { outline: 2px solid var(--nav-active-bar); outline-offset: 2px; }
+.diary-guide__free-text summary { cursor: pointer; color: var(--nav-active-bar); font-weight: 700; margin-bottom: 12px; }
+[data-diary-form] .diary-guide__metric { padding: 12px; border-radius: var(--radius-md); }
+.diary-guide__metric legend { font-size: .85rem; font-weight: 700; }
+.diary-guide__rating { display: flex; gap: 6px; }
+.diary-guide__rating label { cursor: pointer; position: relative; flex: 1; }
+.diary-guide__rating input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.diary-guide__rating span { display: grid; place-items: center; min-height: 38px; border: 1px solid var(--card-border); border-radius: 8px; color: var(--text-main); background: var(--surface); }
+.diary-guide__rating input:checked + span { color: var(--nav-active-bar); border-color: var(--nav-active-bar); background: var(--hero-badge-icon-bg); font-weight: 800; }
+.diary-guide__rating input:focus-visible + span { outline: 2px solid var(--nav-active-bar); outline-offset: 2px; }
+.diary-guide__clear { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: .75rem; color: var(--text-soft); cursor: pointer; }
+[data-diary-form] .diary-needs label { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid var(--card-border); border-radius: 20px; cursor: pointer; font-size: .85rem; }
+[data-diary-form] .diary-needs label:has(input:checked) { border-color: var(--nav-active-bar); color: var(--nav-active-bar); background: var(--hero-badge-icon-bg); }
+@media (max-width: 640px) { .diary-guide__question { padding: 16px; } }
+
+// Autoconhecimento: diário, revisão e evolução.
+.progress-week-selector { grid-column: auto; width: 100%; box-sizing: border-box; }
+.progress-week-selector { min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 12px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); }
+.progress-week-selector .progress-history__header { flex-wrap: wrap; gap: 8px; font-size: .9rem; }
+.progress-week-selector .progress-empty { margin: 0; font-size: .75rem; }
+.progress-week-selector .progress-week-period { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; gap: 12px; }
+.progress-week-selector .progress-week-period__button { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; background: var(--surface); }
+.progress-week-selector .progress-week-period__label { font-size: 1.1rem; line-height: 1.4; color: var(--text-soft); font-weight: 700; }
+@media (max-width: 480px) {
+  .progress-week-selector .progress-week-period { gap: 4px; }
+  .progress-week-selector .progress-week-period__label { gap: 4px; font-size: .9rem; }
+}
+.progress-page .progress-panels--activity { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+@media (max-width: 991px) { .progress-page .progress-panels--activity { grid-template-columns: minmax(0, 1fr); } }
+.progress-diary-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin: 16px 0; }
+.progress-diary-day { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px; border: 1px solid var(--card-border); border-radius: 10px; color: var(--text-soft); text-decoration: none; background: var(--surface); }
+.progress-diary-day.is-done { color: var(--nav-active-bar); background: var(--hero-badge-icon-bg); }
+.progress-diary-day:focus-visible { outline: 2px solid var(--nav-active-bar); outline-offset: 2px; }
+.progress-week-reflection { margin: 14px 0; padding: 12px; border-left: 3px solid var(--nav-active-bar); background: var(--hero-badge-icon-bg); border-radius: 8px; overflow-wrap: anywhere; }
+.progress-activity-scroll { overflow-x: auto; margin-top: 16px; }
+.progress-activity-table { width: 100%; min-width: 600px; table-layout: fixed; border-collapse: collapse; font-size: .85rem; }
+.progress-activity-table th, .progress-activity-table td { padding: 12px 4px; border-bottom: 1px solid var(--card-border); text-align: center; }
+.progress-activity-table th:first-child { text-align: left; width: 24%; overflow-wrap: anywhere; }
+.progress-activity-table th:last-child { width: 15%; }
+.progress-activity-table small { display: block; margin-top: 4px; color: var(--text-soft); font-size: .75rem; font-weight: 400; }
+.progress-activity-day { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: var(--hero-badge-icon-bg); color: var(--text-soft); }
+.progress-activity-day.is-done { background: rgba(45, 190, 148, .16); color: #16836b; }
+html[data-theme="night"] .progress-activity-day.is-done { color: #5edbb6; }
+.self-knowledge-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+.self-knowledge-page .app-page__hero-top.self-knowledge-section-hero { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: stretch; gap: 12px; }
+.self-knowledge-section-hero__heading { grid-column: span 2; }
+.self-knowledge-page-actions { display: flex; min-width: 0; }
+.self-knowledge-page-actions .app-btn { width: 100%; height: 100%; min-height: 48px; min-width: 0; white-space: normal; text-align: center; font-size: 1rem; gap: 10px; }
+.self-knowledge-page-actions .material-symbols-rounded { font-size: 28px; }
+.self-knowledge-hero-kpi { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 12px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--mental-kpi-tint); border-left: 3px solid var(--mental-kpi-color); }
+.self-knowledge-hero-kpi--green { --mental-kpi-color: #16836b; --mental-kpi-tint: rgba(45, 190, 148, .1); }
+.self-knowledge-hero-kpi--blue { --mental-kpi-color: #5c6df2; --mental-kpi-tint: rgba(92, 109, 242, .08); }
+.self-knowledge-hero-kpi--yellow { --mental-kpi-color: #a76c08; --mental-kpi-tint: rgba(234, 179, 8, .12); }
+.self-knowledge-hero-kpi--red { --mental-kpi-color: #d64161; --mental-kpi-tint: rgba(214, 65, 97, .08); }
+.self-knowledge-hero-kpi--purple { --mental-kpi-color: #8054ca; --mental-kpi-tint: rgba(139, 92, 246, .1); }
+.self-knowledge-hero-kpi > .material-symbols-rounded { font-size: 28px; color: var(--mental-kpi-color); }
+.self-knowledge-hero-kpi p { margin: 0 0 4px; font-size: .8rem; color: var(--text-soft); }
+.self-knowledge-hero-kpi strong { display: block; font-size: 1.1rem; color: var(--mental-kpi-color); }
+.self-knowledge-hero-kpi small { display: block; margin-top: 4px; font-size: .7rem; color: var(--text-soft); }
+html[data-theme="night"] .self-knowledge-hero-kpi--green { --mental-kpi-color: #5edbb6; }
+html[data-theme="night"] .self-knowledge-hero-kpi--blue { --mental-kpi-color: #a3afff; }
+html[data-theme="night"] .self-knowledge-hero-kpi--yellow { --mental-kpi-color: #f3cf63; }
+html[data-theme="night"] .self-knowledge-hero-kpi--red { --mental-kpi-color: #fb8ba1; }
+html[data-theme="night"] .self-knowledge-hero-kpi--purple { --mental-kpi-color: #bd9af5; }
+@media (min-width: 768px) and (max-width: 1199px) {
+  .self-knowledge-page .app-page__hero-top.self-knowledge-section-hero { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 767px) {
+  .self-knowledge-page .app-page__hero-top.self-knowledge-section-hero { grid-template-columns: 1fr; }
+  .self-knowledge-section-hero__heading { grid-column: auto; }
+  .self-knowledge-section-hero__empty { display: none; }
+}
+.self-knowledge-record-filters { display: flex; align-items: flex-end; gap: 12px; }
+.self-knowledge-record-filters .health-index-filters { flex: 1; min-width: 0; margin-bottom: 0; flex-wrap: nowrap; }
+.self-knowledge-record-filters .app-filter-actions { flex: 0 0 auto; margin-top: 0; flex-wrap: nowrap; }
+.self-knowledge-record-filters .app-filter-actions > .app-btn { min-width: 152px; flex-shrink: 0; }
+@media (max-width: 1199px) {
+  .self-knowledge-record-filters { flex-wrap: wrap; }
+  .self-knowledge-record-filters .health-index-filters { flex-basis: 100%; flex-wrap: wrap; }
+  .self-knowledge-record-filters .app-filter-actions { flex-wrap: wrap; }
+}
+.self-knowledge-tabs__link, .self-knowledge-stage-link { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 16px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); color: var(--text-main); text-decoration: none; font-size: .88rem; font-weight: 700; }
+.self-knowledge-tabs__link:not(.is-active) { color: var(--text-soft); }
+.self-knowledge-tabs__link.is-active, .self-knowledge-stage-link.is-active { border-color: var(--nav-active-bar); background: var(--hero-badge-icon-bg); color: var(--nav-active-bar); }
+.self-knowledge-tabs__link:focus-visible, .self-knowledge-stage-link:focus-visible { outline: 2px solid var(--nav-active-bar); outline-offset: 3px; }
+.self-knowledge-home__actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 18px 18px; }
+.self-knowledge-new { align-self: flex-start; }
+.self-knowledge-form { display: grid; gap: 22px; }
+.self-knowledge-form [hidden] { display: none !important; }
+.self-knowledge-form fieldset { min-width: 0; padding: 18px; border: 1px solid var(--card-border); border-radius: var(--radius-lg); }
+.self-knowledge-form .diary-guide__metric { padding: 14px; }
+.self-knowledge-form legend { font-size: 1rem; font-weight: 750; color: var(--text-main); }
+.self-knowledge-help { display: block; margin: 8px 0 14px; color: var(--text-soft); font-size: .85rem; line-height: 1.8; }
+.self-knowledge-question { margin-bottom: 22px; }
+.self-knowledge-question > label, .self-knowledge-rotating > label { display: block; color: var(--text-main); font-size: 1.05rem; font-weight: 750; line-height: 1.5; }
+.self-knowledge-question textarea, .self-knowledge-rotating textarea { line-height: 1.8; }
+.self-knowledge-stage { min-width: 0; }
+.self-knowledge-stage h2, .self-knowledge-rotating h2 { font-size: 1.15rem; color: var(--text-main); margin: 0 0 22px; }
+.self-knowledge-stages { display: flex; flex-wrap: wrap; gap: 10px; }
+.self-knowledge-stage-link { flex: 1; cursor: pointer; font-family: inherit; }
+.self-knowledge-question--next { padding: 18px; border-left: 4px solid var(--nav-active-bar); border-radius: 12px; background: var(--hero-badge-icon-bg); }
+.self-knowledge-form .diary-needs label { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid var(--card-border); border-radius: 20px; cursor: pointer; font-size: .85rem; }
+.self-knowledge-form .diary-needs label:has(input:checked) { border-color: var(--nav-active-bar); color: var(--nav-active-bar); background: var(--hero-badge-icon-bg); }
+.self-knowledge-daily-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; margin: 16px 0; }
+.self-knowledge-daily-grid > div { padding: 10px; background: var(--hero-badge-icon-bg); border-radius: 10px; }
+.self-knowledge-daily-grid small { display: block; color: var(--text-soft); font-size: .73rem; margin-top: 6px; }
+.self-knowledge-summary__day { padding: 18px 0; border-top: 1px solid var(--card-border); overflow-wrap: anywhere; }
+.self-knowledge-summary summary, .self-knowledge-legacy summary { cursor: pointer; }
+.self-knowledge-evolution-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.self-knowledge-evolution-kpis h2 { margin: 8px 0; }
+.self-knowledge-chart { height: 250px; width: 100%; min-width: 0; }
+.self-knowledge-step-history { padding: 16px 0; border-top: 1px solid var(--card-border); overflow-wrap: anywhere; }
+.self-knowledge-legacy { padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; overflow-wrap: anywhere; }
+.self-knowledge-legacy h3 { font-size: .9rem; margin-top: 18px; }
+.self-knowledge-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 900px) { .self-knowledge-daily-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .self-knowledge-tabs__link { flex: 1 1 100%; } .self-knowledge-stage-link { flex: 1 1 100%; } .self-knowledge-evolution-kpis, .self-knowledge-daily-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .self-knowledge-metrics { grid-template-columns: 1fr; } }

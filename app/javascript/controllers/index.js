@@ -3,6 +3,8 @@
 // ./bin/rails generate stimulus controllerName
 
 import { application } from "./application"
+import ExerciseCategoryController from "./exercise_category_controller"
+application.register("exercise-category", ExerciseCategoryController)
 import WeeklyGoalsController from "./weekly_goals_controller"
 import HealthWinFormController from "./health_win_form_controller"
 import WeightChartController from "./weight_chart_controller"
@@ -12,3 +14,10 @@ application.register("weekly-goals", WeeklyGoalsController)
 application.register("health-win-form", HealthWinFormController)
 application.register("weight-chart", WeightChartController)
 application.register("calorie-status", CalorieStatusController)
+
+
+import ExerciseCalendarController from "./exercise_calendar_controller"
+application.register("exercise-calendar", ExerciseCalendarController)
+
+import ExerciseWeekController from "./exercise_week_controller"
+application.register("exercise-week", ExerciseWeekController)

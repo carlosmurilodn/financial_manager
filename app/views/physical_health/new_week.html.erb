@@ -1,0 +1,33 @@
+<% nutrition = @physical_area == :nutrition %>
+<section class="app-page app-form-page">
+  <div class="app-page__hero"><div class="app-page__hero-copy"><span class="app-page__hero-icon"><span class="material-symbols-rounded">calendar_month</span></span><div><p class="app-page__eyebrow">Saúde Física · <%= nutrition ? "Alimentação" : "Exercícios" %></p><h1 class="app-page__title"><%= @editing ? "Editar Semana" : "Nova Semana" %></h1></div></div></div>
+  <div class="app-panel">
+    <p><%= nutrition ? "Calendário fixo de alimentação e calorias para os sete dias." : "Selecione as categorias que deseja acompanhar nesta semana." %></p>
+    <% form_url = @editing ? (nutrition ? health_nutrition_week_path(@selected_week) : health_exercise_week_path(@selected_week)) : (nutrition ? health_nutrition_path : health_exercise_path) %>
+    <%= form_with url: form_url, method: @editing ? :patch : :post, local: true, data: { turbo: false }, class: "app-filter-form" do |f| %>
+      <% year = Date.current.cwyear; options = (1..Date.new(year, 12, 28).cweek).map { |number| start = Date.commercial(year, number, 1); ["Semana #{number} · #{start.strftime('%d/%m/%Y')} a #{(start + 6.days).strftime('%d/%m/%Y')}", start.iso8601] } %>
+      <% if @editing %>
+        <p><strong>Semana de <%= @week_start.strftime('%d/%m/%Y') %> a <%= (@week_start + 6.days).strftime('%d/%m/%Y') %></strong></p>
+        <% if nutrition %><div class="app-filter-field"><%= label_tag :notes, "Observações da Semana" %><%= text_area_tag :notes, params[:notes] || @nutrition_goal&.notes, class: "app-form-control", maxlength: 500 %></div><% end %>
+      <% else %>
+      <div class="app-filter-field"><%= f.label :week_start, "Semana" %><%= f.select :week_start, options_for_select(options, @selected_week), {}, class: "app-form-select", required: true %></div>
+      <% end %>
+      <% unless nutrition %>
+        <fieldset class="exercise-category-picker"><legend>Categorias de Exercícios</legend>
+          <% exercise_categories.each do |type, label| %>
+            <% selected = Array(@selected_activities).include?(type) %>
+            <div class="exercise-category-row" data-controller="exercise-category">
+              <label><%= check_box_tag "activities[]", type, selected, id: "exercise-category-#{type}", data: { exercise_category_target: "checkbox", action: "change->exercise-category#update" } %><span><%= label %></span></label>
+              <div class="exercise-category-row__quantity">
+                <%= label_tag "targets_#{type}", "Dias por semana" %>
+                <%= select_tag "targets[#{type}]", options_for_select((1..7).to_a, params.fetch(:targets, {})[type] || exercise_goal(@plan, type)&.target_count || 3), id: "targets_#{type}", class: "app-form-select", disabled: !selected, data: { exercise_category_target: "quantity" } %>
+              </div>
+            </div>
+          <% end %>
+        </fieldset>
+        <% if @editing %><p>Ao remover uma categoria, primeiro desmarque seus dias realizados.</p><% end %>
+      <% end %>
+      <div class="app-filter-actions"><%= f.submit @editing ? "Salvar Alterações" : "Criar Semana", class: "app-btn app-btn--primary" %><%= link_to "Voltar", nutrition ? health_nutrition_path : health_exercise_path, class: "app-btn app-btn--outline" %></div>
+    <% end %>
+  </div>
+</section>

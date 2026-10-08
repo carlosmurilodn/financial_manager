@@ -1,29 +1,14 @@
-<div id="weight-entries-hero-kpis" class="app-weight-entries-hero-kpis">
-  <div class="app-page__hero-unit">
-    <div class="health-kpi-card health-kpi-card--warning">
-      <div class="health-kpi-card__icon">
-        <span class="material-symbols-rounded">monitor_weight</span>
-      </div>
-      <div>
-        <span class="health-kpi-card__label">Última medição</span>
-        <strong class="health-kpi-card__value">
-          <%= @latest_weight_entry ? "#{number_with_precision(@latest_weight_entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ",")} kg" : "Sem registro" %>
-        </strong>
-        <span class="health-kpi-card__meta"><%= @latest_weight_entry ? @latest_weight_entry.measured_on.strftime("%d/%m/%Y") : "Registre seu primeiro peso." %></span>
-      </div>
-    </div>
-  </div>
-
-  <div class="app-page__hero-unit">
-    <div class="health-kpi-card health-kpi-card--primary">
-      <div class="health-kpi-card__icon">
-        <span class="material-symbols-rounded">format_list_numbered</span>
-      </div>
-      <div>
-        <span class="health-kpi-card__label">Registros filtrados</span>
-        <strong class="health-kpi-card__value"><%= @filtered_count %></strong>
-        <span class="health-kpi-card__meta"><%= @initial_weight_entry ? "Desde #{@initial_weight_entry.measured_on.strftime("%d/%m/%Y")}" : "Nenhum histórico disponível." %></span>
-      </div>
-    </div>
-  </div>
+<div id="weight-entries-hero-kpis" class="physical-health-hero-kpis">
+  <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--green">
+    <span class="material-symbols-rounded" aria-hidden="true">monitor_weight</span>
+    <div><p>Última Medição</p><strong><%= @latest_weight_entry ? "#{number_with_precision(@latest_weight_entry.weight_kg, precision: 2)} kg" : "Sem registro" %></strong><small><%= @latest_weight_entry&.measured_on&.strftime("%d/%m/%Y") %></small></div>
+  </article>
+  <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--yellow">
+    <span class="material-symbols-rounded" aria-hidden="true">format_list_numbered</span>
+    <div><p>Registros Filtrados</p><strong><%= @filtered_count %></strong><small><%= "No período selecionado" %></small></div>
+  </article>
+  <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--purple">
+    <span class="material-symbols-rounded" aria-hidden="true">trending_down</span>
+    <div><p>Variação de Peso</p><strong><%= @latest_weight_entry && @initial_weight_entry ? "#{number_with_precision(@latest_weight_entry.weight_kg - @initial_weight_entry.weight_kg, precision: 2)} kg" : "Sem registro" %></strong><small><%= "Desde a primeira medição" %></small></div>
+  </article>
 </div>

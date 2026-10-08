@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_07_130000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_07_200000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -166,6 +166,33 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_07_130000) do
     t.index ["user_id"], name: "index_financial_goals_on_user_id"
   end
 
+  create_table "health_journal_entries", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "entry_date", null: false
+    t.integer "mood"
+    t.integer "energy"
+    t.integer "tension"
+    t.text "main_thought"
+    t.text "meaningful_event"
+    t.text "emotions"
+    t.text "positive_moment"
+    t.text "needs_notes"
+    t.text "reflection_answer"
+    t.text "notes"
+    t.string "reflection_prompt_key"
+    t.jsonb "needs", default: [], null: false
+    t.jsonb "legacy_content", default: {}, null: false
+    t.bigint "source_review_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["source_review_id"], name: "index_health_journal_entries_on_source_review_id", unique: true
+    t.index ["user_id", "entry_date"], name: "index_health_journal_entries_on_user_id_and_entry_date", unique: true
+    t.index ["user_id"], name: "index_health_journal_entries_on_user_id"
+    t.check_constraint "energy IS NULL OR energy >= 1 AND energy <= 5", name: "journal_energy_range"
+    t.check_constraint "mood IS NULL OR mood >= 1 AND mood <= 5", name: "journal_mood_range"
+    t.check_constraint "tension IS NULL OR tension >= 1 AND tension <= 5", name: "journal_tension_range"
+  end
+
   create_table "health_profiles", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.decimal "height_cm", precision: 5, scale: 2, null: false
@@ -176,6 +203,35 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_07_130000) do
     t.index ["user_id"], name: "index_health_profiles_on_user_id", unique: true
     t.check_constraint "formula_sex::text = ANY (ARRAY['male'::character varying, 'female'::character varying]::text[])", name: "health_profiles_valid_formula_sex"
     t.check_constraint "height_cm > 0::numeric AND height_cm < 1000::numeric", name: "health_profiles_valid_height"
+  end
+
+  create_table "health_weekly_reflections", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "week_start", null: false
+    t.integer "routine_satisfaction"
+    t.text "recurring_patterns"
+    t.text "what_helped"
+    t.text "what_drained"
+    t.text "thought_patterns"
+    t.text "avoidance_and_control"
+    t.text "self_discovery"
+    t.text "weekly_needs_notes"
+    t.text "control_reflection"
+    t.text "proud_of"
+    t.text "weekly_learning"
+    t.text "keep_doing"
+    t.text "change_next_week"
+    t.text "next_small_step"
+    t.jsonb "weekly_needs", default: [], null: false
+    t.jsonb "legacy_content", default: {}, null: false
+    t.bigint "source_review_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["source_review_id"], name: "index_health_weekly_reflections_on_source_review_id", unique: true
+    t.index ["user_id", "week_start"], name: "index_health_weekly_reflections_on_user_id_and_week_start", unique: true
+    t.index ["user_id"], name: "index_health_weekly_reflections_on_user_id"
+    t.check_constraint "EXTRACT(isodow FROM week_start) = 1::numeric", name: "reflection_monday"
+    t.check_constraint "routine_satisfaction IS NULL OR routine_satisfaction >= 1 AND routine_satisfaction <= 5", name: "reflection_routine_range"
   end
 
   create_table "health_weight_goals", force: :cascade do |t|
@@ -245,8 +301,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_07_130000) do
     t.boolean "completed", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "diet_status"
+    t.string "exercise_status"
+    t.decimal "duration_minutes", precision: 7, scale: 2
+    t.decimal "distance_km", precision: 7, scale: 2
+    t.integer "steps"
+    t.string "muscle_groups", limit: 150
+    t.string "exercise_focus"
+    t.string "exercise_intensity"
+    t.text "exercise_notes"
     t.index ["weekly_health_goal_id", "occurred_on"], name: "index_weekly_health_goal_days_on_goal_and_date", unique: true
     t.index ["weekly_health_goal_id"], name: "index_weekly_health_goal_days_on_weekly_health_goal_id"
+    t.check_constraint "diet_status IS NULL OR (diet_status::text = ANY (ARRAY['full'::character varying, 'partial'::character varying, 'none'::character varying]::text[]))", name: "weekly_health_goal_days_diet_status"
+    t.check_constraint "exercise_status IS NULL OR (exercise_status::text = ANY (ARRAY[''::character varying, 'completed'::character varying, 'not_completed'::character varying]::text[]))", name: "weekly_health_goal_days_exercise_status"
   end
 
   create_table "weekly_health_goals", force: :cascade do |t|
@@ -282,8 +349,29 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_07_130000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "review_kind", default: "weekly", null: false
+    t.integer "energy"
+    t.integer "mood"
+    t.integer "routine_satisfaction"
+    t.integer "anxiety"
+    t.integer "overload"
+    t.text "notes"
+    t.text "feelings"
+    t.text "thoughts"
+    t.text "insights"
+    t.text "needs_response"
+    t.text "recognition"
+    t.text "scenario"
+    t.text "other_need"
+    t.jsonb "needs", default: [], null: false
+    t.boolean "legacy_imported", default: false, null: false
+    t.bigint "legacy_wellbeing_id"
     t.index ["user_id", "review_kind", "week_start"], name: "index_weekly_health_reviews_on_user_kind_and_start", unique: true
     t.index ["user_id"], name: "index_weekly_health_reviews_on_user_id"
+    t.check_constraint "anxiety IS NULL OR anxiety >= 1 AND anxiety <= 5", name: "diary_anxiety_range"
+    t.check_constraint "energy IS NULL OR energy >= 1 AND energy <= 5", name: "diary_energy_range"
+    t.check_constraint "mood IS NULL OR mood >= 1 AND mood <= 5", name: "diary_mood_range"
+    t.check_constraint "overload IS NULL OR overload >= 1 AND overload <= 5", name: "diary_overload_range"
+    t.check_constraint "routine_satisfaction IS NULL OR routine_satisfaction >= 1 AND routine_satisfaction <= 5", name: "diary_routine_satisfaction_range"
   end
 
   create_table "weekly_wellbeings", force: :cascade do |t|
@@ -323,7 +411,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_07_130000) do
   add_foreign_key "financial_goal_resources", "financial_goals"
   add_foreign_key "financial_goals", "categories"
   add_foreign_key "financial_goals", "users"
+  add_foreign_key "health_journal_entries", "users"
   add_foreign_key "health_profiles", "users"
+  add_foreign_key "health_weekly_reflections", "users"
   add_foreign_key "health_weight_goals", "users"
   add_foreign_key "health_wins", "users"
   add_foreign_key "incomes", "categories"

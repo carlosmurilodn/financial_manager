@@ -1,15 +1,43 @@
 module ApplicationHelper
+  def mental_score_color(value)
+    return "blue" if value.nil?
+
+    score = value.round(1)
+    return "red" if score <= 2
+    return "yellow" if score <= 4
+
+    "green"
+  end
+
   HEALTH_CONTROLLERS = %w[
     progress
     weight_entries
     health_weight_goals
     weekly_health_plans
     weekly_health_reviews
+    self_knowledge
+    health_journal_entries
+    health_weekly_reflections
     weekly_wellbeings
     health_wins
     health_profiles
+    physical_health
     daily_calorie_entries
   ].freeze
+
+  def personal_development_section?
+    controller_name == "personal_development"
+  end
+
+  def app_section_brand
+    if personal_development_section?
+      { title: "Desenvolvimento Pessoal", icon: "school", footer_title: "Desenvolvimento Pessoal", description: "Um espaço para organizar seu desenvolvimento pessoal.", labels: [] }
+    elsif health_section?
+      { title: "Saúde e Bem-Estar", icon: "self_improvement", footer_title: "Saúde e Bem-Estar", description: "Acompanhe sua saúde, cuide da rotina e reconheça suas conquistas.", labels: ["Autoconhecimento", "Metas Semanais", "Acompanhamento Diário"] }
+    else
+      { title: "Gerenciador Financeiro", icon: "account_balance_wallet", footer_title: "Dashboard Financeiro", description: "Controle receitas, despesas e previsoes em um unico painel.", labels: ["Agenda Mensal", "Planejamento Anual", "Visao Consolidada"] }
+    end
+  end
 
   def health_section?
     controller_name.in?(HEALTH_CONTROLLERS)
@@ -23,8 +51,14 @@ module ApplicationHelper
       controller_name == "weight_entries"
     when :milestones
       controller_name == "health_weight_goals"
+    when :daily
+      controller_name == "health_journal_entries"
+    when :weekly
+      controller_name.in?(%w[health_weekly_reflections weekly_health_reviews])
+    when :self_knowledge
+      controller_name == "self_knowledge"
     when :beyond_scale
-      controller_name == "weekly_wellbeings"
+      controller_name.in?(%w[self_knowledge health_journal_entries health_weekly_reflections weekly_wellbeings weekly_health_reviews])
     when :goals
       controller_name.in?(%w[weekly_health_plans daily_calorie_entries])
     when :questions
@@ -33,6 +67,10 @@ module ApplicationHelper
       controller_name == "health_wins"
     when :profile
       controller_name == "health_profiles"
+    when :nutrition
+      controller_name == "physical_health" && action_name.in?(%w[nutrition nutrition_week toggle_nutrition_day new_nutrition_week create_nutrition_week edit_nutrition_week update_nutrition_week destroy_nutrition_week])
+    when :exercise
+      controller_name == "physical_health" && %w[exercise exercise_week toggle_exercise_day new_exercise_week create_exercise_week edit_exercise_week update_exercise_week destroy_exercise_week].include?(action_name)
     else
       false
     end

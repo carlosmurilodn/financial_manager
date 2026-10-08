@@ -12,6 +12,7 @@
   <% end %>
 
   <%= form_with scope: :daily_calorie_entry, url: daily_calorie_entries_path, method: :post, html: { class: "calorie-day__form" } do |f| %>
+    <%= hidden_field_tag :nutrition_week, "1" if controller_name == "physical_health" || params[:nutrition_week] == "1" %>
     <%= f.hidden_field :occurred_on, value: entry.occurred_on.iso8601 %>
     <% input_id = "calorie-consumption-#{entry.occurred_on.iso8601}" %>
     <%= f.label :consumed_calories, "Consumo (kcal)", for: input_id %>

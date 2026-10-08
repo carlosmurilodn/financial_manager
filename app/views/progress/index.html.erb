@@ -59,48 +59,7 @@
   <%= render "weight_chart" %>
   </div>
 
-    <article id="objetivos-etapa" class="app-panel progress-panel progress-panel--milestones">
-      <div class="progress-history__header">
-        <div class="progress-panel__header">
-          <span class="material-symbols-rounded">flag</span>
-          <div>
-            <p class="app-page__eyebrow">Marcos</p>
-            <h2>Objetivo por etapas</h2>
-          </div>
-        </div>
-        <%= link_to "Ver metas", health_weight_goals_path, class: "app-btn app-btn--outline", data: { turbo: false } %>
-      </div>
 
-      <div class="progress-milestones" aria-label="Marcos de peso">
-        <div class="progress-milestone">
-          <span><%= @initial_weight_entry ? "#{number_with_precision(@initial_weight_entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ',')} kg" : "Sem registro" %></span>
-          <strong>Referencia</strong>
-        </div>
-        <div class="progress-milestone <%= 'is-current' if @latest_weight_entry %>">
-          <span><%= @latest_weight_entry ? "#{number_with_precision(@latest_weight_entry.weight_kg, precision: 2, strip_insignificant_zeros: true, separator: ',')} kg" : "Sem registro" %></span>
-          <strong>Atual</strong>
-        </div>
-        <% if @health_weight_goals.any? %>
-          <% @intermediate_health_weight_goals.each do |goal| %>
-            <% reached = goal.reached_by?(@latest_weight_entry) %>
-            <div class="progress-milestone <%= 'is-done' if reached %>">
-              <span><%= number_with_precision(goal.target_weight, precision: 2, strip_insignificant_zeros: true, separator: ",") %> kg</span>
-              <strong><%= reached ? "Cumprido" : "Marco" %></strong>
-            </div>
-          <% end %>
-          <% if @final_health_weight_goal %>
-            <% target_reached = @final_health_weight_goal.reached_by?(@latest_weight_entry) %>
-            <div class="progress-milestone <%= 'is-done' if target_reached %>">
-              <span><%= number_with_precision(@final_health_weight_goal.target_weight, precision: 2, strip_insignificant_zeros: true, separator: ",") %> kg</span>
-              <strong><%= target_reached ? "Meta cumprida" : "Meta" %></strong>
-            </div>
-          <% end %>
-        <% end %>
-      </div>
-      <% unless @health_weight_goals.any? %>
-        <p class="progress-empty">Cadastre metas para acompanhar sua meta final e os marcos intermediários.</p>
-      <% end %>
-    </article>
 
 
 </section>

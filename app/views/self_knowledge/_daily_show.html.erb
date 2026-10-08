@@ -1,0 +1,32 @@
+<div class="diary-show__reflections diary-show__daily-reflections">
+  <% icons = { main_thought: 'chat_bubble', meaningful_event: 'event', emotions: 'favorite', positive_moment: 'wb_sunny' } %>
+  <% Health::SelfKnowledgeContent::DAILY.each do |field, (question, *)| %>
+    <% next if record.public_send(field).blank? %>
+    <article class="diary-show__reflection diary-show__reflection--<%= field %>">
+      <div class="diary-show__reflection-heading">
+        <span class="material-symbols-rounded" aria-hidden="true"><%= icons.fetch(field) %></span>
+        <h2><%= question %></h2>
+      </div>
+      <div class="diary-show__text"><%= simple_format(record.public_send(field)) %></div>
+    </article>
+  <% end %>
+  <% if record.needs.any? || record.needs_notes.present? %>
+    <article class="diary-show__reflection">
+      <div class="diary-show__reflection-heading"><span class="material-symbols-rounded" aria-hidden="true">volunteer_activism</span><h2>Do que eu precisei</h2></div>
+      <% if record.needs.any? %><div class="diary-show__needs"><% record.needs.each do |need| %><span><%= need %></span><% end %></div><% end %>
+      <% if record.needs_notes.present? %><div class="diary-show__text"><%= simple_format(record.needs_notes) %></div><% end %>
+    </article>
+  <% end %>
+  <% if record.reflection_answer.present? %>
+    <article class="diary-show__reflection">
+      <div class="diary-show__reflection-heading"><span class="material-symbols-rounded" aria-hidden="true">psychology_alt</span><h2><%= record.reflection_prompt.first %></h2></div>
+      <div class="diary-show__text"><%= simple_format(record.reflection_answer) %></div>
+    </article>
+  <% end %>
+  <% if record.notes.present? %>
+    <article class="diary-show__reflection diary-show__reflection--free">
+      <div class="diary-show__reflection-heading"><span class="material-symbols-rounded" aria-hidden="true">edit_note</span><h2>Meu espaço livre</h2></div>
+      <div class="diary-show__text"><%= simple_format(record.notes) %></div>
+    </article>
+  <% end %>
+</div>

@@ -27,12 +27,14 @@
     <% @records.each do |record| %>
       <article class="diary-entry-card <%= 'diary-entry-card--weekly' if weekly? %>"><div class="diary-entry-card__content">
         <%= link_to record_path(record), class: "diary-entry-card__identity-main" do %><span class="diary-entry-card__icon-wrapper"><span class="material-symbols-rounded"><%= weekly? ? 'event_note' : 'edit_note' %></span></span><div class="diary-entry-card__description-link"><h2 class="diary-entry-card__title"><%= record_title(record) %></h2>
-          <% unless weekly? %><p class="diary-entry-card__subtitle"><% Health::SelfKnowledgeContent::METRICS.each do |field, content| %><span><%= content.first %>: <%= record.public_send(field) || "—" %> </span><% end %></p><% end %>
+          <% unless weekly? %><p class="diary-entry-card__subtitle diary-entry-card__metrics"><% Health::SelfKnowledgeContent::METRICS.each do |field, content| %><span class="diary-entry-card__pill"><%= content.first %>: <%= record.public_send(field) || "—" %> </span><% end %></p><% end %>
         </div><% end %>
         <div class="diary-entry-card__actions"><%= link_to "Ver registro", record_path(record), class: "diary-entry-card__action" %><%= link_to "Editar", edit_record_path(record), class: "diary-entry-card__action" %><%= link_to "Excluir", record_path(record), class: "diary-entry-card__action diary-entry-card__action--danger", data: { turbo_method: :delete, turbo_confirm: "Excluir este registro?" } %></div>
       </div>
-      <% excerpt = weekly? ? record.next_small_step.presence || record.weekly_learning : record.main_thought %>
-      <% if excerpt.present? %><div class="diary-entry-card__excerpts"><p><%= truncate(excerpt, length: 220) %></p></div><% end %>
+      <% if weekly? %>
+        <% excerpt = record.next_small_step.presence || record.weekly_learning %>
+        <% if excerpt.present? %><div class="diary-entry-card__excerpts"><p><%= truncate(excerpt, length: 220) %></p></div><% end %>
+      <% end %>
       </article>
     <% end %>
     <% if @records.empty? %><div class="app-panel"><p>Nenhum registro neste período. Você pode começar com uma frase ou um indicador.</p></div><% end %>

@@ -1,4 +1,15 @@
 module ProgressHelper
+  def progress_activity_status(state)
+    case state
+    when "full" then { label: "Segui a Dieta Totalmente", icon: "check", css: "is-done" }
+    when "completed" then { label: "Realizado", icon: "check", css: "is-done" }
+    when "partial" then { label: "Segui a Dieta Parcialmente", icon: "remove", css: "is-partial" }
+    when "none" then { label: "Não Segui a Dieta", icon: "close", css: "is-not-done" }
+    when "not_completed" then { label: "Não Realizado", icon: "close", css: "is-not-done" }
+    else { label: "Sem registro", icon: "remove", css: "is-unselected" }
+    end
+  end
+
   def weekly_comparison_value(row, side)
     value = row.fetch(side)
     return "Sem registros" if value.nil?

@@ -1,5 +1,5 @@
 class PhysicalHealthController < ApplicationController
-  EXERCISE_CATEGORIES = { "training" => "Musculação", "functional" => "Treino Funcional", "walking" => "Caminhada" }.freeze
+  EXERCISE_CATEGORIES = Health::PhysicalActivities::EXERCISE_CATEGORIES
   def destroy_nutrition_week
     destroy_physical_week(:nutrition)
   end
@@ -47,7 +47,8 @@ class PhysicalHealthController < ApplicationController
     dates = @registered_weeks + current_user.daily_calorie_entries.pluck(:occurred_on)
     @weeks = paginate_collection(filter_weeks(dates), per_page: pagination_per_page)
     @plans_by_week = current_user.weekly_health_plans.where(week_start: @weeks).includes(:weekly_health_goals).index_by(&:week_start)
-    @calorie_counts = current_user.daily_calorie_entries.where(occurred_on: @weeks.flat_map { |date| (date..date + 6.days).to_a }).where.not(consumed_calories: nil).pluck(:occurred_on).map { |date| date.beginning_of_week(:monday) }.tally
+    @calorie_summaries = Health::WeeklyCalorieSummaryQuery.new(user: current_user, weeks: @weeks).call
+    @calorie_counts = @calorie_summaries.transform_values { |summary| summary[:consumed][:count] }
   rescue ArgumentError
     redirect_to health_nutrition_path, alert: "Semana inválida."
   end
@@ -107,16 +108,60 @@ class PhysicalHealthController < ApplicationController
       goal = exercise_goal(@plan, type)
       raise ArgumentError unless goal
       day = goal.weekly_health_goal_days.find_or_initialize_by(occurred_on: date)
-      day.update!(completed: !day.completed?)
+      if params[:exercise_day].present?
+        attributes = exercise_day_params(type)
+        day.assign_attributes(attributes)
+        day.completed = day.exercise_status == "completed"
+        @invalid_exercise_day = day
+        day.save!
+      else
+        day.update!(completed: !day.completed?, exercise_status: day.completed? ? "not_completed" : "completed")
+      end
       goal.sync_completed_count!
       Health::RecalculateDailyCalories.new(user: current_user, dates: [date]).call
     end
-    redirect_to health_exercise_week_path(@week_start.iso8601), status: :see_other
+    if request.format.turbo_stream?
+      render_exercise_day_update(type, date)
+    else
+      redirect_to health_exercise_week_path(@week_start.iso8601), notice: "Registro salvo.", status: :see_other
+    end
+  rescue ActiveRecord::RecordInvalid
+    load_exercise_week
+    if request.format.turbo_stream?
+      render_exercise_day_update(type, date, status: :unprocessable_entity)
+    else
+      render :exercise_week, status: :unprocessable_entity
+    end
   rescue ArgumentError
     redirect_to health_exercise_path, alert: "Dia ou atividade inválida.", status: :see_other
   end
 
   private
+
+  def render_exercise_day_update(type, date, status: :ok)
+    load_exercise_week
+    goal = exercise_goal(@plan, type)
+    saved_day = goal.weekly_health_goal_days.find { |day| day.occurred_on == date }
+    day = status == :unprocessable_entity ? @invalid_exercise_day : saved_day
+    prefix = "exercise-#{type}-#{date.iso8601}"
+    render turbo_stream: [
+      turbo_stream.replace("#{prefix}-calendar", partial: "physical_health/exercise_calendar_day", locals: { day: saved_day, date: date, type: type, label: EXERCISE_CATEGORIES.fetch(type) }),
+      turbo_stream.replace(prefix, partial: "physical_health/exercise_day", locals: { day: day, type: type }),
+      turbo_stream.replace("exercise-#{goal.id}-summary", partial: "physical_health/exercise_summary", locals: { goal: goal, type: type }),
+      turbo_stream.update("exercise-#{goal.id}-count", "#{goal.completed_count} / #{goal.target_count}")
+    ], status: status
+  end
+
+  def exercise_day_params(type)
+    fields = [:exercise_status, :duration_minutes, :exercise_notes]
+    fields += type == "walking" ? [:distance_km, :steps] : [:exercise_intensity]
+    fields << :muscle_groups if type == "training"
+    fields << :exercise_focus if type == "functional"
+    attributes = params.require(:exercise_day).permit(*fields).to_h
+    %w[exercise_intensity exercise_focus].each { |field| attributes[field] = attributes[field].presence if attributes.key?(field) }
+    %w[duration_minutes distance_km].each { |field| attributes[field] = attributes[field].to_s.tr(",", ".").presence if attributes.key?(field) }
+    attributes
+  end
 
   def destroy_physical_week(area)
     current_user.with_lock do
@@ -262,13 +307,7 @@ class PhysicalHealthController < ApplicationController
   end
 
   def exercise_goal(plan, type)
-    names = case type
-    when "training" then %w[musculacao treino treinar]
-    when "functional" then ["treino-funcional", "funcional"]
-    when "walking" then %w[caminhada caminhar]
-    else []
-    end
-    plan&.weekly_health_goals&.find { |goal| names.include?(goal.name.parameterize) }
+    Health::PhysicalActivities.goal_for(plan, type)
   end
 
   def exercise_categories

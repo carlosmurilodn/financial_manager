@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   }
 
   root "entry#index"
+  get "desenvolvimento-pessoal", to: "personal_development#index", as: :personal_development
   get "financeiro", to: "home#index", as: :financial_dashboard
   get "progresso", to: "progress#index", as: :progress
   resource :health_profile, path: "progresso/perfil", only: %i[show create update]

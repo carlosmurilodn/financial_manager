@@ -1,11 +1,24 @@
+<% compact = local_assigns.fetch(:compact, false) %>
 <section class="app-panel self-knowledge-summary">
+  <% if compact %>
+    <div class="weekly-overview__header">
+      <h2><span class="material-symbols-rounded" aria-hidden="true">calendar_month</span>Sua semana até aqui</h2>
+      <div class="weekly-overview__pills">
+        <span><%= pluralize(summary.days.size, 'dia registrado', 'dias registrados') %></span>
+        <% if local_assigns[:routine_satisfaction].present? %><span>Satisfação com a rotina: <strong><%= routine_satisfaction %> / 5</strong></span><% end %>
+      </div>
+    </div>
+  <% else %>
   <h2>Sua semana até aqui</h2><p><%= summary.days.size %> dias registrados · <%= summary.start.strftime('%d/%m/%Y') %> a <%= (summary.start + 6.days).strftime('%d/%m/%Y') %></p>
+  <% end %>
   <% if summary.days.empty? %><p>Você ainda não registrou nenhum Diário nesta semana. Tudo bem: ainda é possível fazer sua revisão semanal normalmente.</p><% else %>
+    <% unless compact %>
     <div class="diary-metrics"><% Health::SelfKnowledgeContent::METRICS.each do |field, (label, *)| %><% value = summary.averages.fetch(field) %><div><strong><%= label %> médio<%= ' (mais alto = mais tensão)' if field == :tension %></strong><p><%= value[:mean] ? "#{number_with_precision(value[:mean], precision: 1)} / 5" : "Sem registro" %> <small>(<%= value[:count] %> respostas)</small></p></div><% end %></div>
+    <% end %>
     <% [[:mood, :max, 'Melhor humor'], [:tension, :max, 'Maior tensão']].each do |field, direction, title| %><% dates = summary.extreme_days(field, direction) %><% if dates.any? %><p><strong><%= title %>:</strong> <%= dates.map { |date| I18n.l(date, format: '%A (%d/%m)') }.join(', ') %></p><% end %><% end %>
     <% if summary.days.size >= 2 %>
       <div class="self-knowledge-daily-grid"><% (0..6).each do |offset| %><% date = summary.start + offset; entry = summary.days.find { |day| day.entry_date == date } %><div><strong><%= I18n.l(date, format: '%a') %></strong><% Health::SelfKnowledgeContent::METRICS.each do |field, (label, *)| %><small><%= label %>: <%= entry&.public_send(field) || '—' %></small><% end %></div><% end %></div>
     <% end %>
-    <details><summary>Consultar diários desta semana</summary><% summary.days.each do |day| %><div class="self-knowledge-summary__day"><strong><%= I18n.l(day.entry_date, format: :long) %></strong><% Health::SelfKnowledgeContent::DAILY.each do |field, (question, *)| %><% if day.public_send(field).present? %><p><strong><%= question %></strong></p><%= simple_format(day.public_send(field)) %><% end %><% end %><% if day.notes.present? %><%= simple_format(day.notes) %><% end %><%= link_to 'Abrir diário', health_journal_entry_path(day), target: '_blank', rel: 'noopener', class: 'diary-entry-card__action' %></div><% end %></details>
+    <%= render 'self_knowledge/week_journals', days: summary.days %>
   <% end %>
 </section>

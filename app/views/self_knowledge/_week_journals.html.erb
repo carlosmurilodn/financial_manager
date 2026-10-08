@@ -1,0 +1,29 @@
+<details class="week-journal-browser">
+  <summary class="week-journal-browser__toggle">
+    <span class="material-symbols-rounded week-journal-browser__chevron" aria-hidden="true">chevron_right</span>
+    <span class="material-symbols-rounded" aria-hidden="true">auto_stories</span>
+    <span>Consultar diários desta semana</span>
+    <span class="week-journal-browser__count"><%= days.size %></span>
+  </summary>
+  <div class="week-journal-browser__list">
+    <% days.each do |day| %>
+      <details class="week-journal-day">
+        <summary class="week-journal-day__header">
+          <span class="material-symbols-rounded week-journal-day__chevron" aria-hidden="true">chevron_right</span>
+          <span class="week-journal-day__date"><strong><%= I18n.l(day.entry_date, format: '%A').capitalize %></strong><time datetime="<%= day.entry_date.iso8601 %>"><%= I18n.l(day.entry_date, format: :long) %></time></span>
+          <span class="week-journal-day__metrics">
+            <% Health::SelfKnowledgeContent::METRICS.each do |field, (label, *)| %>
+              <span><%= label %>: <strong><%= day.public_send(field) ? "#{day.public_send(field)} / 5" : '—' %></strong></span>
+            <% end %>
+          </span>
+        </summary>
+        <div class="week-journal-day__content">
+          <div class="week-journal-day__actions">
+            <%= link_to health_journal_entry_path(day), target: '_blank', rel: 'noopener', class: 'diary-entry-card__action' do %><span class="material-symbols-rounded" aria-hidden="true">open_in_new</span>Abrir diário<% end %>
+          </div>
+          <%= render 'self_knowledge/daily_show', record: day %>
+        </div>
+      </details>
+    <% end %>
+  </div>
+</details>

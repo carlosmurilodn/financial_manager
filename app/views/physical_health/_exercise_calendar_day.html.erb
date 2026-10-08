@@ -1,0 +1,6 @@
+<% weekday = ["Domingo", "Segunda-Feira", "Terça-Feira", "Quarta-Feira", "Quinta-Feira", "Sexta-Feira", "Sábado"][date.wday] %>
+<%= button_tag type: :submit, id: "exercise-#{type}-#{date.iso8601}-calendar",
+  class: "weekly-health-plan-days__day exercise-calendar-day exercise-calendar-day--#{day&.exercise_day_status.presence || 'unselected'}",
+  aria: { label: "Alternar #{label} em #{date.strftime('%d/%m/%Y')}", pressed: day&.completed? || false } do %>
+  <span><%= weekday %></span><strong><%= date.strftime('%d/%m/%Y') %></strong>
+<% end %>

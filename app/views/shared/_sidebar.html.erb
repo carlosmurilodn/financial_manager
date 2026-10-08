@@ -1,12 +1,12 @@
-<aside id="sidebar-wrapper" class="app-sidebar">
+<aside id="sidebar-wrapper" class="app-sidebar <%= 'app-sidebar--health' if health_section? %>">
   <div class="app-sidebar__inner">
     <div class="app-sidebar__brand">
       <div class="app-sidebar__brand-main">
-        <%= link_to root_path, class: "app-sidebar__logo", title: "Voltar ao Gerenciador Pessoal", aria: { label: "Voltar à escolha de Financeiro ou Saúde e Bem-Estar" }, data: { turbo: false } do %>
-          <span class="material-symbols-rounded" aria-hidden="true"><%= health_section? ? "self_improvement" : "account_balance_wallet" %></span>
+        <%= link_to root_path, class: "app-sidebar__logo", title: "Voltar ao Gerenciador Pessoal", aria: { label: "Voltar à escolha de áreas do Gerenciador Pessoal" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded" aria-hidden="true"><%= app_section_brand[:icon] %></span>
         <% end %>
         <div class="app-sidebar__brand-copy">
-          <span class="sidebar-title"><%= health_section? ? "Saúde e Bem-Estar" : "Gerenciador Financeiro" %></span>
+          <span class="sidebar-title"><%= app_section_brand[:title] %></span>
         </div>
       </div>
 
@@ -21,7 +21,30 @@
     </div>
 
     <nav class="app-sidebar__nav">
-      <% if health_section? %>
+      <% if personal_development_section? %>
+        <%= link_to personal_development_path, class: "app-nav-link active-menu", id: "link-personal-development", title: "Visão Geral", aria: { label: "Visão Geral" }, data: { turbo: false } do %>
+          <span class="material-symbols-rounded app-nav-link__icon">space_dashboard</span>
+          <span class="link-text">Visão Geral</span>
+        <% end %>
+      <% elsif health_section? %>
+        <div class="app-health-mobile-links">
+          <% [
+            [progress_path, :progress, "Progresso", "monitoring"],
+            [health_profile_path, :profile, "Perfil de Saúde", "person"],
+            [weight_entries_path, :weight, "Balança", "monitor_weight"],
+            [health_nutrition_path, :nutrition, "Alimentação", "restaurant"],
+            [health_exercise_path, :exercise, "Exercícios", "fitness_center"],
+            [health_weight_goals_path, :milestones, "Marcos", "flag"],
+            [health_journal_entries_path, :daily, "Acompanhamento Diário", "edit_note"],
+            [health_weekly_reflections_path, :weekly, "Revisão Semanal", "event_note"],
+            [self_knowledge_path, :self_knowledge, "Autoconhecimento", "psychology_alt"]
+          ].each do |path, section, label, icon| %>
+            <%= link_to path, class: "app-nav-link #{'active-menu' if health_nav_active?(section)}", title: label, aria: { label: label, current: health_nav_active?(section) ? "page" : nil }, data: { turbo: false } do %>
+              <span class="material-symbols-rounded app-nav-link__icon" aria-hidden="true"><%= icon %></span>
+              <span class="link-text"><%= label %></span>
+            <% end %>
+          <% end %>
+        </div>
         <%= link_to progress_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:progress)}", id: "link-progress", title: "Progresso", aria: { label: "Progresso" }, data: { turbo: false } do %>
           <span class="material-symbols-rounded app-nav-link__icon">monitoring</span>
           <span class="link-text">Progresso</span>
@@ -118,7 +141,7 @@
         <% end %>
       <% end %>
 
-      <button id="themeToggleMobile" class="app-nav-link app-nav-link--theme app-theme-toggle-mobile" type="button" aria-label="Alternar tema">
+      <button id="themeToggleMobile" class="app-nav-link app-nav-link--theme app-theme-toggle-mobile" type="button" aria-label="Temas: alternar tema">
         <span class="material-symbols-rounded app-nav-link__icon app-theme-toggle-mobile__icon">devices</span>
         <span class="link-text app-theme-toggle-mobile__label">Sistema</span>
       </button>
@@ -352,8 +375,9 @@
       if (label) label.textContent = currentTheme.label;
       if (meta) meta.textContent = currentTheme.id === "system" ? `Usando ${activeThemeLabel}` : `Trocar para ${nextTheme.label}`;
 
-      toggle.setAttribute("title", `Tema atual: ${currentTheme.label}. Clique para alternar.`);
-      toggle.setAttribute("aria-label", `Tema atual: ${currentTheme.label}. Clique para alternar para ${nextTheme.label}.`);
+      const prefix = toggle.id === "themeToggleMobile" ? "Temas. " : "";
+      toggle.setAttribute("title", `${prefix}Tema atual: ${currentTheme.label}. Clique para alternar.`);
+      toggle.setAttribute("aria-label", `${prefix}Tema atual: ${currentTheme.label}. Clique para alternar para ${nextTheme.label}.`);
     });
   }
 

@@ -1,6 +1,18 @@
-<article class="app-panel progress-panel">
+<article class="app-panel progress-panel progress-mental-panel">
   <div class="progress-panel__header"><span class="material-symbols-rounded">psychology_alt</span><div><p class="app-page__eyebrow">Semana selecionada</p><h2>Saúde Mental</h2></div></div>
-  <div class="diary-metrics"><% Health::SelfKnowledgeContent::METRICS.each do |field, (label, *)| %><% average = @self_knowledge_week.averages.fetch(field) %><div><strong><%= label %> médio</strong><p><%= average[:mean] ? number_with_precision(average[:mean], precision: 1) : "Sem registro" %></p></div><% end %></div>
+  <div class="progress-mental-kpis">
+    <% Health::SelfKnowledgeContent::METRICS.each_with_index do |(field, _), index| %>
+      <% average = @self_knowledge_week.averages.fetch(field) %>
+      <div class="self-knowledge-hero-kpi self-knowledge-hero-kpi--<%= mental_score_color(average[:mean]) %>">
+        <span class="material-symbols-rounded" aria-hidden="true"><%= %w[sentiment_satisfied bolt psychology][index] %></span>
+        <div>
+          <p><%= { mood: "Humor Médio", energy: "Energia Média", tension: "Tensão Média" }.fetch(field) %></p>
+          <strong><%= average[:mean] ? "#{number_with_precision(average[:mean], precision: 1, separator: ',')} / 5" : "Sem registro" %></strong>
+          <small><%= pluralize(average[:count], "resposta diária", "respostas diárias") %></small>
+        </div>
+      </div>
+    <% end %>
+  </div>
   <% diaries = @self_knowledge_week.days.index_by(&:entry_date) %>
   <div class="progress-diary-days" aria-label="Diários da semana">
     <% %w[Seg Ter Qua Qui Sex Sáb Dom].each_with_index do |label, index| %>
@@ -10,8 +22,6 @@
       <% end %>
     <% end %>
   </div>
-  <p>Diários: <%= @self_knowledge_week.days.size %> de 7 dias · quantidade registrada, sem obrigação de preencher todos os dias.</p>
-  <p>Revisão semanal: <%= @self_knowledge_reflection ? "Registrada" : "Ainda não realizada" %></p>
   <% if @self_knowledge_reflection %>
     <% { weekly_learning: "Aprendizado da Semana", next_small_step: "Próximo Pequeno Passo" }.each do |field, label| %>
       <% value = @self_knowledge_reflection.public_send(field) %>

@@ -1,5 +1,8 @@
 <div class="progress-panels progress-panels--activity">
-  <%= render "weekly_goals" %>
+  <div class="progress-physical-column">
+    <%= render "weekly_goals" %>
+    <%= render "weight_goals" %>
+  </div>
   <%= render "self_knowledge" %>
 </div>
-<%= render "weekly_comparison" %>
+<%# Comparação semanal ocultada temporariamente. %>

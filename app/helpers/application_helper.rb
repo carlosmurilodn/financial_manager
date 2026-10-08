@@ -1,4 +1,14 @@
 module ApplicationHelper
+  def mental_score_color(value)
+    return "blue" if value.nil?
+
+    score = value.round(1)
+    return "red" if score <= 2
+    return "yellow" if score <= 4
+
+    "green"
+  end
+
   HEALTH_CONTROLLERS = %w[
     progress
     weight_entries
@@ -14,6 +24,20 @@ module ApplicationHelper
     physical_health
     daily_calorie_entries
   ].freeze
+
+  def personal_development_section?
+    controller_name == "personal_development"
+  end
+
+  def app_section_brand
+    if personal_development_section?
+      { title: "Desenvolvimento Pessoal", icon: "school", footer_title: "Desenvolvimento Pessoal", description: "Um espaço para organizar seu desenvolvimento pessoal.", labels: [] }
+    elsif health_section?
+      { title: "Saúde e Bem-Estar", icon: "self_improvement", footer_title: "Saúde e Bem-Estar", description: "Acompanhe sua saúde, cuide da rotina e reconheça suas conquistas.", labels: ["Autoconhecimento", "Metas Semanais", "Acompanhamento Diário"] }
+    else
+      { title: "Gerenciador Financeiro", icon: "account_balance_wallet", footer_title: "Dashboard Financeiro", description: "Controle receitas, despesas e previsoes em um unico painel.", labels: ["Agenda Mensal", "Planejamento Anual", "Visao Consolidada"] }
+    end
+  end
 
   def health_section?
     controller_name.in?(HEALTH_CONTROLLERS)

@@ -14,3 +14,10 @@ application.register("weekly-goals", WeeklyGoalsController)
 application.register("health-win-form", HealthWinFormController)
 application.register("weight-chart", WeightChartController)
 application.register("calorie-status", CalorieStatusController)
+
+
+import ExerciseCalendarController from "./exercise_calendar_controller"
+application.register("exercise-calendar", ExerciseCalendarController)
+
+import ExerciseWeekController from "./exercise_week_controller"
+application.register("exercise-week", ExerciseWeekController)

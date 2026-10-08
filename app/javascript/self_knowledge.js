@@ -16,15 +16,16 @@ class SelfKnowledgeChartController extends Controller {
   renderChart() {
     this.chart?.destroy()
     const styles = getComputedStyle(this.element)
-    const color = styles.getPropertyValue('--nav-active-bar').trim()
-    const text = styles.getPropertyValue('--text-main').trim()
+    const color = styles.getPropertyValue('--mental-kpi-color').trim() || styles.getPropertyValue('--nav-active-bar').trim()
+    const text = styles.getPropertyValue('--text-soft').trim()
     const grid = styles.getPropertyValue('--card-border').trim()
     const dates = this.pointsValue.map((point) => ({ x: Date.parse(`${point.date}T00:00:00Z`), y: point.value }))
     const label = (value) => new Date(value).toLocaleDateString('pt-BR', { timeZone: 'UTC' })
+    const shortLabel = (value) => new Date(value).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', timeZone: 'UTC' })
     const first = dates[0].x, last = dates[dates.length - 1].x
     this.chart = new Chart(this.canvasTarget, {
-      type: 'line', data: { datasets: [{ label: this.labelValue, data: dates, borderColor: color, backgroundColor: color, pointRadius: 4, pointHitRadius: 12, tension: 0, spanGaps: false }] },
-      options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend: { labels: { color: text } }, tooltip: { callbacks: { title: (items) => label(items[0].parsed.x) } } }, scales: { x: { type: 'linear', min: first === last ? first - 86400000 : first, max: first === last ? last + 86400000 : last, ticks: { color: text, maxTicksLimit: 6, callback: label }, grid: { color: grid } }, y: { min: 1, max: 5, ticks: { stepSize: 1, color: text }, grid: { color: grid } } } }
+      type: 'line', data: { datasets: [{ label: this.labelValue, data: dates, borderColor: color, backgroundColor: color, borderWidth: 2, pointRadius: 3, pointHitRadius: 12, tension: 0, spanGaps: false }] },
+      options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend: { display: false }, tooltip: { callbacks: { title: (items) => label(items[0].parsed.x) } } }, scales: { x: { type: 'linear', min: first === last ? first - 86400000 : first, max: first === last ? last + 86400000 : last, ticks: { color: text, stepSize: 86400000, maxTicksLimit: 4, maxRotation: 0, callback: shortLabel }, grid: { color: grid } }, y: { min: 1, max: 5, ticks: { stepSize: 1, color: text }, grid: { color: grid } } } }
     })
   }
 }

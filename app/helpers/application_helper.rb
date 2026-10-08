@@ -23,6 +23,8 @@ module ApplicationHelper
     health_profiles
     physical_health
     daily_calorie_entries
+    muscle_groups
+    strength_exercise_catalogs
   ].freeze
 
   def personal_development_section?
@@ -52,7 +54,11 @@ module ApplicationHelper
     when :milestones
       controller_name == "health_weight_goals"
     when :basic_registries
-      health_nav_active?(:profile) || health_nav_active?(:milestones)
+      health_nav_active?(:profile) || health_nav_active?(:milestones) || health_nav_active?(:muscle_groups) || health_nav_active?(:strength_exercises)
+    when :muscle_groups
+      controller_name == "muscle_groups"
+    when :strength_exercises
+      controller_name == "strength_exercise_catalogs"
     when :daily
       controller_name == "health_journal_entries"
     when :weekly

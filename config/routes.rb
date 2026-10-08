@@ -62,6 +62,16 @@ Rails.application.routes.draw do
       delete :clear_filters
     end
   end
+  resources :muscle_groups, path: "progresso/cadastros/grupos-musculares", only: %i[index new create edit update destroy] do
+    collection do
+      delete :clear_filters
+    end
+  end
+  resources :strength_exercise_catalogs, path: "progresso/cadastros/exercicios-musculacao", only: %i[index new create edit update destroy] do
+    collection do
+      delete :clear_filters
+    end
+  end
   resources :weekly_wellbeings, path: "progresso/bem-estar", param: :week_start, only: %i[index new create edit update destroy] do
     collection do
       delete :clear_filters

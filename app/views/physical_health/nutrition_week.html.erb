@@ -1,0 +1,19 @@
+<section class="app-page weekly-health-plan-show">
+  <div class="app-page__hero"><div class="weekly-health-plan-show__header"><div class="app-page__hero-copy"><span class="app-page__hero-icon"><span class="material-symbols-rounded">restaurant</span></span><div><p class="app-page__eyebrow">Saúde Física</p><h1 class="app-page__title">Alimentação</h1><p class="app-page__description">Semana de <%= @week_start.strftime('%d/%m/%Y') %> a <%= (@week_start + 6.days).strftime('%d/%m/%Y') %></p></div></div><%= link_to "Editar Semana", edit_health_nutrition_week_path(@week_start.iso8601), class: "app-btn app-btn--primary", data: { turbo: false } %><%= link_to "Excluir Semana", health_nutrition_week_path(@week_start.iso8601), class: "app-btn app-btn--danger", data: { turbo_method: :delete, turbo_confirm: "Excluir os registros de alimentação e calorias desta semana?" } %><%= link_to "Voltar às Semanas", health_nutrition_path, class: "app-btn app-btn--outline", data: { turbo: false } %></div></div>
+  <article class="health-card weekly-health-plan-card" style="--health-card-accent: #5c6df2;"><div class="health-card__content">
+    <div class="weekly-health-plan-days"><div class="weekly-health-plan-days__goal">
+      <div class="weekly-health-plan-days__goal-header"><strong>Alimentação</strong><span><%= @nutrition_goal&.completed_count || 0 %> / 7 totalmente</span></div>
+      <div class="weekly-health-plan-days__week nutrition-diet-week">
+        <% %w[Seg Ter Qua Qui Sex Sáb Dom].each_with_index do |label, index| %>
+          <% date = @week_start + index.days; day = @nutrition_goal&.weekly_health_goal_days&.find { |record| record.occurred_on == date }; status = day&.diet_status %>
+          <%= form_with url: toggle_health_nutrition_day_path(@week_start.iso8601), method: :patch, class: "nutrition-diet-day nutrition-diet-day--#{status || 'unselected'}" do |f| %>
+            <%= f.hidden_field :occurred_on, value: date.iso8601 %>
+            <%= f.label :diet_status, "#{label} #{date.strftime('%d/%m')}", for: "diet-status-#{date.iso8601}" %>
+            <%= f.select :diet_status, options_for_select(WeeklyHealthGoalDay::DIET_STATUSES, status || ""), {}, id: "diet-status-#{date.iso8601}", class: "app-form-select", onchange: "this.form.requestSubmit()" %>
+          <% end %>
+        <% end %>
+      </div>
+    </div></div>
+    <%= render "daily_calorie_entries/week", week_start: @week_start, entries_by_date: @daily_calorie_entries_by_date, health_profile: @health_profile %>
+  </div></article>
+</section>

@@ -1,4 +1,4 @@
 <section class="app-page calorie-entry-page">
-  <%= link_to "Voltar às metas da semana", weekly_health_plan_path(@entry.occurred_on.beginning_of_week(:monday).iso8601), class: "app-btn app-btn--outline", data: { turbo_frame: "_top" } %>
+  <%= link_to params[:nutrition_week] == "1" ? "Voltar à Alimentação" : "Voltar às metas da semana", params[:nutrition_week] == "1" ? health_nutrition_week_path(@entry.occurred_on.beginning_of_week(:monday).iso8601) : weekly_health_plan_path(@entry.occurred_on.beginning_of_week(:monday).iso8601), class: "app-btn app-btn--outline", data: { turbo_frame: "_top" } %>
   <%= render "day", entry: @entry %>
 </section>

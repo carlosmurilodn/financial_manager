@@ -31,7 +31,7 @@
       </div>
     <% end %>
 
-    <p class="health-profile-page__intro"><%= @health_profile.persisted? ? "Atualize seus dados quando precisar." : "Preencha seu perfil para preparar o acompanhamento de calorias." %> O peso continua sendo registrado no Histórico de Peso.</p>
+    <p class="health-profile-page__intro"><%= @health_profile.persisted? ? "Atualize seus dados quando precisar." : "Preencha seu perfil para preparar o acompanhamento de calorias." %> O peso continua sendo registrado no Balança.</p>
 
     <%= form_with model: @health_profile, url: health_profile_path, local: true, html: { class: "app-form-page__form", data: { turbo: false } } do |f| %>
       <div class="health-profile-fields">

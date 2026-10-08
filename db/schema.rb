@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_07_151000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_07_190000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -301,8 +301,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_07_151000) do
     t.boolean "completed", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "diet_status"
     t.index ["weekly_health_goal_id", "occurred_on"], name: "index_weekly_health_goal_days_on_goal_and_date", unique: true
     t.index ["weekly_health_goal_id"], name: "index_weekly_health_goal_days_on_weekly_health_goal_id"
+    t.check_constraint "diet_status IS NULL OR (diet_status::text = ANY (ARRAY['full'::character varying, 'partial'::character varying, 'none'::character varying]::text[]))", name: "weekly_health_goal_days_diet_status"
   end
 
   create_table "weekly_health_goals", force: :cascade do |t|

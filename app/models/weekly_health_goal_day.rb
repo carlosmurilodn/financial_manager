@@ -1,4 +1,6 @@
 class WeeklyHealthGoalDay < ApplicationRecord
+  DIET_STATUSES = { "Selecione" => "", "Segui a Dieta Totalmente" => "full", "Segui a Dieta Parcialmente" => "partial", "Não Segui a Dieta" => "none" }.freeze
+  validates :diet_status, inclusion: { in: %w[full partial none] }, allow_nil: true
   belongs_to :weekly_health_goal
 
   validates :occurred_on, presence: true, uniqueness: { scope: :weekly_health_goal_id }

@@ -7,6 +7,22 @@ Rails.application.routes.draw do
   get "financeiro", to: "home#index", as: :financial_dashboard
   get "progresso", to: "progress#index", as: :progress
   resource :health_profile, path: "progresso/perfil", only: %i[show create update]
+  get "progresso/alimentacao", to: "physical_health#nutrition", as: :health_nutrition
+  get "progresso/alimentacao/nova", to: "physical_health#new_nutrition_week", as: :new_health_nutrition_week
+  post "progresso/alimentacao", to: "physical_health#create_nutrition_week"
+  get "progresso/alimentacao/:week_start/editar", to: "physical_health#edit_nutrition_week", as: :edit_health_nutrition_week
+  patch "progresso/alimentacao/:week_start", to: "physical_health#update_nutrition_week"
+  delete "progresso/alimentacao/:week_start", to: "physical_health#destroy_nutrition_week"
+  get "progresso/alimentacao/:week_start", to: "physical_health#nutrition_week", as: :health_nutrition_week
+  patch "progresso/alimentacao/:week_start/dia", to: "physical_health#toggle_nutrition_day", as: :toggle_health_nutrition_day
+  get "progresso/exercicios", to: "physical_health#exercise", as: :health_exercise
+  get "progresso/exercicios/nova", to: "physical_health#new_exercise_week", as: :new_health_exercise_week
+  post "progresso/exercicios", to: "physical_health#create_exercise_week"
+  get "progresso/exercicios/:week_start/editar", to: "physical_health#edit_exercise_week", as: :edit_health_exercise_week
+  patch "progresso/exercicios/:week_start", to: "physical_health#update_exercise_week"
+  delete "progresso/exercicios/:week_start", to: "physical_health#destroy_exercise_week"
+  get "progresso/exercicios/:week_start", to: "physical_health#exercise_week", as: :health_exercise_week
+  patch "progresso/exercicios/:week_start/dia", to: "physical_health#toggle_exercise_day", as: :toggle_health_exercise_day
   resources :daily_calorie_entries, path: "progresso/calorias", param: :occurred_on, only: %i[show create]
   resources :weight_entries, path: "progresso/pesagens", only: %i[index new create edit update destroy] do
     collection do

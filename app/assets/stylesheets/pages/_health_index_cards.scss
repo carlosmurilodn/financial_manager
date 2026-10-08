@@ -1,3 +1,51 @@
+.nutrition-page .nutrition-week-filter { display: flex; align-items: flex-end; gap: 12px; }
+.weekly-health-plan-days.exercise-week-calendars { display: flex; flex-direction: column; gap: 16px; }
+.exercise-week-calendars > .weekly-health-plan-days__goal { flex: 0 0 auto; width: 100%; min-width: 0; }
+.nutrition-diet-day { min-width: 0; padding: 10px; border: 1px solid var(--diet-color); border-radius: 10px; background: var(--diet-bg); }
+.weekly-health-plan-days__week.nutrition-diet-week { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 8px; }
+.nutrition-diet-day--unselected { --diet-color: #5c6df2; --diet-bg: rgba(92, 109, 242, .08); }
+.nutrition-diet-day--full { --diet-color: #16836b; --diet-bg: rgba(45, 190, 148, .1); }
+.nutrition-diet-day--partial { --diet-color: #a76c08; --diet-bg: rgba(234, 179, 8, .12); }
+.nutrition-diet-day--none { --diet-color: #d64161; --diet-bg: rgba(214, 65, 97, .08); }
+.nutrition-diet-day label { display: block; margin-bottom: 8px; font-weight: 700; color: var(--diet-color); }
+.nutrition-diet-day .app-form-select { color: var(--diet-color); font-weight: 700; font-size: .8rem; padding-left: 6px; }
+.nutrition-diet-day option[value=""] { color: #5c6df2; }
+.nutrition-diet-day option[value="full"] { color: #16836b; }
+.nutrition-diet-day option[value="partial"] { color: #a76c08; }
+.nutrition-diet-day option[value="none"] { color: #d64161; }
+html[data-theme="night"] .nutrition-diet-day--full { --diet-color: #5edbb6; }
+html[data-theme="night"] .nutrition-diet-day--partial { --diet-color: #f3cf63; }
+html[data-theme="night"] .nutrition-diet-day--none { --diet-color: #fb8ba1; }
+.exercise-category-picker { display: flex; flex-wrap: wrap; gap: 12px; padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; }
+.exercise-category-picker legend { float: none; width: auto; padding: 0 6px; font-size: 1rem; font-weight: 700; color: var(--text-soft); }
+.exercise-category-picker label { display: inline-flex; align-items: center; gap: 10px; padding: 12px 16px; border: 1px solid var(--card-border); border-radius: 10px; cursor: pointer; }
+.exercise-category-picker input { width: 18px; height: 18px; accent-color: var(--nav-active-bar); }
+.exercise-category-picker label:has(input:checked) { background: var(--hero-badge-icon-bg); border-color: var(--nav-active-bar); }
+.exercise-category-row { display: flex; align-items: flex-end; gap: 12px; flex: 1 1 300px; min-width: 0; }
+.exercise-category-picker .exercise-category-row > label { flex: 1; min-width: 0; min-height: 40px; margin: 0; padding: 8px 12px; box-sizing: border-box; }
+.exercise-category-row__quantity { flex: 0 0 130px; }
+.exercise-category-row__quantity label { display: block; padding: 0; margin-bottom: 6px; border: 0; font-size: .8rem; color: var(--text-soft); }
+.exercise-category-row__quantity .app-form-select { height: 40px; margin: 0; }
+.exercise-category-row__quantity select:disabled { opacity: .5; cursor: not-allowed; }
+.nutrition-page .nutrition-week-filter .app-filter-field { flex: 1; min-width: 0; }
+.nutrition-page .nutrition-week-filter .app-btn { min-width: 152px; }
+.nutrition-page .nutrition-week-card__summary { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
+.nutrition-page .nutrition-week-card .health-card__identity-block { flex: 1 1 340px; min-width: 0; }
+.nutrition-page .nutrition-week-card .health-card__identity-main { text-decoration: none; color: var(--text-soft); gap: 14px; }
+.nutrition-page .nutrition-week-card .health-card__title { margin: 0; font-size: 1rem; line-height: 1.4; }
+.nutrition-page .nutrition-week-card__metrics { display: flex; flex: 0 1 auto; flex-wrap: wrap; gap: 24px; }
+.nutrition-week-card__metric { display: flex; align-items: center; gap: 10px; min-width: 150px; }
+.nutrition-week-card__metric > .material-symbols-rounded { font-size: 24px; color: var(--nav-active-bar); }
+.nutrition-week-card__metric small { display: block; margin-bottom: 4px; color: var(--text-soft); font-size: .8rem; font-weight: 700; }
+.nutrition-week-card__metric strong { display: block; color: var(--text-main); font-size: 1rem; white-space: nowrap; }
+.nutrition-page .nutrition-week-card .health-card__actions { flex: 0 0 auto; margin-left: auto; }
+@media (max-width: 767px) {
+  .nutrition-page .nutrition-week-filter { flex-wrap: wrap; }
+  .nutrition-page .nutrition-week-filter .app-filter-field { flex-basis: 100%; }
+  .nutrition-page .nutrition-week-card__metrics { flex: 1 1 100%; gap: 16px; }
+  .nutrition-page .nutrition-week-card .health-card__actions { margin-left: 0; }
+}
+
 .health-index-page,
 .progress-page {
   display: flex;

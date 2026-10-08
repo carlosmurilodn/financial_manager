@@ -27,7 +27,7 @@
           <span class="link-text">Progresso</span>
         <% end %>
 
-        <details class="app-nav-group" <%= "open" if %i[profile weight milestones goals].any? { |item| health_nav_active?(item) } %>>
+        <details class="app-nav-group" <%= "open" if %i[profile weight nutrition exercise milestones goals].any? { |item| health_nav_active?(item) } %>>
           <summary class="app-nav-link" title="Saúde Física">
             <span class="material-symbols-rounded app-nav-link__icon">fitness_center</span>
             <span class="link-text">Saúde Física</span>
@@ -38,17 +38,21 @@
               <span class="material-symbols-rounded app-nav-link__icon">person</span>
               <span class="link-text">Perfil de Saúde</span>
             <% end %>
-            <%= link_to weight_entries_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:weight)}", id: "link-health-weight", title: "Histórico de Peso", data: { turbo: false } do %>
+            <%= link_to weight_entries_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:weight)}", id: "link-health-weight", title: "Balança", data: { turbo: false } do %>
               <span class="material-symbols-rounded app-nav-link__icon">monitor_weight</span>
-              <span class="link-text">Histórico de Peso</span>
+              <span class="link-text">Balança</span>
             <% end %>
-            <%= link_to health_weight_goals_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:milestones)}", id: "link-health-milestones", title: "Marcos de Peso", data: { turbo: false } do %>
+            <%= link_to health_nutrition_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:nutrition)}", title: "Alimentação", data: { turbo: false } do %>
+              <span class="material-symbols-rounded app-nav-link__icon">restaurant</span>
+              <span class="link-text">Alimentação</span>
+            <% end %>
+            <%= link_to health_exercise_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:exercise)}", title: "Exercícios", data: { turbo: false } do %>
+              <span class="material-symbols-rounded app-nav-link__icon">fitness_center</span>
+              <span class="link-text">Exercícios</span>
+            <% end %>
+            <%= link_to health_weight_goals_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:milestones)}", id: "link-health-milestones", title: "Marcos", data: { turbo: false } do %>
               <span class="material-symbols-rounded app-nav-link__icon">flag</span>
-              <span class="link-text">Marcos de Peso</span>
-            <% end %>
-            <%= link_to weekly_health_plans_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:goals)}", id: "link-health-goals", title: "Metas Semanais", aria: { label: "Metas Semanais" }, data: { turbo: false } do %>
-              <span class="material-symbols-rounded app-nav-link__icon">task_alt</span>
-              <span class="link-text">Metas Semanais</span>
+              <span class="link-text">Marcos</span>
             <% end %>
           </div>
         </details>

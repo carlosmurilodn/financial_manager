@@ -51,6 +51,8 @@ module ApplicationHelper
       controller_name == "weight_entries"
     when :milestones
       controller_name == "health_weight_goals"
+    when :basic_registries
+      health_nav_active?(:profile) || health_nav_active?(:milestones)
     when :daily
       controller_name == "health_journal_entries"
     when :weekly

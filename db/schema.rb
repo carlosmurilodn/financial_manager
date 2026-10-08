@@ -25,7 +25,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_07_200000) do
   enable_extension "extensions.pgcrypto"
   enable_extension "extensions.uuid-ossp"
   enable_extension "pg_catalog.plpgsql"
-  enable_extension "vault.supabase_vault"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false

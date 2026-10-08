@@ -30,14 +30,14 @@
         <div class="app-health-mobile-links">
           <% [
             [progress_path, :progress, "Progresso", "monitoring"],
-            [health_profile_path, :profile, "Perfil de Saúde", "person"],
             [weight_entries_path, :weight, "Balança", "monitor_weight"],
             [health_nutrition_path, :nutrition, "Alimentação", "restaurant"],
             [health_exercise_path, :exercise, "Exercícios", "fitness_center"],
-            [health_weight_goals_path, :milestones, "Marcos", "flag"],
             [health_journal_entries_path, :daily, "Acompanhamento Diário", "edit_note"],
             [health_weekly_reflections_path, :weekly, "Revisão Semanal", "event_note"],
-            [self_knowledge_path, :self_knowledge, "Autoconhecimento", "psychology_alt"]
+            [self_knowledge_path, :self_knowledge, "Autoconhecimento", "psychology_alt"],
+            [health_profile_path, :profile, "Perfil de Saúde", "person"],
+            [health_weight_goals_path, :milestones, "Marcos", "flag"]
           ].each do |path, section, label, icon| %>
             <%= link_to path, class: "app-nav-link #{'active-menu' if health_nav_active?(section)}", title: label, aria: { label: label, current: health_nav_active?(section) ? "page" : nil }, data: { turbo: false } do %>
               <span class="material-symbols-rounded app-nav-link__icon" aria-hidden="true"><%= icon %></span>
@@ -50,17 +50,13 @@
           <span class="link-text">Progresso</span>
         <% end %>
 
-        <details class="app-nav-group" <%= "open" if %i[profile weight nutrition exercise milestones goals].any? { |item| health_nav_active?(item) } %>>
+        <details class="app-nav-group" <%= "open" if %i[weight nutrition exercise goals].any? { |item| health_nav_active?(item) } %>>
           <summary class="app-nav-link" title="Saúde Física">
             <span class="material-symbols-rounded app-nav-link__icon">fitness_center</span>
             <span class="link-text">Saúde Física</span>
             <span class="material-symbols-rounded app-nav-group__arrow" aria-hidden="true">expand_more</span>
           </summary>
           <div class="app-nav-group__items">
-            <%= link_to health_profile_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:profile)}", id: "link-health-profile", title: "Perfil de Saúde", data: { turbo: false } do %>
-              <span class="material-symbols-rounded app-nav-link__icon">person</span>
-              <span class="link-text">Perfil de Saúde</span>
-            <% end %>
             <%= link_to weight_entries_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:weight)}", id: "link-health-weight", title: "Balança", data: { turbo: false } do %>
               <span class="material-symbols-rounded app-nav-link__icon">monitor_weight</span>
               <span class="link-text">Balança</span>
@@ -72,10 +68,6 @@
             <%= link_to health_exercise_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:exercise)}", title: "Exercícios", data: { turbo: false } do %>
               <span class="material-symbols-rounded app-nav-link__icon">fitness_center</span>
               <span class="link-text">Exercícios</span>
-            <% end %>
-            <%= link_to health_weight_goals_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:milestones)}", id: "link-health-milestones", title: "Marcos", data: { turbo: false } do %>
-              <span class="material-symbols-rounded app-nav-link__icon">flag</span>
-              <span class="link-text">Marcos</span>
             <% end %>
           </div>
         </details>
@@ -98,6 +90,24 @@
             <%= link_to self_knowledge_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:self_knowledge)}", id: "link-health-beyond-scale", title: "Autoconhecimento", data: { turbo: false } do %>
               <span class="material-symbols-rounded app-nav-link__icon">psychology_alt</span>
               <span class="link-text">Autoconhecimento</span>
+            <% end %>
+          </div>
+        </details>
+
+        <details class="app-nav-group" <%= "open" if health_nav_active?(:basic_registries) %>>
+          <summary class="app-nav-link" title="Cadastros Básicos">
+            <span class="material-symbols-rounded app-nav-link__icon">inventory_2</span>
+            <span class="link-text">Cadastros Básicos</span>
+            <span class="material-symbols-rounded app-nav-group__arrow" aria-hidden="true">expand_more</span>
+          </summary>
+          <div class="app-nav-group__items">
+            <%= link_to health_profile_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:profile)}", id: "link-health-profile", title: "Perfil de Saúde", data: { turbo: false } do %>
+              <span class="material-symbols-rounded app-nav-link__icon">person</span>
+              <span class="link-text">Perfil de Saúde</span>
+            <% end %>
+            <%= link_to health_weight_goals_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:milestones)}", id: "link-health-milestones", title: "Marcos", data: { turbo: false } do %>
+              <span class="material-symbols-rounded app-nav-link__icon">flag</span>
+              <span class="link-text">Marcos</span>
             <% end %>
           </div>
         </details>

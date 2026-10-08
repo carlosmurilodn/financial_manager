@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_08_120100) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_08_130100) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -104,6 +104,28 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_08_120100) do
     t.check_constraint "calculation_status::text = ANY (ARRAY['calculated'::character varying, 'missing_consumption'::character varying, 'missing_profile'::character varying, 'missing_weight'::character varying, 'invalid_profile'::character varying]::text[])", name: "daily_calorie_entries_valid_status"
     t.check_constraint "consumed_calories IS NULL OR consumed_calories >= 0::numeric", name: "daily_calorie_entries_nonnegative_consumption"
     t.check_constraint "reference_weight_date IS NULL OR reference_weight_date <= occurred_on", name: "daily_calorie_entries_reference_not_later"
+  end
+
+  create_table "exercise_entries", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "performed_on", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "performed_on"], name: "index_exercise_entries_on_user_id_and_performed_on"
+    t.index ["user_id"], name: "index_exercise_entries_on_user_id"
+  end
+
+  create_table "exercise_items", force: :cascade do |t|
+    t.bigint "exercise_entry_id", null: false
+    t.string "exercise_type", null: false
+    t.integer "duration_minutes"
+    t.string "intensity"
+    t.integer "steps"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exercise_entry_id"], name: "index_exercise_items_on_exercise_entry_id"
+    t.index ["exercise_type"], name: "index_exercise_items_on_exercise_type"
   end
 
   create_table "expenses", force: :cascade do |t|
@@ -311,6 +333,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_08_120100) do
     t.index ["user_id"], name: "index_strength_exercise_catalogs_on_user_id"
   end
 
+  create_table "strength_exercise_logs", force: :cascade do |t|
+    t.bigint "exercise_item_id", null: false
+    t.bigint "muscle_group_id", null: false
+    t.bigint "strength_exercise_catalog_id", null: false
+    t.integer "sets", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exercise_item_id"], name: "index_strength_exercise_logs_on_exercise_item_id"
+    t.index ["muscle_group_id"], name: "index_strength_exercise_logs_on_muscle_group_id"
+    t.index ["strength_exercise_catalog_id"], name: "index_strength_exercise_logs_on_strength_exercise_catalog_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", null: false
     t.string "password_digest", default: "", null: false
@@ -433,6 +467,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_08_120100) do
   add_foreign_key "cards", "users"
   add_foreign_key "categories", "users"
   add_foreign_key "daily_calorie_entries", "users"
+  add_foreign_key "exercise_entries", "users"
+  add_foreign_key "exercise_items", "exercise_entries"
   add_foreign_key "expenses", "cards"
   add_foreign_key "expenses", "categories"
   add_foreign_key "expenses", "users"
@@ -450,6 +486,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_08_120100) do
   add_foreign_key "passkey_credentials", "users"
   add_foreign_key "strength_exercise_catalogs", "muscle_groups"
   add_foreign_key "strength_exercise_catalogs", "users"
+  add_foreign_key "strength_exercise_logs", "exercise_items"
+  add_foreign_key "strength_exercise_logs", "muscle_groups"
+  add_foreign_key "strength_exercise_logs", "strength_exercise_catalogs"
   add_foreign_key "weekly_health_goal_days", "weekly_health_goals"
   add_foreign_key "weekly_health_goals", "weekly_health_plans"
   add_foreign_key "weekly_health_plans", "users"

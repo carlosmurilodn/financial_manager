@@ -1,0 +1,77 @@
+<div class="exercise-entry-item" data-exercise-entry-item>
+  <%= f.hidden_field :id if f.object.persisted? %>
+  <%= f.hidden_field :_destroy, value: "0", data: { destroy_input: true } if f.object.persisted? %>
+
+  <div class="exercise-entry-item__header">
+    <strong>Exercício</strong>
+    <button type="button" class="app-btn app-btn--secondary" data-action="exercise-entry-form#remove">
+      <span class="material-symbols-rounded">delete</span>
+      <span>Remover</span>
+    </button>
+  </div>
+
+  <div class="progress-review-form exercise-entry-item__grid">
+    <div>
+      <%= f.label :exercise_type, "Tipo" %>
+      <%= f.select :exercise_type,
+            options_for_select(ExerciseItem::TYPES.map { |value, label| [label, value] }, f.object.exercise_type.presence || "training"),
+            {},
+            class: "app-form-select",
+            required: true,
+            data: { exercise_type: true, action: "change->exercise-entry-form#changeType" } %>
+    </div>
+
+    <div>
+      <%= f.label :duration_minutes, "Duração (min)" %>
+      <%= f.number_field :duration_minutes, class: "app-form-control", min: 1, step: 1, placeholder: "Ex.: 45" %>
+    </div>
+
+    <div>
+      <%= f.label :intensity, "Intensidade" %>
+      <%= f.select :intensity,
+            options_for_select(ExerciseItem::INTENSITIES.to_a, f.object.intensity),
+            { include_blank: "Selecione" },
+            class: "app-form-select" %>
+    </div>
+  </div>
+
+  <div class="progress-review-form exercise-entry-item__grid" data-type-fields="training">
+    <%= f.fields_for :strength_exercise_log, f.object.strength_exercise_log || f.object.build_strength_exercise_log do |log_form| %>
+      <%= log_form.hidden_field :id if log_form.object.persisted? %>
+      <div>
+        <%= log_form.label :muscle_group_id, "Grupo muscular" %>
+        <%= log_form.select :muscle_group_id,
+              options_from_collection_for_select(@muscle_groups, :id, :name, log_form.object.muscle_group_id),
+              { prompt: "Selecione um grupo" },
+              class: "app-form-select" %>
+      </div>
+
+      <div>
+        <%= log_form.label :strength_exercise_catalog_id, "Exercício" %>
+        <%= log_form.select :strength_exercise_catalog_id,
+              options_from_collection_for_select(@strength_exercises, :id, :name, log_form.object.strength_exercise_catalog_id),
+              { prompt: "Selecione um exercício" },
+              class: "app-form-select" %>
+      </div>
+
+      <div>
+        <%= log_form.label :sets, "Séries" %>
+        <%= log_form.number_field :sets, class: "app-form-control", min: 1, step: 1, placeholder: "Ex.: 4" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="progress-review-form exercise-entry-item__grid" data-type-fields="ergometry">
+    <div>
+      <%= f.label :steps, "Passos" %>
+      <%= f.number_field :steps, class: "app-form-control", min: 0, step: 1, placeholder: "Ex.: 6500" %>
+    </div>
+  </div>
+
+  <div data-type-fields="functional"></div>
+
+  <div>
+    <%= f.label :notes, "Observação" %>
+    <%= f.text_area :notes, class: "app-form-control", rows: 3, maxlength: 500, placeholder: "Opcional" %>
+  </div>
+</div>

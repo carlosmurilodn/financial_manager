@@ -912,6 +912,53 @@ html[data-theme="night"] .progress-activity-day.is-not-done { color: #fb8ba1; }
   object-fit: cover;
 }
 
+.exercise-entry-form__items {
+  display: grid;
+  gap: 16px;
+}
+
+.exercise-entry-item {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.exercise-entry-item__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.exercise-entry-item__grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.exercise-entry-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.exercise-entry-card__chips span {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--hero-badge-icon-bg);
+  color: var(--nav-active-bar);
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+@media (max-width: 767px) {
+  .exercise-entry-item__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .app-health-mobile-links { display: none; }
 @media (max-width: 991px) {
   .app-sidebar--health .app-health-mobile-links { display: contents; }

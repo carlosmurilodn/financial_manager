@@ -1,4 +1,4 @@
-<% path = @physical_area == :nutrition ? health_nutrition_path : health_exercise_path %>
+<% path = @physical_area == :nutrition ? health_nutrition_path : health_exercises_path %>
 <div class="app-panel">
   <%= render "shared/filter_accordion" do %>
     <%= form_with url: path, method: :get, local: true, class: "app-filter-form self-knowledge-record-filters" do |f| %>

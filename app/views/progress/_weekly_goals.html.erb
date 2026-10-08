@@ -3,7 +3,7 @@
     <div class="progress-panel__header"><span class="material-symbols-rounded">task_alt</span><div><p class="app-page__eyebrow">Saúde Física</p><h2>Realizado na Semana</h2></div></div>
     <div class="progress-physical-links">
       <%= link_to "Alimentação", health_nutrition_week_path(@week_start.iso8601), class: "app-btn app-btn--outline", data: { turbo_frame: "_top" } %>
-      <%= link_to "Exercícios", health_exercise_week_path(@week_start.iso8601), class: "app-btn app-btn--outline", data: { turbo_frame: "_top" } %>
+      <%= link_to "Exercícios", health_exercises_path, class: "app-btn app-btn--outline", data: { turbo_frame: "_top" } %>
     </div>
   </div>
   <% if @saved_weekly_goals.any? %>

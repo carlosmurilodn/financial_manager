@@ -1,0 +1,10 @@
+<%= render layout: "shared/form_page", locals: {
+  resource: @exercise_entry,
+  title: "Editar Exercício",
+  eyebrow: "Saúde Física",
+  description: "Atualize os exercícios registrados no dia.",
+  icon: "fitness_center",
+  back_path: health_exercises_path
+} do %>
+  <%= render "form", exercise_entry: @exercise_entry %>
+<% end %>

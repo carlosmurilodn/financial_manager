@@ -1,0 +1,47 @@
+<div id="<%= dom_id(exercise_entry) %>" class="health-weight-goal-card health-weight-goal-card--success" style="--health-card-accent: #5c6df2;">
+  <div class="health-weight-goal-card__content">
+    <div class="health-weight-goal-card__identity-main">
+      <div class="health-weight-goal-card__icon-wrapper">
+        <span class="material-symbols-rounded health-weight-goal-card__icon">fitness_center</span>
+      </div>
+      <div class="health-weight-goal-card__description-link">
+        <h3 class="health-weight-goal-card__title">Dia <%= l(exercise_entry.performed_on, format: :long) %></h3>
+        <div class="exercise-entry-card__chips">
+          <% exercise_entry.exercise_items.each do |item| %>
+            <span><%= item.type_label %></span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="health-weight-goal-card__meta-item">
+      <span class="material-symbols-rounded">format_list_numbered</span>
+      <span><small>Itens</small><strong><%= exercise_entry.exercise_items.size %></strong></span>
+    </div>
+
+    <div class="health-weight-goal-card__meta-item">
+      <span class="material-symbols-rounded">timer</span>
+      <span><small>Duração</small><strong><%= exercise_entry.total_duration_minutes %> min</strong></span>
+    </div>
+
+    <div class="health-weight-goal-card__meta-item">
+      <span class="material-symbols-rounded">directions_walk</span>
+      <span><small>Passos</small><strong><%= exercise_entry.total_steps %></strong></span>
+    </div>
+
+    <div class="health-weight-goal-card__actions">
+      <%= link_to edit_health_exercise_path(exercise_entry), class: "health-weight-goal-card__action", title: "Editar exercício" do %>
+        <span class="material-symbols-rounded">edit</span>
+        <span class="health-weight-goal-card__action-label">Editar</span>
+      <% end %>
+
+      <%= link_to health_exercise_path(exercise_entry),
+                  data: { turbo_method: :delete, turbo_confirm: "Excluir este registro de exercício?" },
+                  class: "health-weight-goal-card__action health-weight-goal-card__action--danger",
+                  title: "Excluir exercício" do %>
+        <span class="material-symbols-rounded">delete</span>
+        <span class="health-weight-goal-card__action-label">Excluir</span>
+      <% end %>
+    </div>
+  </div>
+</div>

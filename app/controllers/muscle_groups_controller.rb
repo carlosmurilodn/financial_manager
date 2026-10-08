@@ -52,7 +52,7 @@ class MuscleGroupsController < ApplicationController
     @name_filter = session[:muscle_groups_name].to_s
     @status_filter = session[:muscle_groups_status].to_s
 
-    muscle_groups = current_user.muscle_groups.ordered
+    muscle_groups = current_user.muscle_groups.includes(:strength_exercise_catalogs).ordered
     muscle_groups = muscle_groups.where("name ILIKE ?", "%#{@name_filter}%") if @name_filter.present?
     muscle_groups = muscle_groups.where(active: @status_filter == "active") if %w[active inactive].include?(@status_filter)
 

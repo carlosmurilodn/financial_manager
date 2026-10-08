@@ -1,0 +1,10 @@
+<%= render layout: "shared/form_page", locals: {
+  resource: @strength_exercise_catalog,
+  title: "Novo Exercício de Musculação",
+  eyebrow: "Cadastros Básicos",
+  description: "Cadastre exercícios para usar nos lançamentos de musculação.",
+  icon: "fitness_center",
+  back_path: strength_exercise_catalogs_path
+} do %>
+  <%= render "form", strength_exercise_catalog: @strength_exercise_catalog %>
+<% end %>

@@ -1,0 +1,10 @@
+<%= render layout: "shared/form_page", locals: {
+  resource: @muscle_group,
+  title: "Editar Grupo Muscular",
+  eyebrow: "Cadastros Básicos",
+  description: "Atualize nome, ordem e status do grupo muscular.",
+  icon: "accessibility_new",
+  back_path: muscle_groups_path
+} do %>
+  <%= render "form", muscle_group: @muscle_group %>
+<% end %>

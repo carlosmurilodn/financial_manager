@@ -1,0 +1,26 @@
+<%= form_with model: muscle_group, local: true, html: { class: "app-form-page__form", data: { turbo: false } } do |f| %>
+  <div class="progress-review-form">
+    <div>
+      <%= f.label :name, "Nome" %>
+      <%= f.text_field :name, class: "app-form-control", required: true, maxlength: 100, placeholder: "Ex.: Peito" %>
+    </div>
+
+    <div>
+      <%= f.label :position, "Ordem" %>
+      <%= f.number_field :position, class: "app-form-control", min: 0, step: 1, placeholder: "Ex.: 1" %>
+      <small>Menor número aparece primeiro. Se deixar zero em novo cadastro, a ordem será preenchida automaticamente.</small>
+    </div>
+
+    <div>
+      <label class="app-checkbox">
+        <%= f.check_box :active %>
+        <span>Ativo</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="app-form-page__actions">
+    <%= link_to "Cancelar", muscle_groups_path, class: "app-btn app-btn--outline" %>
+    <%= f.submit "Salvar grupo", class: "app-btn app-btn--primary" %>
+  </div>
+<% end %>

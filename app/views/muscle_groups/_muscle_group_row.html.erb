@@ -1,0 +1,44 @@
+<div id="<%= dom_id(muscle_group) %>" class="health-weight-goal-card <%= muscle_group.active? ? "health-weight-goal-card--success" : "health-weight-goal-card--pending" %>" style="--health-card-accent: #5c6df2;">
+  <div class="health-weight-goal-card__content">
+    <div class="health-weight-goal-card__identity-main">
+      <div class="health-weight-goal-card__icon-wrapper">
+        <span class="material-symbols-rounded health-weight-goal-card__icon">accessibility_new</span>
+      </div>
+      <div class="health-weight-goal-card__description-link">
+        <h3 class="health-weight-goal-card__title"><%= muscle_group.name %></h3>
+      </div>
+    </div>
+
+    <div class="health-weight-goal-card__amount-area">
+      <span class="health-weight-goal-card__status <%= muscle_group.active? ? "health-weight-goal-card__status--success" : "health-weight-goal-card__status--pending" %>">
+        <span class="material-symbols-rounded health-weight-goal-card__status-state-icon"><%= muscle_group.active? ? "check" : "visibility_off" %></span>
+        <span class="health-weight-goal-card__status-label"><%= muscle_group.active? ? "Ativo" : "Inativo" %></span>
+      </span>
+    </div>
+
+    <div class="health-weight-goal-card__meta-item">
+      <span class="material-symbols-rounded">fitness_center</span>
+      <span><small>Exercícios</small><strong><%= muscle_group.strength_exercise_catalogs.size %></strong></span>
+    </div>
+
+    <div class="health-weight-goal-card__meta-item health-weight-goal-card__position">
+      <span class="material-symbols-rounded">sort</span>
+      <span><small>Ordem</small><strong><%= muscle_group.position %></strong></span>
+    </div>
+
+    <div class="health-weight-goal-card__actions">
+      <%= link_to edit_muscle_group_path(muscle_group), class: "health-weight-goal-card__action", title: "Editar grupo muscular" do %>
+        <span class="material-symbols-rounded">edit</span>
+        <span class="health-weight-goal-card__action-label">Editar</span>
+      <% end %>
+
+      <%= link_to muscle_group_path(muscle_group),
+                  data: { turbo_method: :delete, turbo_confirm: "Excluir este grupo muscular?" },
+                  class: "health-weight-goal-card__action health-weight-goal-card__action--danger",
+                  title: "Excluir grupo muscular" do %>
+        <span class="material-symbols-rounded">delete</span>
+        <span class="health-weight-goal-card__action-label">Excluir</span>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -37,11 +37,20 @@
             [health_weekly_reflections_path, :weekly, "Revisão Semanal", "event_note"],
             [self_knowledge_path, :self_knowledge, "Autoconhecimento", "psychology_alt"],
             [health_profile_path, :profile, "Perfil de Saúde", "person"],
-            [health_weight_goals_path, :milestones, "Marcos", "flag"]
+            [health_weight_goals_path, :milestones, "Marcos", "flag"],
+            [nil, :muscle_groups, "Grupos Musculares", "accessibility_new"],
+            [nil, :strength_exercises, "Exercícios de Musculação", "fitness_center"]
           ].each do |path, section, label, icon| %>
-            <%= link_to path, class: "app-nav-link #{'active-menu' if health_nav_active?(section)}", title: label, aria: { label: label, current: health_nav_active?(section) ? "page" : nil }, data: { turbo: false } do %>
-              <span class="material-symbols-rounded app-nav-link__icon" aria-hidden="true"><%= icon %></span>
-              <span class="link-text"><%= label %></span>
+            <% if path.present? %>
+              <%= link_to path, class: "app-nav-link #{'active-menu' if health_nav_active?(section)}", title: label, aria: { label: label, current: health_nav_active?(section) ? "page" : nil }, data: { turbo: false } do %>
+                <span class="material-symbols-rounded app-nav-link__icon" aria-hidden="true"><%= icon %></span>
+                <span class="link-text"><%= label %></span>
+              <% end %>
+            <% else %>
+              <span class="app-nav-link app-nav-link--disabled" title="<%= label %>" aria-label="<%= label %>" aria-disabled="true">
+                <span class="material-symbols-rounded app-nav-link__icon" aria-hidden="true"><%= icon %></span>
+                <span class="link-text"><%= label %></span>
+              </span>
             <% end %>
           <% end %>
         </div>
@@ -109,6 +118,14 @@
               <span class="material-symbols-rounded app-nav-link__icon">flag</span>
               <span class="link-text">Marcos</span>
             <% end %>
+            <span class="app-nav-link app-nav-link--disabled" title="Grupos Musculares" aria-label="Grupos Musculares" aria-disabled="true">
+              <span class="material-symbols-rounded app-nav-link__icon">accessibility_new</span>
+              <span class="link-text">Grupos Musculares</span>
+            </span>
+            <span class="app-nav-link app-nav-link--disabled" title="Exercícios de Musculação" aria-label="Exercícios de Musculação" aria-disabled="true">
+              <span class="material-symbols-rounded app-nav-link__icon">fitness_center</span>
+              <span class="link-text">Exercícios de Musculação</span>
+            </span>
           </div>
         </details>
 

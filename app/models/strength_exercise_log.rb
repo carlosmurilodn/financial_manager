@@ -1,5 +1,5 @@
 class StrengthExerciseLog < ApplicationRecord
-  belongs_to :exercise_item, inverse_of: :strength_exercise_log
+  belongs_to :exercise_item, inverse_of: :strength_exercise_logs
   belongs_to :muscle_group
   belongs_to :strength_exercise_catalog
 

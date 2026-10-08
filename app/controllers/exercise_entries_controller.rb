@@ -68,7 +68,7 @@ class ExerciseEntriesController < ApplicationController
     @date_to_filter = session[:exercise_entries_date_to].to_s
     @type_filter = session[:exercise_entries_type].to_s
 
-    entries = current_user.exercise_entries.includes(exercise_items: { strength_exercise_log: [ :muscle_group, :strength_exercise_catalog ] }).recent
+    entries = current_user.exercise_entries.includes(exercise_items: { strength_exercise_logs: [ :muscle_group, :strength_exercise_catalog ] }).recent
     entries = entries.where(performed_on: Date.iso8601(@date_from_filter)..) if @date_from_filter.present?
     entries = entries.where(performed_on: ..Date.iso8601(@date_to_filter)) if @date_to_filter.present?
     entries = entries.joins(:exercise_items).where(exercise_items: { exercise_type: @type_filter }).distinct if ExerciseItem::TYPES.key?(@type_filter)
@@ -93,21 +93,20 @@ class ExerciseEntriesController < ApplicationController
 
   def build_default_item
     item = @exercise_entry.exercise_items.build(exercise_type: "training")
-    item.build_strength_exercise_log
+    item.strength_exercise_logs.build
   end
 
   def build_missing_strength_logs
     @exercise_entry.exercise_items.each do |item|
-      item.build_strength_exercise_log if item.training? && item.strength_exercise_log.blank?
+      item.strength_exercise_logs.build if item.training? && item.strength_exercise_logs.blank?
     end
   end
 
   def normalize_items
     @exercise_entry.exercise_items.each do |item|
       item.duration_minutes = nil if item.duration_minutes.to_s.blank?
-      item.steps = nil unless item.ergometry?
       item.intensity = nil if item.intensity.blank?
-      item.strength_exercise_log&.mark_for_destruction unless item.training?
+      item.strength_exercise_logs.each(&:mark_for_destruction) unless item.training?
     end
   end
 
@@ -119,10 +118,9 @@ class ExerciseEntriesController < ApplicationController
         :exercise_type,
         :duration_minutes,
         :intensity,
-        :steps,
         :notes,
         :_destroy,
-        strength_exercise_log_attributes: [
+        strength_exercise_logs_attributes: [
           :id,
           :muscle_group_id,
           :strength_exercise_catalog_id,

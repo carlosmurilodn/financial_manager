@@ -8,7 +8,7 @@
     <div><p>Último treino</p><strong><%= @latest_exercise_entry ? @latest_exercise_entry.performed_on.strftime("%d/%m") : "Sem registro" %></strong><small><%= @latest_exercise_entry ? pluralize(@latest_exercise_entry.exercise_items.size, "exercício", "exercícios") : "Cadastre o primeiro" %></small></div>
   </article>
   <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--purple">
-    <span class="material-symbols-rounded" aria-hidden="true">directions_walk</span>
-    <div><p>Passos filtrados</p><strong><%= @exercise_entries.sum(&:total_steps) %></strong><small>Ergometria</small></div>
+    <span class="material-symbols-rounded" aria-hidden="true">timer</span>
+    <div><p>Minutos filtrados</p><strong><%= @exercise_entries.sum(&:total_duration_minutes) %></strong><small>Duração registrada</small></div>
   </article>
 </div>

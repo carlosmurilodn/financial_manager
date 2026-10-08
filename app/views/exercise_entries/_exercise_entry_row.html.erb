@@ -24,11 +24,6 @@
       <span><small>Duração</small><strong><%= exercise_entry.total_duration_minutes %> min</strong></span>
     </div>
 
-    <div class="health-weight-goal-card__meta-item">
-      <span class="material-symbols-rounded">directions_walk</span>
-      <span><small>Passos</small><strong><%= exercise_entry.total_steps %></strong></span>
-    </div>
-
     <div class="health-weight-goal-card__actions">
       <%= link_to edit_health_exercise_path(exercise_entry), class: "health-weight-goal-card__action", title: "Editar exercício" do %>
         <span class="material-symbols-rounded">edit</span>

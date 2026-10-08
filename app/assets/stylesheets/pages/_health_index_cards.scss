@@ -917,6 +917,11 @@ html[data-theme="night"] .progress-activity-day.is-not-done { color: #fb8ba1; }
   gap: 16px;
 }
 
+.exercise-entry-form__add-action {
+  margin-top: 18px;
+  margin-bottom: 12px;
+}
+
 .exercise-entry-item {
   display: grid;
   gap: 14px;
@@ -934,7 +939,56 @@ html[data-theme="night"] .progress-activity-day.is-not-done { color: #fb8ba1; }
 }
 
 .exercise-entry-item__grid {
+  display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+}
+
+.exercise-entry-item__grid--ergometry {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.exercise-entry-strength {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  background: var(--app-bg-soft);
+}
+
+.exercise-entry-item [hidden] {
+  display: none !important;
+}
+
+.exercise-entry-strength__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.exercise-entry-strength__logs {
+  display: grid;
+  gap: 10px;
+}
+
+.exercise-entry-strength-log {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr) minmax(120px, .4fr) auto;
+  align-items: end;
+  gap: 12px;
+}
+
+.exercise-entry-strength-log__remove {
+  min-width: 44px;
+  padding-inline: 12px;
+}
+
+.exercise-entry-item__notes textarea {
+  min-height: 48px;
+  resize: vertical;
 }
 
 .exercise-entry-card__chips {
@@ -954,7 +1008,8 @@ html[data-theme="night"] .progress-activity-day.is-not-done { color: #fb8ba1; }
 }
 
 @media (max-width: 767px) {
-  .exercise-entry-item__grid {
+  .exercise-entry-item__grid,
+  .exercise-entry-strength-log {
     grid-template-columns: 1fr;
   }
 }

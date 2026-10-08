@@ -13,10 +13,6 @@ class ExerciseEntry < ApplicationRecord
     exercise_items.sum { |item| item.duration_minutes.to_i }
   end
 
-  def total_steps
-    exercise_items.sum { |item| item.steps.to_i }
-  end
-
   private
 
   def reject_exercise_item?(attributes)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_08_130100) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_08_130200) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -120,7 +120,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_08_130100) do
     t.string "exercise_type", null: false
     t.integer "duration_minutes"
     t.string "intensity"
-    t.integer "steps"
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

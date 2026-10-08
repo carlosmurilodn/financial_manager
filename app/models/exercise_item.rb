@@ -11,17 +11,15 @@ class ExerciseItem < ApplicationRecord
   }.freeze
 
   belongs_to :exercise_entry, inverse_of: :exercise_items
-  has_one :strength_exercise_log, dependent: :destroy, inverse_of: :exercise_item
+  has_many :strength_exercise_logs, dependent: :destroy, inverse_of: :exercise_item
 
-  accepts_nested_attributes_for :strength_exercise_log, allow_destroy: true
+  accepts_nested_attributes_for :strength_exercise_logs, allow_destroy: true, reject_if: :reject_strength_exercise_log?
 
   validates :exercise_type, presence: true, inclusion: { in: TYPES.keys }
   validates :duration_minutes, numericality: { greater_than: 0, less_than_or_equal_to: 1440 }, allow_nil: true
-  validates :steps, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 1000000 }, allow_nil: true
   validates :intensity, inclusion: { in: INTENSITIES.values }, allow_nil: true
   validates :notes, length: { maximum: 500 }
   validate :training_must_have_strength_log
-  validate :ergometry_must_have_steps
 
   before_validation :normalize_optional_fields
 
@@ -52,15 +50,12 @@ class ExerciseItem < ApplicationRecord
 
   def training_must_have_strength_log
     return unless training?
-    return if strength_exercise_log.present? && !strength_exercise_log.marked_for_destruction?
+    return if strength_exercise_logs.reject(&:marked_for_destruction?).any?
 
-    errors.add(:strength_exercise_log, "deve ser informado")
+    errors.add(:strength_exercise_logs, "deve ter pelo menos um exercício de musculação")
   end
 
-  def ergometry_must_have_steps
-    return unless ergometry?
-    return if steps.present?
-
-    errors.add(:steps, "deve ser informado")
+  def reject_strength_exercise_log?(attributes)
+    attributes["muscle_group_id"].blank? && attributes["strength_exercise_catalog_id"].blank? && attributes["sets"].blank?
   end
 end

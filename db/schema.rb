@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_07_200000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_08_120100) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -269,6 +269,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_07_200000) do
     t.index ["user_id"], name: "index_incomes_on_user_id"
   end
 
+  create_table "muscle_groups", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name", null: false
+    t.integer "position", default: 0, null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "active"], name: "index_muscle_groups_on_user_id_and_active"
+    t.index ["user_id", "name"], name: "index_muscle_groups_on_user_id_and_name", unique: true
+    t.index ["user_id", "position"], name: "index_muscle_groups_on_user_id_and_position"
+    t.index ["user_id"], name: "index_muscle_groups_on_user_id"
+  end
+
   create_table "passkey_credentials", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "webauthn_id", null: false
@@ -280,6 +293,22 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_07_200000) do
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_passkey_credentials_on_user_id"
     t.index ["webauthn_id"], name: "index_passkey_credentials_on_webauthn_id", unique: true
+  end
+
+  create_table "strength_exercise_catalogs", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "muscle_group_id", null: false
+    t.string "name", null: false
+    t.integer "position", default: 0, null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["muscle_group_id"], name: "index_strength_exercise_catalogs_on_muscle_group_id"
+    t.index ["user_id", "active"], name: "index_strength_exercise_catalogs_on_user_id_and_active"
+    t.index ["user_id", "muscle_group_id"], name: "idx_on_user_id_muscle_group_id_b5d651f973"
+    t.index ["user_id", "name"], name: "index_strength_exercise_catalogs_on_user_id_and_name", unique: true
+    t.index ["user_id", "position"], name: "index_strength_exercise_catalogs_on_user_id_and_position"
+    t.index ["user_id"], name: "index_strength_exercise_catalogs_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -417,7 +446,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_07_200000) do
   add_foreign_key "health_wins", "users"
   add_foreign_key "incomes", "categories"
   add_foreign_key "incomes", "users"
+  add_foreign_key "muscle_groups", "users"
   add_foreign_key "passkey_credentials", "users"
+  add_foreign_key "strength_exercise_catalogs", "muscle_groups"
+  add_foreign_key "strength_exercise_catalogs", "users"
   add_foreign_key "weekly_health_goal_days", "weekly_health_goals"
   add_foreign_key "weekly_health_goals", "weekly_health_plans"
   add_foreign_key "weekly_health_plans", "users"

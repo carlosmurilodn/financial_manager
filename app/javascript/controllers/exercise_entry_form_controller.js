@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { initSelect2 } from "../select2_init"
 
 export default class extends Controller {
   static targets = ["items", "template"]
@@ -34,6 +35,8 @@ export default class extends Controller {
     const logs = item.querySelector("[data-strength-logs]")
     const content = template.innerHTML.replaceAll("NEW_STRENGTH_RECORD", Date.now().toString())
     logs.insertAdjacentHTML("beforeend", content)
+    initSelect2(logs)
+    this.filterStrengthExercises()
   }
 
   removeStrengthLog(event) {
@@ -53,6 +56,31 @@ export default class extends Controller {
     this.refresh()
   }
 
+  filterStrengthExercises(event) {
+    const logs = event ? [event.target.closest("[data-strength-log]")] : this.element.querySelectorAll("[data-strength-log]")
+
+    logs.forEach((log) => {
+      if (!log) return
+
+      const muscleGroupId = log.querySelector("[data-strength-muscle-group]")?.value
+      const exerciseSelect = log.querySelector("[data-strength-exercise]")
+
+      if (!exerciseSelect) return
+
+      Array.from(exerciseSelect.options).forEach((option) => {
+        const optionMuscleGroupId = option.dataset.muscleGroupId
+        const visible = option.value === "" || !muscleGroupId || optionMuscleGroupId === muscleGroupId
+        option.hidden = !visible
+        option.disabled = !visible
+      })
+
+      if (exerciseSelect.selectedOptions[0]?.disabled) {
+        exerciseSelect.value = ""
+        exerciseSelect.dispatchEvent(new Event("change", { bubbles: true }))
+      }
+    })
+  }
+
   refresh() {
     this.element.querySelectorAll("[data-exercise-entry-item]").forEach((item) => {
       const type = item.querySelector("[data-exercise-type]")?.value
@@ -64,5 +92,6 @@ export default class extends Controller {
         })
       })
     })
+    this.filterStrengthExercises()
   }
 }

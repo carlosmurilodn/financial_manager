@@ -808,15 +808,17 @@
 @media (max-width: 640px) { .diary-guide__question { padding: 16px; } }
 
 // Autoconhecimento: diário, revisão e evolução.
-.progress-page .app-page__hero-top--progress { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
-.progress-page .app-page__hero-top--progress > .app-page__hero-copy { grid-column: span 1; }
-.progress-week-selector { grid-column: span 2; }
+.progress-week-selector { grid-column: auto; width: 100%; box-sizing: border-box; }
 .progress-week-selector { min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 12px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); }
-.progress-week-selector .progress-history__header { flex-wrap: wrap; gap: 4px; font-size: .8rem; }
+.progress-week-selector .progress-history__header { flex-wrap: wrap; gap: 8px; font-size: .9rem; }
 .progress-week-selector .progress-empty { margin: 0; font-size: .75rem; }
-.progress-week-selector .progress-week-period { display: grid; grid-template-columns: 28px minmax(0, 1fr) 28px; align-items: center; gap: 4px; }
-.progress-week-selector .progress-week-period__button { display: flex; align-items: center; justify-content: center; width: 28px; height: 32px; padding: 0; }
-.progress-week-selector .progress-week-period__label { font-size: .8rem; line-height: 1.4; color: var(--text-soft); font-weight: 700; }
+.progress-week-selector .progress-week-period { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; gap: 12px; }
+.progress-week-selector .progress-week-period__button { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; background: var(--surface); }
+.progress-week-selector .progress-week-period__label { font-size: 1.1rem; line-height: 1.4; color: var(--text-soft); font-weight: 700; }
+@media (max-width: 480px) {
+  .progress-week-selector .progress-week-period { gap: 4px; }
+  .progress-week-selector .progress-week-period__label { gap: 4px; font-size: .9rem; }
+}
 .progress-page .progress-panels--activity { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
 @media (max-width: 991px) { .progress-page .progress-panels--activity { grid-template-columns: minmax(0, 1fr); } }
 .progress-diary-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin: 16px 0; }
@@ -833,14 +835,6 @@
 .progress-activity-day { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: var(--hero-badge-icon-bg); color: var(--text-soft); }
 .progress-activity-day.is-done { background: rgba(45, 190, 148, .16); color: #16836b; }
 html[data-theme="night"] .progress-activity-day.is-done { color: #5edbb6; }
-@media (max-width: 1199px) {
-  .progress-page .app-page__hero-top--progress { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .progress-page .app-page__hero-top--progress > .app-page__hero-copy { grid-column: 1 / -1; }
-  .progress-week-selector { grid-column: 1 / -1; }
-}
-@media (max-width: 767px) {
-  .progress-page .app-page__hero-top--progress { grid-template-columns: 1fr; }
-}
 .self-knowledge-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
 .self-knowledge-page .app-page__hero-top.self-knowledge-section-hero { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: stretch; gap: 12px; }
 .self-knowledge-section-hero__heading { grid-column: span 2; }

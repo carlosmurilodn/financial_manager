@@ -12,7 +12,9 @@
       <span class="material-symbols-rounded">chevron_left</span>
     <% end %>
     <span class="progress-week-period__label">
-      <span><%= @week_start.strftime("%d/%m/%Y") %><br>a <%= (@week_start + 6.days).strftime("%d/%m/%Y") %></span>
+      <time datetime="<%= @week_start.iso8601 %>"><%= @week_start.strftime("%d/%m/%Y") %></time>
+      <span>a</span>
+      <time datetime="<%= (@week_start + 6.days).iso8601 %>"><%= (@week_start + 6.days).strftime("%d/%m/%Y") %></time>
     </span>
     <%= link_to progress_path(week: (@week_start + 7.days).iso8601, weight_period: @weight_period), class: "progress-week-period__button", aria: { label: "Próxima semana" }, data: { turbo_frame: "progress-weekly-goals", turbo_prefetch: false } do %>
       <span class="material-symbols-rounded">chevron_right</span>

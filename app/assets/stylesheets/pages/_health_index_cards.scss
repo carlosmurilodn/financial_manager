@@ -342,9 +342,14 @@ html[data-theme="night"] .nutrition-diet-day--none { --diet-color: #fb8ba1; }
 .health-win-card__title { font-weight: 700; }
 
 .progress-page .app-page__hero-top--progress {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 16px;
+}
+.progress-page .app-page__hero-top--progress > .app-page__hero-copy,
+.progress-page .app-page__hero-top--progress > .progress-week-selector { grid-column: auto; }
+@media (max-width: 991px) {
+  .progress-page .app-page__hero-top--progress { grid-template-columns: minmax(0, 1fr); }
 }
 
 .progress-page .app-page__hero-copy { flex: 2 1 300px; }

@@ -888,6 +888,30 @@ html[data-theme="night"] .progress-activity-day.is-not-done { color: #fb8ba1; }
 .progress-mental-kpis .self-knowledge-hero-kpi { padding: 10px; gap: 8px; }
 .progress-mental-kpis .self-knowledge-hero-kpi > .material-symbols-rounded { font-size: 24px; }
 @media (max-width: 575px) { .progress-mental-kpis { grid-template-columns: 1fr; } }
+
+.strength-exercise-card__image {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
+.strength-exercise-image-preview {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.strength-exercise-image-preview img {
+  width: 96px;
+  height: 96px;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  object-fit: cover;
+}
+
 .app-health-mobile-links { display: none; }
 @media (max-width: 991px) {
   .app-sidebar--health .app-health-mobile-links { display: contents; }

@@ -36,6 +36,7 @@ class StrengthExerciseCatalogsController < ApplicationController
 
   def update
     if @strength_exercise_catalog.update(strength_exercise_catalog_params)
+      remove_example_image_attachment_if_requested
       redirect_to strength_exercise_catalogs_path, notice: "Exercício de musculação atualizado com sucesso!", status: :see_other
     else
       load_muscle_group_options
@@ -78,10 +79,17 @@ class StrengthExerciseCatalogsController < ApplicationController
   end
 
   def strength_exercise_catalog_params
-    params.require(:strength_exercise_catalog).permit(:name, :muscle_group_id, :active, :position)
+    params.require(:strength_exercise_catalog).permit(:name, :muscle_group_id, :active, :position, :example_image)
   end
 
   def next_position
     current_user.strength_exercise_catalogs.maximum(:position).to_i + 1
+  end
+
+  def remove_example_image_attachment_if_requested
+    return unless ActiveModel::Type::Boolean.new.cast(params.dig(:strength_exercise_catalog, :remove_example_image))
+    return if params.dig(:strength_exercise_catalog, :example_image).present?
+
+    @strength_exercise_catalog.example_image.purge_later if @strength_exercise_catalog.example_image.attached?
   end
 end

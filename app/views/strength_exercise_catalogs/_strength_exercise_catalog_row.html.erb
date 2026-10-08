@@ -2,7 +2,11 @@
   <div class="health-weight-goal-card__content">
     <div class="health-weight-goal-card__identity-main">
       <div class="health-weight-goal-card__icon-wrapper">
-        <span class="material-symbols-rounded health-weight-goal-card__icon">fitness_center</span>
+        <% if strength_exercise_catalog.example_image.attached? %>
+          <%= image_tag strength_exercise_catalog.example_image, class: "strength-exercise-card__image", alt: strength_exercise_catalog.name %>
+        <% else %>
+          <span class="material-symbols-rounded health-weight-goal-card__icon">fitness_center</span>
+        <% end %>
       </div>
       <div class="health-weight-goal-card__description-link">
         <h3 class="health-weight-goal-card__title"><%= strength_exercise_catalog.name %></h3>

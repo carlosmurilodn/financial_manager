@@ -1,0 +1,10 @@
+<%= render layout: "shared/form_page", locals: {
+  resource: @muscle_group,
+  title: "Novo Grupo Muscular",
+  eyebrow: "Cadastros Básicos",
+  description: "Cadastre grupos usados nos exercícios de musculação.",
+  icon: "accessibility_new",
+  back_path: muscle_groups_path
+} do %>
+  <%= render "form", muscle_group: @muscle_group %>
+<% end %>

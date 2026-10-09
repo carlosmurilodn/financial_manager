@@ -7,7 +7,6 @@
       <div class="health-card__content"><div class="health-card__summary nutrition-week-card__summary">
         <div class="health-card__identity-block"><%= link_to health_nutrition_week_path(week.iso8601), class: "health-card__identity-main", data: { turbo: false } do %><div class="health-card__icon-wrapper"><span class="material-symbols-rounded health-card__icon">restaurant</span></div><h2 class="health-card__title">Semana de <%= week.strftime('%d/%m/%Y') %> a <%= (week + 6.days).strftime('%d/%m/%Y') %></h2><% end %></div>
         <div class="health-card__information nutrition-week-card__metrics"><span class="nutrition-week-card__metric"><span class="material-symbols-rounded">task_alt</span><span><small>Alimentação</small><strong><%= completed %> / 7 dias</strong></span></span><span class="nutrition-week-card__metric"><span class="material-symbols-rounded">local_fire_department</span><span><small>Calorias Preenchidas</small><strong><%= @calorie_counts[week] || 0 %> / 7 dias</strong></span></span></div>
-        <div class="health-card__actions"><%= link_to "Ver Semana", health_nutrition_week_path(week.iso8601), class: "health-card__action", data: { turbo: false } %><%= link_to "Editar", edit_health_nutrition_week_path(week.iso8601), class: "health-card__action", data: { turbo: false } %><%= link_to "Excluir", health_nutrition_week_path(week.iso8601), class: "health-card__action health-card__action--danger", data: { turbo_method: :delete, turbo_confirm: "Excluir os registros de alimentação e calorias desta semana?" } %></div>
         <div class="nutrition-week-card__averages">
           <% { consumed: ["Calorias Ingeridas Médias", "restaurant", "blue"], expenditure: ["Gasto Estimado Médio", "local_fire_department", "red"], deficit: ["Déficit Médio", "balance", "green"] }.each do |metric, (label, icon, color)| %>
             <% average = @calorie_summaries.fetch(week).fetch(metric) %>
@@ -21,6 +20,7 @@
             </div>
           <% end %>
         </div>
+        <div class="health-card__actions"><%= link_to edit_health_nutrition_week_path(week.iso8601), class: "health-card__action", data: { turbo: false } do %><span class="material-symbols-rounded">edit</span><span class="health-card__action-label">Editar</span><% end %><%= link_to health_nutrition_week_path(week.iso8601), class: "health-card__action health-card__action--danger", data: { turbo_method: :delete, turbo_confirm: "Excluir os registros de alimentação e calorias desta semana?" } do %><span class="material-symbols-rounded">delete</span><span class="health-card__action-label">Excluir</span><% end %></div>
       </div></div>
     </article>
   <% end %>

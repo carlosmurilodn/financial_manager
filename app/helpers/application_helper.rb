@@ -23,6 +23,9 @@ module ApplicationHelper
     health_profiles
     physical_health
     daily_calorie_entries
+    exercise_entries
+    muscle_groups
+    strength_exercise_catalogs
   ].freeze
 
   def personal_development_section?
@@ -51,6 +54,12 @@ module ApplicationHelper
       controller_name == "weight_entries"
     when :milestones
       controller_name == "health_weight_goals"
+    when :basic_registries
+      health_nav_active?(:profile) || health_nav_active?(:milestones) || health_nav_active?(:muscle_groups) || health_nav_active?(:strength_exercises)
+    when :muscle_groups
+      controller_name == "muscle_groups"
+    when :strength_exercises
+      controller_name == "strength_exercise_catalogs"
     when :daily
       controller_name == "health_journal_entries"
     when :weekly
@@ -70,7 +79,7 @@ module ApplicationHelper
     when :nutrition
       controller_name == "physical_health" && action_name.in?(%w[nutrition nutrition_week toggle_nutrition_day new_nutrition_week create_nutrition_week edit_nutrition_week update_nutrition_week destroy_nutrition_week])
     when :exercise
-      controller_name == "physical_health" && %w[exercise exercise_week toggle_exercise_day new_exercise_week create_exercise_week edit_exercise_week update_exercise_week destroy_exercise_week].include?(action_name)
+      controller_name == "exercise_entries"
     else
       false
     end

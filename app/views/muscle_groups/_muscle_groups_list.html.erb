@@ -1,0 +1,21 @@
+<div id="muscle-groups-table">
+  <% if @muscle_groups.any? %>
+    <div class="health-weight-goal-list" id="muscle-groups-list">
+      <% @muscle_groups.each do |muscle_group| %>
+        <%= render partial: "muscle_group_row", locals: { muscle_group: muscle_group } %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="dashboard-empty-state">
+      <span class="material-symbols-rounded">accessibility_new</span>
+      <strong>Nenhum grupo muscular encontrado</strong>
+      <small>Ajuste os filtros ou cadastre um novo grupo.</small>
+    </div>
+  <% end %>
+
+  <%= render "shared/pagination",
+             current_page: @current_page,
+             total_pages: @total_pages,
+             base_params: request.query_parameters.except(:page),
+             aria_label: "Paginacao de grupos musculares" %>
+</div>

@@ -1,0 +1,21 @@
+<div id="strength-exercise-catalogs-table">
+  <% if @strength_exercise_catalogs.any? %>
+    <div class="health-weight-goal-list" id="strength-exercise-catalogs-list">
+      <% @strength_exercise_catalogs.each do |strength_exercise_catalog| %>
+        <%= render partial: "strength_exercise_catalog_row", locals: { strength_exercise_catalog: strength_exercise_catalog } %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="dashboard-empty-state">
+      <span class="material-symbols-rounded">fitness_center</span>
+      <strong>Nenhum exercício encontrado</strong>
+      <small>Ajuste os filtros ou cadastre um novo exercício.</small>
+    </div>
+  <% end %>
+
+  <%= render "shared/pagination",
+             current_page: @current_page,
+             total_pages: @total_pages,
+             base_params: request.query_parameters.except(:page),
+             aria_label: "Paginacao de exercícios de musculação" %>
+</div>

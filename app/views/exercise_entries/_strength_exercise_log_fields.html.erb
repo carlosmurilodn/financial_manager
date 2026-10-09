@@ -1,0 +1,29 @@
+<div class="exercise-entry-strength-log" data-strength-log>
+  <%= f.hidden_field :id if f.object.persisted? %>
+  <%= f.hidden_field :_destroy, value: "0", data: { strength_destroy_input: true } if f.object.persisted? %>
+
+  <div>
+    <%= f.label :muscle_group_id, "Grupo muscular" %>
+    <%= f.select :muscle_group_id,
+          options_from_collection_for_select(@muscle_groups, :id, :name, f.object.muscle_group_id),
+          { prompt: "Selecione um grupo" },
+          class: "app-form-select" %>
+  </div>
+
+  <div>
+    <%= f.label :strength_exercise_catalog_id, "Exercício" %>
+    <%= f.select :strength_exercise_catalog_id,
+          options_from_collection_for_select(@strength_exercises, :id, :name, f.object.strength_exercise_catalog_id),
+          { prompt: "Selecione um exercício" },
+          class: "app-form-select" %>
+  </div>
+
+  <div>
+    <%= f.label :sets, "Séries" %>
+    <%= f.number_field :sets, class: "app-form-control", min: 1, step: 1, placeholder: "Ex.: 4", required: true %>
+  </div>
+
+  <button type="button" class="app-btn app-btn--secondary exercise-entry-strength-log__remove" data-action="exercise-entry-form#removeStrengthLog" title="Remover grupo">
+    <span class="material-symbols-rounded">delete</span>
+  </button>
+</div>

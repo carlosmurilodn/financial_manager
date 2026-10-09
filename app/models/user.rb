@@ -16,5 +16,8 @@ class User < ApplicationRecord
   has_many :weekly_wellbeings, dependent: :destroy
   has_many :health_wins, dependent: :destroy
   has_many :health_weight_goals, dependent: :destroy
+  has_many :exercise_entries, dependent: :destroy
+  has_many :strength_exercise_catalogs, dependent: :destroy
+  has_many :muscle_groups, dependent: :destroy
   has_many :passkey_credentials, dependent: :destroy
 end

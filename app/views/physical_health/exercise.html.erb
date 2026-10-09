@@ -12,7 +12,7 @@
             <span class="nutrition-week-card__metric"><span class="material-symbols-rounded"><%= type == "walking" ? "directions_walk" : "fitness_center" %></span><span><small><%= label %></small><strong><%= goal.completed_count %> / <%= goal.target_count %> dias</strong></span></span>
           <% end %>
         </div>
-        <div class="health-card__actions"><%= link_to "Ver Semana", health_exercise_week_path(week.iso8601), class: "health-card__action", data: { turbo: false } %><%= link_to "Editar", edit_health_exercise_week_path(week.iso8601), class: "health-card__action", data: { turbo: false } %><%= link_to "Excluir", health_exercise_week_path(week.iso8601), class: "health-card__action health-card__action--danger", data: { turbo_method: :delete, turbo_confirm: "Excluir as categorias e marcações de exercícios desta semana? As calorias serão preservadas e recalculadas." } %></div>
+        <div class="health-card__actions"><%= link_to edit_health_exercise_week_path(week.iso8601), class: "health-card__action", data: { turbo: false } do %><span class="material-symbols-rounded">edit</span><span class="health-card__action-label">Editar</span><% end %><%= link_to health_exercise_week_path(week.iso8601), class: "health-card__action health-card__action--danger", data: { turbo_method: :delete, turbo_confirm: "Excluir as categorias e marcações de exercícios desta semana? As calorias serão preservadas e recalculadas." } do %><span class="material-symbols-rounded">delete</span><span class="health-card__action-label">Excluir</span><% end %></div>
       </div></div>
     </article>
   <% end %>

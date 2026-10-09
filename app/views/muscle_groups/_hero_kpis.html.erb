@@ -1,0 +1,14 @@
+<div id="muscle-groups-hero-kpis" class="physical-health-hero-kpis">
+  <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--green">
+    <span class="material-symbols-rounded" aria-hidden="true">accessibility_new</span>
+    <div><p>Grupos filtrados</p><strong><%= @filtered_count || 0 %></strong><small>Conforme filtros selecionados</small></div>
+  </article>
+  <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--yellow">
+    <span class="material-symbols-rounded" aria-hidden="true">toggle_on</span>
+    <div><p>Ativos</p><strong><%= current_user.muscle_groups.active.count %></strong><small>Disponíveis para uso</small></div>
+  </article>
+  <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--purple">
+    <span class="material-symbols-rounded" aria-hidden="true">fitness_center</span>
+    <div><p>Exercícios</p><strong><%= current_user.strength_exercise_catalogs.count %></strong><small>Cadastrados nos grupos</small></div>
+  </article>
+</div>

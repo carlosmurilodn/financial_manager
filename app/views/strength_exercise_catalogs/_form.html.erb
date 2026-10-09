@@ -1,0 +1,49 @@
+<%= form_with model: strength_exercise_catalog, local: true, html: { class: "app-form-page__form", data: { turbo: false } } do |f| %>
+  <div class="progress-review-form">
+    <div>
+      <%= f.label :muscle_group_id, "Grupo muscular" %>
+      <%= f.select :muscle_group_id,
+            options_from_collection_for_select(@muscle_group_options, :id, :name, strength_exercise_catalog.muscle_group_id),
+            { prompt: "Selecione um grupo" },
+            class: "app-form-select",
+            required: true %>
+    </div>
+
+    <div>
+      <%= f.label :name, "Nome" %>
+      <%= f.text_field :name, class: "app-form-control", required: true, maxlength: 120, placeholder: "Ex.: Supino reto" %>
+    </div>
+
+    <div>
+      <%= f.label :position, "Ordem" %>
+      <%= f.number_field :position, class: "app-form-control", min: 0, step: 1, placeholder: "Ex.: 1" %>
+      <small>Menor número aparece primeiro dentro do grupo.</small>
+    </div>
+
+    <div>
+      <%= f.label :example_image, "Imagem de exemplo" %>
+      <%= f.file_field :example_image, class: "app-form-control", accept: "image/*" %>
+      <% if strength_exercise_catalog.example_image.attached? %>
+        <div class="strength-exercise-image-preview">
+          <%= image_tag strength_exercise_catalog.example_image, alt: "Imagem de exemplo de #{strength_exercise_catalog.name}" %>
+          <label class="app-checkbox">
+            <%= check_box_tag "strength_exercise_catalog[remove_example_image]", "1", false %>
+            <span>Remover imagem atual</span>
+          </label>
+        </div>
+      <% end %>
+    </div>
+
+    <div>
+      <label class="app-checkbox">
+        <%= f.check_box :active %>
+        <span>Ativo</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="app-form-page__actions">
+    <%= link_to "Cancelar", strength_exercise_catalogs_path, class: "app-btn app-btn--outline" %>
+    <%= f.submit "Salvar exercício", class: "app-btn app-btn--primary" %>
+  </div>
+<% end %>

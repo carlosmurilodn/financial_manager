@@ -1,0 +1,21 @@
+<div id="exercise-entries-table">
+  <% if @exercise_entries.any? %>
+    <div class="health-weight-goal-list" id="exercise-entries-list">
+      <% @exercise_entries.each do |exercise_entry| %>
+        <%= render partial: "exercise_entry_row", locals: { exercise_entry: exercise_entry } %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="dashboard-empty-state">
+      <span class="material-symbols-rounded">fitness_center</span>
+      <strong>Nenhum exercício encontrado</strong>
+      <small>Ajuste os filtros ou registre um novo exercício.</small>
+    </div>
+  <% end %>
+
+  <%= render "shared/pagination",
+             current_page: @current_page,
+             total_pages: @total_pages,
+             base_params: request.query_parameters.except(:page),
+             aria_label: "Paginacao de exercícios" %>
+</div>

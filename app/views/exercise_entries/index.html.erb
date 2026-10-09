@@ -1,0 +1,70 @@
+<section class="app-page health-index-page self-knowledge-page">
+  <div class="app-page__hero">
+    <div class="app-page__hero-top self-knowledge-section-hero">
+      <div class="app-page__hero-unit app-page__hero-copy self-knowledge-section-hero__heading">
+        <span class="app-page__hero-icon">
+          <span class="material-symbols-rounded">fitness_center</span>
+        </span>
+        <div>
+          <p class="app-page__eyebrow">Saúde Física</p>
+          <h1 class="app-page__title">Exercícios</h1>
+        </div>
+      </div>
+
+      <div class="app-page__hero-unit self-knowledge-page-actions">
+        <%= link_to new_health_exercise_path, class: "app-btn app-btn--primary", data: { turbo: false } do %>
+          <span><span class="material-symbols-rounded">add</span></span>
+          <span><strong>Novo Exercício</strong></span>
+        <% end %>
+      </div>
+
+      <div class="app-page__hero-kpis">
+        <%= render "hero_kpis" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-panel">
+    <%= render "shared/filter_accordion" do %>
+      <%= form_with url: health_exercises_path, method: :get, local: true, class: "app-filter-form" do |f| %>
+        <div class="health-index-filters">
+          <div class="app-filter-field">
+            <%= f.label :date_from, "De" %>
+            <%= f.date_field :date_from, value: @date_from_filter, class: "app-form-control" %>
+          </div>
+
+          <div class="app-filter-field">
+            <%= f.label :date_to, "Até" %>
+            <%= f.date_field :date_to, value: @date_to_filter, class: "app-form-control" %>
+          </div>
+
+          <div class="app-filter-field">
+            <%= f.label :exercise_type, "Tipo" %>
+            <%= f.select :exercise_type,
+                  options_for_select([["Todos", ""]] + ExerciseItem::TYPES.map { |value, label| [label, value] }, @type_filter),
+                  {},
+                  class: "app-form-select" %>
+          </div>
+        </div>
+
+        <div class="app-filter-actions">
+          <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>
+            <i class="bi bi-funnel me-1"></i> <%= t("buttons.filter") %>
+          <% end %>
+
+          <%= link_to clear_filters_health_exercises_path,
+                      class: "app-btn app-btn--secondary app-page__secondary-btn",
+                      data: { turbo_method: :delete } do %>
+            <i class="bi bi-x-circle me-1"></i> Limpar Filtros
+          <% end %>
+
+          <%= render "shared/per_page_select" %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="app-panel app-panel--table">
+    <%= render "exercise_entries_list" %>
+  </div>
+</section>

@@ -1,0 +1,68 @@
+<div class="exercise-entry-item" data-exercise-entry-item>
+  <%= f.hidden_field :id if f.object.persisted? %>
+  <%= f.hidden_field :_destroy, value: "0", data: { destroy_input: true } if f.object.persisted? %>
+
+  <div class="exercise-entry-item__header">
+    <strong>Exercício</strong>
+    <button type="button" class="app-btn app-btn--secondary" data-action="exercise-entry-form#remove">
+      <span class="material-symbols-rounded">delete</span>
+      <span>Remover</span>
+    </button>
+  </div>
+
+  <div class="progress-review-form exercise-entry-item__grid exercise-entry-item__grid--main">
+    <div>
+      <%= f.label :exercise_type, "Tipo" %>
+      <%= f.select :exercise_type,
+            options_for_select(ExerciseItem::TYPES.map { |value, label| [label, value] }, f.object.exercise_type.presence || "training"),
+            {},
+            class: "app-form-select",
+            required: true,
+            data: { exercise_type: true, action: "change->exercise-entry-form#changeType" } %>
+    </div>
+
+    <div>
+      <%= f.label :duration_minutes, "Duração (min)" %>
+      <%= f.number_field :duration_minutes, class: "app-form-control", min: 1, step: 1, placeholder: "Ex.: 45" %>
+    </div>
+
+    <div>
+      <%= f.label :intensity, "Intensidade" %>
+      <%= f.select :intensity,
+            options_for_select(ExerciseItem::INTENSITIES.to_a, f.object.intensity),
+            { include_blank: "Selecione" },
+            class: "app-form-select" %>
+    </div>
+  </div>
+
+  <div class="exercise-entry-strength" data-type-fields="training">
+    <div class="exercise-entry-strength__header">
+      <strong>Musculação</strong>
+      <button type="button" class="app-btn app-btn--secondary" data-action="exercise-entry-form#addStrengthLog">
+        <span class="material-symbols-rounded">add</span>
+        <span>Adicionar grupo</span>
+      </button>
+    </div>
+
+    <% f.object.strength_exercise_logs.build if f.object.strength_exercise_logs.blank? %>
+    <div class="exercise-entry-strength__logs" data-strength-logs>
+      <%= f.fields_for :strength_exercise_logs do |log_form| %>
+        <%= render "strength_exercise_log_fields", f: log_form %>
+      <% end %>
+    </div>
+
+    <template data-strength-template>
+      <%= f.fields_for :strength_exercise_logs, StrengthExerciseLog.new, child_index: "NEW_STRENGTH_RECORD" do |log_form| %>
+        <%= render "strength_exercise_log_fields", f: log_form %>
+      <% end %>
+    </template>
+  </div>
+
+  <div data-type-fields="ergometry"></div>
+  <div data-type-fields="functional"></div>
+
+  <div class="exercise-entry-item__notes">
+    <%= f.label :notes, "Observação" %>
+    <%= f.text_area :notes, class: "app-form-control", rows: 1, maxlength: 500, placeholder: "Opcional" %>
+  </div>
+</div>

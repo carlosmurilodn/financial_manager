@@ -21,3 +21,6 @@ application.register("exercise-calendar", ExerciseCalendarController)
 
 import ExerciseWeekController from "./exercise_week_controller"
 application.register("exercise-week", ExerciseWeekController)
+
+import ExerciseEntryFormController from "./exercise_entry_form_controller"
+application.register("exercise-entry-form", ExerciseEntryFormController)

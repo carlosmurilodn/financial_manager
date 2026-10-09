@@ -1,9 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
+import $ from "jquery"
+import { initSelect2 } from "../select2_init"
 
 export default class extends Controller {
   static targets = ["items", "template"]
 
   connect() {
+    this.exerciseOptions = new WeakMap()
     this.refresh()
   }
 
@@ -34,6 +37,7 @@ export default class extends Controller {
     const logs = item.querySelector("[data-strength-logs]")
     const content = template.innerHTML.replaceAll("NEW_STRENGTH_RECORD", Date.now().toString())
     logs.insertAdjacentHTML("beforeend", content)
+    this.refresh()
   }
 
   removeStrengthLog(event) {
@@ -53,6 +57,28 @@ export default class extends Controller {
     this.refresh()
   }
 
+  changeMuscleGroup(event) {
+    this.filterExercises(event.target.closest("[data-strength-log]"))
+  }
+
+  filterExercises(log) {
+    const group = log.querySelector("[data-muscle-group]")
+    const exercises = log.querySelector("[data-strength-exercise]")
+    if (!group || !exercises) return
+
+    if (!this.exerciseOptions.has(exercises)) {
+      this.exerciseOptions.set(exercises, Array.from(exercises.options, (option) => option.cloneNode(true)))
+    }
+
+    const selected = exercises.value
+    const options = this.exerciseOptions.get(exercises).filter((option) => {
+      return option.value === "" || option.dataset.muscleGroupId === group.value
+    })
+    exercises.replaceChildren(...options.map((option) => option.cloneNode(true)))
+    exercises.value = options.some((option) => option.value === selected) ? selected : ""
+    $(exercises).trigger("change.select2")
+  }
+
   refresh() {
     this.element.querySelectorAll("[data-exercise-entry-item]").forEach((item) => {
       const type = item.querySelector("[data-exercise-type]")?.value
@@ -64,5 +90,7 @@ export default class extends Controller {
         })
       })
     })
+    this.element.querySelectorAll("[data-strength-log]").forEach((log) => this.filterExercises(log))
+    initSelect2(this.element)
   }
 }

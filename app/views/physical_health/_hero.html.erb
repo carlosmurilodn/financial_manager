@@ -1,8 +1,7 @@
-<% nutrition = @physical_area == :nutrition %>
 <div class="app-page__hero">
   <div class="app-page__hero-top self-knowledge-section-hero">
-    <div class="app-page__hero-copy self-knowledge-section-hero__heading"><span class="app-page__hero-icon"><span class="material-symbols-rounded"><%= nutrition ? "restaurant" : "fitness_center" %></span></span><div><p class="app-page__eyebrow">Saúde Física</p><h1 class="app-page__title"><%= nutrition ? "Alimentação" : "Exercícios" %></h1></div></div>
-    <div class="self-knowledge-page-actions"><%= link_to nutrition ? new_health_nutrition_week_path : new_health_exercise_path, class: "app-btn app-btn--primary", data: { turbo: false } do %><span class="material-symbols-rounded" aria-hidden="true">add</span><span><%= nutrition ? "Nova Semana" : "Novo Exercício" %></span><% end %></div>
+    <div class="app-page__hero-copy self-knowledge-section-hero__heading"><span class="app-page__hero-icon"><span class="material-symbols-rounded">restaurant</span></span><div><p class="app-page__eyebrow">Saúde Física</p><h1 class="app-page__title">Alimentação</h1></div></div>
+    <div class="self-knowledge-page-actions"><%= link_to new_health_nutrition_week_path, class: "app-btn app-btn--primary", data: { turbo: false } do %><span class="material-symbols-rounded" aria-hidden="true">add</span><span>Nova Semana</span><% end %></div>
     <% @hero_kpis.each_with_index do |(label, icon, value), index| %>
       <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--<%= %w[green yellow purple][index] %>"><span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span><div><p><%= label %></p><strong><%= value %></strong><small>Histórico registrado</small></div></article>
     <% end %>

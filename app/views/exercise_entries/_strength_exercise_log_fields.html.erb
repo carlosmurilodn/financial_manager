@@ -1,4 +1,4 @@
-<div class="exercise-entry-strength-log" data-strength-log>
+<div class="exercise-entry-strength-log" data-strength-log data-controller="select2">
   <%= f.hidden_field :id if f.object.persisted? %>
   <%= f.hidden_field :_destroy, value: "0", data: { strength_destroy_input: true } if f.object.persisted? %>
 

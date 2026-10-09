@@ -1,6 +1,4 @@
 .nutrition-page .nutrition-week-filter { display: flex; align-items: flex-end; gap: 12px; }
-.weekly-health-plan-days.exercise-week-calendars { display: flex; flex-direction: column; gap: 16px; }
-.exercise-week-calendars > .weekly-health-plan-days__goal { flex: 0 0 auto; width: 100%; min-width: 0; }
 .nutrition-diet-day { min-width: 0; padding: 10px; border: 1px solid var(--diet-color); border-radius: 10px; background: var(--diet-bg); }
 .weekly-health-plan-days__week.nutrition-diet-week { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 8px; }
 .nutrition-diet-day--unselected { --diet-color: #5c6df2; --diet-bg: rgba(92, 109, 242, .08); }
@@ -16,17 +14,6 @@
 html[data-theme="night"] .nutrition-diet-day--full { --diet-color: #5edbb6; }
 html[data-theme="night"] .nutrition-diet-day--partial { --diet-color: #f3cf63; }
 html[data-theme="night"] .nutrition-diet-day--none { --diet-color: #fb8ba1; }
-.exercise-category-picker { display: flex; flex-wrap: wrap; gap: 12px; padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; }
-.exercise-category-picker legend { float: none; width: auto; padding: 0 6px; font-size: 1rem; font-weight: 700; color: var(--text-soft); }
-.exercise-category-picker label { display: inline-flex; align-items: center; gap: 10px; padding: 12px 16px; border: 1px solid var(--card-border); border-radius: 10px; cursor: pointer; }
-.exercise-category-picker input { width: 18px; height: 18px; accent-color: var(--nav-active-bar); }
-.exercise-category-picker label:has(input:checked) { background: var(--hero-badge-icon-bg); border-color: var(--nav-active-bar); }
-.exercise-category-row { display: flex; align-items: flex-end; gap: 12px; flex: 1 1 300px; min-width: 0; }
-.exercise-category-picker .exercise-category-row > label { flex: 1; min-width: 0; min-height: 40px; margin: 0; padding: 8px 12px; box-sizing: border-box; }
-.exercise-category-row__quantity { flex: 0 0 130px; }
-.exercise-category-row__quantity label { display: block; padding: 0; margin-bottom: 6px; border: 0; font-size: .8rem; color: var(--text-soft); }
-.exercise-category-row__quantity .app-form-select { height: 40px; margin: 0; }
-.exercise-category-row__quantity select:disabled { opacity: .5; cursor: not-allowed; }
 .nutrition-page .nutrition-week-filter .app-filter-field { flex: 1; min-width: 0; }
 .nutrition-page .nutrition-week-filter .app-btn { min-width: 152px; }
 .nutrition-page .nutrition-week-card__summary { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
@@ -874,35 +861,8 @@ html[data-theme="night"] .nutrition-diet-day--none { --diet-color: #fb8ba1; }
   .self-knowledge-page .app-page__hero-top.self-knowledge-hero { grid-template-columns: 1fr; }
 }
 
-.exercise-section__summary { display: flex; flex-wrap: wrap; gap: 12px 24px; margin: 16px 0; color: var(--text-soft); font-size: .85rem; }
-.exercise-day-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 12px; }
-.exercise-day-card { min-width: 0; padding: 14px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); color: var(--text-soft); scroll-margin-top: 20px; }
-.exercise-day-card__header { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin-bottom: 12px; font-size: .8rem; font-weight: 700; }
-.exercise-day-card__form { display: flex; flex-direction: column; gap: 8px; }
-.exercise-day-card__form label { margin: 4px 0 0; font-size: .85rem; }
-.exercise-day-card__form .app-form-control, .exercise-day-card__form .app-form-select { width: 100%; min-width: 0; }
-.exercise-day-card__form .app-btn { width: 100%; min-width: 0; margin-top: 8px; }
-.exercise-day-card__pace { margin: 14px 0 8px; font-size: .8rem; }
-.exercise-day-card__saved { display: block; margin-top: 12px; font-size: .75rem; }
-.exercise-day-card__errors { color: var(--danger); font-size: .8rem; overflow-wrap: anywhere; }
-.exercise-calendar-day { text-decoration: none; }
-.exercise-calendar-day.exercise-calendar-day--unselected { background: rgba(92,109,242,.08); border-color: #5c6df2; color: #5c6df2; }
-.exercise-calendar-day.exercise-calendar-day--completed { background: rgba(45,190,148,.1); border-color: #16836b; color: #16836b; }
-.exercise-calendar-day.exercise-calendar-day--not_completed { background: rgba(214,65,97,.08); border-color: #d64161; color: #d64161; }
-@media (max-width: 1399px) { .exercise-day-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-@media (max-width: 991px) { .exercise-day-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 575px) { .exercise-day-grid { grid-template-columns: 1fr; } }
-
-.exercise-calendar-day strong { color: inherit; }
-
 .diary-entry-card__metrics { display: flex; flex-wrap: wrap; gap: 6px; }
 .diary-entry-card__metrics .diary-entry-card__pill { padding: 5px 10px; background: var(--pill-bg); color: var(--text-soft); }
-
-.exercise-calendar-form { flex: 1 1 0; min-width: 0; }
-.exercise-section .exercise-calendar-day { flex-direction: column; gap: 4px; min-height: 54px; padding: 8px 4px; cursor: pointer; }
-.exercise-section .exercise-calendar-day > span, .exercise-section .exercise-calendar-day > strong { color: inherit; font-size: .8rem; }
-
-.exercise-section .exercise-calendar-day > span { text-transform: none; }
 
 .diary-show--reading { gap: 16px; }
 .diary-show--reading .diary-show__hero { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; padding: 16px; align-items: stretch; }

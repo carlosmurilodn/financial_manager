@@ -19,6 +19,8 @@ module ProgressHelper
       "#{number_with_precision(value, precision: 2, separator: ',')} kg · #{pluralize(row.fetch(:"#{side}_count"), 'medição', 'medições')}"
     when :goals
       value.map { |goal| "#{goal.completed_count}/#{goal.target_count}" }.join(" · ")
+    when :exercise_days
+      pluralize(value, "dia", "dias")
     when :score
       "#{value}/5"
     when :wins
@@ -38,6 +40,8 @@ module ProgressHelper
       "#{sign}#{number_with_precision(amount, precision: 2, separator: ',')} kg"
     when :goals
       "#{sign}#{pluralize(amount, 'realizado', 'realizados')}"
+    when :exercise_days
+      "#{sign}#{pluralize(amount, 'dia', 'dias')}"
     when :score
       "#{sign}#{pluralize(amount, 'ponto', 'pontos')}"
     when :wins

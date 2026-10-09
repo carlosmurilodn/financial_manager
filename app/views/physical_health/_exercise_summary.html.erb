@@ -1,8 +1,0 @@
-<% completed_days = goal.weekly_health_goal_days.select(&:completed?) %>
-  <div class="exercise-section__summary" id="exercise-<%= goal.id %>-summary">
-    <span><strong><%= completed_days.size %></strong> <%= type == 'walking' ? 'caminhadas realizadas' : 'sessões realizadas' %></span>
-    <span><strong><%= number_with_precision(completed_days.sum { |day| day.duration_minutes || 0 }, precision: 2, strip_insignificant_zeros: true, separator: ',') %></strong> minutos totais</span>
-    <% if type == 'walking' %>
-      <span><strong><%= number_with_precision(completed_days.sum { |day| day.distance_km || 0 }, precision: 2, strip_insignificant_zeros: true, separator: ',') %></strong> km totais</span>
-    <% end %>
-  </div>

@@ -1,6 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
 import $ from "jquery"
-import { initSelect2 } from "../select2_init"
 
 export default class extends Controller {
   static targets = ["items", "template"]
@@ -91,6 +90,5 @@ export default class extends Controller {
       })
     })
     this.element.querySelectorAll("[data-strength-log]").forEach((log) => this.filterExercises(log))
-    initSelect2(this.element)
   }
 }

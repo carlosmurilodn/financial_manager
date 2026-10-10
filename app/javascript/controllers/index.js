@@ -38,6 +38,9 @@ application.register("publication", PublicationController)
 import ContextExportController from "./context_export_controller"
 application.register("context-export", ContextExportController)
 
+import GithubSyncController from "./github_sync_controller"
+application.register("github-sync", GithubSyncController)
+
 import ManuscriptChartController from "./manuscript_chart_controller"
 application.register("manuscript-chart", ManuscriptChartController)
 

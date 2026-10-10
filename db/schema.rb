@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_11_011000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_11_012100) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -655,6 +655,26 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_011000) do
     t.index ["writing_book_id"], name: "index_writing_conflicts_on_writing_book_id"
   end
 
+  create_table "writing_github_syncs", force: :cascade do |t|
+    t.bigint "writing_book_id", null: false
+    t.string "status", default: "never", null: false
+    t.datetime "last_attempt_at"
+    t.datetime "last_success_at"
+    t.text "error_message"
+    t.string "repository"
+    t.string "branch"
+    t.integer "created_count", default: 0, null: false
+    t.integer "updated_count", default: 0, null: false
+    t.integer "unchanged_count", default: 0, null: false
+    t.jsonb "obsolete_files", default: [], null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["writing_book_id"], name: "index_writing_github_syncs_on_writing_book_id", unique: true
+    t.check_constraint "created_count >= 0 AND updated_count >= 0 AND unchanged_count >= 0", name: "writing_github_syncs_valid_counts"
+    t.check_constraint "status::text = ANY (ARRAY['never'::character varying, 'processing'::character varying, 'succeeded'::character varying, 'failed'::character varying]::text[])", name: "writing_github_syncs_valid_status"
+  end
+  execute "ALTER TABLE writing_github_syncs ENABLE ROW LEVEL SECURITY"
+
   create_table "writing_locations", force: :cascade do |t|
     t.bigint "writing_book_id", null: false
     t.string "name", null: false
@@ -937,6 +957,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_011000) do
   add_foreign_key "writing_conflict_plots", "writing_conflicts", column: ["writing_conflict_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
   add_foreign_key "writing_conflict_plots", "writing_plots", column: ["writing_plot_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
   add_foreign_key "writing_conflicts", "writing_books"
+  add_foreign_key "writing_github_syncs", "writing_books"
   add_foreign_key "writing_locations", "writing_books"
   add_foreign_key "writing_locations", "writing_locations", column: ["parent_location_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
   add_foreign_key "writing_organization_memberships", "writing_books"

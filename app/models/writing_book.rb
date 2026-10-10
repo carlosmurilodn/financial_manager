@@ -29,6 +29,7 @@ class WritingBook < ApplicationRecord
   has_many :writing_characters, dependent: :destroy
   has_many :writing_chapters, dependent: :destroy
   belongs_to :user
+  has_one :writing_github_sync, dependent: :destroy
   has_one_attached :cover
 
   around_destroy :suppress_writing_history, prepend: true

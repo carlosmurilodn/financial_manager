@@ -6,6 +6,11 @@
     <p class="writing-muted">Reúna manuscrito, personagens e planejamento narrativo em um ZIP de documentos Markdown. Escolha quais grupos deseja compartilhar.</p>
     <%= link_to writing_action_label("folder_zip", "Exportar para ChatGPT"), writing_book_writing_context_export_path(@book), class: "app-btn app-btn--primary" %>
   </section>
+  <section class="app-panel writing-publication-export">
+    <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">sync</span>Sincronização GitHub</h2>
+    <p class="writing-muted">Publique manualmente uma cópia Markdown do livro e acompanhe o resultado da última sincronização.</p>
+    <%= link_to writing_action_label("sync", "Sincronização GitHub"), writing_book_writing_github_sync_path(@book), class: "app-btn app-btn--primary" %>
+  </section>
   <%= form_with model: @options, scope: :publication, url: writing_book_writing_publication_path(@book), method: :post, class: "writing-publication-form", data: { publication_target: "form", action: "submit->publication#generate change->publication#changed", turbo: false } do |f| %>
     <section class="app-panel"><fieldset class="writing-publication-fieldset"><legend>Conteúdo</legend>
       <div class="writing-publication-choices"><label class="app-checkbox"><%= f.radio_button :content_scope, "all", data: { publication_target: "scope" } %><span>Livro Completo</span></label><label class="app-checkbox"><%= f.radio_button :content_scope, "selected", data: { publication_target: "scope" } %><span>Capítulos Selecionados</span></label></div>

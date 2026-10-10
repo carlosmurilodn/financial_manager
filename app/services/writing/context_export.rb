@@ -27,13 +27,13 @@ module Writing
       "Segredos" => { secrets: "Segredos" }
     }.freeze
 
-    def initialize(book, options)
+    def initialize(book, options, exported_at: Time.current)
       @book = book
       @options = options
       @converter = TiptapMarkdown.new
       @paths = []
       @references = {}
-      @exported_at = Time.current
+      @exported_at = exported_at
     end
 
     def generate(path)
@@ -298,7 +298,7 @@ module Writing
     end
 
     def readme
-      joined("# Contexto literário: #{escape(@book.title)}", "**Exportado em:** #{@exported_at.in_time_zone('America/Sao_Paulo').strftime('%d/%m/%Y às %H:%M:%S %:z')}",
+      joined("# Contexto literário: #{escape(@book.title)}", @exported_at ? "**Exportado em:** #{@exported_at.in_time_zone('America/Sao_Paulo').strftime('%d/%m/%Y às %H:%M:%S %:z')}" : nil,
         "Este conteúdo é uma cópia dos dados salvos. A fonte oficial permanece no Gerenciador Pessoal. Alterações feitas nesta cópia não modificam a obra original.",
         "## Grupos selecionados\n\n#{@options.groups.map { |group| "- #{ContextExportOptions::GROUPS.fetch(group)}" }.join("\n")}",
         "## Estrutura e leitura\n\nComece pelo dossiê, quando incluído. Leia Manuscrito/ pela numeração dos arquivos, que acompanha a ordem atual dos capítulos. Todos os capítulos cadastrados são incluídos quando o manuscrito é selecionado, inclusive os sem texto, identificados com aviso explícito. As cenas seguem a ordem cadastrada dentro de cada capítulo. Personagens/, Narrativa/, Universo/ e Planejamento/ contêm os respectivos registros selecionados. Grupos sem registros não geram documentos vazios.",

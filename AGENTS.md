@@ -10,4 +10,4 @@
 - Testes devem ser feitos e rodados apenas quando solicitado pelo usuario.
 - Antes de criar ou atualizar qualquer documentacao em arquivo `.md`, sempre solicite autorizacao explicita do usuario.
 - Se o usuario nao autorizar a documentacao, nao crie nem atualize arquivos `.md`; siga diretamente para a implementacao solicitada.
-- Sempre ao final de cada tarefa ou quando o usuario solicitar, sugerir uma mensagem de commit em portugues, detalhada, baseada em todas as alteracoes que ainda nao foram commitadas e apresentada dentro de um bloco de codigo `bash`.
+- Sempre ao final de cada tarefa ou quando o usuario solicitar, sugerir uma mensagem de commit em portugues, detalhada e baseada em todas as alteracoes que ainda nao foram commitadas. Apresentar apenas o texto da mensagem, sem comandos Git ou bloco de codigo `bash`.

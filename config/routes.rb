@@ -28,6 +28,7 @@ Rails.application.routes.draw do
       get :status
       get :download, path: "arquivo"
     end
+    resource :writing_github_sync, path: "sincronizacao-github", only: %i[show create]
     resource :writing_narrative_context, path: "contexto-narrativo", only: %i[show create destroy]
     resources :writing_timeline_events, path: "linha-do-tempo" do
       member { patch :reorder, path: "ordenar" }

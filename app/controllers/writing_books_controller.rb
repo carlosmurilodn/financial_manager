@@ -68,6 +68,8 @@ class WritingBooksController < ApplicationController
 
     response.headers["Cache-Control"] = "private, no-store"
     send_data @book.cover.download, type: @book.cover.content_type, disposition: "inline"
+  rescue ActiveStorage::FileNotFoundError
+    head :not_found
   end
 
   private

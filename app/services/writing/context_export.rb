@@ -137,10 +137,12 @@ module Writing
 
             sections << "## Cena #{scene_index + 1}: #{escape(scene.title)}\n\n**Identificador:** cena-#{scene.id}\n\n#{text}"
           end
-          next if sections.empty?
+          without_text = plain_legacy.blank? && plain_scenes.all?(&:blank?)
+          sections << "_Este capítulo ainda não possui texto cadastrado._" if without_text
 
           path = format("Manuscrito/Capitulo-%03d-ID-%d.md", index, chapter.id)
           header = "# #{escape(chapter.title)}\n\n**Identificador:** capitulo-#{chapter.id}\n\n**Ordem de leitura:** #{index}\n\n**Posição cadastrada:** #{chapter.position}"
+          header += "\n\n**Situação do conteúdo:** Sem texto cadastrado" if without_text
           write(path, joined(header, sections.join("\n\n* * *\n\n")))
         end
       end
@@ -299,7 +301,7 @@ module Writing
       joined("# Contexto literário: #{escape(@book.title)}", "**Exportado em:** #{@exported_at.in_time_zone('America/Sao_Paulo').strftime('%d/%m/%Y às %H:%M:%S %:z')}",
         "Este conteúdo é uma cópia dos dados salvos. A fonte oficial permanece no Gerenciador Pessoal. Alterações feitas nesta cópia não modificam a obra original.",
         "## Grupos selecionados\n\n#{@options.groups.map { |group| "- #{ContextExportOptions::GROUPS.fetch(group)}" }.join("\n")}",
-        "## Estrutura e leitura\n\nComece pelo dossiê, quando incluído. Leia Manuscrito/ pela numeração dos arquivos, que acompanha a ordem atual dos capítulos. As cenas seguem a ordem cadastrada dentro de cada capítulo. Personagens/, Narrativa/, Universo/ e Planejamento/ contêm os respectivos registros selecionados. Grupos sem registros não geram documentos vazios.",
+        "## Estrutura e leitura\n\nComece pelo dossiê, quando incluído. Leia Manuscrito/ pela numeração dos arquivos, que acompanha a ordem atual dos capítulos. Todos os capítulos cadastrados são incluídos quando o manuscrito é selecionado, inclusive os sem texto, identificados com aviso explícito. As cenas seguem a ordem cadastrada dentro de cada capítulo. Personagens/, Narrativa/, Universo/ e Planejamento/ contêm os respectivos registros selecionados. Grupos sem registros não geram documentos vazios.",
         "## Identificadores e referências\n\nIdentificadores seguem tipo-ID (livro, capitulo, cena, personagem, trama, conflito, local, organizacao, regra, evento, nota e relacionamento). IDs permanecem estáveis entre exportações; a numeração de leitura pode mudar. Referências exibem ID e nome apenas dos grupos incluídos. Datas relativas e aproximadas não são convertidas em datas exatas. Relações preservam origem → destino; registros inversos permanecem separados.",
         "## Documentos incluídos\n\n#{document_index([ '00-LEIA-ME.md', *@paths ].sort)}",
         "Somente documentos Markdown UTF-8. Imagens e anexos não fazem parte deste pacote. Formatação visual sem equivalente Markdown é simplificada. Nenhum resumo interpretativo foi gerado.")

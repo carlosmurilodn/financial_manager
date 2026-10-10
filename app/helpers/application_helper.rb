@@ -34,7 +34,7 @@ module ApplicationHelper
 
   def app_section_brand
     if personal_development_section?
-      { title: "Desenvolvimento Pessoal", icon: "school", footer_title: "Desenvolvimento Pessoal", description: "Um espaço para organizar seu desenvolvimento pessoal.", labels: [] }
+      { title: "Projetos", icon: "school", footer_title: "Projetos", description: "Um espaço para organizar seus projetos.", labels: [] }
     elsif health_section?
       { title: "Saúde e Bem-Estar", icon: "self_improvement", footer_title: "Saúde e Bem-Estar", description: "Acompanhe sua saúde, cuide da rotina e reconheça suas conquistas.", labels: ["Autoconhecimento", "Metas Semanais", "Acompanhamento Diário"] }
     else

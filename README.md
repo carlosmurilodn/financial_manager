@@ -1,8 +1,9 @@
 # Financial Manager
 
 Aplicacao Rails para gerenciamento financeiro pessoal. O sistema organiza despesas,
-receitas, cartoes, categorias, metas financeiras e relatorios, com autenticacao via
-Devise e interface server-rendered com Hotwire.
+receitas, cartoes, categorias, metas financeiras e relatorios, alem do acompanhamento
+de saude fisica com alimentacao, calorias, pesagens e exercicios. Usa autenticacao
+via Devise e interface server-rendered com Hotwire.
 
 ## Fontes
 
@@ -36,7 +37,23 @@ Devise e interface server-rendered com Hotwire.
 - Cadastro e acompanhamento de metas financeiras
 - Relatorios financeiros e previsao financeira
 - Exportacao de relatorios em PDF
+- Acompanhamento semanal da alimentacao com status diario da dieta e consumo de calorias
+- Perfil de saude e registro de pesagens
+- Registro de exercicios com detalhes do treino, grupos musculares, series e imagens
 - Suporte a PWA via manifesto e service worker do Rails
+
+### Alimentacao e exercicios
+
+Em Alimentacao, abra uma semana e selecione o status de cada dia: dieta seguida
+totalmente, parcialmente ou nao seguida. A opcao "Selecione" limpa o status.
+A selecao salva automaticamente e atualiza o contador semanal, que considera
+somente os dias com dieta totalmente seguida. O consumo de calorias tem seu proprio
+botao Salvar. Falhas de validacao do status exibem uma mensagem na pagina da semana.
+
+Em Exercicios, clique na data do card para abrir os detalhes do treino. A pagina
+mostra duracao, intensidade e observacoes; nos itens de treino, tambem apresenta
+grupos musculares, exercicios, series e imagens disponiveis. As acoes Editar e
+Duplicar ficam acessiveis nessa pagina.
 
 ## Requisitos
 
@@ -180,6 +197,26 @@ bin/brakeman
 - `GET /reports`
 - `GET /reports/forecast`
 - `GET /reports/forecast_pdf`
+
+### Saude fisica
+
+- `GET /progresso`
+- `GET /progresso/perfil`
+- `GET /progresso/alimentacao`
+- `GET /progresso/alimentacao/nova`
+- `GET /progresso/alimentacao/:week_start`
+- `PATCH /progresso/alimentacao/:week_start/dia`
+- `GET /progresso/calorias/:occurred_on`
+- `POST /progresso/calorias`
+- `GET /progresso/pesagens`
+- `GET /progresso/exercicios`
+- `GET /progresso/exercicios/:id`
+- `GET /progresso/exercicios/:id/edit`
+- `GET /progresso/exercicios/:id/duplicar`
+
+Os parametros `week_start` e `occurred_on` usam datas no formato `AAAA-MM-DD`.
+O status diario recebe `occurred_on` e `diet_status` (`full`, `partial`, `none`
+ou vazio para limpar).
 
 ### PWA
 

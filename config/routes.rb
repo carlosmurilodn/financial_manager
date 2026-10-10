@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get "desenvolvimento-pessoal", to: "personal_development#index", as: :personal_development
   get "projetos/oficina-filosofica", to: "philosophical_workshop#index", as: :philosophical_workshop
   resources :philosophical_workshop_philosophers, path: "projetos/oficina-filosofica/filosofos"
+  resources :philosophical_workshop_concepts, path: "projetos/oficina-filosofica/conceitos-e-teses"
   post "projetos/estudio-de-escrita/backup", to: "writing_backups#create", as: :writing_backup
   resources :writing_books, path: "projetos/estudio-de-escrita" do
     member { get :cover, path: "capa" }

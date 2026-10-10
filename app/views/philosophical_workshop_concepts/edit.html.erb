@@ -1,0 +1,4 @@
+<%= render "breadcrumbs" %>
+<%= render layout: "shared/form_page", locals: { page_class: "writing-studio", resource: @concept, title: "Editar Conceito ou Tese", eyebrow: "Oficina Filosófica", description: "Título, tipo e descrição são obrigatórios.", icon: "account_tree", back_path: philosophical_workshop_concept_path(@concept) } do %>
+  <%= render "form", concept: @concept %>
+<% end %>

@@ -10,6 +10,9 @@ Rails.application.routes.draw do
     member { get :cover, path: "capa" }
     member { get :read, path: "ler" }
     resource :writing_narrative_context, path: "contexto-narrativo", only: %i[show create destroy]
+    resources :writing_timeline_events, path: "linha-do-tempo" do
+      member { patch :reorder, path: "ordenar" }
+    end
     resources :writing_notes, path: "notas-e-ideias"
     resources :writing_scenes, path: "cenas", only: %i[new create show edit update destroy] do
       member do

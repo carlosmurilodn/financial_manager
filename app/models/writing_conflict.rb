@@ -1,4 +1,5 @@
 class WritingConflict < ApplicationRecord
+  has_many :writing_timeline_links, dependent: :destroy
   has_many :writing_narrative_associations, dependent: :destroy
   has_many :writing_note_links, dependent: :destroy
   LABEL = "Conflitos"

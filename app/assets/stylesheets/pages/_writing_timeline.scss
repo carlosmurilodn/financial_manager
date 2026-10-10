@@ -1,0 +1,47 @@
+.writing-timeline-page { min-width: 0; }
+.writing-timeline-page [hidden] { display: none !important; }
+.writing-timeline-page .writing-narrative-heading > div:first-child { min-width: 0; flex: 1 1 360px; }
+.writing-timeline-page .app-page__title { overflow-wrap: anywhere; }
+.writing-timeline-filters .writing-fields { grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 14px; }
+.writing-timeline-filters .writing-character-actions { margin-top: 14px; }
+.writing-timeline-group > .writing-muted { margin: 10px 0 18px; }
+.writing-timeline { list-style: none; padding: 0; margin: 20px 0 0; }
+.writing-timeline__event { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; column-gap: 20px; padding: 0 0 24px 28px; border-left: 2px solid var(--card-border); margin-left: 7px; }
+.writing-timeline__event:last-child { padding-bottom: 0; border-color: transparent; }
+.writing-timeline__event::before { content: ""; position: absolute; left: -8px; top: 3px; width: 14px; height: 14px; border: 3px solid var(--surface); border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 14%, transparent); }
+.writing-timeline__event--confirmed::before { background: var(--success); box-shadow: 0 0 0 2px color-mix(in srgb, var(--success) 14%, transparent); }
+.writing-timeline__event--discarded::before { background: var(--text-soft); box-shadow: none; }
+.writing-timeline__event--discarded .writing-timeline__identity { opacity: .65; }
+.writing-timeline__body { min-width: 0; overflow-wrap: anywhere; }
+.writing-timeline__date { margin: 0 0 6px; color: var(--text-soft); font-size: .8rem; font-weight: 600; }
+.writing-timeline__identity h3 { margin: 0; font-size: 1.05rem; line-height: 1.5; }
+.writing-timeline__identity h3 a { color: var(--text-main); text-decoration: none; }
+.writing-timeline__identity h3 a:hover { color: var(--primary); }
+.writing-timeline__badges { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.writing-timeline__status--confirmed { color: var(--success); background: color-mix(in srgb, var(--success) 10%, transparent); }
+.writing-timeline__status--discarded { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
+.writing-timeline__summary { margin: 8px 0; color: var(--text-main); font-size: .9rem; white-space: pre-line; }
+.writing-timeline__reference { margin: 8px 0; font-size: .85rem; }
+.writing-timeline__links { display: flex; flex-wrap: wrap; gap: 6px; }
+.writing-timeline__link { display: inline-flex; padding: 4px 8px; border-radius: 8px; background: var(--app-bg-soft); color: var(--text-soft); text-decoration: none; font-size: .8rem; overflow-wrap: anywhere; max-width: 100%; }
+.writing-timeline__link:hover { color: var(--primary); background: color-mix(in srgb, var(--primary) 10%, transparent); }
+.writing-timeline__link:focus-visible, .writing-timeline__identity a:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; border-radius: 4px; }
+.writing-timeline__actions { gap: 8px; padding-top: 20px; }
+.writing-timeline__actions form { margin: 0; }
+.writing-timeline-relations h3 { margin: 18px 0 8px; font-size: .9rem; color: var(--text-soft); }
+.writing-timeline-empty { text-align: center; padding: 32px; }
+.writing-timeline-empty > .material-symbols-rounded { color: var(--primary); font-size: 40px; }
+.writing-timeline-empty h2 { margin: 12px 0; font-size: 1.1rem; }
+@media (max-width: 1100px) {
+  .writing-timeline__event { grid-template-columns: minmax(0, 1fr); }
+  .writing-timeline__actions { padding-top: 12px; justify-content: flex-start; }
+}
+@media (max-width: 700px) {
+  .writing-timeline-page .writing-narrative-heading > div:first-child { flex-basis: 100%; }
+  .writing-timeline-page .writing-narrative-heading > .writing-character-actions { width: 100%; }
+  .writing-timeline-page .writing-narrative-heading .app-btn { flex: 1 1 auto; }
+  .writing-timeline-page .writing-fields { grid-template-columns: minmax(0, 1fr); }
+  .writing-timeline__event { padding-left: 20px; }
+  .writing-timeline__link { min-height: 44px; align-items: center; padding: 8px 10px; }
+  .writing-timeline__identity h3 a { display: inline-block; padding: 6px 0; }
+}

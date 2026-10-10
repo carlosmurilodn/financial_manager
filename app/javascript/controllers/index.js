@@ -28,3 +28,6 @@ import NarrativePanelController from "./narrative_panel_controller"
 application.register("narrative-panel", NarrativePanelController)
 import ChapterEditorController from "./chapter_editor_controller"
 application.register("chapter-editor", ChapterEditorController)
+
+import TimelineDateController from "./timeline_date_controller"
+application.register("timeline-date", TimelineDateController)

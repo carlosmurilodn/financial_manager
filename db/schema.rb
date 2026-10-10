@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_10_190000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_10_210000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -607,6 +607,56 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_190000) do
     t.index ["writing_book_id"], name: "index_writing_organizations_on_writing_book_id"
   end
 
+  create_table "writing_timeline_events", force: :cascade do |t|
+    t.bigint "writing_book_id", null: false
+    t.string "title", null: false
+    t.text "description"
+    t.string "kind", default: "main", null: false
+    t.string "status", default: "planned", null: false
+    t.string "date_mode", default: "undefined", null: false
+    t.date "occurred_on"
+    t.time "occurred_at"
+    t.string "temporal_reference"
+    t.bigint "reference_event_id"
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["id", "writing_book_id"], name: "index_writing_timeline_events_on_id_and_writing_book_id", unique: true
+    t.index ["reference_event_id"], name: "index_writing_timeline_events_on_reference_event_id"
+    t.index ["writing_book_id", "occurred_on", "position"], name: "idx_timeline_chronology"
+    t.index ["writing_book_id"], name: "index_writing_timeline_events_on_writing_book_id"
+    t.check_constraint "date_mode::text = 'exact'::text AND occurred_on IS NOT NULL AND reference_event_id IS NULL OR (date_mode::text = ANY (ARRAY['approximate'::character varying, 'relative'::character varying, 'undefined'::character varying]::text[])) AND occurred_on IS NULL AND (date_mode::text = 'relative'::text OR reference_event_id IS NULL)", name: "timeline_valid_date"
+    t.check_constraint "reference_event_id IS NULL OR reference_event_id <> id", name: "timeline_no_self_reference"
+  end
+
+  create_table "writing_timeline_links", force: :cascade do |t|
+    t.bigint "writing_book_id", null: false
+    t.bigint "writing_timeline_event_id", null: false
+    t.bigint "writing_character_id"
+    t.bigint "writing_location_id"
+    t.bigint "writing_plot_id"
+    t.bigint "writing_conflict_id"
+    t.bigint "writing_chapter_id"
+    t.bigint "writing_scene_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["writing_book_id"], name: "index_writing_timeline_links_on_writing_book_id"
+    t.index ["writing_chapter_id"], name: "index_writing_timeline_links_on_writing_chapter_id"
+    t.index ["writing_character_id"], name: "index_writing_timeline_links_on_writing_character_id"
+    t.index ["writing_conflict_id"], name: "index_writing_timeline_links_on_writing_conflict_id"
+    t.index ["writing_location_id"], name: "index_writing_timeline_links_on_writing_location_id"
+    t.index ["writing_plot_id"], name: "index_writing_timeline_links_on_writing_plot_id"
+    t.index ["writing_scene_id"], name: "index_writing_timeline_links_on_writing_scene_id"
+    t.index ["writing_timeline_event_id", "writing_chapter_id"], name: "idx_timeline_link_chapter", unique: true, where: "(writing_chapter_id IS NOT NULL)"
+    t.index ["writing_timeline_event_id", "writing_character_id"], name: "idx_timeline_link_character", unique: true, where: "(writing_character_id IS NOT NULL)"
+    t.index ["writing_timeline_event_id", "writing_conflict_id"], name: "idx_timeline_link_conflict", unique: true, where: "(writing_conflict_id IS NOT NULL)"
+    t.index ["writing_timeline_event_id", "writing_location_id"], name: "idx_timeline_link_location", unique: true, where: "(writing_location_id IS NOT NULL)"
+    t.index ["writing_timeline_event_id", "writing_plot_id"], name: "idx_timeline_link_plot", unique: true, where: "(writing_plot_id IS NOT NULL)"
+    t.index ["writing_timeline_event_id", "writing_scene_id"], name: "idx_timeline_link_scene", unique: true, where: "(writing_scene_id IS NOT NULL)"
+    t.index ["writing_timeline_event_id"], name: "idx_timeline_links_event"
+    t.check_constraint "num_nonnulls(writing_character_id, writing_location_id, writing_plot_id, writing_conflict_id, writing_chapter_id, writing_scene_id) = 1", name: "timeline_link_one_target"
+  end
+
   create_table "writing_universe_rules", force: :cascade do |t|
     t.bigint "writing_book_id", null: false
     t.string "title", null: false
@@ -832,4 +882,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_190000) do
   add_foreign_key "writing_notes", "writing_books"
   add_foreign_key "writing_scenes", "writing_books"
   add_foreign_key "writing_scenes", "writing_chapters", column: ["writing_chapter_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
+  add_foreign_key "writing_timeline_events", "writing_books"
+  add_foreign_key "writing_timeline_events", "writing_timeline_events", column: ["reference_event_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_timeline_reference_book"
+  add_foreign_key "writing_timeline_links", "writing_books"
+  add_foreign_key "writing_timeline_links", "writing_chapters", column: ["writing_chapter_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_timeline_link_chapter_book"
+  add_foreign_key "writing_timeline_links", "writing_characters", column: ["writing_character_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_timeline_link_character_book"
+  add_foreign_key "writing_timeline_links", "writing_conflicts", column: ["writing_conflict_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_timeline_link_conflict_book"
+  add_foreign_key "writing_timeline_links", "writing_locations", column: ["writing_location_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_timeline_link_location_book"
+  add_foreign_key "writing_timeline_links", "writing_plots", column: ["writing_plot_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_timeline_link_plot_book"
+  add_foreign_key "writing_timeline_links", "writing_scenes", column: ["writing_scene_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_timeline_link_scene_book"
+  add_foreign_key "writing_timeline_links", "writing_timeline_events", column: ["writing_timeline_event_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_timeline_link_event_book"
 end

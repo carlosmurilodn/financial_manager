@@ -1,0 +1,19 @@
+<li class="writing-timeline__event <%= "writing-timeline__event--#{event.status}" %>">
+  <div class="writing-timeline__body">
+    <div class="writing-timeline__identity"><p class="writing-timeline__date"><%= timeline_temporal_label(event) %></p><h3><%= link_to event.title, writing_book_writing_timeline_event_path(@book, event) %></h3></div>
+    <div class="writing-timeline__badges"><span class="writing-book-tool__badge"><%= WritingTimelineEvent::OPTIONS[:kind][event.kind] %></span><span class="writing-book-tool__badge writing-timeline__status--<%= event.status %>"><%= WritingTimelineEvent::OPTIONS[:status][event.status] %></span></div>
+    <% if event.description.present? %><p class="writing-timeline__summary"><%= truncate(event.description, length: 220) %></p><% end %>
+    <% if event.reference_event %><p class="writing-muted writing-timeline__reference">Referência: <%= link_to event.reference_event.title, writing_book_writing_timeline_event_path(@book, event.reference_event) %></p><% end %>
+    <div class="writing-timeline__links"><% timeline_links(event).each do |record| %><%= link_to timeline_target_label(record), polymorphic_path([@book, record]), class: "writing-timeline__link" %><% end %></div>
+  </div>
+  <div class="writing-character-actions writing-timeline__actions">
+    <%= link_to timeline_action_label("edit", "Editar"), edit_writing_book_writing_timeline_event_path(@book, event), class: "writing-record-action", aria: { label: "Editar #{event.title}" }, title: "Editar" %>
+    <% if @order == "chronological" && event.date_mode != "exact" %>
+      <% index = @manual_ids.index(event.id) %>
+      <% [["up", "arrow_upward", "Mover Para Cima", index == 0], ["down", "arrow_downward", "Mover Para Baixo", index == @manual_ids.length - 1]].each do |direction, icon, label, disabled| %>
+        <%= button_to timeline_action_label(icon, ""), reorder_writing_book_writing_timeline_event_path(@book, event), method: :patch, params: { direction: direction }, class: "writing-record-action writing-record-action--icon", disabled: disabled || !@reordering_enabled, aria: { label: label }, title: label %>
+      <% end %>
+    <% end %>
+    <%= button_to timeline_action_label("delete", "Excluir"), writing_book_writing_timeline_event_path(@book, event), method: :delete, class: "writing-record-action writing-record-action--danger", aria: { label: "Excluir #{event.title}" }, title: "Excluir", form: { data: { turbo_confirm: "Excluir #{event.title}? Os vínculos serão removidos; manuscrito e registros relacionados serão preservados." } } %>
+  </div>
+</li>

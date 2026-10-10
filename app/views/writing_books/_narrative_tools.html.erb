@@ -2,7 +2,8 @@
   { title: "Personagens", icon: "group", count: @book.writing_characters.count, description: "Organize fichas e relacionamentos da obra.", action: "Gerenciar Personagens", path: writing_book_writing_characters_path(@book) },
   { title: "Tramas E Conflitos", icon: "account_tree", count: @book.writing_plots.count + @book.writing_conflicts.count, description: "Organize linhas narrativas, subtramas e tensões da história.", action: "Gerenciar Tramas E Conflitos", path: writing_book_writing_plots_path(@book) },
   { title: "Universo E Cenários", icon: "public", count: @book.writing_locations.count + @book.writing_organizations.count + @book.writing_universe_rules.count, description: "Desenvolva locais, organizações e regras do seu universo.", action: "Gerenciar Universo E Cenários", path: writing_book_writing_locations_path(@book) },
-  { title: "Notas E Ideias", icon: "sticky_note_2", count: @book.writing_notes.count, description: "Guarde ideias, pesquisas e decisões sem alterar o manuscrito.", action: "Gerenciar Notas E Ideias", path: writing_book_writing_notes_path(@book) }
+  { title: "Notas E Ideias", icon: "sticky_note_2", count: @book.writing_notes.count, description: "Guarde ideias, pesquisas e decisões sem alterar o manuscrito.", action: "Gerenciar Notas E Ideias", path: writing_book_writing_notes_path(@book) },
+  { title: "Linha Do Tempo", icon: "timeline", count: @book.writing_timeline_events.count, description: "Organize acontecimentos e referências temporais da história.", action: "Gerenciar Linha Do Tempo", path: writing_book_writing_timeline_events_path(@book) }
 ] %>
 <div class="writing-book-tools">
   <% tools.each do |tool| %>

@@ -48,3 +48,6 @@ application.register("manuscript-chart", ManuscriptChartController)
 
 import ProductivityChartController from "./productivity_chart_controller"
 application.register("productivity-chart", ProductivityChartController)
+
+import BookReaderController from "./book_reader_controller"
+application.register("book-reader", BookReaderController)

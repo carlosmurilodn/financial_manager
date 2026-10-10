@@ -61,6 +61,58 @@
 .writing-reader-document__heading .material-symbols-rounded { font-size: 20px; color: var(--primary); }
 .writing-reader-document .literary-manuscript { max-width: 76ch; margin-inline: auto; padding: 0 0 8px; }
 .writing-book-reading__chapter + .writing-book-reading__chapter { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--card-border); }
+.writing-reader-book { width: min(100%, 740px); margin-inline: auto; }
+.writing-reader-heading__actions, .writing-reader-heading__styles { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.writing-reader-heading__styles[hidden] { display: none; }
+.writing-reader-heading__style-hint { flex-basis: 100%; font-size: .8rem; }
+.writing-reader-heading__style-hint[hidden] { display: none; }
+.writing-reader-heading__styles .app-btn[aria-pressed="true"] { color: var(--surface); background: var(--primary); border-color: var(--primary); }
+.writing-reader-book__navigation { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 20px; margin-top: 24px; border-top: 1px solid var(--card-border); }
+.writing-reader-book__navigation[hidden] { display: none; }
+.writing-reader-book__counter { color: var(--text-soft); font-size: .85rem; text-align: center; }
+.writing-reader-book.is-paginated .writing-reader-book__viewport {
+  --reader-line-height: 1.5;
+  --reader-lines-per-page: 38;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 12pt;
+  line-height: var(--reader-line-height);
+  height: calc(var(--reader-lines-per-page) * var(--reader-line-height) * 1em);
+  overflow: hidden;
+  // In this proportional font, 36em holds roughly 75 average text characters.
+  max-width: 36em;
+  margin-inline: auto;
+}
+.writing-reader-book__viewport:focus-visible { outline: 2px solid var(--primary); outline-offset: 6px; }
+.writing-reader-document .writing-reader-book__pages { max-width: none; margin-inline: 0; padding: 0; }
+.is-paginated .writing-reader-book__pages { height: 100%; column-count: auto; column-gap: 48px; column-fill: auto; }
+.is-paginated .writing-book-reading__chapter { break-before: column; }
+.is-paginated .writing-book-reading__chapter + .writing-book-reading__chapter { margin-top: 0; padding-top: 0; border-top: 0; }
+.is-paginated .writing-book-reading__chapter > h2 { margin-top: 0; }
+.is-paginated .writing-book-reading__chapter p { orphans: 2; widows: 2; }
+.is-paginated .writing-book-reading__chapter hr { margin: .75em 0; line-height: 1.5; break-inside: avoid; }
+@media screen and (min-width: 1400px) {
+  .writing-reader-book { width: min(100%, 1280px); }
+  .writing-reader-book.is-paginated .writing-reader-book__viewport { max-width: calc(72em + 48px); position: relative; }
+  .writing-reader-book.is-spread .writing-reader-book__viewport::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: var(--card-border); pointer-events: none; }
+}
+@media (max-width: 600px) {
+  .writing-reader-heading__identity > div { min-width: 0; }
+  .writing-reader-heading__actions { width: 100%; }
+  .writing-reader-heading__styles { flex: 1 1 100%; }
+  .writing-reader-heading__styles .app-btn { flex: 1; }
+  .writing-reader-book__navigation { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  .writing-reader-book__counter { grid-column: 1 / -1; grid-row: 1; }
+  .writing-reader-book__navigation .app-btn { width: 100%; }
+  .writing-reader-book__navigation .app-btn { padding: 8px; font-size: .8rem; }
+}
+.writing-reader-book.is-single { width: min(100%, 740px); }
+.writing-reader-book.is-paginated.is-single .writing-reader-book__viewport { max-width: 36em; }
+@media print {
+  .writing-reader-book__navigation { display: none; }
+  .writing-reader-book.is-paginated .writing-reader-book__viewport { height: auto; overflow: visible; max-width: none; }
+  .is-paginated .writing-reader-book__pages { height: auto; width: auto !important; columns: auto !important; transform: none !important; }
+  .is-paginated .writing-book-reading__chapter { break-before: page; }
+}
 .writing-scenes-card .writing-detail__title { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 1.1rem; }
 .writing-scenes-card .writing-muted { margin: 0 0 16px; }
 .writing-manuscript-cards { display: grid; gap: var(--writing-card-gap, 14px); list-style: none; padding: 0; margin: 0; }

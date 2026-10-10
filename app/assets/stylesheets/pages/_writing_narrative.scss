@@ -33,3 +33,22 @@
 .writing-book-tool > .writing-muted { margin-top: 0; }
 .writing-book-tool > .app-btn { margin-top: auto; max-width: 100%; }
 .writing-book-tool__badge { display: inline-flex; align-items: center; justify-content: center; min-width: 26px; padding: 2px 8px; border: 1px solid var(--card-border); border-radius: 20px; background: var(--app-bg-soft); color: var(--text-soft); font-size: .75rem; line-height: 1.4; font-weight: 600; }
+
+.philosophical-table__caption { display: none; }
+@media (max-width: 700px) {
+  .philosophical-list-page .app-table-responsive { overflow-x: visible; }
+  .philosophical-list-page .app-table { display: block; }
+  .philosophical-list-page .philosophical-table__caption { display: block; padding-bottom: 8px; color: var(--text-soft); font-size: .85rem; font-weight: 600; text-align: left; }
+  .philosophical-list-page .app-table thead { display: block; margin-bottom: 16px; }
+  .philosophical-list-page .app-table thead tr { display: flex; flex-wrap: wrap; gap: 8px; }
+  .philosophical-list-page .app-table thead th { display: block; padding: 0; white-space: normal; }
+  .philosophical-list-page .app-table thead th:last-child { display: none; }
+  .philosophical-list-page .app-table thead a { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--card-border); border-radius: 10px; }
+  .philosophical-list-page .app-table tbody { display: grid; gap: 16px; }
+  .philosophical-list-page .app-table tbody tr { display: grid; min-width: 0; padding: 12px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); }
+  .philosophical-list-page .app-table tbody td { display: block; min-width: 0; padding: 8px 0; border: 0; white-space: normal; overflow-wrap: anywhere; }
+  .philosophical-list-page .app-table tbody td::before { content: attr(data-label); display: block; margin-bottom: 4px; font-size: .75rem; font-weight: 700; color: var(--text-soft); }
+  .philosophical-list-page .writing-character-actions { gap: 8px; }
+  .philosophical-list-page .writing-character-actions > .app-btn, .philosophical-list-page .writing-character-actions > form { flex: 1 1 100px; min-width: 0; }
+  .philosophical-list-page .writing-character-actions > form .app-btn { width: 100%; }
+}

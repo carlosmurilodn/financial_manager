@@ -35,6 +35,8 @@
 .writing-github-schedule [data-github-schedule-target="states"] p { margin: 0 0 8px; line-height: 1.6; overflow-wrap: anywhere; }
 .writing-github-schedule [data-github-schedule-target="states"] a { display: inline-block; }
 .writing-github-schedule [data-github-schedule-target="message"]:empty { display: none; }
+.writing-github-page [data-github-sync-target="obsolete"] { min-width: 0; padding-inline-start: 20px; }
+.writing-github-page [data-github-sync-target="obsolete"] li { overflow-wrap: anywhere; }
 @media (max-width: 700px) {
   .writing-github-page .writing-detail > p:has(> strong) { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   .writing-github-heading__copy { align-items: flex-start; gap: 12px; }
@@ -45,4 +47,6 @@
   .writing-publication-page .writing-character-actions > .app-btn { flex: 1 1 auto; }
   .writing-publication-export .app-btn { width: 100%; }
   .writing-publication-frame { height: 65vh; min-height: 320px; }
+  .writing-publication-preview > .writing-character-actions { gap: 12px; }
+  .writing-publication-preview > .writing-character-actions > .app-btn { flex-basis: 100%; }
 }

@@ -1,16 +1,24 @@
-<section class="app-page writing-studio writing-book-reading">
+<section class="app-page writing-studio writing-book-reading" <% if @chapters.any? %>data-controller="book-reader" data-action="keydown->book-reader#navigate"<% end %>>
   <%= render "shared/breadcrumbs", items: [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, writing_book_path(@book)], ["Ler Livro", nil]] %>
   <header class="app-panel writing-reader-heading">
     <div class="writing-reader-heading__identity">
       <span class="material-symbols-rounded writing-reader-heading__icon" aria-hidden="true">menu_book</span>
       <div><p class="app-page__eyebrow">Leitura Do Manuscrito</p><h1 class="app-page__title"><%= @book.title %></h1><% if @book.author.present? %><p class="writing-muted"><%= @book.author %></p><% end %></div>
     </div>
-    <%= link_to writing_action_label("arrow_back", "Voltar Ao Livro"), writing_book_path(@book), class: "app-btn app-btn--outline" %>
+    <div class="writing-reader-heading__actions">
+      <% if @chapters.any? %>
+        <div class="writing-reader-heading__styles" role="group" aria-label="Estilo de leitura" data-book-reader-target="styles" hidden>
+          <button type="button" class="app-btn app-btn--outline" data-book-reader-target="style" data-action="book-reader#chooseStyle" data-pages="1" aria-pressed="false">1 página</button>
+          <button type="button" class="app-btn app-btn--outline" data-book-reader-target="style" data-action="book-reader#chooseStyle" data-pages="2" aria-pressed="true">2 páginas</button>
+        </div>
+      <% end %>
+      <%= link_to writing_action_label("arrow_back", "Voltar Ao Livro"), writing_book_path(@book), class: "app-btn app-btn--outline" %>
+    </div>
   </header>
   <% if @chapters.empty? %>
     <section class="app-panel writing-empty"><h2>Seu manuscrito ainda está vazio.</h2><p class="writing-muted">Crie capítulos e cenas para começar a leitura.</p></section>
   <% else %>
-    <article class="app-panel writing-reader-document writing-reader-book" data-controller="book-reader" data-action="keydown->book-reader#navigate">
+    <article class="app-panel writing-reader-document writing-reader-book" data-book-reader-target="book">
       <div class="writing-reader-book__viewport" data-book-reader-target="viewport" tabindex="0" aria-label="Páginas do manuscrito; use as setas para navegar">
       <div class="literary-manuscript writing-reader-book__pages" data-book-reader-target="pages">
         <% @chapters.each do |chapter| %>

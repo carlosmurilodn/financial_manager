@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_11_012200) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_11_013000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -359,6 +359,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_012200) do
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_passkey_credentials_on_user_id"
     t.index ["webauthn_id"], name: "index_passkey_credentials_on_webauthn_id", unique: true
+  end
+
+  create_table "philosophical_workshop_philosophers", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name", null: false
+    t.string "historical_period"
+    t.string "philosophical_school"
+    t.text "biography"
+    t.text "main_ideas"
+    t.text "personal_notes"
+    t.boolean "favorite", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_philosophical_workshop_philosophers_on_user_id"
   end
 
   create_table "solid_cache_entries", force: :cascade do |t|
@@ -917,6 +931,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_012200) do
     t.check_constraint "num_nonnulls(writing_character_id, writing_plot_id, writing_conflict_id, writing_location_id, writing_organization_id) = 1", name: "narrative_association_one_element"
   end
 
+  add_foreign_key "philosophical_workshop_philosophers", "users"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_grants", "users", column: "resource_owner_id", on_delete: :cascade
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"

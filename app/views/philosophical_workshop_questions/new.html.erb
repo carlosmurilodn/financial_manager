@@ -1,0 +1,4 @@
+<%= render "breadcrumbs" %>
+<%= render layout: "shared/form_page", locals: { page_class: "writing-studio", resource: @question, title: "Nova Questão", eyebrow: "Oficina Filosófica", description: "Somente a pergunta é obrigatória.", icon: "help", back_path: philosophical_workshop_questions_path } do %>
+  <%= render "form", question: @question %>
+<% end %>

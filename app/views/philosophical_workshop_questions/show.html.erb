@@ -1,0 +1,18 @@
+<section class="app-page writing-studio writing-narrative-page">
+  <%= render "breadcrumbs" %>
+  <header class="app-panel writing-narrative-heading">
+    <div><p class="app-page__eyebrow"><%= @question.status_label %></p><h1 class="app-page__title"><%= @question.question %></h1></div>
+    <div class="writing-character-actions">
+      <%= link_to edit_philosophical_workshop_question_path(@question), class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">edit</span> Editar<% end %>
+      <%= link_to philosophical_workshop_questions_path, class: "app-btn app-btn--outline" do %><span class="material-symbols-rounded" aria-hidden="true">arrow_back</span> Voltar<% end %>
+      <%= button_to philosophical_workshop_question_path(@question), method: :delete, class: "app-btn app-btn--danger", form: { data: { turbo_confirm: "Excluir #{truncate(@question.question, length: 60)}? Esta ação não poderá ser desfeita." } } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span> Excluir<% end %>
+    </div>
+  </header>
+  <% { context: "Contextualização", personal_reflection: "Reflexão pessoal" }.each do |field, label| %>
+    <section class="app-panel writing-detail">
+      <h2 class="writing-detail__title"><%= label %></h2>
+      <div class="writing-detail__body"><%= simple_format(@question.public_send(field).presence || "Ainda não informado.") %></div>
+    </section>
+  <% end %>
+  <section class="app-panel"><p>Criado em <%= l(@question.created_at.to_date) %> · Atualizado em <%= l(@question.updated_at.to_date) %></p></section>
+</section>

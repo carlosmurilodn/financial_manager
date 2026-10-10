@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   resources :philosophical_workshop_concepts, path: "projetos/oficina-filosofica/conceitos-e-teses"
   resources :philosophical_workshop_thoughts, path: "projetos/oficina-filosofica/meus-pensamentos"
   resources :philosophical_workshop_insights, path: "projetos/oficina-filosofica/insights"
+  resources :philosophical_workshop_questions, path: "projetos/oficina-filosofica/grandes-questoes"
   post "projetos/estudio-de-escrita/backup", to: "writing_backups#create", as: :writing_backup
   resources :writing_books, path: "projetos/estudio-de-escrita" do
     member { get :cover, path: "capa" }

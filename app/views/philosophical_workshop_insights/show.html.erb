@@ -1,0 +1,19 @@
+<section class="app-page writing-studio writing-narrative-page">
+  <%= render "breadcrumbs" %>
+  <header class="app-panel writing-narrative-heading">
+    <div><p class="app-page__eyebrow"><%= @insight.status_label %></p><h1 class="app-page__title">Insight</h1></div>
+    <div class="writing-character-actions">
+      <%= link_to new_philosophical_workshop_thought_path(source_insight_id: @insight.id), class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">psychology</span> Transformar em Pensamento<% end %>
+      <%= link_to edit_philosophical_workshop_insight_path(@insight), class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">edit</span> Editar<% end %>
+      <%= link_to philosophical_workshop_insights_path, class: "app-btn app-btn--outline" do %><span class="material-symbols-rounded" aria-hidden="true">arrow_back</span> Voltar<% end %>
+      <%= button_to philosophical_workshop_insight_path(@insight), method: :delete, class: "app-btn app-btn--danger", form: { data: { turbo_confirm: "Excluir #{truncate(@insight.content, length: 60)}? Esta ação não poderá ser desfeita." } } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span> Excluir<% end %>
+    </div>
+  </header>
+  <% { content: ["Conteúdo", "lightbulb"], origin: ["Origem", "source"], notes: ["Observações", "notes"] }.each do |field, (label, icon)| %>
+    <section class="app-panel writing-detail">
+      <h2 class="writing-detail__title"><%= writing_action_label(icon, label) %></h2>
+      <div class="writing-detail__body"><%= simple_format(@insight.public_send(field).presence || "Ainda não informado.") %></div>
+    </section>
+  <% end %>
+  <section class="app-panel"><p>Criado em <%= l(@insight.created_at.to_date) %> · Atualizado em <%= l(@insight.updated_at.to_date) %></p></section>
+</section>

@@ -1,0 +1,27 @@
+<%= form_with model: concept, local: true, class: "app-form-page__form" do |f| %>
+  <fieldset class="writing-form-section">
+    <legend>Identificação</legend>
+    <div class="writing-fields">
+      <div><%= f.label :title, "Título" %><%= f.text_field :title, class: "app-form-control", required: true, maxlength: 200 %></div>
+      <div><%= f.label :kind, "Tipo" %><%= f.select :kind, PhilosophicalWorkshopConcept::KINDS.invert, { include_blank: "Selecione o tipo" }, class: "app-form-select", required: true %></div>
+    </div>
+  </fieldset>
+  <fieldset class="writing-form-section">
+    <legend>Conteúdo e reflexões</legend>
+    <div class="writing-fields">
+      <% { description: "Descrição", premises: "Premissas", arguments: "Argumentos", personal_notes: "Observações pessoais" }.each do |field, label| %>
+        <div class="writing-field-wide"><%= f.label field, label %><%= f.text_area field, class: "app-form-control", rows: 5, required: field == :description %></div>
+      <% end %>
+    </div>
+  </fieldset>
+  <fieldset class="writing-form-section" data-controller="select2">
+    <legend>Filósofos associados</legend>
+    <%= f.label :philosopher_ids, "Filósofos" %>
+    <%= f.collection_select :philosopher_ids, @philosophers, :id, :name, {}, multiple: true, class: "app-form-select", data: { placeholder: "Pesquisar e selecionar…" } %>
+    <% if @philosophers.empty? %><p class="writing-muted">Nenhum filósofo cadastrado.</p><% end %>
+  </fieldset>
+  <div class="app-form-page__actions">
+    <%= link_to writing_action_label("close", "Cancelar"), concept.persisted? ? philosophical_workshop_concept_path(concept) : philosophical_workshop_concepts_path, class: "app-btn app-btn--outline" %>
+    <%= f.button class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">save</span> Salvar<% end %>
+  </div>
+<% end %>

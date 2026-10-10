@@ -1,0 +1,51 @@
+<% sections = [
+  { title: "Meus Pensamentos", icon: "psychology", description: "Organize seus pensamentos e desenvolva suas reflexões pessoais.", count: @thoughts_count, path: philosophical_workshop_thoughts_path },
+  { title: "Insights", icon: "lightbulb", description: "Guarde descobertas, percepções e novas conexões entre ideias.", count: @insights_count, path: philosophical_workshop_insights_path },
+  { title: "Filósofos", icon: "person", description: "Reúna filósofos e explore suas ideias e contribuições.", count: @philosophers_count, path: philosophical_workshop_philosophers_path },
+  { title: "Conceitos e Teses", icon: "account_tree", description: "Organize conceitos, argumentos e teses para aprofundar seus estudos.", count: @concepts_count, path: philosophical_workshop_concepts_path },
+  { title: "Grandes Questões", icon: "help", description: "Explore perguntas fundamentais e caminhos possíveis de reflexão.", count: @questions_count, path: philosophical_workshop_questions_path }
+] %>
+<section class="app-page writing-studio writing-book-page">
+  <%= render "shared/breadcrumbs", items: [["Projetos", personal_development_path], ["Oficina Filosófica", nil]] %>
+
+  <header class="app-panel writing-narrative-heading">
+    <div class="app-page__hero-copy">
+      <span class="app-page__hero-icon"><span class="material-symbols-rounded" aria-hidden="true">psychology</span></span>
+      <div>
+        <p class="app-page__eyebrow">Projetos</p>
+        <h1 class="app-page__title">Oficina Filosófica</h1>
+        <p class="app-page__description">Um espaço para explorar ideias, perguntas e reflexões filosóficas.</p>
+      </div>
+    </div>
+    <div class="writing-actions">
+      <%= link_to new_philosophical_workshop_insight_path, class: "app-btn app-btn--primary" do %>
+        <span class="material-symbols-rounded" aria-hidden="true">lightbulb</span> Novo Insight
+      <% end %>
+      <%= link_to new_philosophical_workshop_thought_path, class: "app-btn app-btn--primary" do %>
+        <span class="material-symbols-rounded" aria-hidden="true">psychology</span> Novo Pensamento
+      <% end %>
+    </div>
+  </header>
+
+  <div class="writing-book-tools">
+    <% sections.each do |section| %>
+      <section class="app-panel writing-detail writing-book-tool">
+        <h2 class="writing-detail__title">
+          <span class="material-symbols-rounded" aria-hidden="true"><%= section[:icon] %></span>
+          <%= section[:title] %>
+          <span class="writing-book-tool__badge" aria-label="<%= section.fetch(:count, 0) %> registros em <%= section[:title] %>"><%= section.fetch(:count, 0) %></span>
+        </h2>
+        <p class="writing-muted"><%= section[:description] %></p>
+        <% if section[:path] %>
+          <%= link_to section[:path], class: "app-btn app-btn--primary" do %>
+            <span class="material-symbols-rounded" aria-hidden="true"><%= section[:icon] %></span> Gerenciar <%= section[:title] %>
+          <% end %>
+        <% else %>
+        <button type="button" class="app-btn app-btn--primary" disabled aria-label="Gerenciar <%= section[:title] %>" title="Gerenciamento ainda não disponível">
+          <span class="material-symbols-rounded" aria-hidden="true"><%= section[:icon] %></span> Gerenciar <%= section[:title] %>
+        </button>
+        <% end %>
+      </section>
+    <% end %>
+  </div>
+</section>

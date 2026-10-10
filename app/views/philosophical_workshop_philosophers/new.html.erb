@@ -1,0 +1,3 @@
+<%= render layout: "shared/form_page", locals: { page_class: "writing-studio", breadcrumb_partial: "philosophical_workshop_philosophers/breadcrumbs", resource: @philosopher, title: "Novo Filósofo", eyebrow: "Oficina Filosófica", description: "Somente o nome é obrigatório.", icon: "person", back_path: philosophical_workshop_philosophers_path } do %>
+  <%= render "form", philosopher: @philosopher %>
+<% end %>

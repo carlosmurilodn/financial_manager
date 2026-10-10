@@ -1,6 +1,11 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :rememberable, :validatable
   has_many :writing_books, dependent: :destroy
+  has_many :philosophical_workshop_philosophers, dependent: :destroy
+  has_many :philosophical_workshop_concepts, dependent: :destroy
+  has_many :philosophical_workshop_thoughts, dependent: :destroy
+  has_many :philosophical_workshop_insights, dependent: :destroy
+  has_many :philosophical_workshop_questions, dependent: :destroy
   has_many :expenses, dependent: :destroy
   has_many :financial_goals, dependent: :destroy
   has_many :incomes, dependent: :destroy

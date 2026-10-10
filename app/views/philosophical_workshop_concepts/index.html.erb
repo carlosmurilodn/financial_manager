@@ -1,0 +1,56 @@
+<section class="app-page writing-studio writing-narrative-page">
+  <%= render "breadcrumbs" %>
+  <header class="app-panel writing-narrative-heading">
+    <div><p class="app-page__eyebrow">Oficina Filosófica</p><h1 class="app-page__title">Conceitos e Teses</h1></div>
+    <%= link_to new_philosophical_workshop_concept_path, class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">add</span> Novo Conceito ou Tese<% end %>
+  </header>
+  <div class="app-panel">
+    <%= render "shared/filter_accordion" do %>
+      <%= form_with url: philosophical_workshop_concepts_path, method: :get, local: true, class: "app-filter-form" do |f| %>
+        <%= f.hidden_field :sort, value: @sort %>
+        <%= f.hidden_field :direction, value: @direction %>
+        <div class="app-filter-grid writing-narrative-filters">
+          <div class="app-filter-field"><%= f.label :title, "Título" %><%= f.search_field :title, value: @title_filter, class: "app-form-control", placeholder: "Buscar por título" %></div>
+          <div class="app-filter-field"><%= f.label :kind, "Tipo" %><%= f.select :kind, options_for_select(PhilosophicalWorkshopConcept::KINDS.invert, params[:kind]), { include_blank: "Todos" }, class: "app-form-select" %></div>
+        </div>
+        <div class="app-filter-actions">
+          <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %><span class="material-symbols-rounded" aria-hidden="true">filter_alt</span> Filtrar<% end %>
+          <%= link_to philosophical_workshop_concepts_path, class: "app-btn app-btn--secondary app-page__secondary-btn" do %><span class="material-symbols-rounded" aria-hidden="true">filter_alt_off</span> Limpar Filtros<% end %>
+          <div class="app-per-page-control"><%= f.label :per_page, "Exibir", class: "app-per-page-control__label" %><%= f.select :per_page, options_for_select(per_page_options, @per_page), {}, class: "form-select app-per-page-control__select", onchange: "this.form.requestSubmit()" %><span class="app-per-page-control__suffix">por página</span></div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <p class="writing-muted"><%= @filtered_count %> registro(s) encontrado(s)</p>
+  <% if @concepts.empty? %>
+    <div class="app-panel writing-empty"><h2>Nenhum conceito ou tese encontrado.</h2><p>Cadastre um registro ou ajuste os filtros.</p></div>
+  <% else %>
+    <div class="app-panel app-panel--table">
+      <div class="app-table-responsive">
+        <table class="app-table">
+          <thead><tr>
+            <th scope="col"><%= sortable_table_header("Título", :title) %></th>
+            <th scope="col"><%= sortable_table_header("Tipo", :kind) %></th>
+            <th scope="col"><%= sortable_table_header("Atualizado em", :updated_at) %></th>
+            <th scope="col">Ações</th>
+          </tr></thead>
+          <tbody>
+            <% @concepts.each do |concept| %>
+              <tr>
+                <td><%= link_to concept.title, philosophical_workshop_concept_path(concept) %></td>
+                <td><%= concept.kind_label %></td>
+                <td><%= l(concept.updated_at.to_date) %></td>
+                <td><div class="writing-character-actions">
+                  <%= link_to philosophical_workshop_concept_path(concept), class: "app-btn app-btn--secondary", aria: { label: "Ver #{concept.title}" } do %><span class="material-symbols-rounded" aria-hidden="true">visibility</span> Ver<% end %>
+                  <%= link_to edit_philosophical_workshop_concept_path(concept), class: "app-btn app-btn--primary", aria: { label: "Editar #{concept.title}" } do %><span class="material-symbols-rounded" aria-hidden="true">edit</span> Editar<% end %>
+                  <%= button_to philosophical_workshop_concept_path(concept), method: :delete, class: "app-btn app-btn--danger", aria: { label: "Excluir #{concept.title}" }, form: { data: { turbo_confirm: "Excluir #{concept.title}? Esta ação não poderá ser desfeita." } } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span> Excluir<% end %>
+                </div></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+  <%= render "shared/pagination", current_page: @current_page, total_pages: @total_pages, base_params: request.query_parameters %>
+</section>

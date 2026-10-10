@@ -1,0 +1,26 @@
+<%= form_with model: philosopher, local: true, class: "app-form-page__form" do |f| %>
+  <fieldset class="writing-form-section">
+    <legend>Identificação</legend>
+    <div class="writing-fields">
+      <% { name: "Nome", historical_period: "Período histórico", philosophical_school: "Corrente filosófica" }.each do |field, label| %>
+        <div>
+          <%= f.label field, label %>
+          <%= f.text_field field, class: "app-form-control", required: field == :name, maxlength: 200 %>
+        </div>
+      <% end %>
+      <div><label class="app-checkbox"><%= f.check_box :favorite %><span>Favorito</span></label></div>
+    </div>
+  </fieldset>
+  <fieldset class="writing-form-section">
+    <legend>Ideias e reflexões</legend>
+    <div class="writing-fields">
+      <% { biography: "Biografia", main_ideas: "Principais ideias (resumo)", personal_notes: "Observações pessoais" }.each do |field, label| %>
+        <div class="writing-field-wide"><%= f.label field, label %><%= f.text_area field, class: "app-form-control", rows: 5 %></div>
+      <% end %>
+    </div>
+  </fieldset>
+  <div class="app-form-page__actions">
+    <%= link_to writing_action_label("close", "Cancelar"), philosopher.persisted? ? philosophical_workshop_philosopher_path(philosopher) : philosophical_workshop_philosophers_path, class: "app-btn app-btn--outline" %>
+    <%= f.button class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">save</span> Salvar Filósofo<% end %>
+  </div>
+<% end %>

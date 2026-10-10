@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_10_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_10_130000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -484,6 +484,61 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_120000) do
     t.index ["writing_book_id"], name: "index_writing_chapters_on_writing_book_id"
   end
 
+  create_table "writing_characters", force: :cascade do |t|
+    t.bigint "writing_book_id", null: false
+    t.string "name", null: false
+    t.string "surname"
+    t.string "nicknames"
+    t.string "role"
+    t.string "status"
+    t.text "age"
+    t.text "appearance"
+    t.text "height"
+    t.text "distinguishing_features"
+    t.text "usual_clothing"
+    t.text "personality"
+    t.text "virtues"
+    t.text "flaws"
+    t.text "fears"
+    t.text "desires"
+    t.text "motivations"
+    t.text "beliefs"
+    t.text "internal_contradictions"
+    t.text "origin"
+    t.text "past"
+    t.text "family"
+    t.text "education"
+    t.text "profession"
+    t.text "secrets"
+    t.text "goals"
+    t.text "internal_needs"
+    t.text "conflicts"
+    t.text "initial_situation"
+    t.text "planned_transformations"
+    t.text "planned_outcome"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["id", "writing_book_id"], name: "index_writing_characters_on_id_and_writing_book_id", unique: true
+    t.index ["writing_book_id"], name: "index_writing_characters_on_writing_book_id"
+  end
+
+  create_table "writing_relationships", force: :cascade do |t|
+    t.bigint "writing_book_id", null: false
+    t.bigint "source_character_id", null: false
+    t.bigint "target_character_id", null: false
+    t.string "relation_type", null: false
+    t.text "description"
+    t.text "current_situation"
+    t.string "fingerprint", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["source_character_id"], name: "index_writing_relationships_on_source_character_id"
+    t.index ["target_character_id"], name: "index_writing_relationships_on_target_character_id"
+    t.index ["writing_book_id", "fingerprint"], name: "index_writing_relationships_on_writing_book_id_and_fingerprint", unique: true
+    t.index ["writing_book_id"], name: "index_writing_relationships_on_writing_book_id"
+    t.check_constraint "source_character_id <> target_character_id", name: "writing_relationship_different_characters"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cards", "users"
@@ -519,4 +574,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_120000) do
   add_foreign_key "weight_entries", "users"
   add_foreign_key "writing_books", "users"
   add_foreign_key "writing_chapters", "writing_books"
+  add_foreign_key "writing_characters", "writing_books"
+  add_foreign_key "writing_relationships", "writing_books"
+  add_foreign_key "writing_relationships", "writing_characters", column: ["source_character_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_writing_relationship_source_book"
+  add_foreign_key "writing_relationships", "writing_characters", column: ["target_character_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_writing_relationship_target_book"
 end

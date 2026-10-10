@@ -1,0 +1,4 @@
+<%= render "writing_characters/breadcrumbs" %>
+<%= render layout: "shared/form_page", locals: { resource: @relationship, title: "Editar relacionamento", eyebrow: @character.full_name, icon: "group", back_path: writing_book_writing_character_path(@book, @character), description: "Preserve a direção da relação. Os dois personagens devem pertencer a este livro." } do %>
+  <%= render "form" %>
+<% end %>

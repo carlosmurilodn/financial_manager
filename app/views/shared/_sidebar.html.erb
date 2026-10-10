@@ -26,7 +26,7 @@
           <span class="material-symbols-rounded app-nav-link__icon">space_dashboard</span>
           <span class="link-text">Visão Geral</span>
         <% end %>
-        <%= link_to writing_books_path, class: "app-nav-link #{'active-menu' if controller_name.in?(%w[writing_books writing_chapters])}", title: "Estúdio de Escrita", aria: { label: "Estúdio de Escrita", current: controller_name.in?(%w[writing_books writing_chapters]) ? "page" : nil } do %>
+        <%= link_to writing_books_path, class: "app-nav-link #{'active-menu' if controller_name.in?(%w[writing_books writing_chapters writing_characters writing_relationships])}", title: "Estúdio de Escrita", aria: { label: "Estúdio de Escrita", current: controller_name.in?(%w[writing_books writing_chapters writing_characters writing_relationships]) ? "page" : nil } do %>
           <span class="material-symbols-rounded app-nav-link__icon" aria-hidden="true">auto_stories</span>
           <span class="link-text">Estúdio de Escrita</span>
         <% end %>

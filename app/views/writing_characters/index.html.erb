@@ -1,0 +1,27 @@
+<section class="app-page writing-studio writing-characters">
+  <%= render "breadcrumbs" %>
+  <header class="app-panel writing-characters-heading"><div><p class="app-page__eyebrow"><%= @book.title %></p><h1 class="app-page__title">Personagens</h1><p class="writing-muted">Construa as pessoas que dão vida à sua história.</p></div><%= link_to "Novo personagem", new_writing_book_writing_character_path(@book), class: "app-btn app-btn--primary" %></header>
+  <div class="app-panel"><%= render "shared/filter_accordion" do %>
+    <%= form_with url: writing_book_writing_characters_path(@book), method: :get, class: "app-filter-form" do |f| %>
+      <div class="app-filter-grid writing-character-filters">
+        <div class="app-filter-field"><%= f.label :name, "Nome" %><%= f.search_field :name, value: @name_filter, class: "app-form-control", placeholder: "Nome, sobrenome ou apelido" %></div>
+        <div class="app-filter-field"><%= f.label :role, "Papel" %><%= f.select :role, options_for_select(WritingCharacter::ROLES.invert, params[:role]), { include_blank: "Todos" }, class: "app-form-select" %></div>
+        <div class="app-filter-field"><%= f.label :status, "Situação" %><%= f.select :status, options_for_select(WritingCharacter::STATUSES.invert, params[:status]), { include_blank: "Todas" }, class: "app-form-select" %></div>
+      </div>
+      <div class="app-filter-actions">
+        <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %><i class="bi bi-funnel me-1" aria-hidden="true"></i> Filtrar<% end %>
+        <%= link_to writing_book_writing_characters_path(@book), class: "app-btn app-btn--secondary app-page__secondary-btn" do %><i class="bi bi-x-circle me-1" aria-hidden="true"></i> Limpar Filtros<% end %>
+        <div class="app-per-page-control"><%= f.label :per_page, "Exibir", class: "app-per-page-control__label" %><%= f.select :per_page, options_for_select(per_page_options, @per_page), {}, class: "form-select app-per-page-control__select", onchange: "this.form.requestSubmit()" %><span class="app-per-page-control__suffix">por página</span></div>
+      </div>
+    <% end %>
+  <% end %></div>
+  <p class="writing-muted"><%= @filtered_count %> personagem(ns) encontrado(s)</p>
+  <% if @characters.empty? %><div class="app-panel writing-empty"><h2>Nenhum personagem encontrado.</h2><p>Cadastre um personagem ou ajuste os filtros.</p></div><% else %>
+    <div class="writing-character-cards"><% @characters.each do |character| %>
+      <%= link_to writing_book_writing_character_path(@book, character), class: "app-panel writing-character-card" do %>
+        <%= render "image", character: character %><h2><%= character.full_name %></h2><p><%= character.role_label %></p><span class="writing-character-status"><%= character.status_label %></span>
+      <% end %>
+    <% end %></div>
+  <% end %>
+  <%= render "shared/pagination", current_page: @current_page, total_pages: @total_pages, base_params: request.query_parameters %>
+</section>

@@ -29,7 +29,7 @@ module ApplicationHelper
   ].freeze
 
   def personal_development_section?
-    controller_name.in?(%w[personal_development writing_books writing_chapters])
+    controller_name.in?(%w[personal_development writing_books writing_chapters writing_characters writing_relationships])
   end
 
   def app_section_brand

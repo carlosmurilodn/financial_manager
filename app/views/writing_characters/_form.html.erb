@@ -1,0 +1,23 @@
+<%= form_with model: [@book, @character], local: true, html: { class: "app-form-page__form" } do |f| %>
+  <fieldset class="writing-form-section"><legend>Identificação</legend><div class="writing-fields">
+    <% { name: "Nome", surname: "Sobrenome", nicknames: "Apelidos" }.each do |field, label| %>
+      <div><%= f.label field, label %><%= f.text_field field, class: "app-form-control", required: field == :name, maxlength: 200, aria: writing_character_field_accessibility(@character, field) %><%= writing_character_field_errors(@character, field) %></div>
+    <% end %>
+    <div><%= f.label :role, "Papel" %><%= f.select :role, WritingCharacter::ROLES.invert, { include_blank: "Não informado" }, class: "app-form-select" %></div>
+    <div><%= f.label :status, "Situação" %><%= f.select :status, WritingCharacter::STATUSES.invert, { include_blank: "Não informado" }, class: "app-form-select" %></div>
+  </div></fieldset>
+  <% WritingCharacter::PROFILE_SECTIONS.each do |section, fields| %>
+    <fieldset class="writing-form-section"><legend><%= section %></legend><div class="writing-fields">
+      <% fields.each do |field, label| %><div><%= f.label field, label %><%= f.text_area field, class: "app-form-control", rows: 3 %></div><% end %>
+    </div></fieldset>
+  <% end %>
+  <fieldset class="writing-form-section"><legend>Imagem de referência</legend>
+    <%= f.label :reference_image, "Enviar ou substituir imagem" %><%= f.file_field :reference_image, class: "app-form-control", accept: WritingCharacter::IMAGE_TYPES.join(","), aria: writing_character_field_accessibility(@character, :reference_image) %><%= writing_character_field_errors(@character, :reference_image) %>
+    <small>JPEG, PNG ou WebP. Máximo: 5 MB. Nova imagem substitui a atual.</small>
+    <% if @character.persisted? && @character.reference_image.attached? %>
+      <div class="writing-character-current-image"><%= render "image", character: @character %></div>
+      <label class="app-checkbox"><%= check_box_tag "writing_character[remove_reference_image]", "1", ActiveModel::Type::Boolean.new.cast(params.dig(:writing_character, :remove_reference_image)) %><span>Remover imagem atual</span></label>
+    <% end %>
+  </fieldset>
+  <div class="app-form-page__actions"><%= link_to "Cancelar", @character.persisted? ? writing_book_writing_character_path(@book, @character) : writing_book_writing_characters_path(@book), class: "app-btn app-btn--outline" %><%= f.submit "Salvar personagem", class: "app-btn app-btn--primary" %></div>
+<% end %>

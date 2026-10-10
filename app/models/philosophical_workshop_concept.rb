@@ -1,0 +1,15 @@
+class PhilosophicalWorkshopConcept < ApplicationRecord
+  KINDS = { "concept" => "Conceito", "thesis" => "Tese" }.freeze
+
+  belongs_to :user
+
+  normalizes :title, with: ->(value) { value.to_s.strip }
+
+  validates :title, presence: true, length: { maximum: 200 }
+  validates :kind, presence: true, inclusion: { in: KINDS.keys }
+  validates :description, presence: true
+
+  def kind_label
+    KINDS[kind]
+  end
+end

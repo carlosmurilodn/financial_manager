@@ -1,4 +1,17 @@
 .writing-statistics-page { min-width: 0; }
+.writing-statistics-page .writing-detail__title { display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
+.writing-statistics-page .writing-statistics-chapter { grid-template-columns: minmax(180px, 1fr) minmax(0, 2fr); gap: 20px; }
+.writing-statistics-chapter__metrics { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; margin: 0; }
+.writing-statistics-chapter__metrics > div { min-width: 0; }
+.writing-statistics-chapter__metrics dt { color: var(--text-soft); font-size: .75rem; font-weight: 400; }
+.writing-statistics-chapter__metrics dd { margin: 4px 0 0; color: var(--text-main); font-size: .85rem; font-weight: 600; overflow-wrap: anywhere; }
+.writing-statistics-chapter .writing-manuscript-card__title:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; border-radius: 4px; }
+@media (max-width: 1200px) {
+  .writing-statistics-page .writing-statistics-chapter { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+}
+@media (max-width: 700px) {
+  .writing-statistics-chapter__metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+}
 .writing-statistics-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; margin: 0; }
 .writing-statistics-metrics > div { min-width: 0; padding: 16px; border-radius: 12px; background: var(--app-bg-soft); }
 .writing-statistics-metrics dt { display: flex; align-items: center; gap: 8px; color: var(--text-soft); font-size: .85rem; }

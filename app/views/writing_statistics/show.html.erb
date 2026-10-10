@@ -23,7 +23,7 @@
     <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">bar_chart</span>Distribuição Por Capítulo</h2>
     <% if @statistics.totals[:words].positive? %>
       <div class="writing-statistics-chart" data-controller="manuscript-chart" data-manuscript-chart-chapters-value="<%= @statistics.chapters.map { |chapter| chapter.slice(:order, :title, :words) }.to_json %>">
-        <canvas data-manuscript-chart-target="canvas" role="img" aria-label="Palavras por capítulo na ordem do manuscrito. Valores disponíveis na tabela abaixo.">Consulte os valores na tabela de capítulos abaixo.</canvas>
+        <canvas data-manuscript-chart-target="canvas" role="img" aria-label="Palavras por capítulo na ordem do manuscrito. Valores disponíveis na lista abaixo.">Consulte os valores na lista de capítulos abaixo.</canvas>
       </div>
     <% else %><p class="writing-muted">Ainda não há palavras salvas no manuscrito. Escreva um capítulo ou cena para visualizar a distribuição.</p><% end %>
   </section>
@@ -35,16 +35,25 @@
       <%= button_tag "Aplicar", class: "app-btn app-btn--primary" %>
     <% end %>
     <% if @chapters.any? %>
-      <div class="writing-statistics-table-wrap" tabindex="0" role="region" aria-label="Tabela de capítulos">
-        <table class="writing-statistics-table"><caption>Capítulos vazios aparecem com zero palavras. Participação calculada sobre o total do livro.</caption>
-          <thead><tr><th scope="col">Capítulo</th><th scope="col">Palavras</th><th scope="col">Caracteres</th><th scope="col">Parágrafos</th><th scope="col">Cenas</th><th scope="col">Participação</th></tr></thead>
-          <tbody><% @chapters.each do |chapter| %><tr>
-            <td><%= chapter[:order] %>. <%= link_to chapter[:title], writing_book_writing_chapter_path(@book, chapter[:id]) %></td>
-            <% %i[words characters paragraphs scenes].each do |key| %><td><%= number_with_delimiter(chapter[key]) %></td><% end %>
-            <td><%= number_to_percentage(@statistics.totals[:words].zero? ? 0 : chapter[:words] * 100.0 / @statistics.totals[:words], precision: 1) %></td>
-          </tr><% end %></tbody>
-        </table>
-      </div>
+      <p class="writing-muted">Capítulos vazios aparecem com zero palavras. Participação calculada sobre o total do livro.</p>
+      <ol class="writing-manuscript-cards" aria-label="Estatísticas dos capítulos">
+        <% @chapters.each do |chapter| %>
+          <li class="writing-manuscript-card writing-manuscript-card--compact writing-statistics-chapter" value="<%= chapter[:order] %>">
+            <div class="writing-manuscript-card__identity">
+              <span class="writing-manuscript-card__icon material-symbols-rounded" aria-hidden="true">menu_book</span>
+              <div class="writing-manuscript-card__copy">
+                <%= link_to chapter[:title], writing_book_writing_chapter_path(@book, chapter[:id]), class: "writing-manuscript-card__title", aria: { label: "#{chapter[:order]}. #{chapter[:title]}" } %>
+              </div>
+            </div>
+            <dl class="writing-statistics-chapter__metrics">
+              <% [["Ordem", chapter[:order]], ["Palavras", chapter[:words]], ["Caracteres", chapter[:characters]], ["Parágrafos", chapter[:paragraphs]], ["Cenas", chapter[:scenes]]].each do |label, value| %>
+                <div><dt><%= label %></dt><dd><%= number_with_delimiter(value, delimiter: ".") %></dd></div>
+              <% end %>
+              <div><dt>Participação</dt><dd><%= number_to_percentage(@statistics.totals[:words].zero? ? 0 : chapter[:words] * 100.0 / @statistics.totals[:words], precision: 1, separator: ",") %></dd></div>
+            </dl>
+          </li>
+        <% end %>
+      </ol>
     <% else %><p class="writing-muted">Livro ainda sem capítulos.</p><% end %>
   </section>
   <section class="app-panel">

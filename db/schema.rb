@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_09_130000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_10_120000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -473,6 +473,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_09_130000) do
     t.index ["user_id"], name: "index_writing_books_on_user_id"
   end
 
+  create_table "writing_chapters", force: :cascade do |t|
+    t.bigint "writing_book_id", null: false
+    t.string "title", null: false
+    t.jsonb "content", default: {"type"=>"doc", "content"=>[{"type"=>"paragraph", "attrs"=>{"textAlign"=>"left", "firstLineIndent"=>true}}]}, null: false
+    t.integer "document_version", default: 1, null: false
+    t.integer "lock_version", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["writing_book_id"], name: "index_writing_chapters_on_writing_book_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cards", "users"
@@ -507,4 +518,5 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_09_130000) do
   add_foreign_key "weekly_wellbeings", "users"
   add_foreign_key "weight_entries", "users"
   add_foreign_key "writing_books", "users"
+  add_foreign_key "writing_chapters", "writing_books"
 end

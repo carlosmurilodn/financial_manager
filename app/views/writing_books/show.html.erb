@@ -34,6 +34,8 @@
     </div>
   </div>
 
+  <%= render "chapters" %>
+
   <div class="writing-book-layout">
     <div class="writing-book-narrative">
       <% [["Sinopse", @book.synopsis, "description"], ["Premissa", @book.premise, "lightbulb"], ["Observações", @book.notes, "notes"]].each do |label, content, icon| %>
@@ -56,8 +58,8 @@
   <section class="app-panel writing-detail writing-book-future">
     <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">auto_awesome</span>Próximas ferramentas</h2>
     <div class="writing-detail__body">
-      <p class="writing-muted">Nas próximas fases, esta obra receberá editor, capítulos e cenas, personagens, tramas e conflitos, universo e cenários, linha do tempo, notas e ideias e exportação.</p>
-      <p class="writing-muted">Indicadores de capítulos, personagens, palavras e progresso estarão disponíveis com o manuscrito.</p>
+      <p class="writing-muted">Nas próximas fases, esta obra receberá cenas, personagens, tramas e conflitos, universo e cenários, linha do tempo, notas e ideias e exportação.</p>
+      <p class="writing-muted">Indicadores de capítulos, personagens, palavras e progresso serão ampliados nas próximas fases.</p>
     </div>
   </section>
 </section>

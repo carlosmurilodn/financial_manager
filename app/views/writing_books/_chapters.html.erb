@@ -1,0 +1,21 @@
+<section class="app-panel writing-detail writing-chapters">
+  <div class="writing-chapters__heading">
+    <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">menu_book</span>Manuscrito</h2>
+    <%= link_to new_writing_book_writing_chapter_path(@book), class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">add</span> Novo capítulo<% end %>
+  </div>
+  <% chapters = @book.writing_chapters.ordered %>
+  <% if chapters.empty? %>
+    <p class="writing-muted">Seu manuscrito começa aqui. Crie um capítulo e abra o Editor Literário para escrever.</p>
+  <% else %>
+    <ol class="writing-chapters__list">
+      <% chapters.each do |chapter| %>
+        <li class="writing-chapters__item">
+          <%= link_to edit_writing_book_writing_chapter_path(@book, chapter), class: "writing-chapters__link" do %>
+            <strong><%= chapter.title %></strong><small>Atualizado em <%= l(chapter.updated_at.to_date) %></small>
+          <% end %>
+          <%= button_to "Excluir", writing_book_writing_chapter_path(@book, chapter), method: :delete, class: "app-btn app-btn--secondary app-btn--sm", form: { data: { turbo_confirm: "Excluir o capítulo #{chapter.title} e todo o seu texto? Esta ação não poderá ser desfeita." } } %>
+        </li>
+      <% end %>
+    </ol>
+  <% end %>
+</section>

@@ -1,0 +1,28 @@
+.literary-manuscript {
+  --literary-first-line-indent: 1.25cm;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 12pt;
+  line-height: 1.5;
+  color: #272727;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.literary-manuscript p { margin: 0; text-indent: 0; }
+.literary-manuscript p:empty { min-height: 1.5em; }
+.literary-manuscript > p[data-literary-indent="true"] { text-indent: var(--literary-first-line-indent); }
+.literary-manuscript [data-literary-align="justify"] { text-align: justify; }
+.literary-manuscript [data-literary-align="left"] { text-align: left; }
+.literary-manuscript h1, .literary-manuscript h2 { font-family: inherit; color: inherit; margin: 1.5em 0 .75em; text-indent: 0; break-after: avoid; }
+.literary-manuscript h1 { font-size: 18pt; }
+.literary-manuscript h2 { font-size: 14pt; }
+.literary-manuscript h1:first-child, .literary-manuscript h2:first-child { margin-top: 0; }
+.literary-manuscript ul, .literary-manuscript ol { margin: .75em 0; padding-left: 2em; }
+.literary-manuscript li p, .literary-manuscript blockquote p { text-indent: 0; }
+.literary-manuscript blockquote { border-left: 2px solid #bbb; margin: 1em 0; padding-left: 1em; }
+.literary-manuscript hr { border: 0; text-align: center; margin: 1.5em 0; text-indent: 0; }
+.literary-manuscript hr::after { content: "* * *"; letter-spacing: .5em; }
+.literary-manuscript:focus-visible { outline: 2px solid #5871e7; outline-offset: 8px; }
+@media print {
+  .literary-manuscript { font-size: 12pt; line-height: 1.5; }
+  .literary-manuscript p { orphans: 2; widows: 2; }
+}

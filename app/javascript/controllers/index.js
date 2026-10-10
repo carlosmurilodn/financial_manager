@@ -20,3 +20,6 @@ application.register("exercise-entry-form", ExerciseEntryFormController)
 
 import BookCoverController from "./book_cover_controller"
 application.register("book-cover", BookCoverController)
+
+import LiteraryEditorController from "./literary_editor_controller"
+application.register("literary-editor", LiteraryEditorController)

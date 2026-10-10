@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   get "desenvolvimento-pessoal", to: "personal_development#index", as: :personal_development
   resources :writing_books, path: "projetos/estudio-de-escrita" do
     member { get :cover, path: "capa" }
+    resources :writing_chapters, path: "capitulos", only: %i[new create edit update destroy] do
+      member { get :export, path: "exportar" }
+    end
   end
   get "financeiro", to: "home#index", as: :financial_dashboard
   get "progresso", to: "progress#index", as: :progress

@@ -111,3 +111,39 @@
 @media (max-width: 450px) {
   .writing-book-facts { grid-template-columns: minmax(0, 1fr); }
 }
+
+.writing-chapters__heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.writing-book-page .writing-chapters__heading .writing-detail__title { margin: 0; }
+.writing-chapters__list { margin: 0; padding-left: 1.5rem; }
+.writing-chapters__item { padding: .75rem 0; border-bottom: 1px solid var(--card-border); }
+.writing-chapters__item:last-child { border-bottom: 0; }
+.writing-chapters__link { display: inline-flex; flex-direction: column; gap: .25rem; max-width: 100%; color: var(--text-main); text-decoration: none; overflow-wrap: anywhere; }
+.writing-chapters__link:hover { color: var(--primary); }
+.writing-chapters__link small { color: var(--text-soft); }
+.writing-chapters__item .button_to { float: right; margin-left: .75rem; }
+.literary-editor { display: grid; gap: 16px; min-width: 0; }
+.literary-editor-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.literary-editor-heading__title { flex: 1; min-width: min(100%, 220px); }
+.literary-chapter-title { width: 100%; padding: .4rem 0; border: 0; border-bottom: 1px solid var(--card-border); background: transparent; color: var(--text-main); font-size: 1.3rem; font-weight: 700; }
+.literary-chapter-title:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+.literary-editor-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; }
+.literary-editor-actions .app-btn { white-space: nowrap; }
+.literary-editor-tools { padding: 12px 16px; }
+.literary-editor-toolbar { display: flex; flex-wrap: wrap; gap: 6px; }
+.literary-editor-tool { display: inline-grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--card-border); border-radius: 8px; color: var(--text-main); background: var(--app-bg-soft); cursor: pointer; }
+.literary-editor-tool:hover, .literary-editor-tool[aria-pressed="true"] { color: var(--primary); background: var(--hero-badge-icon-bg); }
+.literary-editor-tool:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.literary-editor-tool:disabled { opacity: .45; cursor: default; }
+.literary-editor-tool .material-symbols-rounded { font-size: 1.25rem; }
+.literary-editor-meta { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; font-size: .78rem; color: var(--text-soft); }
+.literary-editor-meta p { margin: 0; }
+.literary-editor-status--error { color: var(--danger); }
+.literary-editor-desk { padding: 1.5rem; border-radius: var(--radius-lg); background: var(--app-bg-accent); }
+.literary-editor-sheet { width: min(100%, 210mm); min-height: 65vh; margin: auto; padding: 20mm 22mm; border: 1px solid #e6e3dd; background: #fffefa; box-shadow: 0 6px 24px rgba(0, 0, 0, .08); }
+.literary-editor-sheet .literary-manuscript { min-height: 50vh; }
+@media (max-width: 700px) {
+  .literary-editor-desk { padding: .5rem; }
+  .literary-editor-sheet { padding: 1.5rem 1rem; }
+  .literary-editor-heading { padding: 1rem; }
+  .literary-editor-actions { width: 100%; }
+}

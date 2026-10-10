@@ -1,12 +1,12 @@
 module ApplicationHelper
-  def mental_score_color(value)
+  def mental_score_color(value, field: nil)
     return "blue" if value.nil?
 
     score = value.round(1)
-    return "red" if score <= 2
+    return field == :tension ? "green" : "red" if score <= 2
     return "yellow" if score <= 4
 
-    "green"
+    field == :tension ? "red" : "green"
   end
 
   HEALTH_CONTROLLERS = %w[

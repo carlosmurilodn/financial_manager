@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_11_023000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_11_024000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -443,6 +443,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_023000) do
     t.string "status", default: "developing", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "source_insight_id"
+    t.index ["source_insight_id"], name: "idx_philosophy_thoughts_source_insight"
     t.index ["user_id"], name: "index_philosophical_workshop_thoughts_on_user_id"
     t.check_constraint "kind::text = ANY (ARRAY['reflection'::character varying, 'hypothesis'::character varying, 'conviction'::character varying]::text[])", name: "philosophical_workshop_thoughts_valid_kind"
     t.check_constraint "status::text = ANY (ARRAY['developing'::character varying, 'consolidated'::character varying, 'revision'::character varying]::text[])", name: "philosophical_workshop_thoughts_valid_status"
@@ -1038,6 +1040,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_023000) do
   add_foreign_key "philosophical_workshop_questions", "users"
   add_foreign_key "philosophical_workshop_thought_questions", "philosophical_workshop_questions", column: "question_id"
   add_foreign_key "philosophical_workshop_thought_questions", "philosophical_workshop_thoughts", column: "thought_id"
+  add_foreign_key "philosophical_workshop_thoughts", "philosophical_workshop_insights", column: "source_insight_id", on_delete: :nullify
   add_foreign_key "philosophical_workshop_thoughts", "users"
   add_foreign_key "strength_exercise_catalogs", "muscle_groups"
   add_foreign_key "strength_exercise_catalogs", "users"

@@ -1,4 +1,8 @@
 <%= form_with model: thought, local: true, class: "app-form-page__form" do |f| %>
+  <% if thought.new_record? && thought.source_insight %>
+    <%= hidden_field_tag :source_insight_id, thought.source_insight_id %>
+    <p class="writing-muted">Origem: <%= link_to "Insight", philosophical_workshop_insight_path(thought.source_insight) %></p>
+  <% end %>
   <fieldset class="writing-form-section">
     <legend>Identificação</legend>
     <div class="writing-fields">

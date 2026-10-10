@@ -1,6 +1,7 @@
 class PhilosophicalWorkshopThoughtsController < ApplicationController
   before_action :set_thought, only: %i[show edit update destroy]
   before_action :load_questions, only: %i[new edit create update]
+  before_action :load_source_insight, only: %i[new create]
 
   def index
     scope = current_user.philosophical_workshop_thoughts
@@ -22,6 +23,10 @@ class PhilosophicalWorkshopThoughtsController < ApplicationController
 
   def new
     @thought = current_user.philosophical_workshop_thoughts.new
+    if @source_insight
+      @thought.source_insight = @source_insight
+      @thought.central_idea = @source_insight.content
+    end
   end
 
   def edit
@@ -29,8 +34,10 @@ class PhilosophicalWorkshopThoughtsController < ApplicationController
 
   def create
     @thought = current_user.philosophical_workshop_thoughts.new(thought_params)
+    @thought.source_insight = @source_insight
     if @thought.save
-      redirect_to @thought, notice: "Pensamento criado com sucesso!", status: :see_other
+      message = @source_insight ? "Pensamento criado a partir do Insight com sucesso!" : "Pensamento criado com sucesso!"
+      redirect_to @thought, notice: message, status: :see_other
     else
       render :new, status: :unprocessable_entity
     end
@@ -67,5 +74,9 @@ class PhilosophicalWorkshopThoughtsController < ApplicationController
 
   def load_questions
     @questions = current_user.philosophical_workshop_questions.order(:question, :id)
+  end
+
+  def load_source_insight
+    @source_insight = current_user.philosophical_workshop_insights.find(params[:source_insight_id]) if params[:source_insight_id].present?
   end
 end

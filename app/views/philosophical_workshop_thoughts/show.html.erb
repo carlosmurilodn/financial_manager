@@ -14,5 +14,11 @@
       <div class="writing-detail__body"><%= simple_format(@thought.public_send(field).presence || "Ainda não informado.") %></div>
     </section>
   <% end %>
+  <% if @thought.source_insight %>
+    <section class="app-panel writing-detail">
+      <h2 class="writing-detail__title">Origem</h2>
+      <%= link_to "Insight: #{truncate(@thought.source_insight.content, length: 100)}", philosophical_workshop_insight_path(@thought.source_insight) %>
+    </section>
+  <% end %>
   <section class="app-panel"><p>Criado em <%= l(@thought.created_at.to_date) %> · Atualizado em <%= l(@thought.updated_at.to_date) %></p></section>
 </section>

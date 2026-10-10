@@ -1,0 +1,98 @@
+.writing-studio {
+  .app-page__title, .writing-detail__title { overflow-wrap: anywhere; }
+  .select2-container { max-width: 100%; }
+  .app-form-control, .app-form-select { min-width: 0; max-width: 100%; }
+  .app-btn { max-width: 100%; }
+}
+
+@media (max-width: 1440px) {
+  .writing-studio {
+    .writing-book-heading { gap: 20px; }
+    .chapter-writing-heading { align-items: flex-start; }
+    .chapter-writing-title { flex-basis: 100%; }
+    .literary-editor-actions { gap: 8px; }
+    .writing-book-narrative { grid-template-columns: minmax(0, 1fr); }
+    .writing-manuscript-card { gap: 16px; }
+    .chapter-scene-editor__desk .literary-editor-sheet { padding: 24px; }
+  }
+  .writing-book-page .writing-book-heading { grid-template-columns: 120px minmax(0, 1fr); }
+  .writing-book-page .writing-book-heading__info { grid-column: 1 / -1; padding: 16px 0 0; border-left: 0; border-top: 1px solid var(--card-border); }
+  .writing-studio.narrative-panel-open .literary-writing-layout { grid-template-columns: minmax(0, 1fr); }
+  .writing-studio .literary-narrative-panel { position: fixed; top: 16px; bottom: 16px; right: 16px; z-index: 1100; width: min(380px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overscroll-behavior: contain; box-shadow: 0 8px 32px rgba(0, 0, 0, .18); }
+}
+
+@media (max-width: 991px) {
+  .app-content:has(.writing-studio) { overflow-x: clip; overflow-y: visible; }
+  .writing-studio {
+    .chapter-writing-toolbar { top: var(--writing-sticky-top, 72px); }
+    .chapter-scene-editor { scroll-margin-top: calc(var(--writing-sticky-top, 72px) + 130px); }
+    .writing-character-sections { grid-template-columns: minmax(0, 1fr); }
+    .writing-character-filters { grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr)); }
+    .literary-editor-sheet { padding: 24px; }
+    .literary-editor-heading__title { flex-basis: 100%; }
+    .writing-reader-heading .writing-character-actions { width: 100%; }
+  }
+}
+
+@media (max-width: 700px) {
+  .writing-studio {
+    .app-panel, .writing-detail, .writing-form-section { padding: 16px; }
+    .writing-book-card { padding: 0; }
+    .writing-book-heading { grid-template-columns: minmax(0, 1fr); }
+    .writing-book-heading > .writing-cover { width: 120px; max-width: 100%; margin-inline: auto; }
+    .writing-book-heading__info { width: 100%; }
+    .writing-library { grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
+    .writing-narrative-tabs { gap: 6px; }
+    .writing-narrative-tab { flex: 1 1 auto; text-align: center; padding: 10px 12px; }
+    .writing-filter-fields, .writing-character-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .writing-character-filters > :first-child { grid-column: 1 / -1; }
+    .writing-narrative-heading, .writing-characters-heading { gap: 14px; }
+    .app-btn { min-height: 44px; white-space: normal; text-align: center; }
+    .writing-book-tool > .app-btn { width: 100%; }
+    .writing-actions, .literary-editor-actions, .app-form-page__actions { width: 100%; gap: 8px; }
+    .writing-actions > .app-btn, .writing-actions > form, .literary-editor-actions > .app-btn { flex: 1 1 150px; }
+    .writing-actions > form .app-btn { width: 100%; }
+    .literary-editor-toolbar { flex-wrap: nowrap; overflow-x: auto; padding: 4px; scroll-padding-inline: 4px; }
+    .literary-editor-tool { flex: 0 0 44px; width: 44px; height: 44px; }
+    .literary-editor-tools { padding: 8px; }
+    .chapter-writing-toolbar #literary-editor-help { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    .literary-editor-meta { margin-top: 6px; font-size: .75rem; }
+    .chapter-scene-editor__heading { gap: 10px; padding: 12px; }
+    .chapter-scene-editor__desk { padding: 10px; }
+    .chapter-scene-editor__desk .literary-editor-sheet { padding: 20px 16px; min-height: 220px; }
+    .literary-editor-sheet .literary-manuscript { min-height: 220px; }
+    .chapter-scene-editor__number { width: 26px; height: 26px; font-size: .8rem; }
+    .chapter-scene-editor__heading > .writing-record-action { margin-bottom: 0; }
+    .writing-record-action { flex-shrink: 0; width: 44px; height: 44px; padding: 0; }
+    .writing-record-action__label { display: none; }
+    .writing-manuscript-card.writing-manuscript-card--compact { padding: 12px; }
+    .writing-manuscript-card__identity { gap: 10px; }
+    .writing-chapter-actions, .writing-manuscript-card__actions { gap: 8px; }
+    .writing-reader-heading__identity { gap: 12px; }
+    .writing-scene-transfer { flex: 1 1 150px; }
+    .writing-scene-transfer > summary { width: 100%; }
+    .writing-scene-transfer__form { position: static; width: 100%; margin-top: 12px; }
+    .writing-scene-transfer__form .writing-character-actions { flex-wrap: wrap; }
+    .writing-scene-transfer__form .app-btn { flex: 1 1 100px; }
+    input[type="text"], input[type="search"], textarea, .select2-search__field { font-size: 16px; }
+    .app-breadcrumbs ol { gap: 4px; }
+    .app-breadcrumbs li { gap: 4px; }
+    .app-breadcrumbs a { padding: 6px; }
+  }
+  .writing-book-page .writing-book-heading { grid-template-columns: minmax(0, 1fr); }
+  .writing-studio .literary-narrative-panel { top: max(8px, env(safe-area-inset-top)); bottom: max(8px, env(safe-area-inset-bottom)); right: 8px; width: min(380px, calc(100vw - 16px)); max-height: calc(100dvh - 16px); padding: 16px; }
+  .writing-studio .literary-narrative-panel__heading .literary-editor-tool { flex-shrink: 0; }
+}
+
+@media (max-width: 420px) {
+  .writing-studio {
+    .writing-filter-fields, .writing-narrative-filters, .writing-book-facts { grid-template-columns: minmax(0, 1fr); }
+    .chapter-writing-heading .literary-editor-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .chapter-writing-heading .app-btn { min-width: 0; padding-inline: 8px; font-size: .75rem; }
+    .chapter-scene-editor__heading { gap: 8px; }
+    .chapter-scene-editor__desk { padding: 6px; }
+    .chapter-scene-editor__desk .literary-editor-sheet { padding: 16px 12px; }
+    .writing-manuscript-card__meta { font-size: .8rem; }
+  }
+}
+

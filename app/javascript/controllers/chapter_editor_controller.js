@@ -7,6 +7,15 @@ export default class extends Controller {
     this.savedTitle = this.titleTarget.value
     this.events = new AbortController()
     const options = { signal: this.events.signal }
+    const nav = document.querySelector(".app-sidebar__nav")
+    const updateOffset = () => {
+      const height = window.matchMedia("(max-width: 991px)").matches ? nav?.getBoundingClientRect().height || 0 : 0
+      this.element.style.setProperty("--writing-sticky-top", `${Math.ceil(height) + 8}px`)
+    }
+    this.navObserver = new ResizeObserver(updateOffset)
+    if (nav) this.navObserver.observe(nav)
+    window.addEventListener("resize", updateOffset, options)
+    updateOffset()
     this.element.addEventListener("literary-editor:toolbar", event => {
       if (event.detail.controller === this.activeScene) this.refreshToolbar()
     }, options)
@@ -32,6 +41,7 @@ export default class extends Controller {
   }
 
   disconnect() {
+    this.navObserver?.disconnect()
     this.events.abort()
     clearTimeout(this.titleTimer)
   }

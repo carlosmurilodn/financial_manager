@@ -1,10 +1,12 @@
-.calorie-week { display: flex; flex-direction: column; gap: 16px; min-width: 0; width: 100%; border-top: 1px solid var(--card-border); padding-top: 18px; }
+.calorie-week { display: flex; flex-direction: column; gap: 16px; min-width: 0; width: 100%; }
 .calorie-week__header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
-.calorie-week__header h3 { margin: 0; color: var(--text-main); font-size: 1rem; font-weight: 800; }
-.calorie-week__header p { margin: 6px 0 0; color: var(--text-soft); font-size: 0.82rem; line-height: 1.5; }
 .calorie-week__days { display: flex; flex-wrap: wrap; gap: 12px; min-width: 0; }
 .calorie-day { display: flex; flex-direction: column; flex: 1 1 200px; gap: 12px; min-width: 0; padding: 14px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); color: var(--text-main); }
 .calorie-day__header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 0.85rem; }
+.calorie-day--nutrition { border-color: var(--diet-color); background: var(--diet-bg); }
+.calorie-day--nutrition .calorie-day__header { color: var(--text-main); font-size: 1rem; font-weight: 700; }
+.calorie-day__diet-form { display: flex; flex-direction: column; gap: 8px; }
+.calorie-day__diet-form label { color: var(--text-main); font-size: .85rem; font-weight: 700; }
 .calorie-day__form { display: flex; flex-direction: column; gap: 8px; }
 .calorie-day__form small, .calorie-day__notice, .calorie-day__saved { color: var(--text-soft); font-size: 0.75rem; line-height: 1.4; }
 .calorie-day__notice { margin: 0; }

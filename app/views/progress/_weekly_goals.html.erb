@@ -6,10 +6,10 @@
       <%= link_to "Exercícios", health_exercises_path, class: "app-btn app-btn--outline", data: { turbo_frame: "_top" } %>
     </div>
   </div>
-  <% if @saved_weekly_goals.any? %>
+  <% if @physical_week_rows.any? %>
     <div class="progress-activity-scroll" tabindex="0" role="region" aria-label="Realizado por meta e dia da semana">
       <table class="progress-activity-table">
-        <thead><tr><th scope="col">Meta</th><% %w[Seg Ter Qua Qui Sex Sáb Dom].each_with_index do |label, index| %><th scope="col"><%= label %><small><%= (@week_start + index.days).strftime("%d/%m") %></small></th><% end %><th scope="col">Realizado<br>/ Planejado</th></tr></thead>
+        <thead><tr><th scope="col">Atividade</th><% %w[Seg Ter Qua Qui Sex Sáb Dom].each_with_index do |label, index| %><th scope="col"><%= label %><small><%= (@week_start + index.days).strftime("%d/%m") %></small></th><% end %><th scope="col">Dias realizados</th></tr></thead>
         <tbody>
           <% @physical_week_rows.each do |row| %>
             <% goal = row[:goal] %>
@@ -19,13 +19,13 @@
                 <% status = progress_activity_status(day[:state]) %>
                 <td><span class="progress-activity-day <%= status[:css] %>" role="img" aria-label="<%= status[:label] %>" title="<%= status[:label] %> em <%= day[:date].strftime('%d/%m/%Y') %>"><span class="material-symbols-rounded" aria-hidden="true"><%= status[:icon] %></span></span></td>
               <% end %>
-              <td title="<%= row[:type] == 'nutrition' ? 'Dias de dieta totalmente seguida / planejados' : 'Dias realizados / planejados' %>"><strong><%= row[:completed_count] %> / <%= goal.target_count %></strong><% if row[:completed_count] >= goal.target_count %><small class="progress-activity-complete">Meta cumprida</small><% end %></td>
+              <td title="<%= row[:type] == 'nutrition' ? 'Dias de dieta totalmente seguida / planejados' : 'Dias com exercícios registrados' %>"><strong><%= row[:completed_count] %><%= " / #{goal.target_count}" if goal %></strong><% if goal && row[:completed_count] >= goal.target_count %><small class="progress-activity-complete">Meta cumprida</small><% end %></td>
             </tr>
           <% end %>
         </tbody>
       </table>
     </div>
   <% else %>
-    <p class="progress-empty">Nenhuma categoria cadastrada nesta semana. Crie a semana em Alimentação ou Exercícios.</p>
+    <p class="progress-empty">Nenhum registro nesta semana. Registre alimentação ou exercícios diários.</p>
   <% end %>
 </article>

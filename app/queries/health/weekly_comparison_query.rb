@@ -18,6 +18,7 @@ module Health
 
       rows = [row("Peso médio", :weight, previous_average, @current[:average_weight]&.round(2)).merge(previous_count: previous_count, current_count: @current[:weight_count])]
       rows.concat(goal_rows(previous_goals, @current[:goals]))
+      rows.concat(exercise_rows(previous_start))
       previous_diaries = Health::SelfKnowledgeWeek.new(@user, previous_start)
       Health::SelfKnowledgeContent::METRICS.each do |attribute, content|
         rows << row(content.first, :score, previous_diaries.averages.fetch(attribute)[:mean], @current[:self_knowledge]&.averages&.fetch(attribute)&.fetch(:mean))
@@ -33,7 +34,23 @@ module Health
       { label: label, kind: kind, previous: previous, current: current, delta: previous && current ? current - previous : nil }
     end
 
+    def exercise_rows(previous_start)
+      records = @user.exercise_entries.joins(:exercise_items)
+        .where(performed_on: previous_start..(@week_start + 6.days))
+        .distinct.pluck("exercise_items.exercise_type", :performed_on)
+      ExerciseItem::TYPES.filter_map do |type, label|
+        dates = records.select { |exercise_type, _date| exercise_type == type }.map(&:last)
+        next if dates.empty?
+
+        previous = dates.count { |date| date < @week_start }
+        current = dates.count { |date| date >= @week_start }
+        row(label, :exercise_days, previous, current)
+      end
+    end
+
     def goal_rows(previous_goals, current_goals)
+      previous_goals = previous_goals.reject { |goal| WeeklyHealthGoal::LEGACY_EXERCISE_NAMES.include?(goal.name.parameterize) }
+      current_goals = current_goals.reject { |goal| WeeklyHealthGoal::LEGACY_EXERCISE_NAMES.include?(goal.name.parameterize) }
       normalize = ->(goal) { goal.name.gsub(/[[:space:]]+/, " ").strip.downcase }
       previous_groups = previous_goals.group_by(&normalize)
       current_groups = current_goals.group_by(&normalize)

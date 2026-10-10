@@ -1,8 +1,22 @@
-<%= turbo_frame_tag "calories-day-#{entry.occurred_on.iso8601}", class: "calorie-day", data: { controller: "calorie-status", calorie_status_persisted_value: entry.persisted?, calorie_status_saved_value: entry.consumed_calories_in_database&.to_s("F") } do %>
+<% nutrition = local_assigns.fetch(:nutrition, false) %>
+<% diet_status = local_assigns[:diet_status] %>
+<% card_class = nutrition ? "calorie-day calorie-day--nutrition nutrition-diet-day--#{diet_status || 'unselected'}" : "calorie-day" %>
+<%= turbo_frame_tag "calories-day-#{entry.occurred_on.iso8601}", class: card_class, data: { controller: "calorie-status", calorie_status_persisted_value: entry.persisted?, calorie_status_saved_value: entry.consumed_calories_in_database&.to_s("F") } do %>
   <div class="calorie-day__header">
+    <% if nutrition %>
+      <strong><%= %w[Dom Seg Ter Qua Qui Sex Sáb][entry.occurred_on.wday] %> <time datetime="<%= entry.occurred_on.iso8601 %>"><%= entry.occurred_on.strftime("%d/%m") %></time></strong>
+    <% else %>
     <strong><%= %w[Dom Seg Ter Qua Qui Sex Sáb][entry.occurred_on.wday] %></strong>
     <time datetime="<%= entry.occurred_on.iso8601 %>"><%= entry.occurred_on.strftime("%d/%m/%Y") %></time>
+    <% end %>
   </div>
+  <% if nutrition %>
+    <%= form_with url: toggle_health_nutrition_day_path(entry.occurred_on.beginning_of_week(:monday).iso8601), method: :patch, class: "calorie-day__diet-form", data: { turbo_frame: "_top" } do |f| %>
+      <%= f.hidden_field :occurred_on, value: entry.occurred_on.iso8601 %>
+      <%= f.label :diet_status, "Alimentação", for: "diet-status-#{entry.occurred_on.iso8601}" %>
+      <%= f.select :diet_status, options_for_select(WeeklyHealthGoalDay::DIET_STATUSES, diet_status || ""), {}, id: "diet-status-#{entry.occurred_on.iso8601}", class: "app-form-select", data: { action: "change->calorie-status#saveDietStatus" } %>
+    <% end %>
+  <% end %>
   <% if entry.errors.any? %>
     <div class="calorie-day__errors" role="alert">
       <% entry.errors.full_messages.each do |message| %>

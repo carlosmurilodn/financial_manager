@@ -6,7 +6,7 @@
       </div>
       <div class="health-weight-goal-card__description-link">
         <div class="exercise-entry-card__heading">
-          <h3 class="health-weight-goal-card__title">Dia <%= l(exercise_entry.performed_on, format: :long) %></h3>
+          <h3 class="health-weight-goal-card__title"><%= link_to "Dia #{l(exercise_entry.performed_on, format: :long)}", health_exercise_path(exercise_entry), class: "exercise-entry-card__show-link" %></h3>
           <div class="exercise-entry-card__chips">
             <% exercise_entry.exercise_items.each do |item| %>
               <span><%= item.type_label %></span>

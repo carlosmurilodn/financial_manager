@@ -1,9 +1,19 @@
 class ExerciseEntriesController < ApplicationController
-  before_action :set_exercise_entry, only: %i[edit update destroy duplicate]
+  before_action :set_exercise_entry, only: %i[show edit update destroy duplicate]
   before_action :load_form_options, only: %i[new edit create update duplicate]
 
   def index
     load_exercise_entries
+  end
+
+  def show
+    ActiveRecord::Associations::Preloader.new(
+      records: [@exercise_entry],
+      associations: { exercise_items: { strength_exercise_logs: {
+        muscle_group: { example_image_attachment: :blob },
+        strength_exercise_catalog: { example_image_attachment: :blob }
+      } } }
+    ).call
   end
 
   def clear_filters

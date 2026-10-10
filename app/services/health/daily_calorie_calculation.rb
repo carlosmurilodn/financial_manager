@@ -1,12 +1,15 @@
 module Health
   class DailyCalorieCalculation
-    TRAINING_WORDS = %w[treinar treino musculacao funcional].freeze
-    WALKING_WORDS = %w[caminhar caminhada].freeze
     FACTORS = {
-      [ false, false ] => BigDecimal("1.2"),
-      [ false, true ] => BigDecimal("1.375"),
-      [ true, false ] => BigDecimal("1.55"),
-      [ true, true ] => BigDecimal("1.725")
+      # Musculação, funcional, ergometria.
+      [ false, false, false ] => BigDecimal("1.2"),
+      [ false, false, true ] => BigDecimal("1.375"),
+      [ false, true, false ] => BigDecimal("1.375"),
+      [ false, true, true ] => BigDecimal("1.55"),
+      [ true, false, false ] => BigDecimal("1.55"),
+      [ true, false, true ] => BigDecimal("1.725"),
+      [ true, true, false ] => BigDecimal("1.725"),
+      [ true, true, true ] => BigDecimal("1.725")
     }.freeze
 
     def initialize(user:, occurred_on:, consumed_calories:)
@@ -54,9 +57,14 @@ module Health
         .distinct
         .pluck("exercise_items.exercise_type")
 
-      trained = exercise_types.any? { |type| %w[training functional].include?(type) }
+      strength_training = exercise_types.include?("training")
+      functional = exercise_types.include?("functional")
       walked = exercise_types.include?("ergometry")
-      { trained: trained, walked: walked, activity_factor: FACTORS.fetch([ trained, walked ]) }
+      {
+        trained: strength_training || functional,
+        walked: walked,
+        activity_factor: FACTORS.fetch([ strength_training, functional, walked ])
+      }
     end
 
     def age_on(birth_date)

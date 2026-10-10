@@ -2,6 +2,7 @@ class DailyCalorieEntriesController < ApplicationController
   def show
     date = Date.iso8601(params[:occurred_on].to_s)
     @entry = current_user.daily_calorie_entries.find_by(occurred_on: date) || current_user.daily_calorie_entries.new(occurred_on: date)
+    load_nutrition_day
   rescue ArgumentError
     redirect_to weekly_health_plans_path, alert: "Data inválida.", status: :see_other
   end
@@ -23,8 +24,20 @@ class DailyCalorieEntriesController < ApplicationController
     end
   rescue ActiveRecord::RecordInvalid => error
     @entry = error.record
+    load_nutrition_day
     render :show, status: :unprocessable_entity
   rescue ArgumentError
     redirect_to weekly_health_plans_path, alert: "Data inválida.", status: :see_other
+  end
+
+  private
+
+  def load_nutrition_day
+    return unless params[:nutrition_week] == "1"
+
+    plan = current_user.weekly_health_plans.includes(weekly_health_goals: :weekly_health_goal_days)
+      .find_by(week_start: @entry.occurred_on.beginning_of_week(:monday))
+    goal = plan&.weekly_health_goals&.find { |record| record.name.parameterize == "alimentacao" }
+    @diet_status = goal&.weekly_health_goal_days&.find { |day| day.occurred_on == @entry.occurred_on }&.diet_status
   end
 end

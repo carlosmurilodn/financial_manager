@@ -1,4 +1,4 @@
-<div class="exercise-entry-strength-log" data-strength-log>
+<div class="exercise-entry-strength-log" data-strength-log data-controller="select2">
   <%= f.hidden_field :id if f.object.persisted? %>
   <%= f.hidden_field :_destroy, value: "0", data: { strength_destroy_input: true } if f.object.persisted? %>
 
@@ -7,15 +7,17 @@
     <%= f.select :muscle_group_id,
           options_from_collection_for_select(@muscle_groups, :id, :name, f.object.muscle_group_id),
           { prompt: "Selecione um grupo" },
-          class: "app-form-select" %>
+          class: "app-form-select",
+          data: { muscle_group: true, action: "change->exercise-entry-form#changeMuscleGroup" } %>
   </div>
 
   <div>
     <%= f.label :strength_exercise_catalog_id, "Exercício" %>
     <%= f.select :strength_exercise_catalog_id,
-          options_from_collection_for_select(@strength_exercises, :id, :name, f.object.strength_exercise_catalog_id),
+          options_for_select(@strength_exercises.map { |exercise| [exercise.name, exercise.id, { "data-muscle-group-id" => exercise.muscle_group_id }] }, f.object.strength_exercise_catalog_id),
           { prompt: "Selecione um exercício" },
-          class: "app-form-select" %>
+          class: "app-form-select",
+          data: { strength_exercise: true } %>
   </div>
 
   <div>

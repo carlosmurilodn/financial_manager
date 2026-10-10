@@ -1,0 +1,62 @@
+<section class="app-page exercise-entry-show self-knowledge-page">
+  <header class="app-page__hero">
+    <div class="exercise-entry-show__header">
+      <div class="app-page__hero-copy">
+        <span class="app-page__hero-icon"><span class="material-symbols-rounded" aria-hidden="true">fitness_center</span></span>
+        <div><p class="app-page__eyebrow">Saúde Física · Exercícios</p><h1 class="app-page__title">Treino de <%= @exercise_entry.performed_on.strftime("%d/%m/%Y") %></h1></div>
+      </div>
+      <div class="exercise-entry-show__actions">
+        <%= link_to health_exercises_path, class: "app-btn app-btn--outline" do %><span class="material-symbols-rounded" aria-hidden="true">arrow_back</span><span>Voltar</span><% end %>
+        <%= link_to edit_health_exercise_path(@exercise_entry), class: "app-btn app-btn--primary", data: { turbo: false } do %><span class="material-symbols-rounded" aria-hidden="true">edit</span><span>Editar</span><% end %>
+        <%= link_to duplicate_health_exercise_path(@exercise_entry), class: "app-btn app-btn--outline", data: { turbo: false } do %><span class="material-symbols-rounded" aria-hidden="true">content_copy</span><span>Duplicar</span><% end %>
+      </div>
+    </div>
+    <p class="exercise-entry-show__summary"><%= pluralize(@exercise_entry.exercise_items.size, "item", "itens") %> · <%= @exercise_entry.total_duration_minutes %> min registrados</p>
+  </header>
+
+  <% @exercise_entry.exercise_items.each do |item| %>
+    <article class="app-panel exercise-entry-show__item">
+      <header class="exercise-entry-show__item-header">
+        <h2><%= item.type_label %></h2>
+        <dl class="exercise-entry-show__details">
+          <div><dt>Duração</dt><dd><%= item.duration_minutes ? "#{item.duration_minutes} min" : "Não informada" %></dd></div>
+          <div><dt>Intensidade</dt><dd><%= ExerciseItem::INTENSITIES.key(item.intensity) || "Não informada" %></dd></div>
+        </dl>
+      </header>
+
+      <% if item.training? %>
+        <div class="exercise-entry-show__groups">
+          <% item.strength_exercise_logs.group_by(&:muscle_group).each do |group, logs| %>
+            <section class="exercise-entry-show__group">
+              <header class="exercise-entry-show__group-header">
+                <% if group.example_image.attached? %>
+                  <%= image_tag group.example_image, class: "exercise-entry-show__group-image", alt: "Grupo muscular: #{group.name}", loading: "lazy" %>
+                <% else %>
+                  <div class="exercise-entry-show__group-placeholder"><span class="material-symbols-rounded" aria-hidden="true">accessibility_new</span><small>Sem imagem</small></div>
+                <% end %>
+                <div><p>Grupo muscular</p><h3><%= group.name %></h3></div>
+              </header>
+              <div class="exercise-entry-show__exercises">
+                <% logs.each do |log| %>
+                  <% exercise = log.strength_exercise_catalog %>
+                  <article class="exercise-entry-show__exercise">
+                    <header><h4><%= exercise.name %></h4><span><%= pluralize(log.sets, "série", "séries") %></span></header>
+                    <% if exercise.example_image.attached? %>
+                      <%= image_tag exercise.example_image, class: "exercise-entry-show__exercise-image", alt: "Ilustração do exercício: #{exercise.name}", loading: "lazy" %>
+                    <% else %>
+                      <div class="exercise-entry-show__exercise-placeholder"><span class="material-symbols-rounded" aria-hidden="true">fitness_center</span><p>Sem imagem do exercício</p></div>
+                    <% end %>
+                  </article>
+                <% end %>
+              </div>
+            </section>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if item.notes.present? %>
+        <div class="exercise-entry-show__notes"><h3>Observações</h3><%= simple_format(item.notes) %></div>
+      <% end %>
+    </article>
+  <% end %>
+</section>

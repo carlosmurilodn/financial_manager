@@ -12,8 +12,9 @@ module Writing
     MAX_BYTES = 5.megabytes
     MAX_DEPTH = 32
 
-    def initialize(content)
+    def initialize(content, allowed_marks: MARKS)
       @content = content
+      @allowed_marks = allowed_marks
     end
 
     def valid?
@@ -50,7 +51,7 @@ module Writing
     end
 
     def valid_marks?(marks)
-      marks.is_a?(Array) && marks.all? { |mark| mark.is_a?(Hash) && mark.keys == [ "type" ] && MARKS.include?(mark["type"]) }
+      marks.is_a?(Array) && marks.all? { |mark| mark.is_a?(Hash) && mark.keys == [ "type" ] && @allowed_marks.include?(mark["type"]) }
     end
 
     def valid_attributes?(type, attrs)

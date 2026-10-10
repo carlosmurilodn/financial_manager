@@ -1,0 +1,18 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8">
+<style>body { margin: 0; font: 9pt serif; color: #777; text-align: center; } #content { visibility: hidden; }</style>
+<script>
+function pageFurniture() {
+  var query = {}, pairs = window.location.search.substring(1).split('&');
+  for (var i = 0; i < pairs.length; i++) { var pair = pairs[i].split('='); query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || ''); }
+  var page = parseInt(query.page || '0', 10);
+  var first = <%= body_start %>;
+  var showFront = <%= options.number_front_matter ? 'true' : 'false' %>;
+  var element = document.getElementById('content');
+  if (page >= first || showFront) {
+    <% if part == 'footer' %>
+      <% if options.paginate %>element.textContent = String(showFront ? page : page - first + 1);<% end %>
+    <% end %>
+    element.style.visibility = 'visible';
+  }
+}
+</script></head><body onload="pageFurniture()"><div id="content"><% if part == 'header' %><%= title %><% end %></div></body></html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title><%= book.title %></title>
+<style>
+<%= raw font_css %>
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { font-family: 'Publication Serif', serif; font-size: <%= options.font_size %>pt; line-height: <%= options.line_height %>; color: #222; }
+.front-page { display: table; width: 100%; height: <%= options.page_height - options.margin_mm * 2 - 6 %>mm; page-break-after: always; page-break-inside: avoid; }
+.front-page-content { display: table-cell; vertical-align: middle; text-align: center; }
+.cover-image { max-width: 100%; max-height: <%= options.page_height - options.margin_mm * 2 - 10 %>mm; }
+.book-title { font-size: 26pt; font-weight: bold; line-height: 1.2; margin: 0 0 10mm; overflow-wrap: break-word; }
+.book-subtitle { font-size: 15pt; margin: 0 0 8mm; }
+.book-author { font-size: 14pt; margin-top: 15mm; }
+.toc { page-break-after: always; }
+.toc-heading { font-size: 20pt; font-weight: bold; margin-bottom: 12mm; page-break-after: avoid; }
+.toc-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.toc-table tr { page-break-inside: avoid; }
+.toc-table td { padding: 3mm 0; vertical-align: top; border-bottom: 1px dotted #ccc; }
+.toc-table .page { width: 15mm; text-align: right; padding-left: 3mm; white-space: nowrap; }
+.toc-table a { color: inherit; text-decoration: none; }
+.chapter + .chapter { page-break-before: always; }
+.chapter-title { font-size: 20pt; line-height: 1.3; text-align: center; margin: 0 0 12mm; page-break-after: avoid; }
+.paragraph { margin: 0 0 .35em; orphans: 3; widows: 3; }
+.indented { text-indent: 12.5mm; }
+.unindented { text-indent: 0; }
+.align-left { text-align: left; }
+.align-justify { text-align: justify; }
+.manuscript-heading { font-weight: bold; line-height: 1.3; margin: 1em 0 .5em; page-break-after: avoid; }
+.heading-1 { font-size: 1.45em; }
+.heading-2 { font-size: 1.2em; }
+blockquote { margin: 1em 8mm; padding-left: 4mm; border-left: 1px solid #aaa; }
+blockquote .paragraph, li .paragraph { text-indent: 0; }
+ul, ol { margin: .6em 0; padding-left: 8mm; }
+li { orphans: 2; widows: 2; }
+.scene-break { border: 0; margin: 6mm 0; text-align: center; letter-spacing: .35em; page-break-inside: avoid; }
+.scene-break { color: #666; }
+</style></head><body>
+<% if options.include_cover %>
+  <section class="front-page"><div class="front-page-content">
+    <% if cover %><img class="cover-image" src="<%= cover %>" alt="Capa de <%= book.title %>">
+    <% else %><div class="book-title"><%= book.title %></div><% if book.subtitle.present? %><div class="book-subtitle"><%= book.subtitle %></div><% end %><div class="book-author"><%= book.author %></div><% end %>
+  </div></section>
+<% end %>
+<% if options.include_title_page %>
+  <section class="front-page"><div class="front-page-content"><div class="book-title"><%= book.title %></div><% if book.subtitle.present? %><div class="book-subtitle"><%= book.subtitle %></div><% end %><div class="book-author"><%= book.author %></div></div></section>
+<% end %>
+<% if options.include_toc %>
+  <section class="toc"><div class="toc-heading">Sumário</div><table class="toc-table"><tbody>
+    <% chapters.each do |chapter| %><tr><td><a href="#publication-chapter-<%= chapter[:id] %>"><%= chapter[:title] %></a></td><% if options.paginate %><td class="page"><%= pages[chapter[:id]] || "—" %></td><% end %></tr><% end %>
+  </tbody></table></section>
+<% end %>
+<main><% chapters.each do |chapter| %><article class="chapter"><h1 class="chapter-title" id="publication-chapter-<%= chapter[:id] %>"><%= chapter[:title] %></h1><%= chapter[:html] %></article><% end %></main>
+</body></html>

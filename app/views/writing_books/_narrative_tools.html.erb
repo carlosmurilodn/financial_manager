@@ -3,12 +3,13 @@
   { title: "Tramas E Conflitos", icon: "account_tree", count: @book.writing_plots.count + @book.writing_conflicts.count, description: "Organize linhas narrativas, subtramas e tensões da história.", action: "Gerenciar Tramas E Conflitos", path: writing_book_writing_plots_path(@book) },
   { title: "Universo E Cenários", icon: "public", count: @book.writing_locations.count + @book.writing_organizations.count + @book.writing_universe_rules.count, description: "Desenvolva locais, organizações e regras do seu universo.", action: "Gerenciar Universo E Cenários", path: writing_book_writing_locations_path(@book) },
   { title: "Notas E Ideias", icon: "sticky_note_2", count: @book.writing_notes.count, description: "Guarde ideias, pesquisas e decisões sem alterar o manuscrito.", action: "Gerenciar Notas E Ideias", path: writing_book_writing_notes_path(@book) },
-  { title: "Linha Do Tempo", icon: "timeline", count: @book.writing_timeline_events.count, description: "Organize acontecimentos e referências temporais da história.", action: "Gerenciar Linha Do Tempo", path: writing_book_writing_timeline_events_path(@book) }
+  { title: "Linha Do Tempo", icon: "timeline", count: @book.writing_timeline_events.count, description: "Organize acontecimentos e referências temporais da história.", action: "Gerenciar Linha Do Tempo", path: writing_book_writing_timeline_events_path(@book) },
+  { title: "Publicação E Exportação", icon: "picture_as_pdf", description: "Configure a diagramação e gere o PDF do seu livro.", action: "Publicação E Exportação", path: writing_book_writing_publication_path(@book) }
 ] %>
 <div class="writing-book-tools">
   <% tools.each do |tool| %>
     <section class="app-panel writing-detail writing-book-tool">
-      <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true"><%= tool[:icon] %></span><%= tool[:title] %><span class="writing-book-tool__badge" aria-label="<%= tool[:count] %> registros em <%= tool[:title] %>"><%= tool[:count] %></span></h2>
+      <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true"><%= tool[:icon] %></span><%= tool[:title] %><% if tool.key?(:count) %><span class="writing-book-tool__badge" aria-label="<%= tool[:count] %> registros em <%= tool[:title] %>"><%= tool[:count] %></span><% end %></h2>
       <p class="writing-muted"><%= tool[:description] %></p>
       <%= link_to writing_action_label(tool[:icon], tool[:action]), tool[:path], class: "app-btn app-btn--primary" %>
     </section>

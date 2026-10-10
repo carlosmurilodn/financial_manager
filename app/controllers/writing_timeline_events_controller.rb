@@ -81,7 +81,7 @@ class WritingTimelineEventsController < ApplicationController
 
   def selected_targets
     raw = params.require(:writing_timeline_event).permit(links: WritingTimelineLink::TARGETS.keys.to_h { |target| [ target, [] ] })[:links] || {}
-    raw.flat_map do |target, ids|
+    raw.to_h.flat_map do |target, ids|
       @book.public_send(target.to_s.pluralize).find(ids.reject(&:blank?).uniq).uniq(&:id).map { |record| [ target.to_sym, record ] }
     end
   end

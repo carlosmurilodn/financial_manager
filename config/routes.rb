@@ -9,6 +9,10 @@ Rails.application.routes.draw do
   resources :writing_books, path: "projetos/estudio-de-escrita" do
     member { get :cover, path: "capa" }
     member { get :read, path: "ler" }
+    resource :writing_publication, path: "publicacao", only: %i[show create] do
+      get :status
+      get :download, path: "arquivo"
+    end
     resource :writing_narrative_context, path: "contexto-narrativo", only: %i[show create destroy]
     resources :writing_timeline_events, path: "linha-do-tempo" do
       member { patch :reorder, path: "ordenar" }

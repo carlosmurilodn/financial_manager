@@ -31,3 +31,6 @@ application.register("chapter-editor", ChapterEditorController)
 
 import TimelineDateController from "./timeline_date_controller"
 application.register("timeline-date", TimelineDateController)
+
+import PublicationController from "./publication_controller"
+application.register("publication", PublicationController)

@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  use_doorkeeper do
+    skip_controllers :applications, :token_info
+    controllers authorizations: "mcp_integration/authorizations", tokens: "mcp_integration/tokens",
+      authorized_applications: "mcp_integration/authorized_applications"
+  end
+  get "/.well-known/oauth-protected-resource/mcp", to: "mcp_integration/metadata#resource"
+  get "/.well-known/oauth-protected-resource", to: "mcp_integration/metadata#resource"
+  get "/.well-known/oauth-authorization-server", to: "mcp_integration/metadata#authorization_server"
+  mount McpIntegration::Endpoint.new => "/mcp"
   devise_for :users, controllers: {
     sessions: "users/sessions"
   }

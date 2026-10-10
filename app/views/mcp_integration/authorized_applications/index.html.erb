@@ -1,0 +1,3 @@
+<section class="app-page"><header class="app-panel"><h1 class="app-page__title">Aplicações Autorizadas</h1><p>Revogue acesso MCP de aplicações conectadas à sua conta.</p></header><section class="app-panel">
+  <% if @applications.empty? %><p>Nenhuma aplicação autorizada.</p><% else %><ul class="writing-manuscript-cards"><% @applications.each do |application| %><li class="writing-manuscript-card writing-manuscript-card--compact"><strong><%= application.name %></strong><%= button_to "Revogar Acesso", oauth_authorized_application_path(application), method: :delete, class: "app-btn app-btn--danger", form: { data: { turbo_confirm: "Revogar acesso desta aplicação?" } } %></li><% end %></ul><% end %>
+</section></section>

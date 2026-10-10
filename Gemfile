@@ -76,3 +76,7 @@ group :test do
 end
 
 gem "diff-lcs", "~> 1.6", require: false
+
+gem "mcp", "~> 1.7.0", require: false
+gem "doorkeeper", "~> 5.9.9"
+gem "rack-attack", "~> 6.8"

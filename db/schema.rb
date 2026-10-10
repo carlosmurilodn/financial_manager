@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_11_022000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_11_023000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -421,6 +421,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_022000) do
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_philosophical_workshop_questions_on_user_id"
     t.check_constraint "status::text = ANY (ARRAY['investigating'::character varying, 'provisionally_answered'::character varying, 'archived'::character varying]::text[])", name: "philosophical_workshop_questions_valid_status"
+  end
+
+  create_table "philosophical_workshop_thought_questions", force: :cascade do |t|
+    t.bigint "thought_id", null: false
+    t.bigint "question_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["question_id"], name: "idx_philosophy_thought_questions_question"
+    t.index ["thought_id", "question_id"], name: "idx_philosophy_thought_questions_unique_pair", unique: true
   end
 
   create_table "philosophical_workshop_thoughts", force: :cascade do |t|
@@ -1027,6 +1036,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_022000) do
   add_foreign_key "philosophical_workshop_insights", "users"
   add_foreign_key "philosophical_workshop_philosophers", "users"
   add_foreign_key "philosophical_workshop_questions", "users"
+  add_foreign_key "philosophical_workshop_thought_questions", "philosophical_workshop_questions", column: "question_id"
+  add_foreign_key "philosophical_workshop_thought_questions", "philosophical_workshop_thoughts", column: "thought_id"
   add_foreign_key "philosophical_workshop_thoughts", "users"
   add_foreign_key "strength_exercise_catalogs", "muscle_groups"
   add_foreign_key "strength_exercise_catalogs", "users"

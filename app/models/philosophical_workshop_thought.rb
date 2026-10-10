@@ -3,6 +3,8 @@ class PhilosophicalWorkshopThought < ApplicationRecord
   STATUSES = { "developing" => "Em desenvolvimento", "consolidated" => "Consolidado", "revision" => "Em revisão" }.freeze
 
   belongs_to :user
+  has_many :thought_questions, class_name: "PhilosophicalWorkshopThoughtQuestion", foreign_key: :thought_id, dependent: :destroy, inverse_of: :thought
+  has_many :questions, through: :thought_questions
 
   normalizes :title, with: ->(value) { value.to_s.strip }
 

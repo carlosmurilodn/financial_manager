@@ -1,5 +1,6 @@
 class PhilosophicalWorkshopThoughtsController < ApplicationController
   before_action :set_thought, only: %i[show edit update destroy]
+  before_action :load_questions, only: %i[new edit create update]
 
   def index
     scope = current_user.philosophical_workshop_thoughts
@@ -55,6 +56,16 @@ class PhilosophicalWorkshopThoughtsController < ApplicationController
   end
 
   def thought_params
-    params.require(:philosophical_workshop_thought).permit(:title, :central_idea, :supporting_arguments, :counterpoints, :provisional_conclusion, :kind, :status)
+    attributes = params.require(:philosophical_workshop_thought).permit(:title, :central_idea, :supporting_arguments, :counterpoints, :provisional_conclusion, :kind, :status, question_ids: [])
+    if attributes.key?(:question_ids)
+      ids = attributes[:question_ids].reject(&:blank?).map(&:to_i).uniq
+      current_user.philosophical_workshop_questions.find(ids) if ids.any?
+      attributes[:question_ids] = ids
+    end
+    attributes
+  end
+
+  def load_questions
+    @questions = current_user.philosophical_workshop_questions.order(:question, :id)
   end
 end

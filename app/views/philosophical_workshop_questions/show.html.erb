@@ -14,5 +14,18 @@
       <div class="writing-detail__body"><%= simple_format(@question.public_send(field).presence || "Ainda não informado.") %></div>
     </section>
   <% end %>
+  <section class="app-panel writing-detail">
+    <h2 class="writing-detail__title">Pensamentos relacionados</h2>
+    <% thoughts = @question.thoughts.order(:title, :id) %>
+    <% if thoughts.any? %>
+      <ul>
+        <% thoughts.each do |thought| %>
+          <li><%= link_to thought.title, philosophical_workshop_thought_path(thought) %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="writing-muted">Nenhum pensamento relacionado.</p>
+    <% end %>
+  </section>
   <section class="app-panel"><p>Criado em <%= l(@question.created_at.to_date) %> · Atualizado em <%= l(@question.updated_at.to_date) %></p></section>
 </section>

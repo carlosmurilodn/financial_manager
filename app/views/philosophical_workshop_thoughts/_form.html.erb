@@ -15,6 +15,12 @@
       <% end %>
     </div>
   </fieldset>
+  <fieldset class="writing-form-section" data-controller="select2">
+    <legend>Grandes Questões associadas</legend>
+    <%= f.label :question_ids, "Questões" %>
+    <%= f.collection_select :question_ids, @questions, :id, :question, {}, multiple: true, class: "app-form-select", data: { placeholder: "Pesquisar e selecionar…" } %>
+    <% if @questions.empty? %><p class="writing-muted">Nenhuma questão cadastrada.</p><% end %>
+  </fieldset>
   <div class="app-form-page__actions">
     <%= link_to "Cancelar", thought.persisted? ? philosophical_workshop_thought_path(thought) : philosophical_workshop_thoughts_path, class: "app-btn app-btn--outline" %>
     <%= f.button class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">save</span> Salvar<% end %>

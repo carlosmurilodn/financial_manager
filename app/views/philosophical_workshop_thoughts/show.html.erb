@@ -8,15 +8,15 @@
       <%= button_to philosophical_workshop_thought_path(@thought), method: :delete, class: "app-btn app-btn--danger", form: { data: { turbo_confirm: "Excluir #{@thought.title}? Esta ação não poderá ser desfeita." } } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span> Excluir<% end %>
     </div>
   </header>
-  <% { central_idea: "Ideia central", supporting_arguments: "Argumentos favoráveis", counterpoints: "Contrapontos", provisional_conclusion: "Conclusão provisória" }.each do |field, label| %>
+  <% { central_idea: ["Ideia central", "lightbulb"], supporting_arguments: ["Argumentos favoráveis", "forum"], counterpoints: ["Contrapontos", "compare_arrows"], provisional_conclusion: ["Conclusão provisória", "summarize"] }.each do |field, (label, icon)| %>
     <section class="app-panel writing-detail">
-      <h2 class="writing-detail__title"><%= label %></h2>
+      <h2 class="writing-detail__title"><%= writing_action_label(icon, label) %></h2>
       <div class="writing-detail__body"><%= simple_format(@thought.public_send(field).presence || "Ainda não informado.") %></div>
     </section>
   <% end %>
   <% if @thought.source_insight %>
     <section class="app-panel writing-detail">
-      <h2 class="writing-detail__title">Origem</h2>
+      <h2 class="writing-detail__title"><%= writing_action_label("source", "Origem") %></h2>
       <%= link_to "Insight: #{truncate(@thought.source_insight.content, length: 100)}", philosophical_workshop_insight_path(@thought.source_insight) %>
     </section>
   <% end %>

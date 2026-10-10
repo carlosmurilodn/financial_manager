@@ -8,14 +8,14 @@
       <%= button_to philosophical_workshop_concept_path(@concept), method: :delete, class: "app-btn app-btn--danger", form: { data: { turbo_confirm: "Excluir #{@concept.title}? Esta ação não poderá ser desfeita." } } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span> Excluir<% end %>
     </div>
   </header>
-  <% { description: "Descrição", premises: "Premissas", arguments: "Argumentos", personal_notes: "Observações pessoais" }.each do |field, label| %>
+  <% { description: ["Descrição", "description"], premises: ["Premissas", "lightbulb"], arguments: ["Argumentos", "forum"], personal_notes: ["Observações pessoais", "notes"] }.each do |field, (label, icon)| %>
     <section class="app-panel writing-detail">
-      <h2 class="writing-detail__title"><%= label %></h2>
+      <h2 class="writing-detail__title"><%= writing_action_label(icon, label) %></h2>
       <div class="writing-detail__body"><%= simple_format(@concept.public_send(field).presence || "Ainda não informado.") %></div>
     </section>
   <% end %>
   <section class="app-panel writing-detail">
-    <h2 class="writing-detail__title">Filósofos associados</h2>
+    <h2 class="writing-detail__title"><%= writing_action_label("person", "Filósofos associados") %></h2>
     <% associated_records = @concept.philosophers.order(:name, :id) %>
     <% if associated_records.any? %>
       <ul>

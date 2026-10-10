@@ -17,14 +17,14 @@
       <div><dt>Favorito</dt><dd><%= @philosopher.favorite? ? "Sim" : "Não" %></dd></div>
     </dl>
   </section>
-  <% { biography: "Biografia", main_ideas: "Principais ideias (resumo)", personal_notes: "Observações pessoais" }.each do |field, label| %>
+  <% { biography: ["Biografia", "person"], main_ideas: ["Principais ideias (resumo)", "lightbulb"], personal_notes: ["Observações pessoais", "notes"] }.each do |field, (label, icon)| %>
     <section class="app-panel writing-detail">
-      <h2 class="writing-detail__title"><%= label %></h2>
+      <h2 class="writing-detail__title"><%= writing_action_label(icon, label) %></h2>
       <div class="writing-detail__body"><%= simple_format(@philosopher.public_send(field).presence || "Ainda não informado.") %></div>
     </section>
   <% end %>
   <section class="app-panel writing-detail">
-    <h2 class="writing-detail__title">Conceitos e Teses associados</h2>
+    <h2 class="writing-detail__title"><%= writing_action_label("account_tree", "Conceitos e Teses associados") %></h2>
     <% associated_records = @philosopher.concepts.order(:title, :id) %>
     <% if associated_records.any? %>
       <ul>

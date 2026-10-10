@@ -21,7 +21,7 @@
     <% if @philosophers.empty? %><p class="writing-muted">Nenhum filósofo cadastrado.</p><% end %>
   </fieldset>
   <div class="app-form-page__actions">
-    <%= link_to "Cancelar", concept.persisted? ? philosophical_workshop_concept_path(concept) : philosophical_workshop_concepts_path, class: "app-btn app-btn--outline" %>
+    <%= link_to writing_action_label("close", "Cancelar"), concept.persisted? ? philosophical_workshop_concept_path(concept) : philosophical_workshop_concepts_path, class: "app-btn app-btn--outline" %>
     <%= f.button class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">save</span> Salvar<% end %>
   </div>
 <% end %>

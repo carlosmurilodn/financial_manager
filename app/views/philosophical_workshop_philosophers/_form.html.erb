@@ -20,7 +20,7 @@
     </div>
   </fieldset>
   <div class="app-form-page__actions">
-    <%= link_to "Cancelar", philosopher.persisted? ? philosophical_workshop_philosopher_path(philosopher) : philosophical_workshop_philosophers_path, class: "app-btn app-btn--outline" %>
+    <%= link_to writing_action_label("close", "Cancelar"), philosopher.persisted? ? philosophical_workshop_philosopher_path(philosopher) : philosophical_workshop_philosophers_path, class: "app-btn app-btn--outline" %>
     <%= f.button class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">save</span> Salvar Filósofo<% end %>
   </div>
 <% end %>

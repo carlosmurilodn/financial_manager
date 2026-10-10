@@ -8,14 +8,14 @@
       <%= button_to philosophical_workshop_question_path(@question), method: :delete, class: "app-btn app-btn--danger", form: { data: { turbo_confirm: "Excluir #{truncate(@question.question, length: 60)}? Esta ação não poderá ser desfeita." } } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span> Excluir<% end %>
     </div>
   </header>
-  <% { context: "Contextualização", personal_reflection: "Reflexão pessoal" }.each do |field, label| %>
+  <% { context: ["Contextualização", "description"], personal_reflection: ["Reflexão pessoal", "psychology"] }.each do |field, (label, icon)| %>
     <section class="app-panel writing-detail">
-      <h2 class="writing-detail__title"><%= label %></h2>
+      <h2 class="writing-detail__title"><%= writing_action_label(icon, label) %></h2>
       <div class="writing-detail__body"><%= simple_format(@question.public_send(field).presence || "Ainda não informado.") %></div>
     </section>
   <% end %>
   <section class="app-panel writing-detail">
-    <h2 class="writing-detail__title">Pensamentos relacionados</h2>
+    <h2 class="writing-detail__title"><%= writing_action_label("psychology", "Pensamentos relacionados") %></h2>
     <% thoughts = @question.thoughts.order(:title, :id) %>
     <% if thoughts.any? %>
       <ul>

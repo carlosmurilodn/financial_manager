@@ -1,4 +1,5 @@
 <section class="app-page app-form-page <%= local_assigns[:page_class] %>">
+  <%= render local_assigns[:breadcrumb_partial] if local_assigns[:breadcrumb_partial].present? %>
   <div class="app-page__hero">
     <div class="app-page__hero-top app-form-page__hero">
       <div class="app-page__hero-unit app-page__hero-copy">

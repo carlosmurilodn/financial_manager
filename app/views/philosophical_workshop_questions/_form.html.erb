@@ -9,7 +9,7 @@
     <div class="writing-field-wide"><%= f.label :personal_reflection, "Reflexão pessoal" %><%= f.text_area :personal_reflection, class: "app-form-control", rows: 3 %></div>
   </div>
   <div class="app-form-page__actions">
-    <%= link_to "Cancelar", question.persisted? ? philosophical_workshop_question_path(question) : philosophical_workshop_questions_path, class: "app-btn app-btn--outline" %>
+    <%= link_to writing_action_label("close", "Cancelar"), question.persisted? ? philosophical_workshop_question_path(question) : philosophical_workshop_questions_path, class: "app-btn app-btn--outline" %>
     <%= f.button class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">save</span> Salvar Questão<% end %>
   </div>
 <% end %>

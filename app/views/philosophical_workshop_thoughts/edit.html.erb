@@ -1,4 +1,3 @@
-<%= render "breadcrumbs" %>
-<%= render layout: "shared/form_page", locals: { page_class: "writing-studio", resource: @thought, title: "Editar Pensamento", eyebrow: "Oficina Filosófica", description: "Título e ideia central são obrigatórios.", icon: "psychology", back_path: philosophical_workshop_thought_path(@thought) } do %>
+<%= render layout: "shared/form_page", locals: { page_class: "writing-studio", breadcrumb_partial: "philosophical_workshop_thoughts/breadcrumbs", resource: @thought, title: "Editar Pensamento", eyebrow: "Oficina Filosófica", description: "Título e ideia central são obrigatórios.", icon: "psychology", back_path: philosophical_workshop_thought_path(@thought) } do %>
   <%= render "form", thought: @thought %>
 <% end %>

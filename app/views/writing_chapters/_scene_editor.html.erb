@@ -1,0 +1,15 @@
+<%= form_with model: [@book, scene], local: true, html: { class: "literary-editor chapter-scene-editor", data: { controller: "literary-editor", literary_editor_label_value: "cena", literary_editor_embedded_value: true, literary_editor_default_title_value: "Cena #{number}", context_url: scene.persisted? ? writing_context_path(@book, scene) : "", action: "submit->literary-editor#save focusin->literary-editor#activate", turbo: false } } do |f| %>
+  <div class="app-panel chapter-scene-editor__heading">
+    <span class="chapter-scene-editor__number"><%= number %></span>
+    <div class="chapter-scene-editor__title">
+      <%= f.label :title, "Nome da cena (opcional)", for: "#{token}_title" %>
+      <%= f.text_field :title, id: "#{token}_title", maxlength: 200, placeholder: "Cena #{number}", class: "app-form-control", data: { literary_editor_target: "title", action: "input->literary-editor#updateDirty" } %>
+    </div>
+    <button type="submit" class="writing-record-action" data-literary-editor-target="save" aria-label="Salvar esta cena"><span class="material-symbols-rounded" aria-hidden="true">save</span><span class="writing-record-action__label">Salvar</span></button>
+  </div>
+  <%= f.hidden_field :content, id: "#{token}_content", value: scene.content.to_json, data: { literary_editor_target: "content" } %>
+  <%= f.hidden_field :writing_chapter_id, id: "#{token}_chapter" %>
+  <%= f.hidden_field :lock_version, id: "#{token}_version", data: { literary_editor_target: "lockVersion" } %>
+  <div class="literary-editor-desk chapter-scene-editor__desk"><div class="literary-editor-sheet" data-literary-editor-target="host"></div></div>
+  <span class="literary-editor-status" role="status" aria-live="polite" data-literary-editor-target="status">Carregando cena…</span>
+<% end %>

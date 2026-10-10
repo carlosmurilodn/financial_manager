@@ -1,0 +1,7 @@
+<fieldset class="writing-form-section"><legend><%= title %></legend>
+  <% id_field = "#{association.to_s.singularize}_ids" %>
+  <%= hidden_field_tag "#{@record.model_name.param_key}[#{id_field}][]", "" %>
+  <% selected = @record.public_send(id_field) %>
+  <div class="writing-narrative-choices"><% records.each do |record| %><label class="app-checkbox"><%= check_box_tag "#{@record.model_name.param_key}[#{id_field}][]", record.id, selected.include?(record.id), id: "#{id_field}_#{record.id}" %><span><%= record.respond_to?(:full_name) ? record.full_name : record.display_name %></span></label><% end %></div>
+  <% if records.empty? %><p class="writing-muted">Nenhum registro disponível neste livro.</p><% end %>
+</fieldset>

@@ -1,0 +1,4 @@
+<%= render "writing_characters/breadcrumbs" %>
+<%= render layout: "shared/form_page", locals: { page_class: "writing-studio", resource: @character, title: "Novo personagem", eyebrow: @book.title, icon: "person", back_path: writing_book_writing_characters_path(@book), description: "Somente o nome é obrigatório. Complete a ficha gradualmente." } do %>
+  <%= render "form" %>
+<% end %>

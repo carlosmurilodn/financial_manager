@@ -1,0 +1,11 @@
+.app-breadcrumbs { padding: 4px 0; font-size: .85rem; overflow-wrap: anywhere; }
+.app-breadcrumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; list-style: none; margin: 0; padding: 0; }
+.app-breadcrumbs li { display: flex; align-items: center; gap: 10px; min-width: 0; max-width: 100%; }
+.app-breadcrumbs a, .app-breadcrumbs a:visited { display: inline-block; padding: 4px 8px; color: var(--text-soft); text-decoration: none; border-radius: 8px; transition: background-color .15s ease, color .15s ease; }
+.app-breadcrumbs a:hover, .app-breadcrumbs a:focus-visible { color: var(--primary); background-color: color-mix(in srgb, var(--primary) 10%, transparent); text-decoration: none; }
+.app-breadcrumbs a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.app-breadcrumbs [aria-current="page"] { color: var(--text-main); font-weight: 700; }
+.app-breadcrumbs__separator { font-family: "Material Symbols Rounded"; font-size: 18px; font-weight: normal; color: var(--text-soft); flex-shrink: 0; line-height: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .app-breadcrumbs a { transition: none; }
+}

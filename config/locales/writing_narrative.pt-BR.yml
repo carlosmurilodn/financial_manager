@@ -1,0 +1,59 @@
+pt-BR:
+  activerecord:
+    models:
+      writing_plot: Trama
+      writing_conflict: Conflito
+      writing_location: Local
+      writing_organization: Organização
+      writing_universe_rule: Regra do universo
+    attributes:
+      writing_plot:
+        writing_book: Livro
+        title: Título
+        description: Descrição
+        kind: Tipo
+        status: Situação
+        narrative_goal: Objetivo narrativo
+        planned_development: Desenvolvimento previsto
+        planned_outcome: Desfecho planejado
+        parent_plot: Trama superior
+      writing_conflict:
+        writing_book: Livro
+        title: Título
+        description: Descrição
+        kind: Tipo
+        origin: Origem
+        intensity: Intensidade
+        status: Situação
+        consequences: Consequências
+        planned_resolution: Resolução prevista
+      writing_location:
+        writing_book: Livro
+        name: Nome
+        kind: Tipo
+        description: Descrição
+        location: Localização
+        physical_features: Características físicas
+        atmosphere: Atmosfera
+        narrative_importance: Importância narrativa
+        parent_location: Local superior
+      writing_organization:
+        writing_book: Livro
+        name: Nome
+        kind: Tipo
+        description: Descrição
+        history: História
+        purpose: Finalidade
+        structure: Estrutura
+        notes: Observações
+        writing_location: Local associado
+        writing_organization_memberships: Personagens vinculados
+      writing_universe_rule:
+        writing_book: Livro
+        title: Título
+        category: Categoria
+        description: Descrição
+        limitations: Limitações
+        exceptions: Exceções
+        narrative_consequences: Consequências narrativas
+        notes: Observações

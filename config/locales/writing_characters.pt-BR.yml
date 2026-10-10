@@ -1,0 +1,20 @@
+pt-BR:
+  activerecord:
+    models:
+      writing_character: Personagem
+      writing_relationship: Relacionamento
+    attributes:
+      writing_character:
+        name: Nome
+        surname: Sobrenome
+        nicknames: Apelidos
+        role: Papel narrativo
+        status: Situação
+        reference_image: Imagem de referência
+        writing_book: Livro
+      writing_relationship:
+        source_character: Personagem de origem
+        target_character: Personagem relacionado
+        relation_type: Tipo de relação
+        fingerprint: Relacionamento
+        writing_book: Livro

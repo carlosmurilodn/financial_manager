@@ -5,6 +5,37 @@ Rails.application.routes.draw do
 
   root "entry#index"
   get "desenvolvimento-pessoal", to: "personal_development#index", as: :personal_development
+  post "projetos/estudio-de-escrita/backup", to: "writing_backups#create", as: :writing_backup
+  resources :writing_books, path: "projetos/estudio-de-escrita" do
+    member { get :cover, path: "capa" }
+    member { get :read, path: "ler" }
+    resource :writing_narrative_context, path: "contexto-narrativo", only: %i[show create destroy]
+    resources :writing_notes, path: "notas-e-ideias"
+    resources :writing_scenes, path: "cenas", only: %i[new create show edit update destroy] do
+      member do
+        get :export, path: "exportar"
+        patch :move, path: "mover"
+        patch :reorder, path: "ordenar"
+      end
+    end
+    resources :writing_plots, path: "tramas"
+    resources :writing_conflicts, path: "conflitos"
+    resources :writing_locations, path: "locais" do
+      member { get :image, path: "imagem" }
+    end
+    resources :writing_organizations, path: "organizacoes"
+    resources :writing_universe_rules, path: "regras-do-universo"
+    resources :writing_characters, path: "personagens" do
+      member { get :image, path: "imagem" }
+      resources :writing_relationships, path: "relacionamentos", only: %i[new create edit update destroy]
+    end
+    resources :writing_chapters, path: "capitulos", only: %i[new create show edit update destroy] do
+      member do
+        get :export, path: "exportar"
+        patch :reorder, path: "ordenar"
+      end
+    end
+  end
   get "financeiro", to: "home#index", as: :financial_dashboard
   get "progresso", to: "progress#index", as: :progress
   resource :health_profile, path: "progresso/perfil", only: %i[show create update]

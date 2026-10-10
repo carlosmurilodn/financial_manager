@@ -1,0 +1,13 @@
+<% crumbs = [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, writing_book_path(@book)], ["Personagens", writing_book_writing_characters_path(@book)]] %>
+<% if controller_name == "writing_relationships" %>
+  <% crumbs << [@character.full_name, writing_book_writing_character_path(@book, @character)] %>
+  <% crumbs << [@relationship.persisted? ? "Editar relacionamento" : "Novo relacionamento", nil] %>
+<% elsif action_name == "index" %>
+  <% crumbs[-1][1] = nil %>
+<% elsif @character&.persisted? %>
+  <% crumbs << [@character.full_name, action_name == "show" ? nil : writing_book_writing_character_path(@book, @character)] %>
+  <% crumbs << ["Editar ficha", nil] if action_name.in?(%w[edit update]) %>
+<% else %>
+  <% crumbs << ["Novo personagem", nil] %>
+<% end %>
+<%= render "shared/breadcrumbs", items: crumbs %>

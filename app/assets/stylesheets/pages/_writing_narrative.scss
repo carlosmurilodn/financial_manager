@@ -1,0 +1,29 @@
+ .writing-narrative-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; }
+.writing-narrative-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.writing-narrative-tab, .writing-narrative-tab:visited { padding: 10px 16px; border: 1px solid var(--card-border); border-radius: 10px; color: var(--text-soft); background: var(--surface); text-decoration: none; font-weight: 700; }
+.writing-narrative-tab.is-active { background: var(--primary); color: var(--white); border-color: var(--primary); }
+.writing-narrative-tab:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.writing-narrative-filters { grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); }
+.writing-narrative-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: var(--writing-card-gap, 14px); }
+.writing-narrative-card, .writing-narrative-card:visited { display: block; color: var(--text-main); text-decoration: none; overflow-wrap: anywhere; }
+.writing-narrative-card h2 { font-size: 1.1rem; }
+.writing-narrative-card p { margin: 12px 0 0; }
+.writing-narrative-card:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.writing-narrative-choices { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.writing-narrative-membership { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); align-items: center; gap: 16px; margin-bottom: 16px; }
+.writing-narrative-details dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin: 0; }
+.writing-narrative-details dt { font-weight: 700; color: var(--text-soft); margin-bottom: 6px; }
+.writing-narrative-details dd { margin: 0; overflow-wrap: anywhere; }
+.writing-narrative-details dd p { margin: 0; }
+.writing-narrative-related { margin-top: 20px; }
+.writing-narrative-related h3 { font-size: 1rem; }
+.writing-narrative-image { display: block; width: 100%; max-width: 320px; max-height: 220px; object-fit: contain; border-radius: 10px; margin: 16px 0; }
+.writing-book-tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--writing-card-gap, 14px); }
+@media (max-width: 700px) { .writing-narrative-details dl, .writing-narrative-membership, .writing-book-tools { grid-template-columns: minmax(0, 1fr); } }
+
+.writing-book-tool { display: flex; flex-direction: column; align-items: flex-start; }
+.writing-book-tool .writing-detail__title { flex-wrap: wrap; }
+.writing-book-page .writing-book-tool .writing-detail__title { margin-bottom: .5rem; }
+.writing-book-tool > .writing-muted { margin-top: 0; }
+.writing-book-tool > .app-btn { margin-top: auto; max-width: 100%; }
+.writing-book-tool__badge { display: inline-flex; align-items: center; justify-content: center; min-width: 26px; padding: 2px 8px; border: 1px solid var(--card-border); border-radius: 20px; background: var(--app-bg-soft); color: var(--text-soft); font-size: .75rem; line-height: 1.4; font-weight: 600; }

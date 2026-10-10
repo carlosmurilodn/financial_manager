@@ -1,0 +1,11 @@
+<% writing_narrative_relations(record).each do |label, records| %>
+  <section class="writing-narrative-related"><h3><%= label %></h3><% if records.empty? %><p class="writing-muted">Nenhum vínculo cadastrado.</p><% else %><div class="writing-narrative-choices"><% records.each do |related| %><%= link_to related.respond_to?(:full_name) ? related.full_name : related.display_name, polymorphic_path([@book, related]), class: "writing-relationship__character-link" %><% end %></div><% end %></section>
+<% end %>
+<% if record.is_a?(WritingOrganization) %>
+  <section class="writing-narrative-related"><h3>Personagens vinculados</h3><% memberships = record.writing_organization_memberships.includes(:writing_character) %>
+    <% if memberships.empty? %><p class="writing-muted">Nenhum personagem vinculado.</p><% end %>
+    <% memberships.each do |membership| %><p><%= link_to membership.writing_character.full_name, writing_book_writing_character_path(@book, membership.writing_character), class: "writing-relationship__character-link" %> <%= membership.role.presence || "Função não informada" %></p><% end %>
+  </section>
+<% elsif record.is_a?(WritingCharacter) %>
+  <% record.writing_organization_memberships.includes(:writing_organization).each do |membership| %><p><%= membership.writing_organization.name %>: <%= membership.role.presence || "Função não informada" %></p><% end %>
+<% end %>

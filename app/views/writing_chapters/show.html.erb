@@ -1,0 +1,42 @@
+<section class="app-page writing-studio literary-editor-page writing-reader-page" data-controller="narrative-panel" data-narrative-panel-url-value="<%= writing_context_path(@book, @chapter) %>">
+  <%= render "shared/breadcrumbs", items: [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, writing_book_path(@book)], [@chapter.title, nil]] %>
+  <% is_scene = @chapter.is_a?(WritingScene) %>
+  <header class="app-panel writing-reader-heading">
+    <div class="writing-reader-heading__identity">
+      <span class="writing-reader-heading__icon material-symbols-rounded" aria-hidden="true"><%= is_scene ? "movie" : "menu_book" %></span>
+      <div><p class="app-page__eyebrow"><%= @book.title %> · <%= is_scene ? "Cena" : "Manuscrito" %></p><h1 class="app-page__title"><%= @chapter.title %></h1><p class="writing-muted">Leitura <%= is_scene ? "da cena" : "do capítulo" %></p></div>
+    </div>
+    <div class="writing-character-actions">
+      <%= link_to writing_action_label("edit", is_scene ? "Abrir editor" : "Organizar capítulo"), edit_polymorphic_path([@book, @chapter]), class: "app-btn app-btn--primary" %>
+      <button type="button" class="app-btn app-btn--secondary" aria-controls="literary-narrative-panel" aria-expanded="false" data-narrative-panel-target="toggle" data-action="narrative-panel#toggle"><%= writing_action_label("view_sidebar", "Painel Narrativo") %></button>
+      <% if is_scene %>
+        <% destinations = @book.writing_chapters.where.not(id: @chapter.writing_chapter_id).ordered.to_a %>
+        <% if destinations.any? %>
+          <details class="writing-scene-transfer">
+            <summary class="app-btn app-btn--secondary"><%= writing_action_label("drive_file_move", "Mover cena") %></summary>
+            <div class="app-panel writing-scene-transfer__form" data-controller="select2">
+              <%= form_with url: move_writing_book_writing_scene_path(@book, @chapter), method: :patch, class: "writing-scene-move" do |f| %>
+                <%= f.label :writing_chapter_id, "Mover para outro capítulo" %>
+                <%= f.collection_select :writing_chapter_id, destinations, :id, :title, { prompt: "Selecione o capítulo" }, class: "app-form-select", required: true %>
+                <p class="writing-muted">Texto e vínculos serão preservados.</p>
+                <div class="writing-character-actions">
+                  <%= link_to writing_action_label("close", "Cancelar"), writing_book_writing_scene_path(@book, @chapter), class: "app-btn app-btn--outline" %>
+                  <%= f.button writing_action_label("drive_file_move", "Mover cena"), class: "app-btn app-btn--primary" %>
+                </div>
+              <% end %>
+            </div>
+          </details>
+        <% end %>
+      <% end %>
+      <%= link_to writing_action_label("arrow_back", is_scene ? "Voltar ao capítulo" : "Voltar ao livro"), is_scene ? writing_book_writing_chapter_path(@book, @chapter.writing_chapter) : writing_book_path(@book), class: "app-btn app-btn--outline" %>
+    </div>
+  </header>
+  <div class="literary-writing-layout">
+    <section class="app-panel writing-reader-document" aria-label="Texto do manuscrito">
+      <div class="writing-reader-document__heading"><span class="material-symbols-rounded" aria-hidden="true">description</span><span>Manuscrito</span></div>
+      <article class="literary-manuscript"><%= literary_manuscript_html(@chapter) %></article>
+    </section>
+    <%= render "narrative_panel" %>
+  </div>
+  <% unless is_scene %><%= render "scenes" %><% end %>
+</section>

@@ -1,0 +1,35 @@
+<% scenes = @chapter.writing_scenes.ordered.to_a %>
+<section class="app-page writing-studio chapter-writing-page" data-controller="chapter-editor narrative-panel" data-narrative-panel-url-value="" data-action="literary-editor:active->chapter-editor#activate literary-editor:status->chapter-editor#sceneStatus literary-editor:saved->chapter-editor#sceneSaved">
+  <%= render "shared/breadcrumbs", items: [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, writing_book_path(@book)], [@chapter.title, nil]] %>
+  <header class="app-panel chapter-writing-heading">
+    <%= form_with model: [@book, @chapter], class: "chapter-writing-title", data: { chapter_editor_target: "titleForm", action: "submit->chapter-editor#save" } do |f| %>
+      <p class="app-page__eyebrow"><%= @book.title %> · Editor Literário</p>
+      <%= f.label :title, "Título do capítulo", class: "visually-hidden" %>
+      <%= f.text_field :title, required: true, maxlength: 200, class: "literary-chapter-title", data: { chapter_editor_target: "title", action: "input->chapter-editor#titleChanged" } %>
+      <%= f.hidden_field :lock_version, data: { chapter_editor_target: "lockVersion" } %>
+    <% end %>
+    <div class="literary-editor-actions">
+      <button type="button" class="app-btn app-btn--primary" data-chapter-editor-target="save" data-action="chapter-editor#save"><%= writing_action_label("save", "Salvar capítulo") %></button>
+      <button type="button" class="app-btn app-btn--secondary" aria-controls="literary-narrative-panel" aria-expanded="false" data-narrative-panel-target="toggle" data-action="narrative-panel#toggle"><%= writing_action_label("view_sidebar", "Painel Narrativo") %></button>
+      <%= link_to writing_action_label("download", "Exportar HTML"), export_writing_book_writing_chapter_path(@book, @chapter), class: "app-btn app-btn--secondary", data: { action: "chapter-editor#export", turbo: false } %>
+      <%= link_to writing_action_label("arrow_back", "Voltar ao livro"), writing_book_path(@book), class: "app-btn app-btn--outline" %>
+    </div>
+  </header>
+  <% if @chapter.errors.any? %><div class="app-alert app-alert--danger"><%= @chapter.errors.full_messages.join(". ") %></div><% end %>
+  <div class="literary-writing-layout">
+    <div class="chapter-writing-main">
+      <div class="chapter-writing-toolbar"><%= render "writing_chapters/toolbar", editor_controller: "chapter-editor" %></div>
+      <div class="chapter-writing-scenes" data-chapter-editor-target="scenes">
+        <% if scenes.empty? %>
+          <%= render "writing_chapters/scene_editor", scene: @book.writing_scenes.new(writing_chapter: @chapter), number: 1, token: "scene_1" %>
+        <% else %>
+          <% scenes.each_with_index do |scene, index| %><%= render "writing_chapters/scene_editor", scene: scene, number: index + 1, token: "scene_#{scene.id}" %><% end %>
+        <% end %>
+      </div>
+      <div class="chapter-writing-add"><button type="button" class="app-btn app-btn--primary" data-action="chapter-editor#addScene"><%= writing_action_label("add", "Adicionar cena") %></button></div>
+      <template data-chapter-editor-target="template"><%= render "writing_chapters/scene_editor", scene: @book.writing_scenes.new(writing_chapter: @chapter), number: "NEW_NUMBER", token: "NEW_TOKEN" %></template>
+    </div>
+    <%= render "writing_chapters/narrative_panel" %>
+  </div>
+  <noscript><div class="app-alert app-alert--danger">Ative JavaScript para escrever. Seus textos salvos permanecem preservados.</div></noscript>
+</section>

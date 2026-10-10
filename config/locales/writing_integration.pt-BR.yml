@@ -1,0 +1,34 @@
+pt-BR:
+  activerecord:
+    models:
+      writing_note: Nota
+      writing_scene: Cena
+      writing_note_link: Vínculo da nota
+      writing_narrative_association: Associação narrativa
+    attributes:
+      writing_note:
+        title: Título
+        description: Conteúdo
+        category: Categoria
+        status: Situação
+        writing_book: Livro
+      writing_scene:
+        title: Título
+        content: Texto
+        writing_chapter: Capítulo
+        writing_book: Livro
+      writing_note_link:
+        writing_note: Nota
+        writing_chapter: Capítulo
+        writing_scene: Cena
+        writing_character: Personagem
+        writing_plot: Trama
+        writing_conflict: Conflito
+      writing_narrative_association:
+        writing_chapter: Capítulo
+        writing_scene: Cena
+        writing_character: Personagem
+        writing_plot: Trama
+        writing_conflict: Conflito
+        writing_location: Cenário
+        writing_organization: Organização

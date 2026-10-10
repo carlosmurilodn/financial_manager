@@ -25,6 +25,10 @@ export function initSelect2(container = document) {
     selects.forEach((el) => {
       const options = { ...SELECT2_OPTIONS }
 
+      // Keep the contextual editor dropdown above its mobile drawer.
+      const narrativePanel = el.closest(".literary-narrative-panel")
+      if (narrativePanel) options.dropdownParent = $(narrativePanel)
+
       // Inside modal: attach dropdown to modal body so z-index works
       if (isModal) {
         const modalBody = document.getElementById("app-modal-body")

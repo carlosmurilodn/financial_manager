@@ -1,0 +1,38 @@
+<section class="app-panel writing-detail writing-chapters">
+  <div class="writing-chapters__heading">
+    <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">menu_book</span>Manuscrito</h2>
+    <%= link_to new_writing_book_writing_chapter_path(@book), class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">add</span> Novo capítulo<% end %>
+  </div>
+  <% chapters = @book.writing_chapters.ordered %>
+  <% if chapters.empty? %>
+    <p class="writing-muted">Seu manuscrito começa aqui. Crie um capítulo e abra o Editor Literário para escrever.</p>
+  <% else %>
+    <ol class="writing-manuscript-cards">
+      <% chapters.each_with_index do |chapter, index| %>
+        <li class="writing-manuscript-card writing-manuscript-card--compact">
+          <div class="writing-manuscript-card__identity">
+            <span class="writing-manuscript-card__icon material-symbols-rounded" aria-hidden="true">menu_book</span>
+            <div class="writing-manuscript-card__copy">
+              <%= link_to chapter.title, writing_book_writing_chapter_path(@book, chapter), class: "writing-manuscript-card__title" %>
+            </div>
+          </div>
+          <div class="writing-manuscript-card__meta">
+            <span class="material-symbols-rounded" aria-hidden="true">calendar_month</span>
+            <div><small>Atualizado em</small><time datetime="<%= chapter.updated_at.iso8601 %>"><%= l(chapter.updated_at.to_date) %></time></div>
+          </div>
+          <div class="writing-chapter-actions writing-manuscript-card__actions">
+            <%= link_to edit_writing_book_writing_chapter_path(@book, chapter), class: "writing-record-action", title: "Editar capítulo", aria: { label: "Editar #{chapter.title}" } do %>
+              <span class="material-symbols-rounded" aria-hidden="true">edit</span><span class="writing-record-action__label">Editar</span>
+            <% end %>
+            <% [["up", "arrow_upward", "Subir capítulo", index.zero?], ["down", "arrow_downward", "Descer capítulo", index == chapters.size - 1]].each do |direction, icon, label, disabled| %>
+              <%= button_to reorder_writing_book_writing_chapter_path(@book, chapter), method: :patch, params: { direction: direction }, class: "writing-record-action writing-record-action--icon", disabled: disabled, title: label, aria: { label: label } do %><span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span><% end %>
+            <% end %>
+            <%= button_to writing_book_writing_chapter_path(@book, chapter), method: :delete, class: "writing-record-action writing-record-action--danger", title: "Excluir capítulo", aria: { label: "Excluir #{chapter.title}" }, form: { data: { turbo_confirm: "Excluir o capítulo #{chapter.title} e todo o seu texto? Esta ação não poderá ser desfeita." } } do %>
+              <span class="material-symbols-rounded" aria-hidden="true">delete</span><span class="writing-record-action__label">Excluir</span>
+            <% end %>
+          </div>
+        </li>
+      <% end %>
+    </ol>
+  <% end %>
+</section>

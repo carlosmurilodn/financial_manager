@@ -1,0 +1,29 @@
+<%= render "breadcrumbs" %>
+<%= render layout: "shared/form_page", locals: { page_class: "writing-studio", resource: @record, title: "#{@record.persisted? ? 'Editar' : 'Cadastrar'} #{narrative_model::SINGULAR_LABEL.downcase}", eyebrow: @book.title, icon: "edit_note", back_path: narrative_collection_path, description: "Preencha os detalhes gradualmente. Somente o título ou nome é obrigatório." } do %>
+  <%= render "tabs" %>
+  <%= form_with model: [@book, @record], local: true, class: "app-form-page__form" do |f| %>
+    <fieldset class="writing-form-section"><legend>Informações</legend><div class="writing-fields">
+      <% narrative_model::FIELDS.each do |field, label| %><div class="<%= 'writing-field-wide' if field == :description %>"><%= f.label field, label %>
+        <% if narrative_model::OPTIONS.key?(field) %><%= f.select field, narrative_model::OPTIONS[field].invert, { include_blank: "Não informado" }, class: "app-form-select" %>
+        <% elsif [narrative_model::NAME_FIELD, :kind, :category].include?(field) %><%= f.text_field field, class: "app-form-control", required: field == narrative_model::NAME_FIELD, maxlength: field == narrative_model::NAME_FIELD ? 200 : nil %>
+        <% else %><%= f.text_area field, class: "app-form-control", rows: 3 %><% end %>
+      </div><% end %>
+      <% if narrative_model.const_defined?(:PARENT_ASSOCIATION, false) %>
+        <% association = narrative_model::PARENT_ASSOCIATION %><div><%= f.label "#{association}_id", narrative_model == WritingPlot ? "Trama superior" : "Local superior" %><%= f.collection_select "#{association}_id", @book.public_send(narrative_model.model_name.route_key).where.not(id: @record.id).order(narrative_model::NAME_FIELD), :id, :display_name, { include_blank: "Nenhum" }, class: "app-form-select" %></div>
+      <% end %>
+      <% if @record.is_a?(WritingOrganization) %><div><%= f.label :writing_location_id, "Local associado" %><%= f.collection_select :writing_location_id, @book.writing_locations.order(:name), :id, :name, { include_blank: "Nenhum" }, class: "app-form-select" %></div><% end %>
+    </div></fieldset>
+    <% if [WritingPlot, WritingConflict].include?(narrative_model) %>
+      <%= render "association_fields", f: f, association: :writing_characters, title: "Personagens envolvidos", records: @book.writing_characters.order(:name) %>
+    <% end %>
+    <% if narrative_model == WritingConflict %><%= render "association_fields", f: f, association: :writing_plots, title: "Tramas relacionadas", records: @book.writing_plots.order(:title) %><% end %>
+    <% if @record.is_a?(WritingOrganization) %><%= render "membership_fields", f: f %><% end %>
+    <% if @record.is_a?(WritingLocation) %>
+      <fieldset class="writing-form-section"><legend>Imagem de referência</legend><%= f.label :reference_image, "Enviar ou substituir imagem" %><%= f.file_field :reference_image, class: "app-form-control", accept: WritingCharacter::IMAGE_TYPES.join(",") %><small>JPEG, PNG ou WebP. Máximo: 5 MB.</small>
+        <% if @record.persisted? && @record.reference_image.attached? %><%= image_tag image_writing_book_writing_location_path(@book, @record), alt: "Referência atual", class: "writing-narrative-image" %><label class="app-checkbox"><%= check_box_tag "writing_location[remove_reference_image]", "1", ActiveModel::Type::Boolean.new.cast(params.dig(:writing_location, :remove_reference_image)) %><span>Remover imagem atual</span></label><% end %>
+      </fieldset>
+    <% end %>
+    <% if @record.is_a?(WritingNote) %><%= render "writing_notes/link_fields" %><% end %>
+    <div class="app-form-page__actions"><%= link_to writing_action_label("close", "Cancelar"), @record.persisted? ? polymorphic_path([@book, @record]) : narrative_collection_path, class: "app-btn app-btn--outline" %><%= f.button writing_action_label("save", "Salvar"), type: :submit, class: "app-btn app-btn--primary" %></div>
+  <% end %>
+<% end %>

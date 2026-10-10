@@ -17,3 +17,14 @@ application.register("calorie-status", CalorieStatusController)
 
 import ExerciseEntryFormController from "./exercise_entry_form_controller"
 application.register("exercise-entry-form", ExerciseEntryFormController)
+
+import BookCoverController from "./book_cover_controller"
+application.register("book-cover", BookCoverController)
+
+import LiteraryEditorController from "./literary_editor_controller"
+application.register("literary-editor", LiteraryEditorController)
+
+import NarrativePanelController from "./narrative_panel_controller"
+application.register("narrative-panel", NarrativePanelController)
+import ChapterEditorController from "./chapter_editor_controller"
+application.register("chapter-editor", ChapterEditorController)

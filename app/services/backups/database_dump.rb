@@ -16,8 +16,9 @@ module Backups
       new(...).call
     end
 
-    def initialize(database_url: ENV["BACKUP_DATABASE_URL"].presence || ENV["DATABASE_URL_FINANCIAL_MANAGER"])
+    def initialize(database_url: ENV["BACKUP_DATABASE_URL"].presence || ENV["DATABASE_URL_FINANCIAL_MANAGER"], full_database: false)
       @database_url = database_url
+      @full_database = full_database
     end
 
     def call
@@ -58,21 +59,25 @@ module Backups
       end
 
       Rails.logger.error("Backup pg_dump failed: #{sanitize(stderr.presence || stdout)}")
+      if stderr.include?("server version mismatch")
+        raise Error, "Versão do pg_dump incompatível com o banco. Instale um cliente PostgreSQL da mesma versão principal do servidor ou mais recente e configure PG_DUMP_PATH."
+      end
       raise Error, "pg_dump falhou. Verifique conexao com Supabase e credenciais do banco."
     end
 
     def pg_dump_command(sql_path)
-      [
-        "pg_dump",
+      command = [
+        ENV["PG_DUMP_PATH"].presence || "pg_dump",
         "-h", database_uri.host,
         "-p", database_uri.port.to_s,
         "-U", URI.decode_www_form_component(database_uri.user),
         "-d", database_name,
-        "--schema=public",
         "--no-owner",
         "--no-privileges",
         "--file=#{sql_path}"
       ]
+      command << "--schema=public" unless @full_database
+      command
     end
 
     def pg_environment

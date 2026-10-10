@@ -29,16 +29,16 @@ module ApplicationHelper
   ].freeze
 
   def personal_development_section?
-    controller_name == "personal_development"
+    controller_name.in?(%w[personal_development writing_books writing_chapters writing_characters writing_relationships writing_plots writing_conflicts writing_locations writing_organizations writing_universe_rules writing_scenes writing_notes writing_narrative_contexts])
   end
 
   def app_section_brand
     if personal_development_section?
       { title: "Projetos", icon: "school", footer_title: "Projetos", description: "Um espaço para organizar seus projetos.", labels: [] }
     elsif health_section?
-      { title: "Saúde e Bem-Estar", icon: "self_improvement", footer_title: "Saúde e Bem-Estar", description: "Acompanhe sua saúde, cuide da rotina e reconheça suas conquistas.", labels: ["Autoconhecimento", "Metas Semanais", "Acompanhamento Diário"] }
+      { title: "Saúde e Bem-Estar", icon: "self_improvement", footer_title: "Saúde e Bem-Estar", description: "Acompanhe sua saúde, cuide da rotina e reconheça suas conquistas.", labels: [ "Autoconhecimento", "Metas Semanais", "Acompanhamento Diário" ] }
     else
-      { title: "Gerenciador Financeiro", icon: "account_balance_wallet", footer_title: "Dashboard Financeiro", description: "Controle receitas, despesas e previsoes em um unico painel.", labels: ["Agenda Mensal", "Planejamento Anual", "Visao Consolidada"] }
+      { title: "Gerenciador Financeiro", icon: "account_balance_wallet", footer_title: "Dashboard Financeiro", description: "Controle receitas, despesas e previsoes em um unico painel.", labels: [ "Agenda Mensal", "Planejamento Anual", "Visao Consolidada" ] }
     end
   end
 

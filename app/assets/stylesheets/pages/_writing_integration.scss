@@ -1,0 +1,107 @@
+.literary-writing-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--writing-card-gap, 14px); align-items: start; min-width: 0; }
+.narrative-panel-open .literary-writing-layout { grid-template-columns: minmax(0, 1fr) 360px; }
+.literary-narrative-panel { position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto; min-width: 0; background: var(--surface); }
+.literary-narrative-panel[hidden] { display: none !important; }
+.literary-narrative-panel__heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+.literary-narrative-panel__heading h2 { font-size: 1.1rem; margin: 0; }
+.literary-narrative-panel > label { display: block; margin: 12px 0 6px; font-weight: 600; font-size: .85rem; }
+.literary-narrative-panel > .app-checkbox { display: flex; }
+.literary-narrative-panel .select2-container { max-width: 100%; }
+.literary-narrative-panel__status { margin: 12px 0; font-size: .85rem; overflow-wrap: anywhere; }
+.literary-narrative-record { padding: 16px 0; border-top: 1px solid var(--card-border); }
+.literary-narrative-record__name { display: block; border: 0; border-radius: 4px; padding: 0; color: var(--text-main); background: transparent; font: inherit; font-weight: 700; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.literary-narrative-record__name:hover { color: var(--primary); }
+.literary-narrative-record__name:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.literary-narrative-record > p { font-size: .85rem; margin: 6px 0 10px; }
+.literary-narrative-details { display: grid; gap: 16px; margin-top: 16px; }
+.literary-narrative-details dt { color: var(--text-soft); font-weight: 700; font-size: .85rem; }
+.literary-narrative-details dd { margin: 4px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.writing-scene-move { display: grid; gap: 12px; max-width: 600px; }
+.writing-scene-transfer { position: relative; }
+.writing-scene-transfer > summary { list-style: none; cursor: pointer; }
+.writing-scene-transfer > summary::-webkit-details-marker { display: none; }
+.writing-scene-transfer__form { position: absolute; top: calc(100% + 12px); right: 0; z-index: 20; width: min(380px, calc(100vw - 64px)); padding: 20px; box-shadow: 0 8px 24px rgba(0, 0, 0, .12); }
+.writing-scene-transfer__form .writing-muted { margin: 0; font-size: .85rem; }
+.writing-scene-transfer__form .select2-container { max-width: 100%; }
+.writing-note-link-field { margin-top: 16px; }
+.writing-note-link-field > label { display: block; margin-bottom: 6px; }
+.writing-chapters__item { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.writing-chapter-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.writing-chapter-actions .button_to { float: none; margin: 0; }
+.chapter-writing-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding: 20px 24px; }
+.chapter-writing-title { flex: 1 1 280px; min-width: 0; margin: 0; }
+.chapter-writing-main, .chapter-writing-scenes { display: grid; gap: var(--writing-card-gap); min-width: 0; }
+.app-content:has(.chapter-writing-page) { overflow-x: clip; overflow-y: visible; }
+.chapter-writing-toolbar { position: sticky; top: 8px; z-index: 10; align-self: start; }
+.chapter-writing-toolbar .literary-editor-tools { background: var(--surface); }
+.chapter-writing-add { display: flex; justify-content: center; padding: 8px 0; }
+.chapter-scene-editor { gap: 0; scroll-margin-top: 180px; }
+.chapter-scene-editor__heading { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.chapter-scene-editor__title { flex: 1; min-width: 0; }
+.chapter-scene-editor__title label { display: block; margin-bottom: 6px; font-size: .8rem; color: var(--text-soft); font-weight: 600; }
+.chapter-scene-editor__heading > .writing-record-action { align-self: flex-end; margin-bottom: 3px; }
+.chapter-scene-editor__number { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; border-radius: 8px; color: var(--primary); background: var(--app-bg-soft); font-weight: 600; }
+.chapter-scene-editor__desk { padding: 20px; border: 1px solid var(--card-border); border-top: 0; border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+.chapter-scene-editor__desk .literary-editor-sheet { min-height: 260px; padding: 28px 36px; }
+.chapter-scene-editor.is-active .chapter-scene-editor__heading { border-color: color-mix(in srgb, var(--primary) 45%, var(--card-border)); }
+.chapter-scene-editor > .literary-editor-status { padding: 6px 4px 0; font-size: .78rem; }
+@media (max-width: 600px) {
+  .chapter-scene-editor__heading > .writing-record-action { margin-bottom: 0; }
+  .chapter-writing-heading, .chapter-scene-editor__heading { padding: 16px; }
+  .chapter-scene-editor__desk { padding: 12px; }
+  .chapter-scene-editor__desk .literary-editor-sheet { padding: 20px; }
+}
+.writing-reader-page > .writing-detail { margin-top: 0; }
+.writing-reader-heading { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; padding: 24px; }
+.writing-reader-heading__identity { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.writing-reader-heading__identity .writing-muted { margin: 6px 0 0; }
+.writing-reader-heading__icon { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: var(--app-bg-soft); color: var(--primary); }
+.writing-reader-document { min-width: 0; padding: 24px; }
+.writing-reader-document__heading { display: flex; align-items: center; gap: 8px; padding-bottom: 16px; margin-bottom: 24px; border-bottom: 1px solid var(--card-border); color: var(--text-soft); font-size: .85rem; font-weight: 600; }
+.writing-reader-document__heading .material-symbols-rounded { font-size: 20px; color: var(--primary); }
+.writing-reader-document .literary-manuscript { max-width: 76ch; margin-inline: auto; padding: 0 0 8px; }
+.writing-book-reading__chapter + .writing-book-reading__chapter { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--card-border); }
+.writing-scenes-card .writing-detail__title { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 1.1rem; }
+.writing-scenes-card .writing-muted { margin: 0 0 16px; }
+.writing-manuscript-cards { display: grid; gap: var(--writing-card-gap, 14px); list-style: none; padding: 0; margin: 0; }
+.writing-manuscript-card { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 24px; padding: 18px 20px 18px 24px; border: 1px solid var(--card-border); border-left: 5px solid var(--primary); border-radius: 18px; background: var(--surface); }
+.writing-manuscript-card__identity { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.writing-manuscript-card__icon { display: grid; place-items: center; width: 58px; height: 58px; flex-shrink: 0; border-radius: 50%; background: color-mix(in srgb, var(--primary) 14%, transparent); color: var(--primary); font-size: 1.9rem; }
+.writing-manuscript-card__copy { display: grid; gap: 8px; min-width: 0; }
+.writing-manuscript-card__title { color: var(--text-main); font-size: 1rem; font-weight: 800; text-decoration: none; overflow-wrap: anywhere; }
+.writing-manuscript-card__title:hover { color: var(--primary); }
+.writing-manuscript-card__position { color: var(--text-soft); font-size: .85rem; overflow-wrap: anywhere; }
+.writing-manuscript-card__meta { display: flex; align-items: center; gap: 8px; color: var(--text-soft); }
+.writing-manuscript-card__meta > .material-symbols-rounded { color: var(--primary); font-size: 20px; }
+.writing-manuscript-card__meta > div { display: grid; gap: 4px; }
+.writing-manuscript-card__meta small { font-size: .75rem; }
+.writing-manuscript-card__meta time { color: var(--text-main); font-size: .85rem; font-weight: 600; }
+.writing-manuscript-card__actions { justify-content: flex-end; }
+.writing-manuscript-card.writing-manuscript-card--compact { padding: 12px 20px; }
+.writing-manuscript-card--compact .writing-manuscript-card__identity { gap: 12px; }
+.writing-manuscript-card--compact .writing-manuscript-card__icon { width: 40px; height: 40px; font-size: 1.4rem; }
+.writing-record-action { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 10px; gap: 5px; border: 0; border-radius: 10px; background: color-mix(in srgb, var(--primary) 12%, transparent); color: var(--primary); font-family: inherit; text-decoration: none; cursor: pointer; }
+.writing-record-action:hover { color: var(--primary); }
+.writing-record-action--danger, .writing-record-action--danger:hover { background: color-mix(in srgb, var(--danger) 12%, transparent); color: var(--danger); }
+.writing-record-action .material-symbols-rounded { font-size: 1.3rem; }
+.writing-record-action__label { font-size: .7rem; font-weight: 800; }
+.writing-record-action:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.writing-record-action--icon { width: 32px; padding: 0; }
+.writing-record-action:disabled { opacity: .4; cursor: default; }
+@media (max-width: 900px) {
+  .writing-manuscript-card { grid-template-columns: minmax(0, 1fr) auto; gap: 16px; }
+  .writing-manuscript-card__actions { grid-column: 1 / -1; }
+}
+@media (max-width: 600px) {
+  .writing-record-action { width: 44px; height: 44px; padding: 0; }
+  .writing-record-action__label { display: none; }
+  .writing-manuscript-card { grid-template-columns: minmax(0, 1fr); padding: 16px; }
+  .writing-manuscript-card__icon { width: 44px; height: 44px; font-size: 1.5rem; }
+  .writing-manuscript-card__actions { justify-content: flex-start; }
+  .writing-reader-heading, .writing-reader-document { padding: 20px; }
+  .writing-scenes-card .writing-character-actions { width: 100%; }
+}
+@media (max-width: 1100px) {
+  .narrative-panel-open .literary-writing-layout { grid-template-columns: minmax(0, 1fr); }
+  .literary-narrative-panel { position: fixed; top: 16px; bottom: 16px; right: 16px; z-index: 1100; width: min(380px, calc(100vw - 32px)); max-height: none; box-shadow: 0 8px 32px rgba(0, 0, 0, .18); }
+}

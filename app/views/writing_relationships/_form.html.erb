@@ -1,0 +1,10 @@
+<%= form_with model: [@book, @character, @relationship], local: true, html: { class: "app-form-page__form" } do |f| %>
+  <div class="writing-fields">
+    <% characters = @book.writing_characters.order(:name, :id).map { |character| [character.full_name, character.id] } %>
+    <div><%= f.label :source_character_id, "Personagem de origem" %><%= f.select :source_character_id, characters, { include_blank: "Selecione" }, class: "app-form-select", required: true %></div>
+    <div><%= f.label :target_character_id, "Personagem relacionado" %><%= f.select :target_character_id, characters, { include_blank: "Selecione" }, class: "app-form-select", required: true %></div>
+    <div><%= f.label :relation_type, "Tipo de relação" %><%= f.select :relation_type, WritingRelationship::TYPES.invert, {}, class: "app-form-select", required: true %></div>
+    <div><%= f.label :current_situation, "Situação atual" %><%= f.text_area :current_situation, class: "app-form-control", rows: 2 %></div>
+    <div class="writing-field-wide"><%= f.label :description, "Descrição" %><%= f.text_area :description, class: "app-form-control", rows: 3 %></div>
+  </div><div class="app-form-page__actions"><%= link_to writing_action_label("close", "Cancelar"), writing_book_writing_character_path(@book, @character, anchor: "relacionamentos"), class: "app-btn app-btn--outline" %><%= f.button writing_action_label("save", "Salvar relacionamento"), type: :submit, class: "app-btn app-btn--primary" %></div>
+<% end %>

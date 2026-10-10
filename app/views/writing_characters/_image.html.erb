@@ -1,0 +1,7 @@
+<div class="writing-character-image">
+  <% if character.reference_image.attached? %>
+    <%= image_tag image_writing_book_writing_character_path(@book, character), alt: "Referência de #{character.full_name}", loading: "lazy" %>
+  <% else %>
+    <span class="material-symbols-rounded" aria-hidden="true">person</span>
+  <% end %>
+</div>

@@ -1,0 +1,13 @@
+<aside class="app-panel literary-narrative-panel" id="literary-narrative-panel" data-narrative-panel-target="panel" aria-label="Painel Narrativo" hidden>
+  <div class="literary-narrative-panel__heading"><h2>Painel Narrativo</h2><button type="button" class="literary-editor-tool" data-action="narrative-panel#close" aria-label="Fechar painel"><span class="material-symbols-rounded" aria-hidden="true">close</span></button></div>
+  <p class="writing-muted">Elementos Narrativos desta parte da história. Associações não alteram o texto.</p>
+  <label for="narrative-kind">Consultar</label>
+  <select id="narrative-kind" class="app-form-select" data-narrative-panel-target="kind" data-action="change->narrative-panel#load">
+    <% WritingNarrativeContextsController::KINDS.each do |key, (_model, label)| %><option value="<%= key %>"><%= label %></option><% end %>
+  </select>
+  <label for="narrative-query">Pesquisar no livro</label><input id="narrative-query" type="search" class="app-form-control" placeholder="Buscar por nome ou título…" data-narrative-panel-target="query" data-action="input->narrative-panel#search">
+  <label class="app-checkbox"><input type="checkbox" data-narrative-panel-target="all" data-action="change->narrative-panel#load"><span>Mostrar todos os registros do livro</span></label>
+  <p class="literary-narrative-panel__status" role="status" aria-live="polite" data-narrative-panel-target="status"></p>
+  <div data-narrative-panel-target="results"></div>
+  <button type="button" class="app-btn app-btn--outline" data-action="narrative-panel#returnToWriting"><%= writing_action_label("edit_note", "Voltar à escrita") %></button>
+</aside>

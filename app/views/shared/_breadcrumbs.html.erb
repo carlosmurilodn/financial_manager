@@ -1,0 +1,14 @@
+<nav class="app-breadcrumbs" aria-label="Navegação estrutural">
+  <ol>
+    <% items.each_with_index do |(label, path), index| %>
+      <li>
+        <% if index.positive? %><span class="app-breadcrumbs__separator" aria-hidden="true">chevron_right</span><% end %>
+        <% if index == items.length - 1 %>
+          <span aria-current="page"><%= label %></span>
+        <% else %>
+          <%= link_to label, path %>
+        <% end %>
+      </li>
+    <% end %>
+  </ol>
+</nav>

@@ -1,0 +1,9 @@
+pt-BR:
+  activerecord:
+    models:
+      writing_chapter: Capítulo
+    attributes:
+      writing_chapter:
+        title: Título do capítulo
+        content: Manuscrito
+        document_version: Versão do documento

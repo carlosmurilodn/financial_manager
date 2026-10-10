@@ -1,0 +1,55 @@
+<section class="app-page writing-studio writing-book-page">
+  <%= render "shared/breadcrumbs", items: [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, nil]] %>
+
+  <div class="app-panel writing-book-heading">
+    <%= render "cover", book: @book %>
+    <div class="writing-book-heading__copy">
+      <div>
+        <p class="app-page__eyebrow">Painel do Livro</p>
+        <h1 class="app-page__title"><%= @book.title %></h1>
+        <% if @book.subtitle.present? %><p class="writing-book-heading__subtitle"><%= @book.subtitle %></p><% end %>
+        <p class="writing-book-heading__author"><%= @book.author.presence || "Autor não informado" %></p>
+      </div>
+      <div class="writing-book-heading__meta">
+        <span><%= @book.genre_label %></span>
+        <span class="writing-status writing-status--<%= @book.status %>"><%= @book.status_label %></span>
+      </div>
+      <div class="writing-actions">
+        <%= link_to read_writing_book_path(@book), class: "app-btn app-btn--primary" do %>
+          <span class="material-symbols-rounded" aria-hidden="true">menu_book</span> Ler Livro
+        <% end %>
+        <%= link_to edit_writing_book_path(@book), class: "app-btn app-btn--primary" do %>
+          <span class="material-symbols-rounded" aria-hidden="true">edit</span> Editar Livro
+        <% end %>
+        <%= button_to writing_book_path(@book), method: :delete, class: "app-btn app-btn--danger", form: { data: { turbo_confirm: "Excluir o livro #{@book.title}? Esta ação não poderá ser desfeita." } } do %>
+          <span class="material-symbols-rounded" aria-hidden="true">delete</span> Excluir Livro
+        <% end %>
+      </div>
+    </div>
+    <%= render "information" %>
+  </div>
+
+  <%= render "chapters" %>
+
+  <%= render "narrative_tools" %>
+
+  <div class="writing-book-layout">
+    <div class="writing-book-narrative">
+      <% [["Sinopse", @book.synopsis, "description"], ["Premissa", @book.premise, "lightbulb"], ["Observações", @book.notes, "notes"]].each do |label, content, icon| %>
+        <section class="app-panel writing-detail">
+          <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span><%= label %></h2>
+          <div class="writing-detail__body"><%= content.present? ? simple_format(content) : tag.p("Ainda não informado.", class: "writing-muted") %></div>
+        </section>
+      <% end %>
+    </div>
+
+  </div>
+
+  <section class="app-panel writing-detail writing-book-future">
+    <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">auto_awesome</span>Próximas ferramentas</h2>
+    <div class="writing-detail__body">
+      <p class="writing-muted">Nas próximas fases, esta obra receberá linha do tempo e novas opções de exportação.</p>
+      <p class="writing-muted">Indicadores de capítulos, personagens, palavras e progresso serão ampliados nas próximas fases.</p>
+    </div>
+  </section>
+</section>

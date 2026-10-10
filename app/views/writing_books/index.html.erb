@@ -1,0 +1,74 @@
+<section class="app-page writing-studio">
+  <div class="app-page__hero">
+    <div class="writing-hero">
+      <div class="app-page__hero-copy writing-hero__heading">
+        <span class="app-page__hero-icon"><span class="material-symbols-rounded" aria-hidden="true">auto_stories</span></span>
+        <div><p class="app-page__eyebrow">Projetos</p><h1 class="app-page__title">Estúdio de Escrita</h1></div>
+      </div>
+      <%= link_to new_writing_book_path, class: "writing-hero__action" do %>
+        <span class="writing-hero__action-icon"><span class="material-symbols-rounded" aria-hidden="true">add</span></span>
+        <strong>Novo Livro</strong>
+      <% end %>
+      <div class="writing-hero__kpis">
+        <%= render "hero_kpis" %>
+      </div>
+    </div>
+    <p class="app-page__description">Organize suas obras, desenvolva suas histórias e acompanhe sua jornada como escritor.</p>
+  </div>
+  <div class="app-panel">
+    <%= render "shared/filter_accordion" do %>
+      <%= form_with url: writing_books_path, method: :get, class: "app-filter-form" do |f| %>
+        <div class="app-filter-grid writing-filter-fields">
+          <div class="app-filter-field"><%= f.label :title, "Título" %><%= f.search_field :title, value: @title_filter, class: "app-form-control" %></div>
+          <div class="app-filter-field"><%= f.label :author, "Autor" %><%= f.search_field :author, value: @author_filter, class: "app-form-control" %></div>
+          <div class="app-filter-field"><%= f.label :genre, "Gênero" %><%= f.select :genre, options_for_select(WritingBook::GENRES.invert, @genre_filter), { include_blank: "Todos" }, class: "app-form-select" %></div>
+          <div class="app-filter-field"><%= f.label :status, "Situação" %><%= f.select :status, options_for_select(WritingBook::STATUSES.invert, @status_filter), { include_blank: "Todas" }, class: "app-form-select" %></div>
+        </div>
+        <div class="app-filter-actions writing-filter-toolbar">
+          <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>
+            <i class="bi bi-funnel me-1" aria-hidden="true"></i> Filtrar
+          <% end %>
+          <%= link_to writing_books_path, class: "app-btn app-btn--secondary app-page__secondary-btn" do %>
+            <i class="bi bi-x-circle me-1" aria-hidden="true"></i> Limpar Filtros
+          <% end %>
+          <div class="app-per-page-control app-sort-control">
+            <%= f.label :order_by, "Ordenar", class: "app-per-page-control__label" %>
+            <%= f.select :order_by, options_for_select([
+              ["Título A → Z", "title:asc"], ["Título Z → A", "title:desc"],
+              ["Criação Recente", "created_at:desc"], ["Criação Antiga", "created_at:asc"],
+              ["Atualização Recente", "updated_at:desc"], ["Atualização Antiga", "updated_at:asc"]
+            ], "#{@sort}:#{@direction}"), {}, class: "form-select app-per-page-control__select app-sort-control__select", onchange: "this.form.requestSubmit()" %>
+          </div>
+          <div class="app-per-page-control">
+            <%= f.label :per_page, "Exibir", class: "app-per-page-control__label" %>
+            <%= f.select :per_page, options_for_select(per_page_options, @per_page), {}, class: "form-select app-per-page-control__select", onchange: "this.form.requestSubmit()" %>
+            <span class="app-per-page-control__suffix">por página</span>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <% if @total_count.zero? %>
+    <div class="app-panel writing-empty"><span class="material-symbols-rounded" aria-hidden="true">auto_stories</span><h2>Sua biblioteca ainda está vazia.</h2>
+      <p>Todas as grandes histórias começam com uma ideia. Que tal cadastrar seu primeiro livro?</p>
+      <%= link_to writing_action_label("add", "Criar primeiro livro"), new_writing_book_path, class: "app-btn app-btn--primary" %></div>
+  <% elsif @books.empty? %>
+    <div class="app-panel writing-empty"><h2>Nenhum livro encontrado.</h2><p>Experimente outros termos ou limpe os filtros.</p><%= link_to writing_action_label("filter_alt_off", "Limpar Filtros"), writing_books_path, class: "app-btn app-btn--secondary" %></div>
+  <% else %>
+    <p><%= @filtered_count %> livro(s) encontrado(s)</p>
+    <div class="writing-library">
+      <% @books.each do |book| %>
+        <%= link_to writing_book_path(book), class: "app-panel writing-book-card" do %>
+          <%= render "cover", book: book %>
+          <div class="writing-book-card__copy"><h2><%= book.title %></h2>
+            <% if book.subtitle.present? %><p><%= book.subtitle %></p><% end %>
+            <p><%= book.author.presence || "Autor não informado" %></p>
+            <span><%= book.genre_label %></span><span class="writing-status writing-status--<%= book.status %>"><%= book.status_label %></span>
+            <small>Atualizado em <%= l(book.updated_at.to_date) %></small>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    <%= render "shared/pagination", current_page: @current_page, total_pages: @total_pages, base_params: request.query_parameters %>
+  <% end %>
+</section>

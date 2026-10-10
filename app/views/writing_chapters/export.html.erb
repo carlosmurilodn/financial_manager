@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= @chapter.title %> — <%= @book.title %></title>
+  <style><%= raw File.read(Rails.root.join("app/assets/stylesheets/literary_manuscript.css")) %></style>
+</head>
+<body>
+  <article class="literary-manuscript">
+    <h1><%= @chapter.title %></h1>
+    <%= literary_manuscript_html(@chapter) %>
+  </article>
+</body>
+</html>

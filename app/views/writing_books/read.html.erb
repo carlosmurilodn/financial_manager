@@ -7,11 +7,7 @@
     </div>
     <div class="writing-reader-heading__actions">
       <% if @chapters.any? %>
-        <div class="writing-reader-heading__styles" role="group" aria-label="Estilo de leitura" data-book-reader-target="styles" hidden>
-          <button type="button" class="app-btn app-btn--outline" data-book-reader-target="style" data-action="book-reader#chooseStyle" data-pages="1" aria-pressed="false">1 página</button>
-          <button type="button" class="app-btn app-btn--outline" data-book-reader-target="style" data-action="book-reader#chooseStyle" data-pages="2" aria-pressed="true">2 páginas</button>
-          <span class="writing-reader-heading__style-hint writing-muted" data-book-reader-target="styleHint" hidden>Duas páginas disponíveis em telas mais largas.</span>
-        </div>
+        <%= render "reading_styles" %>
       <% end %>
       <%= link_to writing_action_label("arrow_back", "Voltar Ao Livro"), writing_book_path(@book), class: "app-btn app-btn--outline" %>
     </div>
@@ -30,11 +26,7 @@
         <% end %>
       </div>
       </div>
-      <nav class="writing-reader-book__navigation" aria-label="Navegação das páginas" data-book-reader-target="navigation" hidden>
-        <button type="button" class="app-btn app-btn--outline" data-book-reader-target="previous" data-action="book-reader#previous" aria-label="Página anterior"><span class="material-symbols-rounded" aria-hidden="true">chevron_left</span> Anterior</button>
-        <span class="writing-reader-book__counter" data-book-reader-target="counter" role="status" aria-live="polite" aria-atomic="true"></span>
-        <button type="button" class="app-btn app-btn--outline" data-book-reader-target="next" data-action="book-reader#next" aria-label="Próxima página">Próxima <span class="material-symbols-rounded" aria-hidden="true">chevron_right</span></button>
-      </nav>
+      <%= render "reading_navigation" %>
     </article>
   <% end %>
 </section>

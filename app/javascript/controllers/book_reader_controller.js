@@ -17,6 +17,7 @@ export default class extends Controller {
     this.observer = new ResizeObserver(() => this.scheduleLayout())
     this.observer.observe(this.viewportTarget)
     this.observer.observe(this.element)
+    this.observer.observe(this.bookTarget.parentElement)
     this.scheduleLayout()
     document.fonts?.ready.then(() => {
       if (this.element.isConnected) this.scheduleLayout()
@@ -48,7 +49,7 @@ export default class extends Controller {
   }
 
   updateStyle() {
-    this.canSpread = window.matchMedia("(min-width: 1400px)").matches && this.element.clientWidth >= 1148
+    this.canSpread = window.matchMedia("(min-width: 1400px)").matches && this.bookTarget.parentElement.clientWidth >= 1148
     this.bookTarget.classList.toggle("is-single", this.preferredPages === 1 || !this.canSpread)
     this.styleHintTarget.hidden = this.canSpread
     const activePages = this.canSpread ? this.preferredPages : 1
@@ -95,6 +96,7 @@ export default class extends Controller {
   }
 
   navigate(event) {
+    if (!event.target.closest(".writing-reader-book, .writing-reader-heading")) return
     if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return
     if (event.target.closest("input, textarea, select, [contenteditable]")) return
     if (event.key === "ArrowLeft") {

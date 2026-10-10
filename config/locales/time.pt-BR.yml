@@ -1,4 +1,5 @@
 pt-BR:
   time:
     formats:
+      short: "%d/%m/%Y %H:%M"
       long: "%d/%m/%Y às %H:%M"

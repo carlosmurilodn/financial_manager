@@ -1,6 +1,6 @@
 <section class="app-page writing-studio writing-characters">
   <%= render "breadcrumbs" %>
-  <header class="app-panel writing-characters-heading"><div><p class="app-page__eyebrow"><%= @book.title %></p><h1 class="app-page__title">Personagens</h1><p class="writing-muted">Construa as pessoas que dão vida à sua história.</p></div><%= link_to "Novo personagem", new_writing_book_writing_character_path(@book), class: "app-btn app-btn--primary" %></header>
+  <header class="app-panel writing-characters-heading"><div><p class="app-page__eyebrow"><%= @book.title %></p><h1 class="app-page__title">Personagens</h1><p class="writing-muted">Construa as pessoas que dão vida à sua história.</p></div><%= link_to writing_action_label("add", "Novo personagem"), new_writing_book_writing_character_path(@book), class: "app-btn app-btn--primary" %></header>
   <div class="app-panel"><%= render "shared/filter_accordion" do %>
     <%= form_with url: writing_book_writing_characters_path(@book), method: :get, class: "app-filter-form" do |f| %>
       <div class="app-filter-grid writing-character-filters">

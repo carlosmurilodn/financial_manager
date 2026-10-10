@@ -13,7 +13,7 @@
           <%= link_to edit_writing_book_writing_chapter_path(@book, chapter), class: "writing-chapters__link" do %>
             <strong><%= chapter.title %></strong><small>Atualizado em <%= l(chapter.updated_at.to_date) %></small>
           <% end %>
-          <%= button_to "Excluir", writing_book_writing_chapter_path(@book, chapter), method: :delete, class: "app-btn app-btn--secondary app-btn--sm", form: { data: { turbo_confirm: "Excluir o capítulo #{chapter.title} e todo o seu texto? Esta ação não poderá ser desfeita." } } %>
+          <%= button_to writing_action_label("delete", "Excluir"), writing_book_writing_chapter_path(@book, chapter), method: :delete, class: "app-btn app-btn--secondary writing-book-delete", form: { data: { turbo_confirm: "Excluir o capítulo #{chapter.title} e todo o seu texto? Esta ação não poderá ser desfeita." } } %>
         </li>
       <% end %>
     </ol>

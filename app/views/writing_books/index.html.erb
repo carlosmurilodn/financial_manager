@@ -51,9 +51,9 @@
   <% if @total_count.zero? %>
     <div class="app-panel writing-empty"><span class="material-symbols-rounded" aria-hidden="true">auto_stories</span><h2>Sua biblioteca ainda está vazia.</h2>
       <p>Todas as grandes histórias começam com uma ideia. Que tal cadastrar seu primeiro livro?</p>
-      <%= link_to "Criar primeiro livro", new_writing_book_path, class: "app-btn app-btn--primary" %></div>
+      <%= link_to writing_action_label("add", "Criar primeiro livro"), new_writing_book_path, class: "app-btn app-btn--primary" %></div>
   <% elsif @books.empty? %>
-    <div class="app-panel writing-empty"><h2>Nenhum livro encontrado.</h2><p>Experimente outros termos ou limpe os filtros.</p><%= link_to "Limpar Filtros", writing_books_path, class: "app-btn app-btn--secondary" %></div>
+    <div class="app-panel writing-empty"><h2>Nenhum livro encontrado.</h2><p>Experimente outros termos ou limpe os filtros.</p><%= link_to writing_action_label("filter_alt_off", "Limpar Filtros"), writing_books_path, class: "app-btn app-btn--secondary" %></div>
   <% else %>
     <p><%= @filtered_count %> livro(s) encontrado(s)</p>
     <div class="writing-library">

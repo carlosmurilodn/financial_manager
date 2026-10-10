@@ -40,5 +40,5 @@
       <label class="app-checkbox"><%= check_box_tag "writing_book[remove_cover]", "1", ActiveModel::Type::Boolean.new.cast(params.dig(:writing_book, :remove_cover)) %><span>Remover capa atual</span></label>
     <% end %>
   </fieldset>
-  <div class="app-form-page__actions"><%= link_to "Cancelar", book.persisted? ? writing_book_path(book) : writing_books_path, class: "app-btn app-btn--outline" %><%= f.submit "Salvar Livro", class: "app-btn app-btn--primary" %></div>
+  <div class="app-form-page__actions"><%= link_to writing_action_label("close", "Cancelar"), book.persisted? ? writing_book_path(book) : writing_books_path, class: "app-btn app-btn--outline" %><%= f.button writing_action_label("save", "Salvar Livro"), type: :submit, class: "app-btn app-btn--primary" %></div>
 <% end %>

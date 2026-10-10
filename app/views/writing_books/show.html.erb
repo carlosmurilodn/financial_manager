@@ -30,7 +30,7 @@
   </div>
 
   <%= render "chapters" %>
-  <section class="app-panel writing-detail"><div class="writing-chapters__heading"><h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">group</span>Personagens</h2><%= link_to "Gerenciar personagens", writing_book_writing_characters_path(@book), class: "app-btn app-btn--primary" %></div><p class="writing-muted"><%= @book.writing_characters.count %> personagem(ns). Organize fichas e relacionamentos da obra.</p></section>
+  <section class="app-panel writing-detail"><div class="writing-chapters__heading"><h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">group</span>Personagens</h2><%= link_to writing_action_label("group", "Gerenciar personagens"), writing_book_writing_characters_path(@book), class: "app-btn app-btn--primary" %></div><p class="writing-muted"><%= @book.writing_characters.count %> personagem(ns). Organize fichas e relacionamentos da obra.</p></section>
 
   <div class="writing-book-layout">
     <div class="writing-book-narrative">

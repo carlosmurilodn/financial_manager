@@ -19,5 +19,5 @@
       <label class="app-checkbox"><%= check_box_tag "writing_character[remove_reference_image]", "1", ActiveModel::Type::Boolean.new.cast(params.dig(:writing_character, :remove_reference_image)) %><span>Remover imagem atual</span></label>
     <% end %>
   </fieldset>
-  <div class="app-form-page__actions"><%= link_to "Cancelar", @character.persisted? ? writing_book_writing_character_path(@book, @character) : writing_book_writing_characters_path(@book), class: "app-btn app-btn--outline" %><%= f.submit "Salvar personagem", class: "app-btn app-btn--primary" %></div>
+  <div class="app-form-page__actions"><%= link_to writing_action_label("close", "Cancelar"), @character.persisted? ? writing_book_writing_character_path(@book, @character) : writing_book_writing_characters_path(@book), class: "app-btn app-btn--outline" %><%= f.button writing_action_label("save", "Salvar personagem"), type: :submit, class: "app-btn app-btn--primary" %></div>
 <% end %>

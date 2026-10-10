@@ -3,7 +3,7 @@
   <header class="app-panel writing-character-heading">
     <%= render "image", character: @character %>
     <div class="writing-character-heading__copy"><p class="app-page__eyebrow">Ficha do personagem</p><h1 class="app-page__title"><%= @character.full_name %></h1><p><%= @character.role_label %> · <%= @character.status_label %></p><% if @character.nicknames.present? %><p>Apelidos: <%= @character.nicknames %></p><% end %></div>
-    <div class="writing-character-actions writing-character-heading__actions"><%= link_to "Editar ficha", edit_writing_book_writing_character_path(@book, @character), class: "app-btn app-btn--primary" %><%= link_to "Voltar", writing_book_writing_characters_path(@book), class: "app-btn app-btn--secondary" %><%= button_to "Excluir personagem", writing_book_writing_character_path(@book, @character), method: :delete, class: "app-btn app-btn--danger", form: { data: { turbo_confirm: "Excluir #{@character.full_name} e todos os seus relacionamentos? Esta ação não poderá ser desfeita." } } %></div>
+    <div class="writing-character-actions writing-character-heading__actions"><%= link_to writing_action_label("edit", "Editar ficha"), edit_writing_book_writing_character_path(@book, @character), class: "app-btn app-btn--primary" %><%= link_to writing_action_label("arrow_back", "Voltar"), writing_book_writing_characters_path(@book), class: "app-btn app-btn--outline" %><%= button_to writing_action_label("delete", "Excluir personagem"), writing_book_writing_character_path(@book, @character), method: :delete, class: "app-btn app-btn--secondary writing-book-delete", form: { data: { turbo_confirm: "Excluir #{@character.full_name} e todos os seus relacionamentos? Esta ação não poderá ser desfeita." } } %></div>
   </header>
   <div class="writing-character-sections"><% WritingCharacter::PROFILE_SECTIONS.each do |section, fields| %>
     <section class="app-panel writing-character-section"><h2><%= section %></h2>
@@ -21,13 +21,13 @@
       <% if can_add_relationship %>
         <%= link_to new_writing_book_writing_character_writing_relationship_path(@book, @character), class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">add</span> Novo relacionamento<% end %>
       <% else %>
-        <%= link_to "Cadastrar outro personagem", new_writing_book_writing_character_path(@book), class: "app-btn app-btn--primary" %>
+        <%= link_to writing_action_label("person_add", "Cadastrar outro personagem"), new_writing_book_writing_character_path(@book), class: "app-btn app-btn--primary" %>
       <% end %>
     </div>
     <% if @relationships.empty? %><div class="writing-character-relationships__empty"><span class="material-symbols-rounded" aria-hidden="true">group</span><h3>Nenhum relacionamento cadastrado</h3><p>Crie vínculos de amizade, rivalidade, parentesco ou outros. Cada relação tem uma direção: Marc pode confiar em Teresa, enquanto Teresa desconfia de Marc.</p><% unless can_add_relationship %><p>Cadastre pelo menos mais um personagem para criar uma relação.</p><% end %></div><% end %>
     <% @relationships.each do |relationship| %>
       <article class="writing-relationship"><h3><%= link_to relationship.source_character.full_name, writing_book_writing_character_path(@book, relationship.source_character), class: "writing-relationship__character-link" %> <span class="writing-relationship__direction" aria-label="se relaciona com">→</span> <%= link_to relationship.target_character.full_name, writing_book_writing_character_path(@book, relationship.target_character), class: "writing-relationship__character-link" %></h3><strong><%= relationship.type_label %></strong><%= simple_format(relationship.description.presence || "Descrição não informada.") %><p>Situação atual: <%= relationship.current_situation.presence || "Não informada" %></p>
-        <div class="writing-character-actions"><%= link_to "Editar relação", edit_writing_book_writing_character_writing_relationship_path(@book, @character, relationship), class: "app-btn app-btn--secondary" %><%= button_to "Excluir relação", writing_book_writing_character_writing_relationship_path(@book, @character, relationship), method: :delete, class: "app-btn app-btn--secondary", form: { data: { turbo_confirm: "Excluir este relacionamento?" } } %></div>
+        <div class="writing-character-actions"><%= link_to writing_action_label("edit", "Editar relação"), edit_writing_book_writing_character_writing_relationship_path(@book, @character, relationship), class: "app-btn app-btn--secondary" %><%= button_to writing_action_label("delete", "Excluir relação"), writing_book_writing_character_writing_relationship_path(@book, @character, relationship), method: :delete, class: "app-btn app-btn--secondary writing-book-delete", form: { data: { turbo_confirm: "Excluir este relacionamento?" } } %></div>
       </article>
     <% end %>
   </section>

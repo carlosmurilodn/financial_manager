@@ -10,9 +10,9 @@
         <%= f.text_field :title, required: true, maxlength: 200, class: "literary-chapter-title", placeholder: "Título do capítulo", data: { literary_editor_target: "title", action: "input->literary-editor#updateDirty" } %>
       </div>
       <div class="literary-editor-actions">
-        <%= f.button "Salvar capítulo", type: :submit, class: "app-btn app-btn--primary", disabled: true, data: { literary_editor_target: "save" } %>
-        <%= link_to "Voltar ao livro", writing_book_path(@book), class: "app-btn app-btn--outline" %>
-        <%= link_to "Exportar HTML", @chapter.persisted? ? export_writing_book_writing_chapter_path(@book, @chapter) : "#", class: "app-btn app-btn--secondary", aria: { disabled: !@chapter.persisted? }, data: { literary_editor_target: "export", action: "click->literary-editor#export", turbo: false } %>
+        <%= f.button writing_action_label("save", "Salvar capítulo"), type: :submit, class: "app-btn app-btn--primary", disabled: true, data: { literary_editor_target: "save" } %>
+        <%= link_to writing_action_label("arrow_back", "Voltar ao livro"), writing_book_path(@book), class: "app-btn app-btn--outline" %>
+        <%= link_to writing_action_label("download", "Exportar HTML"), @chapter.persisted? ? export_writing_book_writing_chapter_path(@book, @chapter) : "#", class: "app-btn app-btn--secondary", aria: { disabled: !@chapter.persisted? }, data: { literary_editor_target: "export", action: "click->literary-editor#export", turbo: false } %>
       </div>
     </div>
     <% if @chapter.errors.any? %>

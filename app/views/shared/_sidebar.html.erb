@@ -30,6 +30,10 @@
           <span class="material-symbols-rounded app-nav-link__icon" aria-hidden="true">auto_stories</span>
           <span class="link-text">Estúdio de Escrita</span>
         <% end %>
+        <%= link_to philosophical_workshop_path, class: "app-nav-link #{'active-menu' if philosophical_workshop_section?}", title: "Oficina Filosófica", aria: { label: "Oficina Filosófica", current: philosophical_workshop_section? ? "page" : nil } do %>
+          <span class="material-symbols-rounded app-nav-link__icon" aria-hidden="true">psychology</span>
+          <span class="link-text">Oficina Filosófica</span>
+        <% end %>
         <%= button_to writing_backup_path, method: :post, class: "app-nav-link", title: "Backup", aria: { label: "Backup completo do banco de dados" }, form: { class: "app-nav-form", data: { turbo: false } } do %>
           <span class="material-symbols-rounded app-nav-link__icon" aria-hidden="true">backup</span>
           <span class="link-text">Backup</span>

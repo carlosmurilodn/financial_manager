@@ -27,7 +27,7 @@
       <div aria-hidden="true"></div>
     <% end %>
     <% @hero_kpis.each_with_index do |kpi, index| %>
-      <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--<%= kpi[:scale] ? mental_score_color(kpi[:value]) : %w[green yellow purple][index] %>">
+      <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--<%= kpi[:scale] ? mental_score_color(kpi[:value], field: kpi[:field]) : %w[green yellow purple][index] %>">
         <span class="material-symbols-rounded" aria-hidden="true"><%= kpi[:icon] %></span>
         <div>
           <p><%= kpi[:label] %></p>

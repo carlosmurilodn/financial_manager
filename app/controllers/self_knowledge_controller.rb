@@ -14,7 +14,7 @@ class SelfKnowledgeController < ApplicationController
     @area = "evolution"
     @evolution = Health::SelfKnowledgeEvolution.new(current_user, params[:period])
     @hero_kpis = [[:mood, "Humor Médio", "sentiment_satisfied"], [:energy, "Energia Média", "bolt"], [:tension, "Tensão Média", "psychology"]].map do |field, label, icon|
-      { label: label, value: @evolution.averages.fetch(field)[:mean], scale: true, icon: icon }
+      { field: field, label: label, value: @evolution.averages.fetch(field)[:mean], scale: true, icon: icon }
     end
   end
 end

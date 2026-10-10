@@ -60,6 +60,7 @@
 .writing-reader-document__heading { display: flex; align-items: center; gap: 8px; padding-bottom: 16px; margin-bottom: 24px; border-bottom: 1px solid var(--card-border); color: var(--text-soft); font-size: .85rem; font-weight: 600; }
 .writing-reader-document__heading .material-symbols-rounded { font-size: 20px; color: var(--primary); }
 .writing-reader-document .literary-manuscript { max-width: 76ch; margin-inline: auto; padding: 0 0 8px; }
+.writing-book-reading__chapter + .writing-book-reading__chapter { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--card-border); }
 .writing-scenes-card .writing-detail__title { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 1.1rem; }
 .writing-scenes-card .writing-muted { margin: 0 0 16px; }
 .writing-manuscript-cards { display: grid; gap: var(--writing-card-gap, 14px); list-style: none; padding: 0; margin: 0; }

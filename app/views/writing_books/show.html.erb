@@ -15,13 +15,13 @@
         <span class="writing-status writing-status--<%= @book.status %>"><%= @book.status_label %></span>
       </div>
       <div class="writing-actions">
+        <%= link_to read_writing_book_path(@book), class: "app-btn app-btn--primary" do %>
+          <span class="material-symbols-rounded" aria-hidden="true">menu_book</span> Ler Livro
+        <% end %>
         <%= link_to edit_writing_book_path(@book), class: "app-btn app-btn--primary" do %>
           <span class="material-symbols-rounded" aria-hidden="true">edit</span> Editar Livro
         <% end %>
-        <%= link_to writing_books_path, class: "app-btn app-btn--outline" do %>
-          <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span> Voltar à Biblioteca
-        <% end %>
-        <%= button_to writing_book_path(@book), method: :delete, class: "app-btn app-btn--secondary writing-book-delete", form: { data: { turbo_confirm: "Excluir o livro #{@book.title}? Esta ação não poderá ser desfeita." } } do %>
+        <%= button_to writing_book_path(@book), method: :delete, class: "app-btn app-btn--danger", form: { data: { turbo_confirm: "Excluir o livro #{@book.title}? Esta ação não poderá ser desfeita." } } do %>
           <span class="material-symbols-rounded" aria-hidden="true">delete</span> Excluir Livro
         <% end %>
       </div>

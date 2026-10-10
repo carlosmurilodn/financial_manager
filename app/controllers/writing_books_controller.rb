@@ -1,5 +1,5 @@
 class WritingBooksController < ApplicationController
-  before_action :set_book, only: %i[show edit update destroy cover]
+  before_action :set_book, only: %i[show edit update destroy cover read]
 
   def index
     books = current_user.writing_books
@@ -24,6 +24,11 @@ class WritingBooksController < ApplicationController
   end
 
   def show
+  end
+
+  def read
+    @chapters = @book.writing_chapters.ordered.preload(:writing_scenes)
+    response.headers["Cache-Control"] = "private, no-store"
   end
 
   def new

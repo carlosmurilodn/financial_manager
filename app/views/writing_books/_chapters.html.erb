@@ -13,7 +13,7 @@
           <div class="writing-manuscript-card__identity">
             <span class="writing-manuscript-card__icon material-symbols-rounded" aria-hidden="true">menu_book</span>
             <div class="writing-manuscript-card__copy">
-              <%= link_to chapter.title, edit_writing_book_writing_chapter_path(@book, chapter), class: "writing-manuscript-card__title" %>
+              <%= link_to chapter.title, writing_book_writing_chapter_path(@book, chapter), class: "writing-manuscript-card__title" %>
             </div>
           </div>
           <div class="writing-manuscript-card__meta">
@@ -21,8 +21,8 @@
             <div><small>Atualizado em</small><time datetime="<%= chapter.updated_at.iso8601 %>"><%= l(chapter.updated_at.to_date) %></time></div>
           </div>
           <div class="writing-chapter-actions writing-manuscript-card__actions">
-            <%= link_to writing_book_writing_chapter_path(@book, chapter), class: "writing-record-action", title: "Consultar capítulo", aria: { label: "Consultar #{chapter.title}" } do %>
-              <span class="material-symbols-rounded" aria-hidden="true">visibility</span><span class="writing-record-action__label">Consultar</span>
+            <%= link_to edit_writing_book_writing_chapter_path(@book, chapter), class: "writing-record-action", title: "Editar capítulo", aria: { label: "Editar #{chapter.title}" } do %>
+              <span class="material-symbols-rounded" aria-hidden="true">edit</span><span class="writing-record-action__label">Editar</span>
             <% end %>
             <% [["up", "arrow_upward", "Subir capítulo", index.zero?], ["down", "arrow_downward", "Descer capítulo", index == chapters.size - 1]].each do |direction, icon, label, disabled| %>
               <%= button_to reorder_writing_book_writing_chapter_path(@book, chapter), method: :patch, params: { direction: direction }, class: "writing-record-action writing-record-action--icon", disabled: disabled, title: label, aria: { label: label } do %><span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span><% end %>

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   post "projetos/estudio-de-escrita/backup", to: "writing_backups#create", as: :writing_backup
   resources :writing_books, path: "projetos/estudio-de-escrita" do
     member { get :cover, path: "capa" }
+    member { get :read, path: "ler" }
     resource :writing_narrative_context, path: "contexto-narrativo", only: %i[show create destroy]
     resources :writing_notes, path: "notas-e-ideias"
     resources :writing_scenes, path: "cenas", only: %i[new create show edit update destroy] do

@@ -1,0 +1,24 @@
+<section class="app-page writing-studio writing-book-reading">
+  <%= render "shared/breadcrumbs", items: [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, writing_book_path(@book)], ["Ler Livro", nil]] %>
+  <header class="app-panel writing-reader-heading">
+    <div class="writing-reader-heading__identity">
+      <span class="material-symbols-rounded writing-reader-heading__icon" aria-hidden="true">menu_book</span>
+      <div><p class="app-page__eyebrow">Leitura Do Manuscrito</p><h1 class="app-page__title"><%= @book.title %></h1><% if @book.author.present? %><p class="writing-muted"><%= @book.author %></p><% end %></div>
+    </div>
+    <%= link_to writing_action_label("arrow_back", "Voltar Ao Livro"), writing_book_path(@book), class: "app-btn app-btn--outline" %>
+  </header>
+  <% if @chapters.empty? %>
+    <section class="app-panel writing-empty"><h2>Seu manuscrito ainda está vazio.</h2><p class="writing-muted">Crie capítulos e cenas para começar a leitura.</p></section>
+  <% else %>
+    <article class="app-panel writing-reader-document">
+      <div class="literary-manuscript">
+        <% @chapters.each do |chapter| %>
+          <section class="writing-book-reading__chapter" aria-labelledby="reading-chapter-<%= chapter.id %>">
+            <h2 id="reading-chapter-<%= chapter.id %>"><%= chapter.title %></h2>
+            <div class="literary-manuscript"><%= literary_manuscript_html(chapter) %></div>
+          </section>
+        <% end %>
+      </div>
+    </article>
+  <% end %>
+</section>

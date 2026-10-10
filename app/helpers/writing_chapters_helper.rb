@@ -3,7 +3,8 @@ module WritingChaptersHelper
     return literary_document_html(document.content) unless document.is_a?(WritingChapter)
 
     parts = []
-    document.writing_scenes.ordered.each do |scene|
+    scenes = document.writing_scenes.sort_by { |scene| [ scene.position, scene.created_at, scene.id ] }
+    scenes.each do |scene|
       parts << tag.hr(class: "literary-scene-break") if parts.any?(&:present?)
       parts << literary_document_html(scene.content)
     end

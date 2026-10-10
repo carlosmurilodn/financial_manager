@@ -1,5 +1,6 @@
 class PhilosophicalWorkshopConceptsController < ApplicationController
   before_action :set_concept, only: %i[show edit update destroy]
+  before_action :load_philosophers, only: %i[new edit create update]
 
   def index
     scope = current_user.philosophical_workshop_concepts
@@ -54,6 +55,16 @@ class PhilosophicalWorkshopConceptsController < ApplicationController
   end
 
   def concept_params
-    params.require(:philosophical_workshop_concept).permit(:title, :kind, :description, :premises, :arguments, :personal_notes)
+    attributes = params.require(:philosophical_workshop_concept).permit(:title, :kind, :description, :premises, :arguments, :personal_notes, philosopher_ids: [])
+    if attributes.key?(:philosopher_ids)
+      ids = attributes[:philosopher_ids].reject(&:blank?).uniq
+      current_user.philosophical_workshop_philosophers.find(ids) if ids.any?
+      attributes[:philosopher_ids] = ids
+    end
+    attributes
+  end
+
+  def load_philosophers
+    @philosophers = current_user.philosophical_workshop_philosophers.order(:name, :id)
   end
 end

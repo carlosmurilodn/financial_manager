@@ -14,6 +14,12 @@
       <% end %>
     </div>
   </fieldset>
+  <fieldset class="writing-form-section" data-controller="select2">
+    <legend>Filósofos associados</legend>
+    <%= f.label :philosopher_ids, "Filósofos" %>
+    <%= f.collection_select :philosopher_ids, @philosophers, :id, :name, {}, multiple: true, class: "app-form-select", data: { placeholder: "Pesquisar e selecionar…" } %>
+    <% if @philosophers.empty? %><p class="writing-muted">Nenhum filósofo cadastrado.</p><% end %>
+  </fieldset>
   <div class="app-form-page__actions">
     <%= link_to "Cancelar", concept.persisted? ? philosophical_workshop_concept_path(concept) : philosophical_workshop_concepts_path, class: "app-btn app-btn--outline" %>
     <%= f.button class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">save</span> Salvar<% end %>

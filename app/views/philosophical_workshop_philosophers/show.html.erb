@@ -23,5 +23,18 @@
       <div class="writing-detail__body"><%= simple_format(@philosopher.public_send(field).presence || "Ainda não informado.") %></div>
     </section>
   <% end %>
+  <section class="app-panel writing-detail">
+    <h2 class="writing-detail__title">Conceitos e Teses associados</h2>
+    <% associated_records = @philosopher.concepts.order(:title, :id) %>
+    <% if associated_records.any? %>
+      <ul>
+        <% associated_records.each do |record| %>
+          <li><%= link_to record.title, philosophical_workshop_concept_path(record) %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="writing-muted">Nenhum registro associado.</p>
+    <% end %>
+  </section>
   <section class="app-panel"><p>Criado em <%= l(@philosopher.created_at.to_date) %> · Atualizado em <%= l(@philosopher.updated_at.to_date) %></p></section>
 </section>

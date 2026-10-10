@@ -14,5 +14,18 @@
       <div class="writing-detail__body"><%= simple_format(@concept.public_send(field).presence || "Ainda não informado.") %></div>
     </section>
   <% end %>
+  <section class="app-panel writing-detail">
+    <h2 class="writing-detail__title">Filósofos associados</h2>
+    <% associated_records = @concept.philosophers.order(:name, :id) %>
+    <% if associated_records.any? %>
+      <ul>
+        <% associated_records.each do |record| %>
+          <li><%= link_to record.name, philosophical_workshop_philosopher_path(record) %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="writing-muted">Nenhum registro associado.</p>
+    <% end %>
+  </section>
   <section class="app-panel"><p>Criado em <%= l(@concept.created_at.to_date) %> · Atualizado em <%= l(@concept.updated_at.to_date) %></p></section>
 </section>

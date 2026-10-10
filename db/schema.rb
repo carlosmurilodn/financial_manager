@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_11_021000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_11_022000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -360,6 +360,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_021000) do
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_passkey_credentials_on_user_id"
     t.index ["webauthn_id"], name: "index_passkey_credentials_on_webauthn_id", unique: true
+  end
+
+  create_table "philosophical_workshop_concept_philosophers", force: :cascade do |t|
+    t.bigint "concept_id", null: false
+    t.bigint "philosopher_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["concept_id", "philosopher_id"], name: "idx_philosophy_links_unique_pair", unique: true
+    t.index ["philosopher_id"], name: "idx_philosophy_links_philosopher"
   end
 
   create_table "philosophical_workshop_concepts", force: :cascade do |t|
@@ -1012,6 +1021,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_021000) do
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id", on_delete: :cascade
   add_foreign_key "passkey_credentials", "users"
+  add_foreign_key "philosophical_workshop_concept_philosophers", "philosophical_workshop_concepts", column: "concept_id"
+  add_foreign_key "philosophical_workshop_concept_philosophers", "philosophical_workshop_philosophers", column: "philosopher_id"
   add_foreign_key "philosophical_workshop_concepts", "users"
   add_foreign_key "philosophical_workshop_insights", "users"
   add_foreign_key "philosophical_workshop_philosophers", "users"

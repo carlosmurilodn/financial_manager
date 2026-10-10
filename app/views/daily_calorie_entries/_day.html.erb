@@ -14,7 +14,7 @@
     <%= form_with url: toggle_health_nutrition_day_path(entry.occurred_on.beginning_of_week(:monday).iso8601), method: :patch, class: "calorie-day__diet-form", data: { turbo_frame: "_top" } do |f| %>
       <%= f.hidden_field :occurred_on, value: entry.occurred_on.iso8601 %>
       <%= f.label :diet_status, "Alimentação", for: "diet-status-#{entry.occurred_on.iso8601}" %>
-      <%= f.select :diet_status, options_for_select(WeeklyHealthGoalDay::DIET_STATUSES, diet_status || ""), {}, id: "diet-status-#{entry.occurred_on.iso8601}", class: "app-form-select", onchange: "this.form.requestSubmit()" %>
+      <%= f.select :diet_status, options_for_select(WeeklyHealthGoalDay::DIET_STATUSES, diet_status || ""), {}, id: "diet-status-#{entry.occurred_on.iso8601}", class: "app-form-select", data: { action: "change->calorie-status#saveDietStatus" } %>
     <% end %>
   <% end %>
   <% if entry.errors.any? %>

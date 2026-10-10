@@ -15,6 +15,10 @@ export default class extends Controller {
     this.statusTarget.textContent = saved ? "Registro salvo ✅" : "Registro pendente ❌"
   }
 
+  saveDietStatus(event) {
+    event.target.form.requestSubmit()
+  }
+
   normalize(value) {
     const normalized = value.trim().replace(",", ".")
     if (normalized === "") return ""

@@ -1256,3 +1256,43 @@ html[data-theme="night"] .progress-activity-day.is-not-done { color: #fb8ba1; }
   .app-sidebar--health .app-sidebar__brand-logout-form { display: none; }
   .app-sidebar--health .app-sidebar__brand { grid-template-columns: minmax(0, 1fr); }
 }
+
+.exercise-entry-card__show-link { color: inherit; text-decoration: none; }
+.exercise-entry-card__show-link:hover { color: var(--nav-active-bar); text-decoration: underline; }
+.exercise-entry-show__header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+.exercise-entry-show__actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.exercise-entry-show__summary { margin: 16px 0 0; color: var(--text-soft); }
+.exercise-entry-show__item { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.exercise-entry-show__item-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+.exercise-entry-show__item h2 { margin: 0; font-size: 1.2rem; color: var(--text-main); }
+.exercise-entry-show__details { display: flex; flex-wrap: wrap; gap: 16px 28px; margin: 0; }
+.exercise-entry-show__details dt { color: var(--text-soft); font-size: .8rem; }
+.exercise-entry-show__details dd { margin: 4px 0 0; color: var(--text-main); font-weight: 700; }
+.exercise-entry-show__groups { display: grid; gap: 24px; }
+.exercise-entry-show__group { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 24px; padding-top: 20px; border-top: 1px solid var(--card-border); }
+.exercise-entry-show__group-header { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; min-width: 0; }
+.exercise-entry-show__group-header p { margin: 0 0 4px; color: var(--text-soft); font-size: .8rem; }
+.exercise-entry-show__group h3 { margin: 0; color: var(--text-main); font-size: 1rem; overflow-wrap: anywhere; }
+.exercise-entry-show__group-image { display: block; width: 120px; height: 120px; object-fit: contain; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); }
+.exercise-entry-show__group-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; width: 120px; height: 120px; color: var(--text-soft); background: var(--surface); border: 1px solid var(--card-border); border-radius: 12px; }
+.exercise-entry-show__group-placeholder .material-symbols-rounded { font-size: 40px; }
+.exercise-entry-show__exercises { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; min-width: 0; }
+.exercise-entry-show__exercise { display: flex; flex-direction: column; gap: 16px; min-width: 0; padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); }
+.exercise-entry-show__exercise header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+.exercise-entry-show__exercise h4 { margin: 0; color: var(--text-main); font-size: 1rem; overflow-wrap: anywhere; }
+.exercise-entry-show__exercise header > span { color: var(--text-soft); font-size: .85rem; white-space: nowrap; }
+.exercise-entry-show__exercise-image { display: block; width: 100%; height: 320px; object-fit: contain; border-radius: 8px; }
+.exercise-entry-show__exercise-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 180px; color: var(--text-soft); }
+.exercise-entry-show__exercise-placeholder .material-symbols-rounded { font-size: 48px; }
+.exercise-entry-show__exercise-placeholder p { margin: 0; font-size: .85rem; }
+.exercise-entry-show__notes { padding-top: 20px; border-top: 1px solid var(--card-border); overflow-wrap: anywhere; }
+.exercise-entry-show__notes h3 { margin: 0 0 8px; color: var(--text-main); font-size: 1rem; }
+.exercise-entry-show__notes p { margin: 0 0 8px; color: var(--text-soft); }
+@media (max-width: 767px) {
+  .exercise-entry-show__group { grid-template-columns: 1fr; gap: 16px; }
+  .exercise-entry-show__group-header { flex-direction: row; align-items: center; }
+  .exercise-entry-show__group-image, .exercise-entry-show__group-placeholder { flex: 0 0 80px; width: 80px; height: 80px; }
+  .exercise-entry-show__actions { width: 100%; }
+  .exercise-entry-show__actions .app-btn { flex: 1 1 auto; justify-content: center; }
+  .exercise-entry-show__exercise-image { height: 280px; }
+}

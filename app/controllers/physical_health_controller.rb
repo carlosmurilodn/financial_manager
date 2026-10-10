@@ -93,6 +93,10 @@ class PhysicalHealthController < ApplicationController
       @nutrition_goal.sync_completed_count!
     end
     redirect_to health_nutrition_week_path(@week_start.iso8601), status: :see_other
+  rescue ActiveRecord::RecordInvalid => error
+    redirect_to health_nutrition_week_path(@week_start.iso8601),
+      alert: "Não foi possível salvar o status da dieta: #{error.record.errors.full_messages.to_sentence}",
+      status: :see_other
   rescue ArgumentError
     redirect_to health_nutrition_path, alert: "Dia inválido.", status: :see_other
   end

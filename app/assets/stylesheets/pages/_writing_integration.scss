@@ -61,6 +61,40 @@
 .writing-reader-document__heading .material-symbols-rounded { font-size: 20px; color: var(--primary); }
 .writing-reader-document .literary-manuscript { max-width: 76ch; margin-inline: auto; padding: 0 0 8px; }
 .writing-book-reading__chapter + .writing-book-reading__chapter { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--card-border); }
+.writing-reader-book { width: min(100%, 740px); margin-inline: auto; }
+.writing-reader-book__navigation { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 20px; margin-top: 24px; border-top: 1px solid var(--card-border); }
+.writing-reader-book__navigation[hidden] { display: none; }
+.writing-reader-book__counter { color: var(--text-soft); font-size: .85rem; text-align: center; }
+.writing-reader-book.is-paginated .writing-reader-book__viewport {
+  --reader-line-height: 1.5;
+  --reader-lines-per-page: 38;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 12pt;
+  line-height: var(--reader-line-height);
+  height: calc(var(--reader-lines-per-page) * var(--reader-line-height) * 1em);
+  overflow: hidden;
+  // In this proportional font, 36em holds roughly 75 average text characters.
+  max-width: 36em;
+  margin-inline: auto;
+}
+.writing-reader-book__viewport:focus-visible { outline: 2px solid var(--primary); outline-offset: 6px; }
+.writing-reader-document .writing-reader-book__pages { max-width: none; padding: 0; }
+.is-paginated .writing-reader-book__pages { height: 100%; column-count: auto; column-gap: 48px; column-fill: auto; }
+.is-paginated .writing-book-reading__chapter { break-before: column; }
+.is-paginated .writing-book-reading__chapter + .writing-book-reading__chapter { margin-top: 0; padding-top: 0; border-top: 0; }
+.is-paginated .writing-book-reading__chapter > h2 { margin-top: 0; }
+.is-paginated .writing-book-reading__chapter p { orphans: 2; widows: 2; }
+.is-paginated .writing-book-reading__chapter hr { margin: .75em 0; line-height: 1.5; break-inside: avoid; }
+@media (max-width: 600px) {
+  .writing-reader-book__navigation { gap: 6px; }
+  .writing-reader-book__navigation .app-btn { padding: 8px; font-size: .8rem; }
+}
+@media print {
+  .writing-reader-book__navigation { display: none; }
+  .writing-reader-book.is-paginated .writing-reader-book__viewport { height: auto; overflow: visible; max-width: none; }
+  .is-paginated .writing-reader-book__pages { height: auto; columns: auto !important; transform: none !important; }
+  .is-paginated .writing-book-reading__chapter { break-before: page; }
+}
 .writing-scenes-card .writing-detail__title { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 1.1rem; }
 .writing-scenes-card .writing-muted { margin: 0 0 16px; }
 .writing-manuscript-cards { display: grid; gap: var(--writing-card-gap, 14px); list-style: none; padding: 0; margin: 0; }

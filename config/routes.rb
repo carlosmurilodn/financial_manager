@@ -7,6 +7,13 @@ Rails.application.routes.draw do
   get "desenvolvimento-pessoal", to: "personal_development#index", as: :personal_development
   resources :writing_books, path: "projetos/estudio-de-escrita" do
     member { get :cover, path: "capa" }
+    resources :writing_plots, path: "tramas"
+    resources :writing_conflicts, path: "conflitos"
+    resources :writing_locations, path: "locais" do
+      member { get :image, path: "imagem" }
+    end
+    resources :writing_organizations, path: "organizacoes"
+    resources :writing_universe_rules, path: "regras-do-universo"
     resources :writing_characters, path: "personagens" do
       member { get :image, path: "imagem" }
       resources :writing_relationships, path: "relacionamentos", only: %i[new create edit update destroy]

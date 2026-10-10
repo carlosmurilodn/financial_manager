@@ -1,0 +1,30 @@
+<section class="app-page writing-studio writing-narrative-page">
+  <%= render "breadcrumbs" %>
+  <header class="app-panel writing-narrative-heading"><div><p class="app-page__eyebrow"><%= @book.title %> · <%= writing_narrative_group(narrative_model) %></p><h1 class="app-page__title"><%= narrative_model::LABEL %></h1></div><%= link_to writing_action_label("add", "Cadastrar #{narrative_model::SINGULAR_LABEL.downcase}"), new_polymorphic_path([@book, narrative_model]), class: "app-btn app-btn--primary" %></header>
+  <%= render "tabs" %>
+  <div class="app-panel"><%= render "shared/filter_accordion" do %>
+    <%= form_with url: narrative_collection_path, method: :get, class: "app-filter-form" do |f| %>
+      <div class="app-filter-grid writing-narrative-filters">
+        <div class="app-filter-field"><%= f.label :query, "Pesquisar" %><%= f.search_field :query, value: @query, class: "app-form-control", placeholder: "Buscar por título ou nome" %></div>
+        <% narrative_model::FIELDS.slice(:kind, :status, :intensity, :category).each do |field, label| %>
+          <% options = narrative_model::OPTIONS[field]&.invert || @book.public_send(narrative_model.model_name.route_key).where.not(field => [nil, ""]).distinct.order(field).pluck(field) %>
+          <div class="app-filter-field"><%= f.label field, label %><%= f.select field, options_for_select(options, params[field]), { include_blank: "Todos" }, class: "app-form-select" %></div>
+        <% end %>
+      </div>
+      <div class="app-filter-actions"><%= f.button writing_action_label("filter_alt", "Filtrar"), class: "app-btn app-btn--primary app-page__primary-btn" %><%= link_to writing_action_label("filter_alt_off", "Limpar Filtros"), narrative_collection_path, class: "app-btn app-btn--secondary app-page__secondary-btn" %>
+        <div class="app-per-page-control"><%= f.label :per_page, "Exibir", class: "app-per-page-control__label" %><%= f.select :per_page, options_for_select(per_page_options, @per_page), {}, class: "form-select app-per-page-control__select", onchange: "this.form.requestSubmit()" %><span class="app-per-page-control__suffix">por página</span></div>
+      </div>
+    <% end %>
+  <% end %></div>
+  <p class="writing-muted"><%= @filtered_count %> registro(s) encontrado(s)</p>
+  <% if @records.empty? %><div class="app-panel writing-empty"><h2>Nenhum registro encontrado.</h2><p>Cadastre informações da sua história ou ajuste os filtros.</p></div><% else %>
+    <div class="writing-narrative-cards"><% @records.each do |record| %>
+      <%= link_to polymorphic_path([@book, record]), class: "app-panel writing-narrative-card" do %>
+        <% if record.is_a?(WritingLocation) && record.reference_image.attached? %><%= image_tag image_writing_book_writing_location_path(@book, record), alt: "Referência de #{record.display_name}", loading: "lazy", class: "writing-narrative-image" %><% end %>
+        <h2><%= record.display_name %></h2><% narrative_model::OPTIONS.each do |field, options| %><% if record.public_send(field).present? %><span class="writing-status"><%= options[record.public_send(field)] %></span><% end %><% end %>
+        <p><%= truncate(record.description.presence || "Descrição ainda não informada.", length: 180) %></p>
+      <% end %>
+    <% end %></div>
+  <% end %>
+  <%= render "shared/pagination", current_page: @current_page, total_pages: @total_pages, base_params: request.query_parameters %>
+</section>

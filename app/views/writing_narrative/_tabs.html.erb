@@ -1,0 +1,5 @@
+<nav class="writing-narrative-tabs" aria-label="<%= writing_narrative_group(narrative_model) %>">
+  <% writing_narrative_tabs(narrative_model).each do |model| %>
+    <%= link_to model::LABEL, polymorphic_path([@book, model]), class: "writing-narrative-tab #{'is-active' if model == narrative_model}", aria: { current: model == narrative_model ? "page" : nil } %>
+  <% end %>
+</nav>

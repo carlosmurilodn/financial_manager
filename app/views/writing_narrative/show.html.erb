@@ -1,0 +1,10 @@
+<section class="app-page writing-studio writing-narrative-page">
+  <%= render "breadcrumbs" %><%= render "tabs" %>
+  <header class="app-panel writing-narrative-heading"><div><p class="app-page__eyebrow"><%= narrative_model::SINGULAR_LABEL %></p><h1 class="app-page__title"><%= @record.display_name %></h1></div><div class="writing-character-actions">
+    <%= link_to writing_action_label("edit", "Editar"), edit_polymorphic_path([@book, @record]), class: "app-btn app-btn--primary" %><%= link_to writing_action_label("arrow_back", "Voltar"), narrative_collection_path, class: "app-btn app-btn--outline" %><%= button_to writing_action_label("delete", "Excluir"), polymorphic_path([@book, @record]), method: :delete, class: "app-btn app-btn--secondary writing-book-delete", form: { data: { turbo_confirm: "Excluir #{@record.display_name}? Seus vínculos serão removidos; os demais registros serão preservados." } } %>
+  </div></header>
+  <section class="app-panel writing-narrative-details"><h2>Informações</h2><dl>
+    <% narrative_model::FIELDS.except(narrative_model::NAME_FIELD).each do |field, label| %><div><dt><%= label %></dt><dd><%= simple_format(narrative_model::OPTIONS[field]&.fetch(@record.public_send(field), nil) || @record.public_send(field).presence || "Ainda não informado.") %></dd></div><% end %>
+  </dl><% if @record.is_a?(WritingLocation) && @record.reference_image.attached? %><%= image_tag image_writing_book_writing_location_path(@book, @record), alt: "Referência de #{@record.display_name}", class: "writing-narrative-image" %><% end %></section>
+  <% unless writing_narrative_relations(@record).empty? %><section class="app-panel"><h2>Vínculos narrativos</h2><%= render "relations", record: @record %></section><% end %>
+</section>

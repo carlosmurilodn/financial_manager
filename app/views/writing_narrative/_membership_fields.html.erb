@@ -1,0 +1,13 @@
+<fieldset class="writing-form-section"><legend>Personagens e funções</legend>
+  <% memberships = @record.writing_organization_memberships.index_by(&:writing_character_id) %>
+  <% characters = @book.writing_characters.order(:name) %>
+  <% characters.each_with_index do |character, index| %>
+    <% membership = memberships[character.id] %><% prefix = "writing_organization[writing_organization_memberships_attributes][#{index}]" %>
+    <div class="writing-narrative-membership">
+      <%= hidden_field_tag "#{prefix}[id]", membership.id if membership&.persisted? %><%= hidden_field_tag "#{prefix}[writing_character_id]", character.id %><%= hidden_field_tag "#{prefix}[_destroy]", "1", id: nil %>
+      <label class="app-checkbox"><%= check_box_tag "#{prefix}[_destroy]", "0", membership.present? && !membership.marked_for_destruction?, id: "member_#{character.id}" %><span><%= character.full_name %></span></label>
+      <div><%= label_tag "member_role_#{character.id}", "Função ou cargo de #{character.full_name}" %><%= text_field_tag "#{prefix}[role]", membership&.role, class: "app-form-control", id: "member_role_#{character.id}" %></div>
+    </div>
+  <% end %>
+  <% if characters.empty? %><p class="writing-muted">Cadastre personagens para vinculá-los à organização.</p><% end %>
+</fieldset>

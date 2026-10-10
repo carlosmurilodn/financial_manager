@@ -14,6 +14,13 @@ class WritingCharacter < ApplicationRecord
   has_many :outgoing_relationships, class_name: "WritingRelationship", foreign_key: :source_character_id, dependent: :destroy, inverse_of: :source_character
   has_many :incoming_relationships, class_name: "WritingRelationship", foreign_key: :target_character_id, dependent: :destroy, inverse_of: :target_character
 
+  has_many :writing_plot_characters, dependent: :destroy
+  has_many :writing_plots, through: :writing_plot_characters
+  has_many :writing_conflict_characters, dependent: :destroy
+  has_many :writing_conflicts, through: :writing_conflict_characters
+  has_many :writing_organization_memberships, dependent: :destroy
+  has_many :writing_organizations, through: :writing_organization_memberships
+
   before_validation :normalize_identification
   validates :name, presence: true, length: { maximum: 200 }
   validates :surname, :nicknames, length: { maximum: 200 }

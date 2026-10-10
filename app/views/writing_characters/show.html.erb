@@ -15,6 +15,7 @@
       <% end %>
     </section>
   <% end %></div>
+  <section class="app-panel"><h2 class="writing-detail__title">Participação na história</h2><%= render "writing_narrative/relations", record: @character %></section>
   <% can_add_relationship = @book.writing_characters.where.not(id: @character.id).exists? %>
   <section class="app-panel writing-character-relationships" id="relacionamentos">
     <div class="writing-character-relationships__heading"><div><h2>Relacionamentos <span class="writing-character-relationships__count"><%= @relationships.size %></span></h2><p class="writing-muted">Vínculos de <%= @character.full_name %> com outros personagens deste livro.</p></div>

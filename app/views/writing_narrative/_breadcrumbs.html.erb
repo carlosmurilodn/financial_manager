@@ -1,0 +1,7 @@
+<% items = [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, writing_book_path(@book)], [narrative_model::LABEL, narrative_collection_path]] %>
+<% if action_name == "index" %><% items[-1][1] = nil %>
+<% elsif @record.persisted? %>
+  <% items << [@record.display_name, action_name == "show" ? nil : polymorphic_path([@book, @record])] %>
+  <% items << ["Editar", nil] if action_name.in?(%w[edit update]) %>
+<% else %><% items << ["Cadastrar", nil] %><% end %>
+<%= render "shared/breadcrumbs", items: items %>

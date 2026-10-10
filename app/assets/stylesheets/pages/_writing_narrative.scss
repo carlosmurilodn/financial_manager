@@ -18,5 +18,13 @@
 .writing-narrative-related { margin-top: 20px; }
 .writing-narrative-related h3 { font-size: 1rem; }
 .writing-narrative-image { display: block; width: 100%; max-width: 320px; max-height: 220px; object-fit: contain; border-radius: 10px; margin: 16px 0; }
-.writing-book-tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.writing-book-tools { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
 @media (max-width: 700px) { .writing-narrative-details dl, .writing-narrative-membership, .writing-book-tools { grid-template-columns: minmax(0, 1fr); } }
+
+.writing-book-tool { display: flex; flex-direction: column; align-items: flex-start; }
+.writing-book-tool .writing-detail__title { flex-wrap: wrap; }
+.writing-book-page .writing-book-tool .writing-detail__title { margin-bottom: .5rem; }
+.writing-book-tool > .writing-muted { margin-top: 0; }
+.writing-book-tool > .app-btn { margin-top: auto; max-width: 100%; }
+.writing-book-tool__badge { display: inline-flex; align-items: center; justify-content: center; min-width: 26px; padding: 2px 8px; border: 1px solid var(--card-border); border-radius: 20px; background: var(--app-bg-soft); color: var(--text-soft); font-size: .75rem; line-height: 1.4; font-weight: 600; }
+@media (max-width: 1000px) { .writing-book-tools { grid-template-columns: minmax(0, 1fr); } }

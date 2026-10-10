@@ -8,12 +8,18 @@
     <p class="writing-muted">Seu manuscrito começa aqui. Crie um capítulo e abra o Editor Literário para escrever.</p>
   <% else %>
     <ol class="writing-chapters__list">
-      <% chapters.each do |chapter| %>
+      <% chapters.each_with_index do |chapter, index| %>
         <li class="writing-chapters__item">
           <%= link_to edit_writing_book_writing_chapter_path(@book, chapter), class: "writing-chapters__link" do %>
             <strong><%= chapter.title %></strong><small>Atualizado em <%= l(chapter.updated_at.to_date) %></small>
           <% end %>
+          <div class="writing-chapter-actions">
+            <%= link_to writing_action_label("visibility", "Consultar"), writing_book_writing_chapter_path(@book, chapter), class: "app-btn app-btn--secondary" %>
+            <% [["up", "arrow_upward", "Subir capítulo", index.zero?], ["down", "arrow_downward", "Descer capítulo", index == chapters.size - 1]].each do |direction, icon, label, disabled| %>
+              <%= button_to reorder_writing_book_writing_chapter_path(@book, chapter), method: :patch, params: { direction: direction }, class: "literary-editor-tool", disabled: disabled, title: label, aria: { label: label } do %><span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span><% end %>
+            <% end %>
           <%= button_to writing_action_label("delete", "Excluir"), writing_book_writing_chapter_path(@book, chapter), method: :delete, class: "app-btn app-btn--secondary writing-book-delete", form: { data: { turbo_confirm: "Excluir o capítulo #{chapter.title} e todo o seu texto? Esta ação não poderá ser desfeita." } } %>
+          </div>
         </li>
       <% end %>
     </ol>

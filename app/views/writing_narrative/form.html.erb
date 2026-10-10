@@ -23,6 +23,7 @@
         <% if @record.persisted? && @record.reference_image.attached? %><%= image_tag image_writing_book_writing_location_path(@book, @record), alt: "Referência atual", class: "writing-narrative-image" %><label class="app-checkbox"><%= check_box_tag "writing_location[remove_reference_image]", "1", ActiveModel::Type::Boolean.new.cast(params.dig(:writing_location, :remove_reference_image)) %><span>Remover imagem atual</span></label><% end %>
       </fieldset>
     <% end %>
+    <% if @record.is_a?(WritingNote) %><%= render "writing_notes/link_fields" %><% end %>
     <div class="app-form-page__actions"><%= link_to writing_action_label("close", "Cancelar"), @record.persisted? ? polymorphic_path([@book, @record]) : narrative_collection_path, class: "app-btn app-btn--outline" %><%= f.button writing_action_label("save", "Salvar"), type: :submit, class: "app-btn app-btn--primary" %></div>
   <% end %>
 <% end %>

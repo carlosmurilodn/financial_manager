@@ -23,3 +23,6 @@ application.register("book-cover", BookCoverController)
 
 import LiteraryEditorController from "./literary_editor_controller"
 application.register("literary-editor", LiteraryEditorController)
+
+import NarrativePanelController from "./narrative_panel_controller"
+application.register("narrative-panel", NarrativePanelController)

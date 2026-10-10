@@ -1,0 +1,10 @@
+<fieldset class="writing-form-section" data-controller="select2"><legend>Vínculos opcionais</legend><p class="writing-muted">Relacione a nota aos elementos do mesmo livro. O conteúdo não será inserido no manuscrito.</p>
+  <% labels = { writing_character: "Personagens", writing_plot: "Tramas", writing_conflict: "Conflitos", writing_chapter: "Capítulos", writing_scene: "Cenas" } %>
+  <% selected = @record.writing_note_links.to_a %>
+  <% labels.each do |association, label| %><div class="writing-note-link-field"><%= label_tag "note_#{association}", label %>
+    <% records = @book.public_send(association.to_s.pluralize).order(association == :writing_character ? :name : :title) %>
+    <% chosen = @note_targets ? @note_targets.filter_map { |kind, record| record.id if kind == association } : selected.filter_map { |link| link.public_send("#{association}_id") } %>
+    <%= select_tag "writing_note[links][#{association}][]", options_for_select(records.map { |record| [record.respond_to?(:full_name) ? record.full_name : record.display_name, record.id] }, chosen), multiple: true, id: "note_#{association}", class: "app-form-select", data: { placeholder: "Pesquisar e selecionar…" } %>
+    <%= hidden_field_tag "writing_note[links][#{association}][]", "", id: nil %>
+  </div><% end %>
+</fieldset>

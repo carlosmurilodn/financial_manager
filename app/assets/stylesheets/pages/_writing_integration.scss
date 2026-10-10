@@ -1,0 +1,30 @@
+.literary-writing-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; align-items: start; min-width: 0; }
+.narrative-panel-open .literary-writing-layout { grid-template-columns: minmax(0, 1fr) 360px; }
+.literary-narrative-panel { position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto; min-width: 0; background: var(--surface); }
+.literary-narrative-panel[hidden] { display: none !important; }
+.literary-narrative-panel__heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+.literary-narrative-panel__heading h2 { font-size: 1.1rem; margin: 0; }
+.literary-narrative-panel > label { display: block; margin: 12px 0 6px; font-weight: 600; font-size: .85rem; }
+.literary-narrative-panel > .app-checkbox { display: flex; }
+.literary-narrative-panel .select2-container { max-width: 100%; }
+.literary-narrative-panel__status { margin: 12px 0; font-size: .85rem; overflow-wrap: anywhere; }
+.literary-narrative-record { padding: 16px 0; border-top: 1px solid var(--card-border); }
+.literary-narrative-record__name { display: block; border: 0; border-radius: 4px; padding: 0; color: var(--text-main); background: transparent; font: inherit; font-weight: 700; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.literary-narrative-record__name:hover { color: var(--primary); }
+.literary-narrative-record__name:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.literary-narrative-record > p { font-size: .85rem; margin: 6px 0 10px; }
+.literary-narrative-details { display: grid; gap: 16px; margin-top: 16px; }
+.literary-narrative-details dt { color: var(--text-soft); font-weight: 700; font-size: .85rem; }
+.literary-narrative-details dd { margin: 4px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.writing-scenes-list { padding: 0; margin: 0; list-style: none; }
+.writing-scenes-list > li { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--card-border); }
+.writing-scene-move { display: grid; gap: 12px; max-width: 600px; }
+.writing-note-link-field { margin-top: 16px; }
+.writing-note-link-field > label { display: block; margin-bottom: 6px; }
+.writing-chapters__item { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.writing-chapter-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.writing-chapter-actions .button_to { float: none; margin: 0; }
+@media (max-width: 1100px) {
+  .narrative-panel-open .literary-writing-layout { grid-template-columns: minmax(0, 1fr); }
+  .literary-narrative-panel { position: fixed; top: 16px; bottom: 16px; right: 16px; z-index: 1100; width: min(380px, calc(100vw - 32px)); max-height: none; box-shadow: 0 8px 32px rgba(0, 0, 0, .18); }
+}

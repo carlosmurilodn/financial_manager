@@ -6,7 +6,10 @@ class WritingNarrativeController < ApplicationController
   def index
     scope = narrative_scope
     @query = params[:query].to_s.strip
-    scope = scope.where("#{narrative_model::NAME_FIELD} ILIKE ?", "%#{narrative_model.sanitize_sql_like(@query)}%") if @query.present?
+    if @query.present?
+      pattern = "%#{narrative_model.sanitize_sql_like(@query)}%"
+      scope = narrative_model == WritingNote ? scope.where("title ILIKE ? OR description ILIKE ?", pattern, pattern) : scope.where("#{narrative_model::NAME_FIELD} ILIKE ?", pattern)
+    end
     %i[kind status intensity category].each do |field|
       scope = scope.where(field => params[field]) if narrative_model::FIELDS.key?(field) && params[field].present?
     end
@@ -108,6 +111,7 @@ class WritingNarrativeController < ApplicationController
     @book.with_lock do
       @record.assign_attributes(attributes)
       saved = @record.save
+      after_narrative_save if saved
       raise ActiveRecord::Rollback unless saved
     end
     if saved
@@ -120,6 +124,9 @@ class WritingNarrativeController < ApplicationController
     raise unless error.record == @record
 
     render "writing_narrative/form", status: :unprocessable_content
+  end
+
+  def after_narrative_save
   end
 
   def remove_reference_image

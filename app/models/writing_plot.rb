@@ -1,4 +1,6 @@
 class WritingPlot < ApplicationRecord
+  has_many :writing_narrative_associations, dependent: :destroy
+  has_many :writing_note_links, dependent: :destroy
   LABEL = "Tramas"
   SINGULAR_LABEL = "Trama"
   NAME_FIELD = :title

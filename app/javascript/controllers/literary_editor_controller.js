@@ -6,6 +6,8 @@ import { LiteraryParagraph, LiteraryHeading, LiteraryEditing } from "../writing/
 export default class extends Controller {
   static targets = ["host", "content", "title", "lockVersion", "status", "save", "format", "export", "indent"]
 
+  static values = { label: { type: String, default: "capítulo" } }
+
   connect() {
     this.events = new AbortController()
     this.saving = false
@@ -20,7 +22,7 @@ export default class extends Controller {
         content,
         enableContentCheck: true,
         editorProps: {
-          attributes: { class: "literary-manuscript", role: "textbox", "aria-multiline": "true", "aria-label": "Texto do capítulo", "aria-describedby": "literary-editor-help", spellcheck: "true", lang: "pt-BR" },
+          attributes: { class: "literary-manuscript", role: "textbox", "aria-multiline": "true", "aria-label": `Texto do ${this.labelValue}`, "aria-describedby": "literary-editor-help", spellcheck: "true", lang: "pt-BR" },
           handleKeyDown: (_view, event) => {
             if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s") {
               event.preventDefault()
@@ -63,6 +65,7 @@ export default class extends Controller {
   }
 
   disconnect() {
+    clearTimeout(this.autosaveTimer)
     this.events?.abort()
     this.editor?.destroy()
   }
@@ -78,7 +81,16 @@ export default class extends Controller {
   updateDirty() {
     if (!this.editor) return
     this.dirty = this.snapshot() !== this.savedSnapshot
-    if (!this.saving) this.setStatus(this.dirty ? "Alterações não salvas." : "Pronto para escrever.")
+    if (!this.saving && !this.conflicted) this.setStatus(this.dirty ? "Alterações não salvas. Salvamento automático após pausa na escrita." : "Pronto para escrever.")
+    this.scheduleAutosave()
+  }
+
+  scheduleAutosave() {
+    clearTimeout(this.autosaveTimer)
+    if (!this.dirty || this.saving || this.conflicted) return
+    this.autosaveTimer = setTimeout(() => {
+      if (this.dirty && !this.saving && !this.conflicted && this.titleTarget.value.trim()) this.save()
+    }, 8000)
   }
 
   format(event) {
@@ -128,15 +140,16 @@ export default class extends Controller {
   }
 
   async save(event) {
-    event.preventDefault()
-    if (!this.editor || this.editor.isDestroyed || this.saving) return
+    event?.preventDefault()
+    clearTimeout(this.autosaveTimer)
+    if (!this.editor || this.editor.isDestroyed || this.saving || this.conflicted) return
     if (!this.element.reportValidity()) return
     this.syncContent()
     const savedSnapshot = this.snapshot()
     const formData = new FormData(this.element)
     this.saving = true
     this.saveTarget.disabled = true
-    this.setStatus("Salvando capítulo…")
+    this.setStatus(`Salvando ${this.labelValue}…`)
     try {
       const response = await fetch(this.element.action, {
         method: "POST", body: formData, credentials: "same-origin",
@@ -147,7 +160,11 @@ export default class extends Controller {
         return
       }
       const result = await response.json()
-      if (!response.ok) throw new Error((result.errors || ["Não foi possível salvar."]).join(" "))
+      if (!response.ok) {
+        if (response.status === 409) this.conflicted = true
+        throw new Error((result.errors || ["Não foi possível salvar."]).join(" "))
+      }
+      if (!this.element.isConnected) return
       this.element.action = result.save_url
       let method = this.element.querySelector('input[name="_method"]')
       if (!method) {
@@ -164,20 +181,22 @@ export default class extends Controller {
       this.savedSnapshot = savedSnapshot
       this.element.dataset.savedSnapshot = savedSnapshot
       this.dirty = this.snapshot() !== savedSnapshot
-      this.setStatus(this.dirty ? "Capítulo salvo. Há novas alterações pendentes." : "Capítulo salvo.")
+      this.setStatus(this.dirty ? "Texto salvo. Há novas alterações pendentes." : "Texto salvo.")
+      this.dispatch("saved", { detail: result })
     } catch (error) {
       const message = error instanceof TypeError ? "Falha de conexão. Seu texto continua no editor; tente salvar novamente." : error.message
       this.setStatus(message || "Falha ao salvar. Seu texto continua no editor; tente novamente.", true)
     } finally {
       this.saving = false
-      this.saveTarget.disabled = false
+      this.saveTarget.disabled = this.conflicted === true
+      if (this.dirty && !this.conflicted && this.snapshot() !== savedSnapshot) this.scheduleAutosave()
     }
   }
 
   export(event) {
     if (this.exportTarget.getAttribute("aria-disabled") !== "true" && !this.dirty && !this.saving) return
     event.preventDefault()
-    this.setStatus("Salve o capítulo antes de exportar.", true)
+    this.setStatus(`Salve o ${this.labelValue} antes de exportar.`, true)
     this.saveTarget.focus()
   }
 

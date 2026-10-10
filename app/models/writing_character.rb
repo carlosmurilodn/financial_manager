@@ -1,4 +1,6 @@
 class WritingCharacter < ApplicationRecord
+  has_many :writing_narrative_associations, dependent: :destroy
+  has_many :writing_note_links, dependent: :destroy
   ROLES = { "protagonist" => "Protagonista", "antagonist" => "Antagonista", "supporting" => "Coadjuvante", "secondary" => "Secundário", "extra" => "Figurante", "other" => "Outro" }.freeze
   STATUSES = { "active" => "Ativo", "inactive" => "Inativo", "deceased" => "Falecido", "missing" => "Desaparecido", "undefined" => "Indefinido" }.freeze
   IMAGE_TYPES = %w[image/jpeg image/png image/webp].freeze

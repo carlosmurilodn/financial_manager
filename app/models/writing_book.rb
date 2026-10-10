@@ -13,6 +13,10 @@ class WritingBook < ApplicationRecord
   COVER_TYPES = %w[image/jpeg image/png image/webp].freeze
   MAX_COVER_SIZE = 5.megabytes
 
+  has_many :writing_narrative_associations, dependent: :destroy
+  has_many :writing_note_links, dependent: :destroy
+  has_many :writing_notes, dependent: :destroy
+  has_many :writing_scenes, dependent: :destroy
   has_many :writing_conflicts, dependent: :destroy
   has_many :writing_plots, dependent: :destroy
   has_many :writing_organizations, dependent: :destroy

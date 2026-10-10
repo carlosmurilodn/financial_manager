@@ -7,6 +7,14 @@ Rails.application.routes.draw do
   get "desenvolvimento-pessoal", to: "personal_development#index", as: :personal_development
   resources :writing_books, path: "projetos/estudio-de-escrita" do
     member { get :cover, path: "capa" }
+    resource :writing_narrative_context, path: "contexto-narrativo", only: %i[show create destroy]
+    resources :writing_notes, path: "notas-e-ideias"
+    resources :writing_scenes, path: "cenas", only: %i[new create show edit update destroy] do
+      member do
+        get :export, path: "exportar"
+        patch :move, path: "mover"
+      end
+    end
     resources :writing_plots, path: "tramas"
     resources :writing_conflicts, path: "conflitos"
     resources :writing_locations, path: "locais" do
@@ -18,8 +26,11 @@ Rails.application.routes.draw do
       member { get :image, path: "imagem" }
       resources :writing_relationships, path: "relacionamentos", only: %i[new create edit update destroy]
     end
-    resources :writing_chapters, path: "capitulos", only: %i[new create edit update destroy] do
-      member { get :export, path: "exportar" }
+    resources :writing_chapters, path: "capitulos", only: %i[new create show edit update destroy] do
+      member do
+        get :export, path: "exportar"
+        patch :reorder, path: "ordenar"
+      end
     end
   end
   get "financeiro", to: "home#index", as: :financial_dashboard

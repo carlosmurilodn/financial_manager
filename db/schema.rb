@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_10_140000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_10_150000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -481,6 +481,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_140000) do
     t.integer "lock_version", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "position", default: 0, null: false
+    t.index ["id", "writing_book_id"], name: "index_writing_chapters_on_id_and_writing_book_id", unique: true
     t.index ["writing_book_id"], name: "index_writing_chapters_on_writing_book_id"
   end
 
@@ -669,6 +671,90 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_140000) do
     t.index ["writing_organization_id"], name: "idx_on_writing_organization_id_d17612b1ef"
   end
 
+  create_table "writing_scenes", force: :cascade do |t|
+    t.bigint "writing_book_id", null: false
+    t.bigint "writing_chapter_id", null: false
+    t.string "title", null: false
+    t.jsonb "content", default: {"type"=>"doc", "content"=>[{"type"=>"paragraph", "attrs"=>{"textAlign"=>"left", "firstLineIndent"=>true}}]}, null: false
+    t.integer "document_version", default: 1, null: false
+    t.integer "lock_version", default: 0, null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["id", "writing_book_id"], name: "index_writing_scenes_on_id_and_writing_book_id", unique: true
+    t.index ["writing_book_id"], name: "index_writing_scenes_on_writing_book_id"
+    t.index ["writing_chapter_id", "position"], name: "index_writing_scenes_on_writing_chapter_id_and_position"
+  end
+
+  create_table "writing_notes", force: :cascade do |t|
+    t.bigint "writing_book_id", null: false
+    t.string "title", null: false
+    t.text "description"
+    t.string "category"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["id", "writing_book_id"], name: "index_writing_notes_on_id_and_writing_book_id", unique: true
+    t.index ["writing_book_id"], name: "index_writing_notes_on_writing_book_id"
+  end
+
+  create_table "writing_note_links", force: :cascade do |t|
+    t.bigint "writing_book_id", null: false
+    t.bigint "writing_note_id", null: false
+    t.bigint "writing_character_id"
+    t.bigint "writing_plot_id"
+    t.bigint "writing_conflict_id"
+    t.bigint "writing_chapter_id"
+    t.bigint "writing_scene_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["writing_book_id"], name: "index_writing_note_links_on_writing_book_id"
+    t.index ["writing_chapter_id"], name: "index_writing_note_links_on_writing_chapter_id"
+    t.index ["writing_character_id"], name: "index_writing_note_links_on_writing_character_id"
+    t.index ["writing_conflict_id"], name: "index_writing_note_links_on_writing_conflict_id"
+    t.index ["writing_note_id", "writing_chapter_id"], name: "idx_note_link_chapter", unique: true, where: "(writing_chapter_id IS NOT NULL)"
+    t.index ["writing_note_id", "writing_character_id"], name: "idx_note_link_character", unique: true, where: "(writing_character_id IS NOT NULL)"
+    t.index ["writing_note_id", "writing_conflict_id"], name: "idx_note_link_conflict", unique: true, where: "(writing_conflict_id IS NOT NULL)"
+    t.index ["writing_note_id", "writing_plot_id"], name: "idx_note_link_plot", unique: true, where: "(writing_plot_id IS NOT NULL)"
+    t.index ["writing_note_id", "writing_scene_id"], name: "idx_note_link_scene", unique: true, where: "(writing_scene_id IS NOT NULL)"
+    t.index ["writing_plot_id"], name: "index_writing_note_links_on_writing_plot_id"
+    t.index ["writing_scene_id"], name: "index_writing_note_links_on_writing_scene_id"
+    t.check_constraint "num_nonnulls(writing_character_id, writing_plot_id, writing_conflict_id, writing_chapter_id, writing_scene_id) = 1", name: "note_link_one_target"
+  end
+
+  create_table "writing_narrative_associations", force: :cascade do |t|
+    t.bigint "writing_book_id", null: false
+    t.bigint "writing_chapter_id"
+    t.bigint "writing_scene_id"
+    t.bigint "writing_character_id"
+    t.bigint "writing_plot_id"
+    t.bigint "writing_conflict_id"
+    t.bigint "writing_location_id"
+    t.bigint "writing_organization_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["writing_book_id"], name: "index_writing_narrative_associations_on_writing_book_id"
+    t.index ["writing_chapter_id", "writing_character_id"], name: "idx_narrative_chapter_character", unique: true, where: "((writing_chapter_id IS NOT NULL) AND (writing_character_id IS NOT NULL))"
+    t.index ["writing_chapter_id", "writing_conflict_id"], name: "idx_narrative_chapter_conflict", unique: true, where: "((writing_chapter_id IS NOT NULL) AND (writing_conflict_id IS NOT NULL))"
+    t.index ["writing_chapter_id", "writing_location_id"], name: "idx_narrative_chapter_location", unique: true, where: "((writing_chapter_id IS NOT NULL) AND (writing_location_id IS NOT NULL))"
+    t.index ["writing_chapter_id", "writing_organization_id"], name: "idx_narrative_chapter_organization", unique: true, where: "((writing_chapter_id IS NOT NULL) AND (writing_organization_id IS NOT NULL))"
+    t.index ["writing_chapter_id", "writing_plot_id"], name: "idx_narrative_chapter_plot", unique: true, where: "((writing_chapter_id IS NOT NULL) AND (writing_plot_id IS NOT NULL))"
+    t.index ["writing_chapter_id"], name: "index_writing_narrative_associations_on_writing_chapter_id"
+    t.index ["writing_character_id"], name: "index_writing_narrative_associations_on_writing_character_id"
+    t.index ["writing_conflict_id"], name: "index_writing_narrative_associations_on_writing_conflict_id"
+    t.index ["writing_location_id"], name: "index_writing_narrative_associations_on_writing_location_id"
+    t.index ["writing_organization_id"], name: "idx_on_writing_organization_id_b99c8ed9d0"
+    t.index ["writing_plot_id"], name: "index_writing_narrative_associations_on_writing_plot_id"
+    t.index ["writing_scene_id", "writing_character_id"], name: "idx_narrative_scene_character", unique: true, where: "((writing_scene_id IS NOT NULL) AND (writing_character_id IS NOT NULL))"
+    t.index ["writing_scene_id", "writing_conflict_id"], name: "idx_narrative_scene_conflict", unique: true, where: "((writing_scene_id IS NOT NULL) AND (writing_conflict_id IS NOT NULL))"
+    t.index ["writing_scene_id", "writing_location_id"], name: "idx_narrative_scene_location", unique: true, where: "((writing_scene_id IS NOT NULL) AND (writing_location_id IS NOT NULL))"
+    t.index ["writing_scene_id", "writing_organization_id"], name: "idx_narrative_scene_organization", unique: true, where: "((writing_scene_id IS NOT NULL) AND (writing_organization_id IS NOT NULL))"
+    t.index ["writing_scene_id", "writing_plot_id"], name: "idx_narrative_scene_plot", unique: true, where: "((writing_scene_id IS NOT NULL) AND (writing_plot_id IS NOT NULL))"
+    t.index ["writing_scene_id"], name: "index_writing_narrative_associations_on_writing_scene_id"
+    t.check_constraint "num_nonnulls(writing_chapter_id, writing_scene_id) = 1", name: "narrative_association_one_owner"
+    t.check_constraint "num_nonnulls(writing_character_id, writing_plot_id, writing_conflict_id, writing_location_id, writing_organization_id) = 1", name: "narrative_association_one_element"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cards", "users"
@@ -728,4 +814,22 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_140000) do
   add_foreign_key "writing_plots", "writing_books"
   add_foreign_key "writing_plots", "writing_plots", column: ["parent_plot_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
   add_foreign_key "writing_universe_rules", "writing_books"
+  add_foreign_key "writing_narrative_associations", "writing_books"
+  add_foreign_key "writing_narrative_associations", "writing_chapters", column: ["writing_chapter_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
+  add_foreign_key "writing_narrative_associations", "writing_characters", column: ["writing_character_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
+  add_foreign_key "writing_narrative_associations", "writing_conflicts", column: ["writing_conflict_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
+  add_foreign_key "writing_narrative_associations", "writing_locations", column: ["writing_location_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
+  add_foreign_key "writing_narrative_associations", "writing_organizations", column: ["writing_organization_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
+  add_foreign_key "writing_narrative_associations", "writing_plots", column: ["writing_plot_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
+  add_foreign_key "writing_narrative_associations", "writing_scenes", column: ["writing_scene_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
+  add_foreign_key "writing_note_links", "writing_books"
+  add_foreign_key "writing_note_links", "writing_chapters", column: ["writing_chapter_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
+  add_foreign_key "writing_note_links", "writing_characters", column: ["writing_character_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
+  add_foreign_key "writing_note_links", "writing_conflicts", column: ["writing_conflict_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
+  add_foreign_key "writing_note_links", "writing_notes", column: ["writing_note_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
+  add_foreign_key "writing_note_links", "writing_plots", column: ["writing_plot_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
+  add_foreign_key "writing_note_links", "writing_scenes", column: ["writing_scene_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
+  add_foreign_key "writing_notes", "writing_books"
+  add_foreign_key "writing_scenes", "writing_books"
+  add_foreign_key "writing_scenes", "writing_chapters", column: ["writing_chapter_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
 end

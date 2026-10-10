@@ -1,4 +1,5 @@
 class WritingOrganization < ApplicationRecord
+  has_many :writing_narrative_associations, dependent: :destroy
   LABEL = "Organizações"
   SINGULAR_LABEL = "Organização"
   NAME_FIELD = :name

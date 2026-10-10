@@ -1,4 +1,6 @@
 class WritingConflict < ApplicationRecord
+  has_many :writing_narrative_associations, dependent: :destroy
+  has_many :writing_note_links, dependent: :destroy
   LABEL = "Conflitos"
   SINGULAR_LABEL = "Conflito"
   NAME_FIELD = :title

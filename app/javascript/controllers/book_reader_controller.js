@@ -48,8 +48,12 @@ export default class extends Controller {
   }
 
   next() {
+    if (this.page >= this.total - 1) return
+
     this.page = Math.min(this.total - 1, this.page + 1)
     this.showPage()
+    this.viewportTarget.focus({ preventScroll: true })
+    this.element.closest(".writing-book-reading").scrollIntoView({ behavior: "instant", block: "start" })
   }
 
   navigate(event) {

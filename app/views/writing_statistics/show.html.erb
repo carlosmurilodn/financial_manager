@@ -1,0 +1,75 @@
+<section class="app-page writing-studio writing-statistics-page">
+  <%= render "shared/breadcrumbs", items: [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, writing_book_path(@book)], ["Estatísticas", nil]] %>
+  <header class="app-panel writing-narrative-heading">
+    <div><p class="app-page__eyebrow"><%= @book.title %> · Estúdio De Escrita</p><h1 class="app-page__title">Estatísticas Do Manuscrito</h1><p class="writing-muted">Conteúdo literário salvo. Salve alterações no editor e atualize este painel para acompanhar.</p></div>
+    <%= link_to writing_action_label("arrow_back", "Voltar Ao Livro"), writing_book_path(@book), class: "app-btn app-btn--outline" %>
+  </header>
+  <%= render "writing_statistics/navigation" %>
+  <section class="app-panel" aria-label="Indicadores Gerais">
+    <% minutes = @statistics.reading_minutes %>
+    <% metrics = [
+      ["text_fields", "Palavras Escritas", number_with_delimiter(@statistics.totals[:words])],
+      ["format_size", "Caracteres Com Espaços", number_with_delimiter(@statistics.totals[:characters])],
+      ["space_bar", "Caracteres Sem Espaços", number_with_delimiter(@statistics.totals[:characters_without_spaces])],
+      ["menu_book", "Capítulos", number_with_delimiter(@statistics.chapter_count)],
+      ["movie", "Cenas", number_with_delimiter(@statistics.scene_count)],
+      ["notes", "Parágrafos", number_with_delimiter(@statistics.totals[:paragraphs])],
+      ["bar_chart", "Palavras Por Capítulo", number_with_delimiter(@statistics.average_words_per_chapter)],
+      ["schedule", "Tempo De Leitura", minutes >= 60 ? "#{minutes / 60}h #{minutes % 60}min" : "#{minutes}min"]
+    ] %>
+    <dl class="writing-statistics-metrics"><% metrics.each do |icon, label, value| %><div><dt><span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span><%= label %></dt><dd><%= value %></dd></div><% end %></dl>
+    <p class="writing-muted">Média considera <%= @statistics.content_chapter_count %> capítulos com texto. Leitura estimada: <%= Writing::ManuscriptStatistics::WORDS_PER_MINUTE %> palavras por minuto. Caracteres incluem quebras entre blocos; títulos administrativos não entram na contagem.</p>
+  </section>
+  <section class="app-panel">
+    <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">bar_chart</span>Distribuição Por Capítulo</h2>
+    <% if @statistics.totals[:words].positive? %>
+      <div class="writing-statistics-chart" data-controller="manuscript-chart" data-manuscript-chart-chapters-value="<%= @statistics.chapters.map { |chapter| chapter.slice(:order, :title, :words) }.to_json %>">
+        <canvas data-manuscript-chart-target="canvas" role="img" aria-label="Palavras por capítulo na ordem do manuscrito. Valores disponíveis na lista abaixo.">Consulte os valores na lista de capítulos abaixo.</canvas>
+      </div>
+    <% else %><p class="writing-muted">Ainda não há palavras salvas no manuscrito. Escreva um capítulo ou cena para visualizar a distribuição.</p><% end %>
+  </section>
+  <section class="app-panel">
+    <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">menu_book</span>Estatísticas Dos Capítulos</h2>
+    <%= form_with url: writing_book_writing_statistics_path(@book), method: :get, class: "writing-statistics-filters" do %>
+      <%= hidden_field_tag :include_common, @include_common ? "1" : "0" %>
+      <div><%= label_tag :order, "Ordenar Por" %><%= select_tag :order, options_for_select([["Posição No Manuscrito", "position"], ["Mais Palavras", "words"]], @order), class: "app-form-select" %></div>
+      <%= button_tag "Aplicar", class: "app-btn app-btn--primary" %>
+    <% end %>
+    <% if @chapters.any? %>
+      <p class="writing-muted">Capítulos vazios aparecem com zero palavras. Participação calculada sobre o total do livro.</p>
+      <ol class="writing-manuscript-cards" aria-label="Estatísticas dos capítulos">
+        <% @chapters.each do |chapter| %>
+          <li class="writing-manuscript-card writing-manuscript-card--compact writing-statistics-chapter" value="<%= chapter[:order] %>">
+            <div class="writing-manuscript-card__identity">
+              <span class="writing-manuscript-card__icon material-symbols-rounded" aria-hidden="true">menu_book</span>
+              <div class="writing-manuscript-card__copy">
+                <%= link_to chapter[:title], writing_book_writing_chapter_path(@book, chapter[:id]), class: "writing-manuscript-card__title", aria: { label: "#{chapter[:order]}. #{chapter[:title]}" } %>
+              </div>
+            </div>
+            <dl class="writing-statistics-chapter__metrics">
+              <% [["Ordem", chapter[:order]], ["Palavras", chapter[:words]], ["Caracteres", chapter[:characters]], ["Parágrafos", chapter[:paragraphs]], ["Cenas", chapter[:scenes]]].each do |label, value| %>
+                <div><dt><%= label %></dt><dd><%= number_with_delimiter(value, delimiter: ".") %></dd></div>
+              <% end %>
+              <div><dt>Participação</dt><dd><%= number_to_percentage(@statistics.totals[:words].zero? ? 0 : chapter[:words] * 100.0 / @statistics.totals[:words], precision: 1, separator: ",") %></dd></div>
+            </dl>
+          </li>
+        <% end %>
+      </ol>
+    <% else %><p class="writing-muted">Livro ainda sem capítulos.</p><% end %>
+  </section>
+  <section class="app-panel">
+    <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">text_fields</span>Análise De Palavras E Parágrafos</h2>
+    <p class="writing-muted">Média de <strong><%= number_with_precision(@statistics.average_words_per_paragraph, precision: 1) %></strong> palavras por parágrafo.</p>
+    <% distribution = @statistics.paragraph_distribution %>
+    <div class="writing-statistics-paragraphs"><span>Curtos (até 40): <strong><%= number_with_delimiter(distribution[:short]) %></strong></span><span>Médios (41–100): <strong><%= number_with_delimiter(distribution[:medium]) %></strong></span><span>Longos (mais de 100): <strong><%= number_with_delimiter(distribution[:long]) %></strong></span></div>
+    <p class="writing-muted">Faixas descritivas; não avaliam qualidade literária. Títulos dentro do texto contam como palavras, mas não como parágrafos.</p>
+    <%= form_with url: writing_book_writing_statistics_path(@book), method: :get, class: "writing-statistics-filters" do %>
+      <%= hidden_field_tag :order, @order %><%= hidden_field_tag :include_common, "0", id: nil %>
+      <label class="app-checkbox"><%= check_box_tag :include_common, "1", @include_common %><span>Incluir Artigos, Preposições E Outras Palavras Comuns</span></label>
+      <%= button_tag "Atualizar Frequência", class: "app-btn app-btn--primary" %>
+    <% end %>
+    <% if @frequent_words.any? %>
+      <div class="writing-statistics-table-wrap"><table class="writing-statistics-table"><caption>Até 30 palavras mais frequentes; maiúsculas e minúsculas são agrupadas, acentos preservados.</caption><thead><tr><th scope="col">Palavra</th><th scope="col">Ocorrências</th></tr></thead><tbody><% @frequent_words.each do |word, count| %><tr><td><%= word %></td><td><%= number_with_delimiter(count) %></td></tr><% end %></tbody></table></div>
+    <% else %><p class="writing-muted">Nenhuma palavra disponível para este filtro.</p><% end %>
+  </section>
+</section>

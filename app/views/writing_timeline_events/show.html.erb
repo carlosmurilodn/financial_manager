@@ -1,0 +1,20 @@
+<section class="app-page writing-studio writing-timeline-page">
+  <%= render "breadcrumbs" %>
+  <header class="app-panel writing-narrative-heading"><div><p class="app-page__eyebrow"><%= @book.title %> · Acontecimento</p><h1 class="app-page__title"><%= @event.title %></h1><p class="writing-muted"><%= timeline_temporal_label(@event) %></p></div>
+    <div class="writing-character-actions"><%= link_to writing_action_label("edit", "Editar"), edit_writing_book_writing_timeline_event_path(@book, @event), class: "app-btn app-btn--primary" %><%= link_to writing_action_label("arrow_back", "Voltar À Linha Do Tempo"), writing_book_writing_timeline_events_path(@book), class: "app-btn app-btn--outline" %><%= button_to timeline_action_label("delete", "Excluir"), writing_book_writing_timeline_event_path(@book, @event), method: :delete, class: "writing-record-action writing-record-action--danger", aria: { label: "Excluir #{@event.title}" }, title: "Excluir", form: { data: { turbo_confirm: "Excluir #{@event.title}? Manuscrito e registros vinculados serão preservados." } } %></div>
+  </header>
+  <section class="app-panel writing-narrative-details"><h2>Informações</h2><dl>
+    <div><dt>Tipo</dt><dd><%= WritingTimelineEvent::OPTIONS[:kind][@event.kind] %></dd></div>
+    <div><dt>Situação</dt><dd><span class="writing-book-tool__badge writing-timeline__status--<%= @event.status %>"><%= WritingTimelineEvent::OPTIONS[:status][@event.status] %></span></dd></div>
+    <div><dt>Definição Temporal</dt><dd><%= WritingTimelineEvent::OPTIONS[:date_mode][@event.date_mode] %></dd></div>
+    <div><dt>Descrição</dt><dd><%= simple_format(@event.description.presence || "Ainda não informada.") %></dd></div>
+    <% if @event.reference_event %><div><dt>Acontecimento de Referência</dt><dd><%= link_to @event.reference_event.title, writing_book_writing_timeline_event_path(@book, @event.reference_event) %></dd></div><% end %>
+  </dl></section>
+  <section class="app-panel writing-timeline-relations"><h2 class="writing-detail__title">Vínculos Narrativos</h2>
+    <% WritingTimelineLink::TARGETS.each do |target, label| %>
+      <% records = @links.filter_map { |link| link.public_send(target) } %>
+      <% next if records.empty? %><h3><%= label %></h3><div class="writing-timeline__links"><% records.each do |record| %><%= link_to timeline_target_label(record), polymorphic_path([@book, record]), class: "writing-timeline__link" %><% end %></div>
+    <% end %>
+    <% if @links.empty? %><p class="writing-muted">Nenhum vínculo cadastrado. Use Editar para associar elementos do livro.</p><% end %>
+  </section>
+</section>

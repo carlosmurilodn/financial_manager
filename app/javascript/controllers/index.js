@@ -28,3 +28,15 @@ import NarrativePanelController from "./narrative_panel_controller"
 application.register("narrative-panel", NarrativePanelController)
 import ChapterEditorController from "./chapter_editor_controller"
 application.register("chapter-editor", ChapterEditorController)
+
+import TimelineDateController from "./timeline_date_controller"
+application.register("timeline-date", TimelineDateController)
+
+import PublicationController from "./publication_controller"
+application.register("publication", PublicationController)
+
+import ManuscriptChartController from "./manuscript_chart_controller"
+application.register("manuscript-chart", ManuscriptChartController)
+
+import ProductivityChartController from "./productivity_chart_controller"
+application.register("productivity-chart", ProductivityChartController)

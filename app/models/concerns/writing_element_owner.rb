@@ -2,12 +2,21 @@ module WritingElementOwner
   extend ActiveSupport::Concern
 
   included do
+    has_many :writing_timeline_links, dependent: :destroy
     has_many :writing_narrative_associations, dependent: :destroy
     has_many :writing_note_links, dependent: :destroy
   end
 
   def narrative_owner_attributes
     { self.class.model_name.singular.to_sym => self }
+  end
+
+  def related_timeline_events
+    links = writing_book.writing_timeline_links.where(narrative_owner_attributes)
+    if is_a?(WritingChapter)
+      links = links.or(writing_book.writing_timeline_links.where(writing_scene_id: writing_scenes.select(:id)))
+    end
+    writing_book.writing_timeline_events.where(id: links.select(:writing_timeline_event_id))
   end
 
   def related_notes

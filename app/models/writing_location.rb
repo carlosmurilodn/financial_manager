@@ -1,4 +1,5 @@
 class WritingLocation < ApplicationRecord
+  has_many :writing_timeline_links, dependent: :destroy
   has_many :writing_narrative_associations, dependent: :destroy
   LABEL = "Locais"
   SINGULAR_LABEL = "Local"

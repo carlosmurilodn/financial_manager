@@ -1,0 +1,11 @@
+<section class="app-page"><header class="app-panel"><h1 class="app-page__title">Autorizar Integração MCP</h1><p>Aplicação: <strong><%= @pre_auth.client.name %></strong></p><p>Permissão solicitada: leitura do Estúdio de Escrita. Nesta fase, somente diagnóstico do servidor está disponível.</p><p>O cliente receberá acesso vinculado à sua conta. Você pode revogar autorização em Aplicações Autorizadas.</p></header>
+  <section class="app-panel"><div class="writing-character-actions">
+    <% [[:post, "Autorizar", "app-btn--primary"], [:delete, "Recusar", "app-btn--outline"]].each do |method, label, style| %>
+      <%= form_tag oauth_authorization_path, method: method, data: { turbo: false } do %>
+        <% %i[client_id redirect_uri state response_type response_mode scope code_challenge code_challenge_method].each do |field| %><%= hidden_field_tag field, params[field], id: nil %><% end %>
+        <%= hidden_field_tag :mcp_resource, McpIntegration::Settings.resource, id: nil %>
+        <%= submit_tag label, class: "app-btn #{style}" %>
+      <% end %>
+    <% end %>
+  </div><%= link_to "Aplicações Autorizadas", oauth_authorized_applications_path, class: "app-btn app-btn--outline" %></section>
+</section>

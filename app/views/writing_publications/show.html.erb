@@ -1,0 +1,37 @@
+<section class="app-page writing-studio writing-publication-page" data-controller="publication" data-publication-fonts-value="<%= @font_families.to_json %>" data-publication-status-url-value="<%= @export_urls&.fetch(:status_url, '') %>">
+  <%= render "shared/breadcrumbs", items: [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, writing_book_path(@book)], ["Publicação E Exportação", nil]] %>
+  <header class="app-panel writing-narrative-heading"><div><p class="app-page__eyebrow"><%= @book.title %> · Estúdio De Escrita</p><h1 class="app-page__title">Publicação E Exportação</h1><p class="writing-muted">Configure a diagramação e gere uma cópia do texto salvo. O manuscrito original será preservado.</p></div><%= link_to writing_action_label("arrow_back", "Voltar Ao Livro"), writing_book_path(@book), class: "app-btn app-btn--outline" %></header>
+  <%= form_with model: @options, scope: :publication, url: writing_book_writing_publication_path(@book), method: :post, class: "writing-publication-form", data: { publication_target: "form", action: "submit->publication#generate change->publication#changed", turbo: false } do |f| %>
+    <section class="app-panel"><fieldset class="writing-publication-fieldset"><legend>Conteúdo</legend>
+      <div class="writing-publication-choices"><label class="app-checkbox"><%= f.radio_button :content_scope, "all", data: { publication_target: "scope" } %><span>Livro Completo</span></label><label class="app-checkbox"><%= f.radio_button :content_scope, "selected", data: { publication_target: "scope" } %><span>Capítulos Selecionados</span></label></div>
+      <div class="writing-publication-chapters" data-publication-target="chapters"><p class="writing-muted">A exportação sempre respeita a ordem atual do manuscrito.</p>
+        <% @chapters.each_with_index do |chapter, index| %><label class="app-checkbox"><%= check_box_tag "publication[chapter_ids][]", chapter.id, @options.chapter_ids.map(&:to_s).include?(chapter.id.to_s), id: "publication-chapter-#{chapter.id}" %><span><span class="writing-book-tool__badge"><%= index + 1 %></span> <%= chapter.title %></span></label><% end %>
+        <%= hidden_field_tag "publication[chapter_ids][]", "", id: nil %>
+      </div>
+      <% if @chapters.empty? %><p class="writing-muted">Livro ainda sem capítulos. Escreva o manuscrito antes de gerar o PDF.</p><% end %>
+    </fieldset></section>
+    <section class="app-panel"><fieldset class="writing-publication-fieldset"><legend>Formato Da Página</legend>
+      <div class="writing-publication-choices"><% Writing::PublicationOptions::FORMATS.each do |value, (label, _width, _height)| %><label class="app-checkbox"><%= f.radio_button :page_format, value %><span><%= label %></span></label><% end %></div>
+      <div class="writing-fields"><div><%= f.label :margins, "Margens" %><%= f.select :margins, Writing::PublicationOptions::MARGINS.transform_values(&:first).invert, {}, class: "app-form-select" %></div><div><label>Recuo De Primeira Linha</label><p class="writing-muted">1,25 cm. Parágrafos sem recuo no manuscrito continuam sem recuo no PDF.</p></div></div>
+    </fieldset></section>
+    <section class="app-panel"><fieldset class="writing-publication-fieldset"><legend>Tipografia</legend><div class="writing-fields">
+      <div><%= f.label :font, "Fonte Do Livro" %><%= f.select :font, Writing::PublicationOptions::FONTS, {}, class: "app-form-select" %></div>
+      <div><%= f.label :font_size, "Tamanho Da Fonte" %><%= f.select :font_size, (10..14).map { |size| ["#{size} pt", size] }, {}, class: "app-form-select" %></div>
+      <div><%= f.label :line_height, "Entrelinha" %><%= f.select :line_height, Writing::PublicationOptions::LINE_HEIGHTS.invert, {}, class: "app-form-select" %></div>
+      <div><%= f.label :alignment, "Alinhamento" %><%= f.select :alignment, Writing::PublicationOptions::ALIGNMENTS.invert, {}, class: "app-form-select" %></div>
+    </div><p class="writing-muted" data-publication-target="fontNote"></p><p class="writing-muted">Escolha Original Do Manuscrito para preservar alinhamento de cada parágrafo. Outras opções afetam somente a cópia exportada.</p></fieldset></section>
+    <section class="app-panel"><fieldset class="writing-publication-fieldset"><legend>Elementos Editoriais</legend><div class="writing-publication-choices">
+      <% Writing::PublicationOptions::FLAGS.each do |field, label| %><label class="app-checkbox"><%= f.check_box field %><span><%= label %></span></label><% end %>
+    </div><p class="writing-muted">Sem imagem cadastrada, a capa será tipográfica, com título e autor. Sem numeração inicial, o corpo começa na página 1. Sumário inclui apenas capítulos exportados.</p></fieldset></section>
+    <section class="app-panel writing-publication-export"><h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">picture_as_pdf</span>Exportação</h2><p class="writing-muted" data-publication-target="summary"></p>
+      <div class="writing-character-actions"><%= f.button writing_action_label("picture_as_pdf", "Gerar Prévia E PDF"), class: "app-btn app-btn--primary", disabled: @chapters.empty?, data: { publication_target: "submit" } %></div>
+      <p class="writing-muted">Salve alterações no editor antes de exportar. PDF temporário disponível por uma hora. Manuscritos extensos continuam processando em segundo plano.</p>
+    </section>
+  <% end %>
+  <section class="app-panel writing-publication-preview" aria-label="Pré-visualização"><h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">preview</span>Pré-visualização</h2>
+    <div class="app-alert app-alert--info writing-publication-status" role="status" aria-live="polite" data-publication-target="status"><%= @export ? @export['message'] : 'Gere a prévia para conferir o mesmo PDF que será baixado.' %></div>
+    <div class="writing-character-actions" data-publication-target="links" hidden><a class="app-btn app-btn--primary" data-publication-target="download" data-turbo="false"><%= writing_action_label("download", "Baixar PDF") %></a><a class="app-btn app-btn--outline" data-publication-target="open" target="_blank" rel="noopener" data-turbo="false"><%= writing_action_label("open_in_new", "Abrir Prévia") %></a></div>
+    <iframe title="Prévia do PDF do livro" class="writing-publication-frame" data-publication-target="preview" hidden></iframe>
+    <noscript><p class="writing-muted">Após iniciar exportação, recarregue esta página para acompanhar.</p><% if @export && @export['state'] == 'ready' %><%= link_to 'Baixar PDF', @export_urls[:download_url], class: 'app-btn app-btn--primary' %><%= link_to 'Abrir Prévia', @export_urls[:preview_url], class: 'app-btn app-btn--outline' %><% end %></noscript>
+  </section>
+</section>

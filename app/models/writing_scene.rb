@@ -7,6 +7,7 @@ class WritingScene < ApplicationRecord
   validate :valid_scene_document
   validate :chapter_from_same_book
   scope :ordered, -> { order(:position, :created_at, :id) }
+  include WritingActivityTracking
   include WritingElementOwner
 
   def display_name

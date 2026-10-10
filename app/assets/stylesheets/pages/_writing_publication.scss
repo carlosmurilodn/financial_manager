@@ -1,0 +1,31 @@
+.writing-publication-page { min-width: 0; }
+.writing-publication-page [hidden] { display: none !important; }
+.writing-publication-page .writing-narrative-heading > div { min-width: 0; flex: 1 1 360px; }
+.writing-publication-page .app-page__title { overflow-wrap: anywhere; }
+.writing-publication-form { display: grid; gap: var(--writing-card-gap, 14px); min-width: 0; }
+.writing-publication-fieldset { padding: 0; margin: 0; border: 0; min-width: 0; }
+.writing-publication-fieldset legend { float: none; width: auto; font-size: 1rem; font-weight: 700; color: var(--text-soft); margin-bottom: 16px; }
+.writing-publication-choices { display: grid; gap: 12px; margin-bottom: 18px; }
+.writing-publication-page .app-checkbox { display: flex; align-items: center; gap: 10px; min-height: 32px; font-weight: 500; cursor: pointer; }
+.writing-publication-page .app-checkbox input { accent-color: var(--primary); width: 18px; height: 18px; flex-shrink: 0; }
+.writing-publication-page .app-checkbox > span { min-width: 0; overflow-wrap: anywhere; }
+.writing-publication-chapters { display: grid; gap: 8px; padding: 16px; border-radius: 12px; border: 1px solid var(--card-border); background: var(--app-bg-soft); margin-bottom: 14px; }
+.writing-publication-chapters .writing-book-tool__badge { margin-right: 6px; }
+.writing-publication-fieldset .writing-fields { gap: 14px; }
+.writing-publication-fieldset > .writing-muted { margin: 14px 0 0; }
+.writing-publication-export > .writing-muted:last-child { margin: 14px 0 0; }
+.writing-publication-preview { min-width: 0; }
+.writing-publication-preview > .writing-character-actions { margin: 14px 0; }
+.writing-publication-status { background: color-mix(in srgb, var(--primary) 8%, var(--app-bg)); overflow-wrap: anywhere; }
+.writing-publication-status.app-alert--success { background: color-mix(in srgb, var(--success) 10%, var(--app-bg)); }
+.writing-publication-status.app-alert--danger { background: color-mix(in srgb, var(--danger) 10%, var(--app-bg)); }
+.writing-publication-frame { display: block; width: 100%; height: min(80vh, 900px); min-height: 420px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--app-bg-soft); }
+@media (max-width: 700px) {
+  .writing-publication-page .writing-narrative-heading > div { flex-basis: 100%; }
+  .writing-publication-page .writing-fields { grid-template-columns: minmax(0, 1fr); }
+  .writing-publication-page .app-checkbox { min-height: 44px; }
+  .writing-publication-chapters { padding: 12px; }
+  .writing-publication-page .writing-character-actions > .app-btn { flex: 1 1 auto; }
+  .writing-publication-export .app-btn { width: 100%; }
+  .writing-publication-frame { height: 65vh; min-height: 320px; }
+}

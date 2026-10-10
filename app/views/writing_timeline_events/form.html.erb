@@ -1,0 +1,31 @@
+<%= render "breadcrumbs" %>
+<%= render layout: "shared/form_page", locals: { page_class: "writing-studio writing-timeline-page", resource: @event, title: @event.persisted? ? "Editar Acontecimento" : "Novo Acontecimento", eyebrow: @book.title, icon: "timeline", back_path: writing_book_writing_timeline_events_path(@book), description: "Organize a história sem alterar o manuscrito." } do %>
+  <%= form_with model: [@book, @event], class: "app-form-page__form" do |f| %>
+    <fieldset class="writing-form-section"><legend>Informações</legend><div class="writing-fields">
+      <div class="writing-field-wide"><%= f.label :title, "Título" %><%= f.text_field :title, required: true, maxlength: 200, class: "app-form-control" %></div>
+      <div class="writing-field-wide"><%= f.label :description, "Descrição" %><%= f.text_area :description, rows: 4, class: "app-form-control" %></div>
+      <% { kind: "Tipo", status: "Situação" }.each do |field, label| %><div><%= f.label field, label %><%= f.select field, WritingTimelineEvent::OPTIONS[field].invert, {}, class: "app-form-select" %></div><% end %>
+    </div><p class="writing-muted">Flashback e Flashforward indicam como o acontecimento é apresentado; sua cronologia permanece independente.</p></fieldset>
+    <fieldset class="writing-form-section" data-controller="timeline-date select2"><legend>Quando Aconteceu</legend>
+      <div class="writing-fields">
+        <div><%= f.label :date_mode, "Definição Temporal" %><%= f.select :date_mode, WritingTimelineEvent::OPTIONS[:date_mode].invert, {}, class: "app-form-select", data: { timeline_date_target: "mode", action: "change->timeline-date#refresh" } %></div>
+        <div><%= f.label :occurred_at, "Horário (opcional)" %><%= f.time_field :occurred_at, class: "app-form-control" %></div>
+        <div data-timeline-date-target="exact"><%= f.label :occurred_on, "Data Exata" %><%= f.date_field :occurred_on, class: "app-form-control" %></div>
+        <div data-timeline-date-target="reference"><%= f.label :temporal_reference, "Referência Temporal" %><%= f.text_field :temporal_reference, maxlength: 200, placeholder: "Junho de 2025 ou três dias após o assassinato", class: "app-form-control" %></div>
+        <div data-timeline-date-target="relative"><%= f.label :reference_event_id, "Acontecimento de Referência (opcional)" %><%= f.collection_select :reference_event_id, @book.writing_timeline_events.where.not(id: @event.id).order(:title), :id, :title, { include_blank: "Nenhum" }, class: "app-form-select" %></div>
+      </div>
+      <p class="writing-muted">Datas exatas são ordenadas automaticamente. Referências aproximadas, relativas e acontecimentos sem data ficam em Cronologia indefinida, com ordem manual.</p>
+    </fieldset>
+    <fieldset class="writing-form-section" data-controller="select2"><legend>Vínculos Opcionais</legend><p class="writing-muted">Selecione elementos deste livro. Um acontecimento pode aparecer em várias cenas.</p>
+      <% selected = @event.writing_timeline_links.to_a %>
+      <% WritingTimelineLink::TARGETS.each do |target, label| %>
+        <% records = @book.public_send(target.to_s.pluralize) %>
+        <% records = target.in?(%i[writing_chapter writing_scene]) ? records.ordered : records.order(target.in?(%i[writing_character writing_location]) ? :name : :title) %>
+        <% records = records.includes(:writing_chapter) if target == :writing_scene %>
+        <% chosen = @targets ? @targets.filter_map { |kind, record| record.id if kind == target } : selected.filter_map { |link| link.public_send("#{target}_id") } %>
+        <div class="writing-note-link-field"><%= label_tag "timeline_#{target}", label %><%= select_tag "writing_timeline_event[links][#{target}][]", options_for_select(records.map { |record| [timeline_target_label(record), record.id] }, chosen), multiple: true, id: "timeline_#{target}", class: "app-form-select", data: { placeholder: "Pesquisar e selecionar…" } %><%= hidden_field_tag "writing_timeline_event[links][#{target}][]", "", id: nil %></div>
+      <% end %>
+    </fieldset>
+    <div class="app-form-page__actions"><%= link_to writing_action_label("close", "Cancelar"), writing_book_writing_timeline_events_path(@book), class: "app-btn app-btn--outline" %><%= f.button writing_action_label("save", "Salvar"), class: "app-btn app-btn--primary" %></div>
+  <% end %>
+<% end %>

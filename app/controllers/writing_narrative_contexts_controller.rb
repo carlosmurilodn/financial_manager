@@ -2,7 +2,8 @@ class WritingNarrativeContextsController < ApplicationController
   KINDS = {
     "characters" => [ WritingCharacter, "Personagens" ], "plots" => [ WritingPlot, "Tramas" ],
     "conflicts" => [ WritingConflict, "Conflitos" ], "locations" => [ WritingLocation, "Cenários" ],
-    "organizations" => [ WritingOrganization, "Organizações" ], "notes" => [ WritingNote, "Notas e Ideias" ]
+    "organizations" => [ WritingOrganization, "Organizações" ], "notes" => [ WritingNote, "Notas e Ideias" ],
+    "timeline" => [ WritingTimelineEvent, "Linha do Tempo" ]
   }.freeze
   before_action :set_context
 
@@ -24,7 +25,13 @@ class WritingNarrativeContextsController < ApplicationController
         scope.where(@model.arel_table[name_field].matches(pattern, nil, false))
       end
     elsif params[:all] != "1"
-      scope = @model == WritingNote ? @owner.related_notes : scope.where(id: linked_ids)
+      scope = if @model == WritingNote
+        @owner.related_notes
+      elsif @model == WritingTimelineEvent
+        @owner.related_timeline_events
+      else
+        scope.where(id: linked_ids)
+      end
     end
     records = scope.order(name_field, :id).limit(51).to_a
     render json: { records: records.first(50).map { |record| { id: record.id, name: record_name(record), summary: record_summary(record), associated: linked_ids.include?(record.id) } }, more: records.size > 50 }
@@ -70,6 +77,8 @@ class WritingNarrativeContextsController < ApplicationController
   end
 
   def link_scope
+    return @book.writing_timeline_links if @model == WritingTimelineEvent
+
     @model == WritingNote ? @book.writing_note_links : @book.writing_narrative_associations
   end
 
@@ -84,6 +93,8 @@ class WritingNarrativeContextsController < ApplicationController
   def record_summary(record)
     return "#{record.role_label} · #{record.profession.presence || record.status_label}" if record.is_a?(WritingCharacter)
 
+    return "#{helpers.timeline_temporal_label(record)} · #{WritingTimelineEvent::OPTIONS[:status][record.status]}" if record.is_a?(WritingTimelineEvent)
+
     record.class::OPTIONS.map { |field, options| options[record.public_send(field)] }.compact.join(" · ")
   end
 
@@ -95,6 +106,15 @@ class WritingNarrativeContextsController < ApplicationController
 
       value = record.class::OPTIONS[field]&.fetch(value, value) if record.class.const_defined?(:OPTIONS, false)
       { label: label, value: value }
+    end
+    if record.is_a?(WritingTimelineEvent)
+      details << { label: "Quando", value: helpers.timeline_temporal_label(record) }
+      details << { label: "Acontecimento de referência", value: record.reference_event.title } if record.reference_event
+      links = record.writing_timeline_links.includes(*WritingTimelineLink::DETAIL_ASSOCIATIONS)
+      WritingTimelineLink::TARGETS.each do |target, label|
+        names = links.filter_map { |link| helpers.timeline_target_label(link.public_send(target)) if link.public_send(target) }
+        details << { label: label, value: names.join(" · ") } if names.any?
+      end
     end
     if record.is_a?(WritingNote)
       details += [ { label: "Criado em", value: I18n.l(record.created_at.to_date) }, { label: "Atualizado em", value: I18n.l(record.updated_at.to_date) } ]

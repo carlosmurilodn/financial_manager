@@ -14,7 +14,7 @@
         <span><%= @book.genre_label %></span>
         <span class="writing-status writing-status--<%= @book.status %>"><%= @book.status_label %></span>
       </div>
-      <div class="writing-actions">
+      <div class="writing-actions writing-book-heading__actions">
         <%= link_to read_writing_book_path(@book), class: "app-btn app-btn--primary" do %>
           <span class="material-symbols-rounded" aria-hidden="true">menu_book</span> Ler Livro
         <% end %>

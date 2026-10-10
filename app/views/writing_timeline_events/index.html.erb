@@ -1,0 +1,33 @@
+<section class="app-page writing-studio writing-timeline-page">
+  <%= render "breadcrumbs" %>
+  <header class="app-panel writing-narrative-heading">
+    <div><p class="app-page__eyebrow"><%= @book.title %></p><h1 class="app-page__title">Linha do Tempo <span class="writing-book-tool__badge"><%= @events.size %></span></h1><p class="writing-muted">Cronologia dos acontecimentos da história, independente da ordem do manuscrito.</p></div>
+    <div class="writing-character-actions"><%= link_to writing_action_label("add", "Novo Acontecimento"), new_writing_book_writing_timeline_event_path(@book), class: "app-btn app-btn--primary" %><%= link_to writing_action_label("arrow_back", "Voltar Ao Livro"), writing_book_path(@book), class: "app-btn app-btn--outline" %></div>
+  </header>
+  <section class="app-panel writing-timeline-filters" aria-label="Filtros da linha do tempo" data-controller="select2">
+    <%= form_with url: writing_book_writing_timeline_events_path(@book), method: :get do |f| %>
+      <div class="writing-fields">
+        <div><%= f.label :query, "Pesquisar" %><%= f.search_field :query, value: @query, placeholder: "Buscar por título…", class: "app-form-control" %></div>
+        <div><%= f.label :order, "Visualização" %><%= f.select :order, [["Ordem Cronológica", "chronological"], ["Ordem Narrativa", "narrative"]], { selected: @order }, class: "app-form-select" %></div>
+        <% { kind: "Tipo", status: "Situação" }.each do |field, label| %><div><%= f.label field, label %><%= f.select field, WritingTimelineEvent::OPTIONS[field].invert, { include_blank: "Todos", selected: params[field] }, class: "app-form-select" %></div><% end %>
+        <div><%= f.label :character_id, "Personagem" %><%= f.collection_select :character_id, @book.writing_characters.order(:name), :id, :full_name, { include_blank: "Todos", selected: params[:character_id] }, class: "app-form-select" %></div>
+      </div>
+      <div class="writing-character-actions"><%= f.button writing_action_label("filter_alt", "Filtrar"), class: "app-btn app-btn--primary" %><%= link_to writing_action_label("filter_alt_off", "Limpar Filtros"), writing_book_writing_timeline_events_path(@book), class: "app-btn app-btn--secondary" %></div>
+    <% end %>
+  </section>
+  <% if @events.empty? %>
+    <section class="app-panel writing-timeline-empty"><span class="material-symbols-rounded" aria-hidden="true">timeline</span><h2>Nenhum acontecimento encontrado</h2><p class="writing-muted">Cadastre acontecimentos ou ajuste os filtros para montar a cronologia.</p></section>
+  <% else %>
+    <% @groups.each do |title, events| %>
+      <% next if events.empty? %>
+      <section class="app-panel writing-timeline-group" aria-label="<%= title %>">
+        <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">timeline</span><%= title %></h2>
+        <% if title == "Cronologia indefinida" %><p class="writing-muted">Datas aproximadas e referências relativas não são convertidas em datas exatas. Use as setas para definir a sequência; limpe os filtros para habilitá-las.</p>
+        <% elsif @order == "narrative" %><p class="writing-muted">Cada acontecimento aparece uma vez, na primeira associação ao manuscrito. Todos os vínculos continuam disponíveis nos detalhes.</p><% end %>
+        <ol class="writing-timeline">
+          <% events.each do |event| %><%= render "event", event: event %><% end %>
+        </ol>
+      </section>
+    <% end %>
+  <% end %>
+</section>

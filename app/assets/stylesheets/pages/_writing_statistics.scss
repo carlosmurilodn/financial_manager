@@ -1,0 +1,64 @@
+.writing-statistics-page { min-width: 0; }
+.writing-statistics-page .writing-detail__title { display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
+.writing-statistics-page .writing-statistics-chapter { grid-template-columns: minmax(180px, 1fr) minmax(0, 2fr); gap: 20px; }
+.writing-statistics-chapter__metrics { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; margin: 0; }
+.writing-statistics-chapter__metrics > div { min-width: 0; }
+.writing-statistics-chapter__metrics dt { color: var(--text-soft); font-size: .75rem; font-weight: 400; }
+.writing-statistics-chapter__metrics dd { margin: 4px 0 0; color: var(--text-main); font-size: .85rem; font-weight: 600; overflow-wrap: anywhere; }
+.writing-statistics-chapter .writing-manuscript-card__title:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; border-radius: 4px; }
+@media (max-width: 1200px) {
+  .writing-statistics-page .writing-statistics-chapter { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+}
+@media (max-width: 700px) {
+  .writing-statistics-chapter__metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+}
+.writing-statistics-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; margin: 0; }
+.writing-statistics-metrics > div { min-width: 0; padding: 16px; border-radius: 12px; background: var(--app-bg-soft); }
+.writing-statistics-metrics dt { display: flex; align-items: center; gap: 8px; color: var(--text-soft); font-size: .85rem; }
+.writing-statistics-metrics dt .material-symbols-rounded { color: var(--primary); font-size: 20px; }
+.writing-statistics-metrics dd { margin: 10px 0 0; color: var(--text-main); font-size: 1.5rem; font-weight: 700; overflow-wrap: anywhere; }
+.writing-statistics-chart { position: relative; height: 320px; }
+.writing-statistics-table-wrap { overflow-x: auto; }
+.writing-statistics-table { width: 100%; border-collapse: collapse; color: var(--text-main); font-size: .9rem; }
+.writing-statistics-table th, .writing-statistics-table td { padding: 12px; border-bottom: 1px solid var(--card-border); text-align: left; }
+.writing-statistics-table th { color: var(--text-soft); font-weight: 600; white-space: nowrap; }
+.writing-statistics-table td:first-child { min-width: 180px; overflow-wrap: anywhere; }
+.writing-statistics-table td:not(:first-child) { white-space: nowrap; }
+.writing-statistics-table caption { text-align: left; color: var(--text-soft); padding-bottom: 12px; }
+.writing-statistics-filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin-bottom: 16px; }
+.writing-statistics-filters > div { min-width: 180px; }
+.writing-statistics-filters label { display: block; font-size: .85rem; color: var(--text-soft); margin-bottom: 6px; }
+.writing-statistics-filters .app-checkbox { display: flex; align-items: center; gap: 8px; min-height: 44px; margin: 0; }
+.writing-statistics-filters input[type="checkbox"] { accent-color: var(--primary); width: 18px; height: 18px; }
+.writing-statistics-paragraphs { display: flex; flex-wrap: wrap; gap: 10px 24px; margin: 16px 0; color: var(--text-soft); }
+@media (max-width: 1200px) { .writing-statistics-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; } }
+@media (max-width: 700px) {
+  .writing-statistics-metrics > div { padding: 12px; }
+  .writing-statistics-metrics dt { flex-wrap: wrap; }
+  .writing-statistics-metrics dd { font-size: 1.25rem; }
+  .writing-statistics-chart { height: 260px; }
+  .writing-statistics-filters > div { flex: 1 1 100%; }
+  .writing-statistics-filters .app-btn { min-height: 44px; }
+}
+
+.writing-statistics-tabs { display: flex; flex-wrap: wrap; gap: 10px; }
+.writing-productivity-page .writing-productivity-day { display: block; }
+.writing-productivity-details { width: 100%; min-width: 0; color: var(--text-main); }
+.writing-productivity-details > summary { cursor: pointer; min-height: 44px; align-content: center; overflow-wrap: anywhere; }
+.writing-productivity-details > summary:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; border-radius: 6px; }
+.writing-productivity-day summary { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.writing-productivity-day summary::before { content: "＋"; color: var(--primary); }
+.writing-productivity-day details[open] summary::before { content: "−"; }
+.writing-productivity-day summary > time { font-weight: 700; }
+.writing-productivity-day summary > span { color: var(--text-soft); font-size: .85rem; }
+.writing-productivity-day summary > strong { margin-left: auto; }
+.writing-productivity-events, .writing-productivity-points { list-style: none; padding: 0; margin: 14px 0 0; }
+.writing-productivity-events > li { padding: 12px 0; border-top: 1px solid var(--card-border); font-size: .85rem; overflow-wrap: anywhere; }
+.writing-productivity-events p { margin: 6px 0 0; color: var(--text-soft); }
+.writing-productivity-points { max-height: 320px; overflow-y: auto; }
+.writing-productivity-points > li { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--card-border); font-size: .85rem; }
+@media (max-width: 700px) {
+  .writing-statistics-tabs .app-btn { flex: 1 1 auto; min-height: 44px; }
+  .writing-productivity-day summary > span { flex-basis: 100%; }
+  .writing-productivity-day summary > strong { margin-left: 0; }
+}

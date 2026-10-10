@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_10_190000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_11_010000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -25,6 +25,51 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_190000) do
   enable_extension "extensions.pgcrypto"
   enable_extension "extensions.uuid-ossp"
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "oauth_access_grants", force: :cascade do |t|
+    t.bigint "resource_owner_id", null: false
+    t.bigint "application_id", null: false
+    t.string "token", null: false
+    t.integer "expires_in", null: false
+    t.text "redirect_uri", null: false
+    t.string "scopes", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "revoked_at"
+    t.string "code_challenge"
+    t.string "code_challenge_method"
+    t.string "mcp_resource", null: false
+    t.index ["application_id"], name: "index_oauth_access_grants_on_application_id"
+    t.index ["resource_owner_id"], name: "index_oauth_access_grants_on_resource_owner_id"
+    t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
+  end
+
+  create_table "oauth_access_tokens", force: :cascade do |t|
+    t.bigint "resource_owner_id", null: false
+    t.bigint "application_id", null: false
+    t.string "token", null: false
+    t.string "refresh_token"
+    t.integer "expires_in", null: false
+    t.string "scopes", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "revoked_at"
+    t.string "mcp_resource", null: false
+    t.index ["application_id"], name: "index_oauth_access_tokens_on_application_id"
+    t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
+    t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
+    t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
+  end
+
+  create_table "oauth_applications", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "uid", null: false
+    t.string "secret", null: false
+    t.text "redirect_uri", null: false
+    t.string "scopes", default: "writing_studio:read", null: false
+    t.boolean "confidential", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
+  end
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -452,6 +497,28 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_190000) do
     t.check_constraint "weight_kg > 0::numeric", name: "weight_entries_positive_weight"
   end
 
+  create_table "writing_activity_events", force: :cascade do |t|
+    t.bigint "writing_book_id", null: false
+    t.bigint "chapter_id"
+    t.bigint "scene_id"
+    t.string "chapter_title", null: false
+    t.string "scene_title"
+    t.string "operation", null: false
+    t.datetime "occurred_at", null: false
+    t.bigint "previous_words", null: false
+    t.bigint "current_words", null: false
+    t.bigint "added_words", null: false
+    t.bigint "removed_words", null: false
+    t.bigint "net_words", null: false
+    t.bigint "book_words", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["writing_book_id", "chapter_id", "occurred_at"], name: "idx_writing_activity_chapter"
+    t.index ["writing_book_id", "occurred_at", "id"], name: "idx_writing_activity_history"
+    t.index ["writing_book_id"], name: "index_writing_activity_events_on_writing_book_id"
+    t.check_constraint "previous_words >= 0 AND current_words >= 0 AND added_words >= 0 AND removed_words >= 0 AND book_words >= 0 AND net_words = (added_words - removed_words)", name: "writing_activity_valid_counts"
+  end
+
   create_table "writing_books", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "title", null: false
@@ -468,6 +535,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_190000) do
     t.date "expected_completion_on"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "writing_history_started_at"
+    t.bigint "writing_history_initial_words"
+    t.jsonb "writing_history_initial_chapters", default: {}, null: false
     t.index ["user_id", "genre"], name: "index_writing_books_on_user_id_and_genre"
     t.index ["user_id", "status"], name: "index_writing_books_on_user_id_and_status"
     t.index ["user_id"], name: "index_writing_books_on_user_id"
@@ -605,6 +675,56 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_190000) do
     t.datetime "updated_at", null: false
     t.index ["id", "writing_book_id"], name: "index_writing_organizations_on_id_and_writing_book_id", unique: true
     t.index ["writing_book_id"], name: "index_writing_organizations_on_writing_book_id"
+  end
+
+  create_table "writing_timeline_events", force: :cascade do |t|
+    t.bigint "writing_book_id", null: false
+    t.string "title", null: false
+    t.text "description"
+    t.string "kind", default: "main", null: false
+    t.string "status", default: "planned", null: false
+    t.string "date_mode", default: "undefined", null: false
+    t.date "occurred_on"
+    t.time "occurred_at"
+    t.string "temporal_reference"
+    t.bigint "reference_event_id"
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["id", "writing_book_id"], name: "index_writing_timeline_events_on_id_and_writing_book_id", unique: true
+    t.index ["reference_event_id"], name: "index_writing_timeline_events_on_reference_event_id"
+    t.index ["writing_book_id", "occurred_on", "position"], name: "idx_timeline_chronology"
+    t.index ["writing_book_id"], name: "index_writing_timeline_events_on_writing_book_id"
+    t.check_constraint "date_mode::text = 'exact'::text AND occurred_on IS NOT NULL AND reference_event_id IS NULL OR (date_mode::text = ANY (ARRAY['approximate'::character varying, 'relative'::character varying, 'undefined'::character varying]::text[])) AND occurred_on IS NULL AND (date_mode::text = 'relative'::text OR reference_event_id IS NULL)", name: "timeline_valid_date"
+    t.check_constraint "reference_event_id IS NULL OR reference_event_id <> id", name: "timeline_no_self_reference"
+  end
+
+  create_table "writing_timeline_links", force: :cascade do |t|
+    t.bigint "writing_book_id", null: false
+    t.bigint "writing_timeline_event_id", null: false
+    t.bigint "writing_character_id"
+    t.bigint "writing_location_id"
+    t.bigint "writing_plot_id"
+    t.bigint "writing_conflict_id"
+    t.bigint "writing_chapter_id"
+    t.bigint "writing_scene_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["writing_book_id"], name: "index_writing_timeline_links_on_writing_book_id"
+    t.index ["writing_chapter_id"], name: "index_writing_timeline_links_on_writing_chapter_id"
+    t.index ["writing_character_id"], name: "index_writing_timeline_links_on_writing_character_id"
+    t.index ["writing_conflict_id"], name: "index_writing_timeline_links_on_writing_conflict_id"
+    t.index ["writing_location_id"], name: "index_writing_timeline_links_on_writing_location_id"
+    t.index ["writing_plot_id"], name: "index_writing_timeline_links_on_writing_plot_id"
+    t.index ["writing_scene_id"], name: "index_writing_timeline_links_on_writing_scene_id"
+    t.index ["writing_timeline_event_id", "writing_chapter_id"], name: "idx_timeline_link_chapter", unique: true, where: "(writing_chapter_id IS NOT NULL)"
+    t.index ["writing_timeline_event_id", "writing_character_id"], name: "idx_timeline_link_character", unique: true, where: "(writing_character_id IS NOT NULL)"
+    t.index ["writing_timeline_event_id", "writing_conflict_id"], name: "idx_timeline_link_conflict", unique: true, where: "(writing_conflict_id IS NOT NULL)"
+    t.index ["writing_timeline_event_id", "writing_location_id"], name: "idx_timeline_link_location", unique: true, where: "(writing_location_id IS NOT NULL)"
+    t.index ["writing_timeline_event_id", "writing_plot_id"], name: "idx_timeline_link_plot", unique: true, where: "(writing_plot_id IS NOT NULL)"
+    t.index ["writing_timeline_event_id", "writing_scene_id"], name: "idx_timeline_link_scene", unique: true, where: "(writing_scene_id IS NOT NULL)"
+    t.index ["writing_timeline_event_id"], name: "idx_timeline_links_event"
+    t.check_constraint "num_nonnulls(writing_character_id, writing_location_id, writing_plot_id, writing_conflict_id, writing_chapter_id, writing_scene_id) = 1", name: "timeline_link_one_target"
   end
 
   create_table "writing_universe_rules", force: :cascade do |t|
@@ -755,6 +875,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_190000) do
     t.check_constraint "num_nonnulls(writing_character_id, writing_plot_id, writing_conflict_id, writing_location_id, writing_organization_id) = 1", name: "narrative_association_one_element"
   end
 
+  add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
+  add_foreign_key "oauth_access_grants", "users", column: "resource_owner_id", on_delete: :cascade
+  add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
+  add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id", on_delete: :cascade
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cards", "users"
@@ -789,6 +913,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_190000) do
   add_foreign_key "weekly_wellbeings", "users"
   add_foreign_key "weight_entries", "users"
   add_foreign_key "writing_books", "users"
+  add_foreign_key "writing_activity_events", "writing_books"
   add_foreign_key "writing_chapters", "writing_books"
   add_foreign_key "writing_characters", "writing_books"
   add_foreign_key "writing_relationships", "writing_books"
@@ -832,4 +957,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_190000) do
   add_foreign_key "writing_notes", "writing_books"
   add_foreign_key "writing_scenes", "writing_books"
   add_foreign_key "writing_scenes", "writing_chapters", column: ["writing_chapter_id", "writing_book_id"], primary_key: ["id", "writing_book_id"]
+  add_foreign_key "writing_timeline_events", "writing_books"
+  add_foreign_key "writing_timeline_events", "writing_timeline_events", column: ["reference_event_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_timeline_reference_book"
+  add_foreign_key "writing_timeline_links", "writing_books"
+  add_foreign_key "writing_timeline_links", "writing_chapters", column: ["writing_chapter_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_timeline_link_chapter_book"
+  add_foreign_key "writing_timeline_links", "writing_characters", column: ["writing_character_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_timeline_link_character_book"
+  add_foreign_key "writing_timeline_links", "writing_conflicts", column: ["writing_conflict_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_timeline_link_conflict_book"
+  add_foreign_key "writing_timeline_links", "writing_locations", column: ["writing_location_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_timeline_link_location_book"
+  add_foreign_key "writing_timeline_links", "writing_plots", column: ["writing_plot_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_timeline_link_plot_book"
+  add_foreign_key "writing_timeline_links", "writing_scenes", column: ["writing_scene_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_timeline_link_scene_book"
+  add_foreign_key "writing_timeline_links", "writing_timeline_events", column: ["writing_timeline_event_id", "writing_book_id"], primary_key: ["id", "writing_book_id"], name: "fk_timeline_link_event_book"
 end

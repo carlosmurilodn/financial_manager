@@ -3,6 +3,7 @@
   <head>
     <title>Gerenciador Pessoal</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <% if controller_name.in?(%w[writing_statistics writing_productivity]) %><meta name="turbo-cache-control" content="no-cache"><% end %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= favicon_link_tag "/icon.png?v=personal-3", type: "image/png" %>

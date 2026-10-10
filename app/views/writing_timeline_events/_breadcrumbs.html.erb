@@ -1,0 +1,6 @@
+<% items = [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, writing_book_path(@book)], ["Linha do Tempo", action_name == "index" ? nil : writing_book_writing_timeline_events_path(@book)]] %>
+<% if @event %>
+  <% items << [@event.persisted? ? @event.title : "Novo Acontecimento", action_name.in?(%w[edit update]) ? writing_book_writing_timeline_event_path(@book, @event) : nil] %>
+  <% items << ["Editar", nil] if action_name.in?(%w[edit update]) %>
+<% end %>
+<%= render "shared/breadcrumbs", items: items %>

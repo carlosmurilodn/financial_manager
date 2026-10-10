@@ -1,6 +1,7 @@
 class WritingChapter < ApplicationRecord
   belongs_to :writing_book, touch: true
   has_many :writing_scenes, dependent: :destroy
+  include WritingActivityTracking
   include WritingElementOwner
 
   def display_name

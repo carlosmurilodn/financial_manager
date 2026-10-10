@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  use_doorkeeper do
+    skip_controllers :applications, :token_info
+    controllers authorizations: "mcp_integration/authorizations", tokens: "mcp_integration/tokens",
+      authorized_applications: "mcp_integration/authorized_applications"
+  end
+  get "/.well-known/oauth-protected-resource/mcp", to: "mcp_integration/metadata#resource"
+  get "/.well-known/oauth-protected-resource", to: "mcp_integration/metadata#resource"
+  get "/.well-known/oauth-authorization-server", to: "mcp_integration/metadata#authorization_server"
+  mount McpIntegration::Endpoint.new => "/mcp"
   devise_for :users, controllers: {
     sessions: "users/sessions"
   }
@@ -9,7 +18,16 @@ Rails.application.routes.draw do
   resources :writing_books, path: "projetos/estudio-de-escrita" do
     member { get :cover, path: "capa" }
     member { get :read, path: "ler" }
+    resource :writing_productivity, controller: "writing_productivity", path: "estatisticas/produtividade", only: :show
+    resource :writing_statistics, controller: "writing_statistics", path: "estatisticas", only: :show
+    resource :writing_publication, path: "publicacao", only: %i[show create] do
+      get :status
+      get :download, path: "arquivo"
+    end
     resource :writing_narrative_context, path: "contexto-narrativo", only: %i[show create destroy]
+    resources :writing_timeline_events, path: "linha-do-tempo" do
+      member { patch :reorder, path: "ordenar" }
+    end
     resources :writing_notes, path: "notas-e-ideias"
     resources :writing_scenes, path: "cenas", only: %i[new create show edit update destroy] do
       member do

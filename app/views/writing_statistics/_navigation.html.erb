@@ -1,0 +1,4 @@
+<nav class="app-panel writing-statistics-tabs" aria-label="Estatísticas Do Livro">
+  <%= link_to writing_action_label("bar_chart", "Manuscrito"), writing_book_writing_statistics_path(@book), class: "app-btn #{controller_name == 'writing_statistics' ? 'app-btn--primary' : 'app-btn--outline'}", aria: { current: controller_name == 'writing_statistics' ? 'page' : nil } %>
+  <%= link_to writing_action_label("show_chart", "Produtividade"), writing_book_writing_productivity_path(@book), class: "app-btn #{controller_name == 'writing_productivity' ? 'app-btn--primary' : 'app-btn--outline'}", aria: { current: controller_name == 'writing_productivity' ? 'page' : nil } %>
+</nav>

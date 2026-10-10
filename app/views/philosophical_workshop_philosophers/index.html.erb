@@ -1,0 +1,60 @@
+<section class="app-page writing-studio writing-narrative-page">
+  <%= render "breadcrumbs" %>
+  <header class="app-panel writing-narrative-heading">
+    <div><p class="app-page__eyebrow">Oficina Filosófica</p><h1 class="app-page__title">Filósofos</h1></div>
+    <%= link_to new_philosophical_workshop_philosopher_path, class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">add</span> Novo Filósofo<% end %>
+  </header>
+  <div class="app-panel">
+    <%= render "shared/filter_accordion" do %>
+      <%= form_with url: philosophical_workshop_philosophers_path, method: :get, local: true, class: "app-filter-form" do |f| %>
+        <%= f.hidden_field :sort, value: @sort %>
+        <%= f.hidden_field :direction, value: @direction %>
+        <div class="app-filter-grid writing-narrative-filters">
+          <div class="app-filter-field"><%= f.label :name, "Nome" %><%= f.search_field :name, value: @name_filter, class: "app-form-control", placeholder: "Buscar por nome" %></div>
+          <div class="app-filter-field"><%= f.label :historical_period, "Período histórico" %><%= f.select :historical_period, options_for_select(@historical_periods, params[:historical_period]), { include_blank: "Todos" }, class: "app-form-select" %></div>
+          <div class="app-filter-field"><%= f.label :philosophical_school, "Corrente filosófica" %><%= f.select :philosophical_school, options_for_select(@philosophical_schools, params[:philosophical_school]), { include_blank: "Todas" }, class: "app-form-select" %></div>
+          <div class="app-filter-field"><%= f.label :favorite, "Favorito" %><%= f.select :favorite, options_for_select([["Sim", "true"], ["Não", "false"]], params[:favorite]), { include_blank: "Todos" }, class: "app-form-select" %></div>
+        </div>
+        <div class="app-filter-actions">
+          <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %><span class="material-symbols-rounded" aria-hidden="true">filter_alt</span> Filtrar<% end %>
+          <%= link_to philosophical_workshop_philosophers_path, class: "app-btn app-btn--secondary app-page__secondary-btn" do %><span class="material-symbols-rounded" aria-hidden="true">filter_alt_off</span> Limpar Filtros<% end %>
+          <div class="app-per-page-control"><%= f.label :per_page, "Exibir", class: "app-per-page-control__label" %><%= f.select :per_page, options_for_select(per_page_options, @per_page), {}, class: "form-select app-per-page-control__select", onchange: "this.form.requestSubmit()" %><span class="app-per-page-control__suffix">por página</span></div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <p class="writing-muted"><%= @filtered_count %> filósofo(s) encontrado(s)</p>
+  <% if @philosophers.empty? %>
+    <div class="app-panel writing-empty"><h2>Nenhum filósofo encontrado.</h2><p>Cadastre um filósofo ou ajuste os filtros.</p></div>
+  <% else %>
+    <div class="app-panel app-panel--table">
+      <div class="app-table-responsive">
+        <table class="app-table">
+          <thead><tr>
+            <th scope="col"><%= sortable_table_header("Nome", :name) %></th>
+            <th scope="col"><%= sortable_table_header("Período histórico", :historical_period) %></th>
+            <th scope="col"><%= sortable_table_header("Corrente filosófica", :philosophical_school) %></th>
+            <th scope="col"><%= sortable_table_header("Favorito", :favorite) %></th>
+            <th scope="col">Ações</th>
+          </tr></thead>
+          <tbody>
+            <% @philosophers.each do |philosopher| %>
+              <tr>
+                <td><%= link_to philosopher.name, philosophical_workshop_philosopher_path(philosopher) %></td>
+                <td><%= philosopher.historical_period.presence || "Não informado" %></td>
+                <td><%= philosopher.philosophical_school.presence || "Não informada" %></td>
+                <td><%= philosopher.favorite? ? "Sim" : "Não" %></td>
+                <td><div class="writing-character-actions">
+                  <%= link_to philosophical_workshop_philosopher_path(philosopher), class: "app-btn app-btn--secondary", aria: { label: "Ver #{philosopher.name}" } do %><span class="material-symbols-rounded" aria-hidden="true">visibility</span> Ver<% end %>
+                  <%= link_to edit_philosophical_workshop_philosopher_path(philosopher), class: "app-btn app-btn--primary", aria: { label: "Editar #{philosopher.name}" } do %><span class="material-symbols-rounded" aria-hidden="true">edit</span> Editar<% end %>
+                  <%= button_to philosophical_workshop_philosopher_path(philosopher), method: :delete, class: "app-btn app-btn--danger", aria: { label: "Excluir #{philosopher.name}" }, form: { data: { turbo_confirm: "Excluir #{philosopher.name}? Esta ação não poderá ser desfeita." } } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span> Excluir<% end %>
+                </div></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+  <%= render "shared/pagination", current_page: @current_page, total_pages: @total_pages, base_params: request.query_parameters %>
+</section>

@@ -1,7 +1,7 @@
 <% sections = [
   { title: "Meus Pensamentos", icon: "psychology", description: "Organize seus pensamentos e desenvolva suas reflexões pessoais." },
   { title: "Insights", icon: "lightbulb", description: "Guarde descobertas, percepções e novas conexões entre ideias." },
-  { title: "Filósofos", icon: "person", description: "Reúna filósofos e explore suas ideias e contribuições." },
+  { title: "Filósofos", icon: "person", description: "Reúna filósofos e explore suas ideias e contribuições.", count: @philosophers_count, path: philosophical_workshop_philosophers_path },
   { title: "Conceitos e Teses", icon: "account_tree", description: "Organize conceitos, argumentos e teses para aprofundar seus estudos." },
   { title: "Grandes Questões", icon: "help", description: "Explore perguntas fundamentais e caminhos possíveis de reflexão." }
 ] %>
@@ -33,12 +33,18 @@
         <h2 class="writing-detail__title">
           <span class="material-symbols-rounded" aria-hidden="true"><%= section[:icon] %></span>
           <%= section[:title] %>
-          <span class="writing-book-tool__badge" aria-label="0 registros em <%= section[:title] %>">0</span>
+          <span class="writing-book-tool__badge" aria-label="<%= section.fetch(:count, 0) %> registros em <%= section[:title] %>"><%= section.fetch(:count, 0) %></span>
         </h2>
         <p class="writing-muted"><%= section[:description] %></p>
+        <% if section[:path] %>
+          <%= link_to section[:path], class: "app-btn app-btn--primary" do %>
+            <span class="material-symbols-rounded" aria-hidden="true"><%= section[:icon] %></span> Gerenciar <%= section[:title] %>
+          <% end %>
+        <% else %>
         <button type="button" class="app-btn app-btn--primary" disabled aria-label="Gerenciar <%= section[:title] %>" title="Gerenciamento ainda não disponível">
           <span class="material-symbols-rounded" aria-hidden="true"><%= section[:icon] %></span> Gerenciar <%= section[:title] %>
         </button>
+        <% end %>
       </section>
     <% end %>
   </div>

@@ -1,0 +1,27 @@
+<section class="app-page writing-studio writing-narrative-page">
+  <%= render "breadcrumbs" %>
+  <header class="app-panel writing-narrative-heading">
+    <div><p class="app-page__eyebrow">Filósofo</p><h1 class="app-page__title"><%= @philosopher.name %></h1></div>
+    <div class="writing-character-actions">
+      <%= link_to edit_philosophical_workshop_philosopher_path(@philosopher), class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">edit</span> Editar<% end %>
+      <%= link_to philosophical_workshop_philosophers_path, class: "app-btn app-btn--outline" do %><span class="material-symbols-rounded" aria-hidden="true">arrow_back</span> Voltar<% end %>
+      <%= button_to philosophical_workshop_philosopher_path(@philosopher), method: :delete, class: "app-btn app-btn--danger", form: { data: { turbo_confirm: "Excluir #{@philosopher.name}? Esta ação não poderá ser desfeita." } } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span> Excluir<% end %>
+    </div>
+  </header>
+  <section class="app-panel writing-narrative-details">
+    <h2>Informações</h2>
+    <dl>
+      <% { historical_period: "Período histórico", philosophical_school: "Corrente filosófica" }.each do |field, label| %>
+        <div><dt><%= label %></dt><dd><%= @philosopher.public_send(field).presence || "Ainda não informado." %></dd></div>
+      <% end %>
+      <div><dt>Favorito</dt><dd><%= @philosopher.favorite? ? "Sim" : "Não" %></dd></div>
+    </dl>
+  </section>
+  <% { biography: "Biografia", main_ideas: "Principais ideias (resumo)", personal_notes: "Observações pessoais" }.each do |field, label| %>
+    <section class="app-panel writing-detail">
+      <h2 class="writing-detail__title"><%= label %></h2>
+      <div class="writing-detail__body"><%= simple_format(@philosopher.public_send(field).presence || "Ainda não informado.") %></div>
+    </section>
+  <% end %>
+  <section class="app-panel"><p>Criado em <%= l(@philosopher.created_at.to_date) %> · Atualizado em <%= l(@philosopher.updated_at.to_date) %></p></section>
+</section>

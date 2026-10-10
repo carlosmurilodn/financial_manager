@@ -28,11 +28,7 @@ export default class extends Controller {
   }
 
   returned() {
-    if (document.hidden) {
-      clearTimeout(this.timer)
-    } else {
-      this.refresh()
-    }
+    this.refresh()
   }
 
   async json(url, options = {}) {
@@ -51,7 +47,7 @@ export default class extends Controller {
   }
 
   async refresh() {
-    if (!this.connected || document.hidden) return
+    if (!this.connected) return
     if (this.requesting) { this.refreshAfter = true; return }
     clearTimeout(this.timer)
     this.requesting = true
@@ -84,7 +80,7 @@ export default class extends Controller {
       }
     } finally {
       this.requesting = false
-      if (this.connected && !document.hidden) {
+      if (this.connected) {
         if (this.refreshAfter) {
           this.refreshAfter = false
           this.timer = setTimeout(() => this.refresh(), 1000)

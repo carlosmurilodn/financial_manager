@@ -88,8 +88,8 @@
 .is-paginated .writing-book-reading__chapter { break-before: column; }
 .is-paginated .writing-book-reading__chapter + .writing-book-reading__chapter { margin-top: 0; padding-top: 0; border-top: 0; }
 .is-paginated .writing-book-reading__chapter > h2 { margin-top: 0; }
-.is-paginated .writing-book-reading__chapter p { orphans: 2; widows: 2; }
-.is-paginated .writing-book-reading__chapter hr { margin: .75em 0; line-height: 1.5; break-inside: avoid; }
+.is-paginated .writing-reader-book__pages p { orphans: 2; widows: 2; }
+.is-paginated .writing-reader-book__pages hr { margin: .75em 0; line-height: 1.5; break-inside: avoid; }
 @media screen and (min-width: 1400px) {
   .writing-reader-book { width: min(100%, 1280px); }
   .writing-reader-book.is-paginated .writing-reader-book__viewport { max-width: calc(72em + 48px); position: relative; }

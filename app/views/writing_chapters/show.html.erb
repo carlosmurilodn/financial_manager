@@ -1,4 +1,4 @@
-<section class="app-page writing-studio literary-editor-page writing-reader-page" data-controller="narrative-panel" data-narrative-panel-url-value="<%= writing_context_path(@book, @chapter) %>">
+<section class="app-page writing-studio literary-editor-page writing-reader-page" data-controller="narrative-panel book-reader" data-action="keydown->book-reader#navigate" data-narrative-panel-url-value="<%= writing_context_path(@book, @chapter) %>">
   <%= render "shared/breadcrumbs", items: [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, writing_book_path(@book)], [@chapter.title, nil]] %>
   <% is_scene = @chapter.is_a?(WritingScene) %>
   <header class="app-panel writing-reader-heading">
@@ -6,7 +6,8 @@
       <span class="writing-reader-heading__icon material-symbols-rounded" aria-hidden="true"><%= is_scene ? "movie" : "menu_book" %></span>
       <div><p class="app-page__eyebrow"><%= @book.title %> · <%= is_scene ? "Cena" : "Manuscrito" %></p><h1 class="app-page__title"><%= @chapter.title %></h1><p class="writing-muted">Leitura <%= is_scene ? "da cena" : "do capítulo" %></p></div>
     </div>
-    <div class="writing-character-actions">
+    <div class="writing-character-actions writing-reader-heading__actions">
+      <%= render "writing_books/reading_styles" %>
       <%= link_to writing_action_label("edit", is_scene ? "Abrir editor" : "Organizar capítulo"), edit_polymorphic_path([@book, @chapter]), class: "app-btn app-btn--primary" %>
       <button type="button" class="app-btn app-btn--secondary" aria-controls="literary-narrative-panel" aria-expanded="false" data-narrative-panel-target="toggle" data-action="narrative-panel#toggle"><%= writing_action_label("view_sidebar", "Painel Narrativo") %></button>
       <% if is_scene %>
@@ -32,9 +33,12 @@
     </div>
   </header>
   <div class="literary-writing-layout">
-    <section class="app-panel writing-reader-document" aria-label="Texto do manuscrito">
+    <section class="app-panel writing-reader-document writing-reader-book" aria-label="Texto do manuscrito" data-book-reader-target="book">
       <div class="writing-reader-document__heading"><span class="material-symbols-rounded" aria-hidden="true">description</span><span>Manuscrito</span></div>
-      <article class="literary-manuscript"><%= literary_manuscript_html(@chapter) %></article>
+      <div class="writing-reader-book__viewport" data-book-reader-target="viewport" tabindex="0" aria-label="Páginas do manuscrito; use as setas para navegar">
+        <article class="literary-manuscript writing-reader-book__pages" data-book-reader-target="pages"><%= literary_manuscript_html(@chapter) %></article>
+      </div>
+      <%= render "writing_books/reading_navigation" %>
     </section>
     <%= render "narrative_panel" %>
   </div>

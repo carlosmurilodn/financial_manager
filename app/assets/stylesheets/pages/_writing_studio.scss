@@ -1,8 +1,5 @@
 .writing-studio { min-width: 0; }
-.writing-metrics, .writing-library, .writing-detail-grid, .writing-fields { display: grid; gap: 1.25rem; }
-.writing-metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 1.5rem; }
-.writing-metric { display: flex; flex-direction: column; gap: .5rem; padding: 1.25rem; }
-.writing-metric strong { font-size: 2rem; }
+.writing-library, .writing-detail-grid, .writing-fields { display: grid; gap: 1.25rem; }
 .writing-library { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
 .writing-book-card { display: flex; flex-direction: column; padding: 0; overflow: hidden; color: inherit; text-decoration: none; transition: transform .15s; }
 .writing-book-card:hover { transform: translateY(-3px); }
@@ -39,8 +36,78 @@
 .writing-detail h2 { font-size: 1.2rem; }
 .writing-detail dd { margin: .25rem 0 1rem; }
 .writing-muted { color: var(--text-soft); }
+.writing-filter-fields { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 3fr) minmax(0, 2fr) minmax(0, 2fr); gap: 14px; }
+.writing-filter-fields > div { min-width: 0; }
 @media (max-width: 700px) {
-  .writing-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .writing-filter-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .writing-fields, .writing-detail-grid, .writing-book-heading { grid-template-columns: minmax(0, 1fr); }
   .writing-book-heading > .writing-cover { max-width: 180px; margin: auto; }
+}
+@media (max-width: 450px) {
+  .writing-filter-fields { grid-template-columns: minmax(0, 1fr); }
+}
+
+.writing-hero { display: grid; grid-template-columns: minmax(0, 1.25fr) repeat(5, minmax(0, 1fr)); align-items: stretch; gap: 10px; }
+.writing-hero__heading { min-width: 0; }
+.writing-hero__kpis { display: contents; }
+.writing-hero__action { position: relative; display: flex; align-items: center; gap: 8px; min-width: 0; padding: 8px 10px; border: 1px solid transparent; border-radius: 10px; background: var(--nav-active-bar); color: #fff; text-decoration: none; overflow: hidden; }
+.writing-hero__action::before { content: ""; position: absolute; inset: auto -20px -20px auto; width: 54px; height: 54px; border-radius: 50%; background: rgba(255, 255, 255, .12); }
+.writing-hero__action:hover, .writing-hero__action:focus-visible { color: #fff; transform: translateY(-1px); filter: brightness(1.03); }
+.writing-hero__action:focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; }
+.writing-hero__action-icon { display: inline-grid; place-items: center; flex-shrink: 0; width: 32px; height: 32px; border-radius: 10px; background: rgba(255, 255, 255, .18); }
+.writing-hero__action-icon .material-symbols-rounded { font-size: 1rem; }
+.writing-hero__action strong { font-size: .88rem; font-weight: 800; line-height: 1.2; }
+.writing-kpi { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 10px; border-radius: var(--radius-md); color: var(--text-main); }
+.writing-kpi__icon { display: grid; place-items: center; flex-shrink: 0; width: 32px; height: 32px; border-radius: 10px; color: #fff; }
+.writing-kpi__icon .material-symbols-rounded { font-size: 1rem; }
+.writing-kpi__copy { min-width: 0; }
+.writing-kpi__label { display: block; margin-bottom: 3px; color: var(--text-soft); font-size: .72rem; font-weight: 700; line-height: 1.15; }
+.writing-kpi__value { display: block; font-size: clamp(.82rem, 1.05vw, 1rem); font-weight: 800; overflow-wrap: anywhere; }
+.writing-kpi--primary { background: var(--stat-primary-bg); }
+.writing-kpi--primary .writing-kpi__icon { background: var(--stat-primary-icon-bg); }
+.writing-kpi--warning { background: var(--stat-warning-bg); }
+.writing-kpi--warning .writing-kpi__icon { background: var(--stat-warning-icon-bg); }
+.writing-kpi--success { background: var(--stat-success-bg); }
+.writing-kpi--success .writing-kpi__icon { background: var(--stat-success-icon-bg); }
+@media (max-width: 1200px) {
+  .writing-hero { grid-template-columns: minmax(180px, .9fr) repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .writing-hero__heading { grid-column: 1; grid-row: 1; }
+  .writing-hero__action { grid-column: 1; grid-row: 2; }
+}
+@media (max-width: 767px) {
+  .writing-hero { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .writing-hero__heading { grid-column: 1 / -1; grid-row: auto; }
+  .writing-hero__action { grid-column: 1 / -1; grid-row: auto; min-height: 48px; }
+}
+
+.writing-book-page { gap: 20px; }
+.writing-book-page .writing-breadcrumbs { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin: 0; font-size: .85rem; }
+.writing-book-page .writing-book-heading { grid-template-columns: 150px minmax(0, 1fr); gap: 1.5rem; align-items: center; }
+.writing-book-heading__copy { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; min-width: 0; }
+.writing-book-heading__subtitle { margin: .5rem 0 0; color: var(--text-soft); }
+.writing-book-heading__author { margin: .5rem 0 0; }
+.writing-book-heading__meta { display: flex; align-items: center; flex-wrap: wrap; gap: .75rem; }
+.writing-book-page .writing-actions { margin: 0; align-items: center; }
+.writing-book-page .writing-actions .material-symbols-rounded { font-size: 1rem; }
+.writing-book-delete { color: var(--danger); }
+.writing-book-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.writing-book-narrative { display: grid; gap: 20px; min-width: 0; }
+.writing-book-page .writing-detail { margin: 0; padding: 1.25rem 1.5rem; min-width: 0; }
+.writing-book-page .writing-detail__title { display: flex; align-items: center; gap: .6rem; margin: 0 0 1rem; font-size: 1rem; }
+.writing-detail__title .material-symbols-rounded { color: var(--primary); font-size: 1.25rem; flex-shrink: 0; }
+.writing-detail__body { line-height: 1.7; }
+.writing-detail__body > :last-child { margin-bottom: 0; }
+.writing-book-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.25rem; margin: 0; }
+.writing-book-facts__item { min-width: 0; }
+.writing-book-facts dt { color: var(--text-soft); font-size: .8rem; font-weight: 600; }
+.writing-book-page .writing-book-facts dd { margin: .35rem 0 0; font-size: .9rem; line-height: 1.5; }
+@media (max-width: 900px) {
+  .writing-book-layout { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 700px) {
+  .writing-book-page .writing-book-heading { grid-template-columns: minmax(0, 1fr); }
+  .writing-book-page .writing-detail { padding: 1.25rem; }
+}
+@media (max-width: 450px) {
+  .writing-book-facts { grid-template-columns: minmax(0, 1fr); }
 }

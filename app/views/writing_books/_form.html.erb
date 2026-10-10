@@ -20,7 +20,13 @@
   <fieldset class="writing-form-section"><legend>Acompanhamento</legend><div class="writing-fields">
     <div><%= f.label :status, "Situação" %><%= f.select :status, WritingBook::STATUSES.invert, {}, class: "app-form-select", required: true, aria: writing_book_field_accessibility(book, :status) %><%= writing_book_field_errors(book, :status) %></div>
     <% { started_on: "Data de início", expected_completion_on: "Previsão de conclusão" }.each do |field, label| %>
-      <div><%= f.label field, label %><%= f.date_field field, class: "app-form-control", aria: writing_book_field_accessibility(book, field) %><%= writing_book_field_errors(book, field) %></div>
+      <div>
+        <%= f.label field, label %>
+        <div class="custom-date-wrapper">
+          <%= f.text_field field, value: book.public_send(field)&.strftime("%d/%m/%Y"), class: "app-form-control custom-date", autocomplete: "off", placeholder: "Selecione a data", aria: writing_book_field_accessibility(book, field) %>
+        </div>
+        <%= writing_book_field_errors(book, field) %>
+      </div>
     <% end %>
   </div></fieldset>
   <fieldset class="writing-form-section" data-controller="book-cover"><legend>Identidade Visual</legend>

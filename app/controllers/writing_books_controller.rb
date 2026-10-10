@@ -13,8 +13,9 @@ class WritingBooksController < ApplicationController
     books = books.where("author ILIKE ?", "%#{WritingBook.sanitize_sql_like(@author_filter)}%") if @author_filter.present?
     books = books.where(genre: @genre_filter) if @genre_filter.present?
     books = books.where(status: @status_filter) if @status_filter.present?
-    @sort = %w[title created_at updated_at].include?(params[:sort]) ? params[:sort] : "updated_at"
-    @direction = %w[asc desc].include?(params[:direction]) ? params[:direction] : (@sort == "title" ? "asc" : "desc")
+    sort, direction = params[:order_by].present? ? params[:order_by].to_s.split(":", 2) : [ params[:sort], params[:direction] ]
+    @sort = %w[title created_at updated_at].include?(sort) ? sort : "updated_at"
+    @direction = %w[asc desc].include?(direction) ? direction : (@sort == "title" ? "asc" : "desc")
     @filtered_count = books.count
     @per_page = pagination_per_page
     @total_pages = [ (@filtered_count.to_f / @per_page).ceil, 1 ].max
@@ -74,6 +75,11 @@ class WritingBooksController < ApplicationController
     permitted = params.require(:writing_book).permit(:title, :subtitle, :author, :genre, :target_audience,
       :synopsis, :premise, :notes, :status, :started_on, :expected_completion_on, :cover, secondary_genres: [])
     permitted.delete(:cover) if permitted[:cover].blank?
+    %i[started_on expected_completion_on].each do |field|
+      next unless permitted[field].to_s.include?("/")
+
+      permitted[field] = parse_brazilian_date(permitted[field])
+    end
     permitted
   end
 end

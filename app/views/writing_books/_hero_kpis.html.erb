@@ -1,0 +1,11 @@
+<% [
+  ["Total de livros", @total_count, "auto_stories", "primary"],
+  ["Em planejamento", @counts.fetch("planning", 0), "event_note", "warning"],
+  ["Em escrita", @counts.fetch("writing", 0), "edit_note", "primary"],
+  ["Concluídos", @counts.fetch("completed", 0), "task_alt", "success"]
+].each do |label, count, icon, tone| %>
+  <div class="writing-kpi writing-kpi--<%= tone %>">
+    <span class="writing-kpi__icon"><span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span></span>
+    <div class="writing-kpi__copy"><span class="writing-kpi__label"><%= label %></span><strong class="writing-kpi__value"><%= count %></strong></div>
+  </div>
+<% end %>

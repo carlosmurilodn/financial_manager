@@ -112,5 +112,7 @@ pt-BR:
     cards: "Cartões"
     categories: "Categorias"
   date: 
+    formats:
+      default: "%d/%m/%Y"
     month_names: [~, "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
 

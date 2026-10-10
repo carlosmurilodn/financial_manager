@@ -1,24 +1,63 @@
-<section class="app-page writing-studio">
-  <nav class="writing-breadcrumbs" aria-label="Navegação estrutural"><%= link_to "Projetos", personal_development_path %> / <%= link_to "Estúdio de Escrita", writing_books_path %> / <span aria-current="page"><%= @book.title %></span></nav>
+<section class="app-page writing-studio writing-book-page">
+  <nav class="writing-breadcrumbs" aria-label="Navegação estrutural">
+    <%= link_to "Projetos", personal_development_path %>
+    <span aria-hidden="true">/</span>
+    <%= link_to "Estúdio de Escrita", writing_books_path %>
+    <span aria-hidden="true">/</span>
+    <span aria-current="page"><%= @book.title %></span>
+  </nav>
+
   <div class="app-panel writing-book-heading">
     <%= render "cover", book: @book %>
-    <div><p class="app-page__eyebrow">Painel do Livro</p><h1 class="app-page__title"><%= @book.title %></h1>
-      <% if @book.subtitle.present? %><p><%= @book.subtitle %></p><% end %>
-      <p><%= @book.author.presence || "Autor não informado" %></p><p><%= @book.genre_label %></p>
-      <span class="writing-status writing-status--<%= @book.status %>"><%= @book.status_label %></span>
-      <div class="writing-actions"><%= link_to "Editar Livro", edit_writing_book_path(@book), class: "app-btn app-btn--primary" %><%= link_to "Voltar à Biblioteca", writing_books_path, class: "app-btn app-btn--outline" %>
-        <%= button_to "Excluir Livro", writing_book_path(@book), method: :delete, class: "app-btn app-btn--outline", form: { data: { turbo_confirm: "Excluir o livro #{@book.title}? Esta ação não poderá ser desfeita." } } %></div>
+    <div class="writing-book-heading__copy">
+      <div>
+        <p class="app-page__eyebrow">Painel do Livro</p>
+        <h1 class="app-page__title"><%= @book.title %></h1>
+        <% if @book.subtitle.present? %><p class="writing-book-heading__subtitle"><%= @book.subtitle %></p><% end %>
+        <p class="writing-book-heading__author"><%= @book.author.presence || "Autor não informado" %></p>
+      </div>
+      <div class="writing-book-heading__meta">
+        <span><%= @book.genre_label %></span>
+        <span class="writing-status writing-status--<%= @book.status %>"><%= @book.status_label %></span>
+      </div>
+      <div class="writing-actions">
+        <%= link_to edit_writing_book_path(@book), class: "app-btn app-btn--primary" do %>
+          <span class="material-symbols-rounded" aria-hidden="true">edit</span> Editar Livro
+        <% end %>
+        <%= link_to writing_books_path, class: "app-btn app-btn--outline" do %>
+          <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span> Voltar à Biblioteca
+        <% end %>
+        <%= button_to writing_book_path(@book), method: :delete, class: "app-btn app-btn--secondary writing-book-delete", form: { data: { turbo_confirm: "Excluir o livro #{@book.title}? Esta ação não poderá ser desfeita." } } do %>
+          <span class="material-symbols-rounded" aria-hidden="true">delete</span> Excluir Livro
+        <% end %>
+      </div>
     </div>
   </div>
-  <div class="writing-detail-grid">
-    <% [["Sinopse", @book.synopsis], ["Premissa", @book.premise], ["Observações", @book.notes]].each do |label, content| %>
-      <section class="app-panel writing-detail"><h2><%= label %></h2><%= content.present? ? simple_format(content) : tag.p("Ainda não informado.", class: "writing-muted") %></section>
-    <% end %>
-    <section class="app-panel writing-detail"><h2>Informações da obra</h2>
-      <dl><% [["Gênero principal", @book.genre_label], ["Gêneros secundários", @book.secondary_genres.map { |genre| WritingBook::GENRES[genre] }.join(" · ")], ["Público-alvo", @book.target_audience], ["Situação", @book.status_label], ["Data de início", @book.started_on && l(@book.started_on)], ["Previsão de conclusão", @book.expected_completion_on && l(@book.expected_completion_on)], ["Criado em", l(@book.created_at.to_date)], ["Atualizado em", l(@book.updated_at.to_date)]].each do |label, value| %>
-        <dt><%= label %></dt><dd><%= value.presence || "Não informado" %></dd>
-      <% end %></dl>
+
+  <div class="writing-book-layout">
+    <div class="writing-book-narrative">
+      <% [["Sinopse", @book.synopsis, "description"], ["Premissa", @book.premise, "lightbulb"], ["Observações", @book.notes, "notes"]].each do |label, content, icon| %>
+        <section class="app-panel writing-detail">
+          <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span><%= label %></h2>
+          <div class="writing-detail__body"><%= content.present? ? simple_format(content) : tag.p("Ainda não informado.", class: "writing-muted") %></div>
+        </section>
+      <% end %>
+    </div>
+    <section class="app-panel writing-detail writing-book-info">
+      <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">info</span>Informações da obra</h2>
+      <dl class="writing-book-facts">
+        <% [["Gênero principal", @book.genre_label], ["Gêneros secundários", @book.secondary_genres.map { |genre| WritingBook::GENRES[genre] }.join(" · ")], ["Público-alvo", @book.target_audience], ["Situação", @book.status_label], ["Data de início", @book.started_on && l(@book.started_on)], ["Previsão de conclusão", @book.expected_completion_on && l(@book.expected_completion_on)], ["Criado em", l(@book.created_at.to_date)], ["Atualizado em", l(@book.updated_at.to_date)]].each do |label, value| %>
+          <div class="writing-book-facts__item"><dt><%= label %></dt><dd><%= value.presence || "Não informado" %></dd></div>
+        <% end %>
+      </dl>
     </section>
   </div>
-  <section class="app-panel writing-detail"><h2>Próximas ferramentas</h2><p class="writing-muted">Nas próximas fases, esta obra receberá editor, capítulos e cenas, personagens, tramas e conflitos, universo e cenários, linha do tempo, notas e ideias e exportação.</p><p class="writing-muted">Indicadores de capítulos, personagens, palavras e progresso estarão disponíveis com o manuscrito.</p></section>
+
+  <section class="app-panel writing-detail writing-book-future">
+    <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">auto_awesome</span>Próximas ferramentas</h2>
+    <div class="writing-detail__body">
+      <p class="writing-muted">Nas próximas fases, esta obra receberá editor, capítulos e cenas, personagens, tramas e conflitos, universo e cenários, linha do tempo, notas e ideias e exportação.</p>
+      <p class="writing-muted">Indicadores de capítulos, personagens, palavras e progresso estarão disponíveis com o manuscrito.</p>
+    </div>
+  </section>
 </section>

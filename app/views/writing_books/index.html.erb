@@ -1,34 +1,49 @@
 <section class="app-page writing-studio">
   <div class="app-page__hero">
-    <div class="app-page__hero-top">
-      <div class="app-page__hero-copy">
+    <div class="writing-hero">
+      <div class="app-page__hero-copy writing-hero__heading">
         <span class="app-page__hero-icon"><span class="material-symbols-rounded" aria-hidden="true">auto_stories</span></span>
-        <div><p class="app-page__eyebrow">Projetos</p><h1 class="app-page__title">Estúdio de Escrita</h1>
-          <p class="app-page__description">Organize suas obras, desenvolva suas histórias e acompanhe sua jornada como escritor.</p></div>
+        <div><p class="app-page__eyebrow">Projetos</p><h1 class="app-page__title">Estúdio de Escrita</h1></div>
       </div>
-      <%= link_to "Novo Livro", new_writing_book_path, class: "app-btn app-btn--primary" %>
-    </div>
-    <div class="writing-metrics">
-      <% [["Total de livros", @total_count], ["Em planejamento", @counts.fetch("planning", 0)], ["Em escrita", @counts.fetch("writing", 0)], ["Concluídos", @counts.fetch("completed", 0)]].each do |label, count| %>
-        <div class="app-panel writing-metric"><span><%= label %></span><strong><%= count %></strong></div>
+      <%= link_to new_writing_book_path, class: "writing-hero__action" do %>
+        <span class="writing-hero__action-icon"><span class="material-symbols-rounded" aria-hidden="true">add</span></span>
+        <strong>Novo Livro</strong>
       <% end %>
+      <div class="writing-hero__kpis">
+        <%= render "hero_kpis" %>
+      </div>
     </div>
+    <p class="app-page__description">Organize suas obras, desenvolva suas histórias e acompanhe sua jornada como escritor.</p>
   </div>
   <div class="app-panel">
     <%= render "shared/filter_accordion" do %>
       <%= form_with url: writing_books_path, method: :get, class: "app-filter-form" do |f| %>
-        <div class="writing-fields">
-          <div><%= f.label :title, "Título" %><%= f.search_field :title, value: @title_filter, class: "app-form-control" %></div>
-          <div><%= f.label :author, "Autor" %><%= f.search_field :author, value: @author_filter, class: "app-form-control" %></div>
-          <div><%= f.label :genre, "Gênero" %><%= f.select :genre, options_for_select(WritingBook::GENRES.invert, @genre_filter), { include_blank: "Todos" }, class: "app-form-select" %></div>
-          <div><%= f.label :status, "Situação" %><%= f.select :status, options_for_select(WritingBook::STATUSES.invert, @status_filter), { include_blank: "Todas" }, class: "app-form-select" %></div>
-          <div><%= f.label :sort, "Ordenar por" %><%= f.select :sort, options_for_select([["Título", "title"], ["Data de criação", "created_at"], ["Última atualização", "updated_at"]], @sort), {}, class: "app-form-select" %></div>
-          <div><%= f.label :direction, "Ordem" %><%= f.select :direction, options_for_select([["Crescente", "asc"], ["Decrescente", "desc"]], @direction), {}, class: "app-form-select" %></div>
+        <div class="app-filter-grid writing-filter-fields">
+          <div class="app-filter-field"><%= f.label :title, "Título" %><%= f.search_field :title, value: @title_filter, class: "app-form-control" %></div>
+          <div class="app-filter-field"><%= f.label :author, "Autor" %><%= f.search_field :author, value: @author_filter, class: "app-form-control" %></div>
+          <div class="app-filter-field"><%= f.label :genre, "Gênero" %><%= f.select :genre, options_for_select(WritingBook::GENRES.invert, @genre_filter), { include_blank: "Todos" }, class: "app-form-select" %></div>
+          <div class="app-filter-field"><%= f.label :status, "Situação" %><%= f.select :status, options_for_select(WritingBook::STATUSES.invert, @status_filter), { include_blank: "Todas" }, class: "app-form-select" %></div>
         </div>
-        <div class="app-filter-actions">
-          <%= f.submit "Filtrar", class: "app-btn app-btn--primary" %>
-          <%= link_to "Limpar Filtros", writing_books_path, class: "app-btn app-btn--secondary" %>
-          <div class="app-per-page-control"><%= f.label :per_page, "Exibir" %><%= f.select :per_page, options_for_select(per_page_options, @per_page), {}, class: "app-form-select", onchange: "this.form.requestSubmit()" %><span>por página</span></div>
+        <div class="app-filter-actions writing-filter-toolbar">
+          <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>
+            <i class="bi bi-funnel me-1" aria-hidden="true"></i> Filtrar
+          <% end %>
+          <%= link_to writing_books_path, class: "app-btn app-btn--secondary app-page__secondary-btn" do %>
+            <i class="bi bi-x-circle me-1" aria-hidden="true"></i> Limpar Filtros
+          <% end %>
+          <div class="app-per-page-control app-sort-control">
+            <%= f.label :order_by, "Ordenar", class: "app-per-page-control__label" %>
+            <%= f.select :order_by, options_for_select([
+              ["Título A → Z", "title:asc"], ["Título Z → A", "title:desc"],
+              ["Criação Recente", "created_at:desc"], ["Criação Antiga", "created_at:asc"],
+              ["Atualização Recente", "updated_at:desc"], ["Atualização Antiga", "updated_at:asc"]
+            ], "#{@sort}:#{@direction}"), {}, class: "form-select app-per-page-control__select app-sort-control__select", onchange: "this.form.requestSubmit()" %>
+          </div>
+          <div class="app-per-page-control">
+            <%= f.label :per_page, "Exibir", class: "app-per-page-control__label" %>
+            <%= f.select :per_page, options_for_select(per_page_options, @per_page), {}, class: "form-select app-per-page-control__select", onchange: "this.form.requestSubmit()" %>
+            <span class="app-per-page-control__suffix">por página</span>
+          </div>
         </div>
       <% end %>
     <% end %>

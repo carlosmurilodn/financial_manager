@@ -1,4 +1,4 @@
-<section class="app-page writing-studio writing-narrative-page">
+<section class="app-page writing-studio writing-narrative-page philosophical-list-page">
   <%= render "breadcrumbs" %>
   <header class="app-panel writing-narrative-heading">
     <div><p class="app-page__eyebrow">Oficina Filosófica</p><h1 class="app-page__title">Meus Pensamentos</h1></div>
@@ -28,22 +28,23 @@
   <% else %>
     <div class="app-panel app-panel--table">
       <div class="app-table-responsive">
-        <table class="app-table">
-          <thead><tr>
-            <th scope="col"><%= sortable_table_header("Título", :title) %></th>
-            <th scope="col"><%= sortable_table_header("Tipo", :kind) %></th>
-            <th scope="col"><%= sortable_table_header("Situação", :status) %></th>
-            <th scope="col"><%= sortable_table_header("Atualizado em", :updated_at) %></th>
-            <th scope="col">Ações</th>
+        <table class="app-table" role="table">
+          <caption class="philosophical-table__caption">Ordenar por</caption>
+          <thead role="rowgroup"><tr role="row">
+            <th scope="col" role="columnheader"><%= sortable_table_header("Título", :title) %></th>
+            <th scope="col" role="columnheader"><%= sortable_table_header("Tipo", :kind) %></th>
+            <th scope="col" role="columnheader"><%= sortable_table_header("Situação", :status) %></th>
+            <th scope="col" role="columnheader"><%= sortable_table_header("Atualizado em", :updated_at) %></th>
+            <th scope="col" role="columnheader">Ações</th>
           </tr></thead>
-          <tbody>
+          <tbody role="rowgroup">
             <% @thoughts.each do |thought| %>
-              <tr>
-                <td><%= link_to thought.title, philosophical_workshop_thought_path(thought) %></td>
-                <td><%= thought.kind_label %></td>
-                <td><%= thought.status_label %></td>
-                <td><%= l(thought.updated_at.to_date) %></td>
-                <td><div class="writing-character-actions">
+              <tr role="row">
+                <td role="cell" data-label="Título"><%= link_to thought.title, philosophical_workshop_thought_path(thought) %></td>
+                <td role="cell" data-label="Tipo"><%= thought.kind_label %></td>
+                <td role="cell" data-label="Situação"><%= thought.status_label %></td>
+                <td role="cell" data-label="Atualizado em"><%= l(thought.updated_at.to_date) %></td>
+                <td role="cell" data-label="Ações"><div class="writing-character-actions">
                   <%= link_to philosophical_workshop_thought_path(thought), class: "app-btn app-btn--secondary", aria: { label: "Ver #{thought.title}" } do %><span class="material-symbols-rounded" aria-hidden="true">visibility</span> Ver<% end %>
                   <%= link_to edit_philosophical_workshop_thought_path(thought), class: "app-btn app-btn--primary", aria: { label: "Editar #{thought.title}" } do %><span class="material-symbols-rounded" aria-hidden="true">edit</span> Editar<% end %>
                   <%= button_to philosophical_workshop_thought_path(thought), method: :delete, class: "app-btn app-btn--danger", aria: { label: "Excluir #{thought.title}" }, form: { data: { turbo_confirm: "Excluir #{thought.title}? Esta ação não poderá ser desfeita." } } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span> Excluir<% end %>

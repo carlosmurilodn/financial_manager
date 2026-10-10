@@ -1,4 +1,4 @@
-<section class="app-page writing-studio writing-narrative-page">
+<section class="app-page writing-studio writing-narrative-page philosophical-list-page">
   <%= render "breadcrumbs" %>
   <header class="app-panel writing-narrative-heading">
     <div><p class="app-page__eyebrow">Oficina Filosófica</p><h1 class="app-page__title">Grandes Questões</h1></div>
@@ -27,20 +27,21 @@
   <% else %>
     <div class="app-panel app-panel--table">
       <div class="app-table-responsive">
-        <table class="app-table">
-          <thead><tr>
-            <th scope="col"><%= sortable_table_header("Pergunta", :question) %></th>
-            <th scope="col"><%= sortable_table_header("Situação", :status) %></th>
-            <th scope="col"><%= sortable_table_header("Atualizado em", :updated_at) %></th>
-            <th scope="col">Ações</th>
+        <table class="app-table" role="table">
+          <caption class="philosophical-table__caption">Ordenar por</caption>
+          <thead role="rowgroup"><tr role="row">
+            <th scope="col" role="columnheader"><%= sortable_table_header("Pergunta", :question) %></th>
+            <th scope="col" role="columnheader"><%= sortable_table_header("Situação", :status) %></th>
+            <th scope="col" role="columnheader"><%= sortable_table_header("Atualizado em", :updated_at) %></th>
+            <th scope="col" role="columnheader">Ações</th>
           </tr></thead>
-          <tbody>
+          <tbody role="rowgroup">
             <% @questions.each do |question| %>
-              <tr>
-                <td><%= link_to truncate(question.question, length: 100), philosophical_workshop_question_path(question) %></td>
-                <td><%= question.status_label %></td>
-                <td><%= l(question.updated_at.to_date) %></td>
-                <td><div class="writing-character-actions">
+              <tr role="row">
+                <td role="cell" data-label="Pergunta"><%= link_to truncate(question.question, length: 100), philosophical_workshop_question_path(question) %></td>
+                <td role="cell" data-label="Situação"><%= question.status_label %></td>
+                <td role="cell" data-label="Atualizado em"><%= l(question.updated_at.to_date) %></td>
+                <td role="cell" data-label="Ações"><div class="writing-character-actions">
                   <%= link_to philosophical_workshop_question_path(question), class: "app-btn app-btn--secondary", aria: { label: "Ver #{truncate(question.question, length: 100)}" } do %><span class="material-symbols-rounded" aria-hidden="true">visibility</span> Ver<% end %>
                   <%= link_to edit_philosophical_workshop_question_path(question), class: "app-btn app-btn--primary", aria: { label: "Editar #{truncate(question.question, length: 100)}" } do %><span class="material-symbols-rounded" aria-hidden="true">edit</span> Editar<% end %>
                   <%= button_to philosophical_workshop_question_path(question), method: :delete, class: "app-btn app-btn--danger", aria: { label: "Excluir #{truncate(question.question, length: 100)}" }, form: { data: { turbo_confirm: "Excluir #{truncate(question.question, length: 100)}? Esta ação não poderá ser desfeita." } } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span> Excluir<% end %>

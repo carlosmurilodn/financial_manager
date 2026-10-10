@@ -1,4 +1,4 @@
-<section class="app-page writing-studio writing-narrative-page">
+<section class="app-page writing-studio writing-narrative-page philosophical-list-page">
   <%= render "breadcrumbs" %>
   <header class="app-panel writing-narrative-heading">
     <div><p class="app-page__eyebrow">Oficina Filosófica</p><h1 class="app-page__title">Filósofos</h1></div>
@@ -29,22 +29,23 @@
   <% else %>
     <div class="app-panel app-panel--table">
       <div class="app-table-responsive">
-        <table class="app-table">
-          <thead><tr>
-            <th scope="col"><%= sortable_table_header("Nome", :name) %></th>
-            <th scope="col"><%= sortable_table_header("Período histórico", :historical_period) %></th>
-            <th scope="col"><%= sortable_table_header("Corrente filosófica", :philosophical_school) %></th>
-            <th scope="col"><%= sortable_table_header("Favorito", :favorite) %></th>
-            <th scope="col">Ações</th>
+        <table class="app-table" role="table">
+          <caption class="philosophical-table__caption">Ordenar por</caption>
+          <thead role="rowgroup"><tr role="row">
+            <th scope="col" role="columnheader"><%= sortable_table_header("Nome", :name) %></th>
+            <th scope="col" role="columnheader"><%= sortable_table_header("Período histórico", :historical_period) %></th>
+            <th scope="col" role="columnheader"><%= sortable_table_header("Corrente filosófica", :philosophical_school) %></th>
+            <th scope="col" role="columnheader"><%= sortable_table_header("Favorito", :favorite) %></th>
+            <th scope="col" role="columnheader">Ações</th>
           </tr></thead>
-          <tbody>
+          <tbody role="rowgroup">
             <% @philosophers.each do |philosopher| %>
-              <tr>
-                <td><%= link_to philosopher.name, philosophical_workshop_philosopher_path(philosopher) %></td>
-                <td><%= philosopher.historical_period.presence || "Não informado" %></td>
-                <td><%= philosopher.philosophical_school.presence || "Não informada" %></td>
-                <td><%= philosopher.favorite? ? "Sim" : "Não" %></td>
-                <td><div class="writing-character-actions">
+              <tr role="row">
+                <td role="cell" data-label="Nome"><%= link_to philosopher.name, philosophical_workshop_philosopher_path(philosopher) %></td>
+                <td role="cell" data-label="Período histórico"><%= philosopher.historical_period.presence || "Não informado" %></td>
+                <td role="cell" data-label="Corrente filosófica"><%= philosopher.philosophical_school.presence || "Não informada" %></td>
+                <td role="cell" data-label="Favorito"><%= philosopher.favorite? ? "Sim" : "Não" %></td>
+                <td role="cell" data-label="Ações"><div class="writing-character-actions">
                   <%= link_to philosophical_workshop_philosopher_path(philosopher), class: "app-btn app-btn--secondary", aria: { label: "Ver #{philosopher.name}" } do %><span class="material-symbols-rounded" aria-hidden="true">visibility</span> Ver<% end %>
                   <%= link_to edit_philosophical_workshop_philosopher_path(philosopher), class: "app-btn app-btn--primary", aria: { label: "Editar #{philosopher.name}" } do %><span class="material-symbols-rounded" aria-hidden="true">edit</span> Editar<% end %>
                   <%= button_to philosophical_workshop_philosopher_path(philosopher), method: :delete, class: "app-btn app-btn--danger", aria: { label: "Excluir #{philosopher.name}" }, form: { data: { turbo_confirm: "Excluir #{philosopher.name}? Esta ação não poderá ser desfeita." } } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span> Excluir<% end %>

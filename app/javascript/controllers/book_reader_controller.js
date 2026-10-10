@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["book", "styles", "style", "viewport", "pages", "navigation", "counter", "previous", "next"]
+  static targets = ["book", "styles", "style", "styleHint", "viewport", "pages", "navigation", "counter", "previous", "next"]
 
   connect() {
     this.page = 0
@@ -16,6 +16,7 @@ export default class extends Controller {
     this.navigationTarget.hidden = false
     this.observer = new ResizeObserver(() => this.scheduleLayout())
     this.observer.observe(this.viewportTarget)
+    this.observer.observe(this.element)
     this.scheduleLayout()
     document.fonts?.ready.then(() => {
       if (this.element.isConnected) this.scheduleLayout()
@@ -47,13 +48,20 @@ export default class extends Controller {
   }
 
   updateStyle() {
-    this.bookTarget.classList.toggle("is-single", this.preferredPages === 1)
+    this.canSpread = window.matchMedia("(min-width: 1400px)").matches && this.element.clientWidth >= 1148
+    this.bookTarget.classList.toggle("is-single", this.preferredPages === 1 || !this.canSpread)
+    this.styleHintTarget.hidden = this.canSpread
+    const activePages = this.canSpread ? this.preferredPages : 1
     this.styleTargets.forEach(button => {
-      button.setAttribute("aria-pressed", String(Number(button.dataset.pages) === this.preferredPages))
+      const pages = Number(button.dataset.pages)
+      button.setAttribute("aria-pressed", String(pages === activePages))
+      button.disabled = pages === 2 && !this.canSpread
+      button.title = pages === 2 && !this.canSpread ? "Duas páginas disponíveis em telas mais largas" : ""
     })
   }
 
   layout() {
+    this.updateStyle()
     const width = this.viewportTarget.clientWidth
     if (!width) return
 

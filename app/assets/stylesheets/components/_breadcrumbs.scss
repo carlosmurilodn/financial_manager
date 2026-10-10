@@ -1,0 +1,8 @@
+.app-breadcrumbs { padding: 4px 0; font-size: .85rem; overflow-wrap: anywhere; }
+.app-breadcrumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; list-style: none; margin: 0; padding: 0; }
+.app-breadcrumbs li { display: flex; align-items: center; gap: 10px; min-width: 0; max-width: 100%; }
+.app-breadcrumbs a, .app-breadcrumbs a:visited { color: var(--text-soft); text-decoration: none; border-radius: 4px; }
+.app-breadcrumbs a:hover { color: var(--primary); text-decoration: underline; }
+.app-breadcrumbs a:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.app-breadcrumbs [aria-current="page"] { color: var(--text-main); font-weight: 700; }
+.app-breadcrumbs__separator { font-family: "Material Symbols Rounded"; font-size: 18px; font-weight: normal; color: var(--text-soft); flex-shrink: 0; line-height: 1; }

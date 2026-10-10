@@ -1,7 +1,34 @@
 require "digest"
 
 class WritingRelationship < ApplicationRecord
-  TYPES = { "friendship" => "Amizade", "rivalry" => "Rivalidade", "kinship" => "Parentesco", "romance" => "Romance", "professional" => "Relação profissional", "alliance" => "Aliança", "enmity" => "Inimizade", "mentorship" => "Mentoria", "distrust" => "Desconfiança", "other" => "Outro" }.freeze
+  TYPES = {
+    "friendship" => "Amizade",
+    "best_friendship" => "Melhor amizade",
+    "romance" => "Relação romântica",
+    "attraction" => "Atração",
+    "unrequited_love" => "Amor não correspondido",
+    "marriage" => "Casamento",
+    "former_romance" => "Ex-relacionamento",
+    "kinship" => "Parentesco",
+    "parent_child" => "Relação parental",
+    "siblings" => "Irmãos",
+    "professional" => "Relação profissional",
+    "partnership" => "Parceria",
+    "mentorship" => "Mentoria",
+    "protection" => "Proteção",
+    "admiration" => "Admiração",
+    "trust" => "Confiança",
+    "loyalty" => "Lealdade",
+    "alliance" => "Aliança",
+    "rivalry" => "Rivalidade",
+    "enmity" => "Inimizade",
+    "distrust" => "Desconfiança",
+    "jealousy" => "Ciúme",
+    "resentment" => "Ressentimento",
+    "manipulation" => "Manipulação",
+    "dependency" => "Dependência",
+    "other" => "Outro"
+  }.freeze
 
   belongs_to :writing_book
   belongs_to :source_character, class_name: "WritingCharacter", inverse_of: :outgoing_relationships

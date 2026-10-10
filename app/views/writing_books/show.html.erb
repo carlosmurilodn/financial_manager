@@ -1,11 +1,5 @@
 <section class="app-page writing-studio writing-book-page">
-  <nav class="writing-breadcrumbs" aria-label="Navegação estrutural">
-    <%= link_to "Projetos", personal_development_path %>
-    <span aria-hidden="true">/</span>
-    <%= link_to "Estúdio de Escrita", writing_books_path %>
-    <span aria-hidden="true">/</span>
-    <span aria-current="page"><%= @book.title %></span>
-  </nav>
+  <%= render "shared/breadcrumbs", items: [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, nil]] %>
 
   <div class="app-panel writing-book-heading">
     <%= render "cover", book: @book %>

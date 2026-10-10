@@ -10,10 +10,4 @@
 <% else %>
   <% crumbs << ["Novo personagem", nil] %>
 <% end %>
-<nav class="writing-character-breadcrumbs" aria-label="Navegação">
-  <ol>
-    <% crumbs.each do |label, path| %>
-      <li><% if path %><%= link_to label, path %><% else %><span aria-current="page"><%= label %></span><% end %></li>
-    <% end %>
-  </ol>
-</nav>
+<%= render "shared/breadcrumbs", items: crumbs %>

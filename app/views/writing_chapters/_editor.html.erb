@@ -1,7 +1,5 @@
 <section class="app-page writing-studio literary-editor-page">
-  <nav class="writing-breadcrumbs" aria-label="Navegação estrutural">
-    <%= link_to "Estúdio de Escrita", writing_books_path %> / <%= link_to @book.title, writing_book_path(@book) %> / <span aria-current="page">Editor Literário</span>
-  </nav>
+  <%= render "shared/breadcrumbs", items: [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, writing_book_path(@book)], ["Editor Literário", nil]] %>
   <%= form_with model: [@book, @chapter], local: true, html: {
     class: "literary-editor", data: { controller: "literary-editor", action: "submit->literary-editor#save", turbo: false }
   } do |f| %>

@@ -1,6 +1,11 @@
 <section class="app-page writing-studio writing-publication-page" data-controller="publication" data-publication-fonts-value="<%= @font_families.to_json %>" data-publication-status-url-value="<%= @export_urls&.fetch(:status_url, '') %>">
   <%= render "shared/breadcrumbs", items: [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, writing_book_path(@book)], ["Publicação E Exportação", nil]] %>
   <header class="app-panel writing-narrative-heading"><div><p class="app-page__eyebrow"><%= @book.title %> · Estúdio De Escrita</p><h1 class="app-page__title">Publicação E Exportação</h1><p class="writing-muted">Configure a diagramação e gere uma cópia do texto salvo. O manuscrito original será preservado.</p></div><%= link_to writing_action_label("arrow_back", "Voltar Ao Livro"), writing_book_path(@book), class: "app-btn app-btn--outline" %></header>
+  <section class="app-panel writing-publication-export">
+    <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">folder_zip</span>Exportar para ChatGPT</h2>
+    <p class="writing-muted">Reúna manuscrito, personagens e planejamento narrativo em um ZIP de documentos Markdown. Escolha quais grupos deseja compartilhar.</p>
+    <%= link_to writing_action_label("folder_zip", "Exportar para ChatGPT"), writing_book_writing_context_export_path(@book), class: "app-btn app-btn--primary" %>
+  </section>
   <%= form_with model: @options, scope: :publication, url: writing_book_writing_publication_path(@book), method: :post, class: "writing-publication-form", data: { publication_target: "form", action: "submit->publication#generate change->publication#changed", turbo: false } do |f| %>
     <section class="app-panel"><fieldset class="writing-publication-fieldset"><legend>Conteúdo</legend>
       <div class="writing-publication-choices"><label class="app-checkbox"><%= f.radio_button :content_scope, "all", data: { publication_target: "scope" } %><span>Livro Completo</span></label><label class="app-checkbox"><%= f.radio_button :content_scope, "selected", data: { publication_target: "scope" } %><span>Capítulos Selecionados</span></label></div>

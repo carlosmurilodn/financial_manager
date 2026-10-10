@@ -5,7 +5,7 @@
   { title: "Notas E Ideias", icon: "sticky_note_2", count: @book.writing_notes.count, description: "Guarde ideias, pesquisas e decisões sem alterar o manuscrito.", action: "Gerenciar Notas E Ideias", path: writing_book_writing_notes_path(@book) },
   { title: "Linha Do Tempo", icon: "timeline", count: @book.writing_timeline_events.count, description: "Organize acontecimentos e referências temporais da história.", action: "Gerenciar Linha Do Tempo", path: writing_book_writing_timeline_events_path(@book) },
   { title: "Estatísticas", icon: "bar_chart", description: "Acompanhe palavras, capítulos e características do manuscrito salvo.", action: "Ver Estatísticas", path: writing_book_writing_statistics_path(@book) },
-  { title: "Publicação E Exportação", icon: "picture_as_pdf", description: "Configure a diagramação e gere o PDF do seu livro.", action: "Publicação E Exportação", path: writing_book_writing_publication_path(@book) }
+  { title: "Publicação E Exportação", icon: "picture_as_pdf", description: "Gere o PDF do livro ou exporte contexto literário para ChatGPT em ZIP.", action: "Publicação E Exportação", path: writing_book_writing_publication_path(@book) }
 ] %>
 <div class="writing-book-tools">
   <% tools.each do |tool| %>

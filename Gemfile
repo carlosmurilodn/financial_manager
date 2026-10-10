@@ -76,6 +76,7 @@ group :test do
 end
 
 gem "diff-lcs", "~> 1.6", require: false
+gem "rubyzip", "~> 3.1", require: false
 
 gem "mcp", "~> 1.7.0", require: false
 gem "doorkeeper", "~> 5.9.9"

@@ -35,6 +35,9 @@ application.register("timeline-date", TimelineDateController)
 import PublicationController from "./publication_controller"
 application.register("publication", PublicationController)
 
+import ContextExportController from "./context_export_controller"
+application.register("context-export", ContextExportController)
+
 import ManuscriptChartController from "./manuscript_chart_controller"
 application.register("manuscript-chart", ManuscriptChartController)
 

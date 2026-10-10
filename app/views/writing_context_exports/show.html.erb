@@ -1,0 +1,31 @@
+<section class="app-page writing-studio writing-publication-page" data-controller="context-export" data-context-export-status-url-value="<%= @export_urls&.fetch(:status_url, '') %>">
+  <%= render "shared/breadcrumbs", items: [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, writing_book_path(@book)], ["Publicação E Exportação", writing_book_writing_publication_path(@book)], ["Exportar para ChatGPT", nil]] %>
+  <header class="app-panel writing-narrative-heading">
+    <div><p class="app-page__eyebrow"><%= @book.title %> · Estúdio de Escrita</p><h1 class="app-page__title">Exportar para ChatGPT</h1><p class="writing-muted">Escolha o conteúdo que deseja compartilhar. O pacote reúne documentos Markdown para anexar à conversa no ChatGPT.</p></div>
+    <%= link_to writing_action_label("arrow_back", "Voltar à exportação"), writing_book_writing_publication_path(@book), class: "app-btn app-btn--outline" %>
+  </header>
+  <%= form_with scope: :context_export, url: writing_book_writing_context_export_path(@book), method: :post, class: "writing-publication-form", data: { context_export_target: "form", action: "submit->context-export#generate change->context-export#changed", turbo: false } do |f| %>
+    <section class="app-panel"><fieldset class="writing-publication-fieldset"><legend>Conteúdo do pacote</legend>
+      <div class="writing-publication-choices">
+        <% Writing::ContextExportOptions::GROUPS.each do |value, label| %>
+          <label class="app-checkbox"><%= check_box_tag "context_export[groups][]", value, @options.include?(value), id: "context-export-#{value}" %><span><%= label %></span></label>
+        <% end %>
+        <%= hidden_field_tag "context_export[groups][]", "", id: nil %>
+      </div>
+      <p class="writing-muted">LEIA-ME sempre incluído. Dossiê incluído quando selecionado. Grupos sem registros não geram documentos vazios.</p>
+    </fieldset></section>
+    <section class="app-panel writing-publication-export">
+      <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">folder_zip</span>Exportação</h2>
+      <p class="writing-muted">Salve alterações no editor antes de exportar. Apenas dados salvos entram no pacote. Imagens e anexos ficam de fora.</p>
+      <div class="writing-character-actions"><%= f.button writing_action_label("folder_zip", "Gerar ZIP"), class: "app-btn app-btn--primary", data: { context_export_target: "submit" } %></div>
+      <p class="writing-muted">Geração em segundo plano. Download disponível por uma hora. A fonte oficial permanece no Gerenciador Pessoal.</p>
+    </section>
+  <% end %>
+  <section class="app-panel writing-publication-preview" aria-label="Download do contexto literário">
+    <div class="app-alert app-alert--info writing-publication-status" role="status" aria-live="polite" data-context-export-target="status">Selecione os grupos e gere o ZIP.</div>
+    <div class="writing-character-actions" hidden data-context-export-target="links"><a class="app-btn app-btn--primary" data-context-export-target="download"><span class="material-symbols-rounded" aria-hidden="true">download</span>Baixar ZIP</a></div>
+    <noscript><p class="writing-muted">Após iniciar a geração, recarregue esta página para acompanhar o resultado.</p>
+      <% if @export_urls %><%= link_to "Baixar ZIP", @export_urls[:download_url], class: "app-btn app-btn--primary" %><% end %>
+    </noscript>
+  </section>
+</section>

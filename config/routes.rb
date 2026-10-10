@@ -24,6 +24,10 @@ Rails.application.routes.draw do
       get :status
       get :download, path: "arquivo"
     end
+    resource :writing_context_export, path: "exportar-chatgpt", only: %i[show create] do
+      get :status
+      get :download, path: "arquivo"
+    end
     resource :writing_narrative_context, path: "contexto-narrativo", only: %i[show create destroy]
     resources :writing_timeline_events, path: "linha-do-tempo" do
       member { patch :reorder, path: "ordenar" }

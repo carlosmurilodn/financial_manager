@@ -69,7 +69,7 @@ module Writing
       raise Missing if data.fetch("created_at") + TTL.to_i < Time.current.to_i
 
       if data["state"].in?(%w[queued processing]) && interrupted?(data)
-        data.merge!("state" => "failed", "message" => "Geração interrompida por reinício do servidor. Gere um novo PDF.")
+        data.merge!("state" => "failed", "message" => interrupted_message)
         write(data)
       end
       data
@@ -96,6 +96,10 @@ module Writing
     end
 
     private
+
+    def interrupted_message
+      "Geração interrompida por reinício do servidor. Gere um novo PDF."
+    end
 
     def interrupted?(data)
       Process.kill(0, data.fetch("process_id"))

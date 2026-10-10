@@ -3,7 +3,7 @@
   <div class="progress-mental-kpis">
     <% Health::SelfKnowledgeContent::METRICS.each_with_index do |(field, _), index| %>
       <% average = @self_knowledge_week.averages.fetch(field) %>
-      <div class="self-knowledge-hero-kpi self-knowledge-hero-kpi--<%= mental_score_color(average[:mean]) %>">
+      <div class="self-knowledge-hero-kpi self-knowledge-hero-kpi--<%= mental_score_color(average[:mean], field: field) %>">
         <span class="material-symbols-rounded" aria-hidden="true"><%= %w[sentiment_satisfied bolt psychology][index] %></span>
         <div>
           <p><%= { mood: "Humor Médio", energy: "Energia Média", tension: "Tensão Média" }.fetch(field) %></p>

@@ -1,6 +1,7 @@
 class WritingChaptersController < ApplicationController
   before_action :set_book
   before_action :set_chapter, only: %i[show edit update destroy export reorder]
+  before_action :reject_chapter_text, only: %i[create update]
 
   def new
     @chapter = @book.writing_chapters.new
@@ -65,6 +66,12 @@ class WritingChaptersController < ApplicationController
 
   private
 
+  def reject_chapter_text
+    return unless params[:writing_chapter]&.key?(:content)
+
+    render json: { errors: [ "A escrita agora acontece nas cenas. Copie seu texto antes de reabrir o capítulo para não perder alterações desta aba." ] }, status: :conflict
+  end
+
   def set_book
     @book = current_user.writing_books.find(params[:writing_book_id])
   end
@@ -74,12 +81,7 @@ class WritingChaptersController < ApplicationController
   end
 
   def chapter_params
-    permitted = params.require(:writing_chapter).permit(:title, :lock_version)
-    permitted[:content] = JSON.parse(params.dig(:writing_chapter, :content)) if params.dig(:writing_chapter, :content).is_a?(String)
-    permitted
-  rescue JSON::ParserError, JSON::NestingError
-    permitted[:content] = nil
-    permitted
+    params.require(:writing_chapter).permit(:title, :lock_version)
   end
 
   def saved_response(status)

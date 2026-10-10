@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   root "entry#index"
   get "desenvolvimento-pessoal", to: "personal_development#index", as: :personal_development
+  post "projetos/estudio-de-escrita/backup", to: "writing_backups#create", as: :writing_backup
   resources :writing_books, path: "projetos/estudio-de-escrita" do
     member { get :cover, path: "capa" }
     resource :writing_narrative_context, path: "contexto-narrativo", only: %i[show create destroy]
@@ -13,6 +14,7 @@ Rails.application.routes.draw do
       member do
         get :export, path: "exportar"
         patch :move, path: "mover"
+        patch :reorder, path: "ordenar"
       end
     end
     resources :writing_plots, path: "tramas"

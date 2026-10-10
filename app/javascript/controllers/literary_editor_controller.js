@@ -6,7 +6,7 @@ import { LiteraryParagraph, LiteraryHeading, LiteraryEditing } from "../writing/
 export default class extends Controller {
   static targets = ["host", "content", "title", "lockVersion", "status", "save", "format", "export", "indent"]
 
-  static values = { label: { type: String, default: "capítulo" } }
+  static values = { label: { type: String, default: "capítulo" }, embedded: Boolean, defaultTitle: String }
 
   connect() {
     this.events = new AbortController()
@@ -30,12 +30,14 @@ export default class extends Controller {
               return true
             }
             if (event.key !== "Escape") return false
-            this.formatTargets.find(button => !button.disabled)?.focus()
+            const buttons = this.embeddedValue ? this.element.closest(".chapter-writing-page").querySelectorAll("[data-chapter-editor-target~='format']") : this.formatTargets
+            Array.from(buttons).find(button => !button.disabled)?.focus()
             return true
           },
         },
         onUpdate: () => { this.syncContent(); this.updateDirty() },
         onTransaction: () => this.updateToolbar(),
+        onFocus: () => this.activate(),
         onContentError: () => { throw new Error("Conteúdo incompatível com o editor.") },
       })
       this.syncContent()
@@ -45,11 +47,13 @@ export default class extends Controller {
       this.updateToolbar()
       const options = { signal: this.events.signal }
       window.addEventListener("beforeunload", event => {
+        if (this.embeddedValue) return
         if (!this.dirty && !this.saving) return
         event.preventDefault()
         event.returnValue = ""
       }, options)
       document.addEventListener("turbo:before-visit", event => {
+        if (this.embeddedValue) return
         if ((this.dirty || this.saving) && !window.confirm("Há alterações não salvas. Sair do editor?")) event.preventDefault()
       }, options)
       document.addEventListener("turbo:before-cache", () => {
@@ -89,8 +93,8 @@ export default class extends Controller {
     clearTimeout(this.autosaveTimer)
     if (!this.dirty || this.saving || this.conflicted) return
     this.autosaveTimer = setTimeout(() => {
-      if (this.dirty && !this.saving && !this.conflicted && this.titleTarget.value.trim()) this.save()
-    }, 8000)
+      if (this.dirty && !this.saving && !this.conflicted && (this.titleTarget.value.trim() || this.embeddedValue)) this.save()
+    }, 4000)
   }
 
   format(event) {
@@ -117,9 +121,14 @@ export default class extends Controller {
     this.updateToolbar()
   }
 
-  updateToolbar() {
+  activate() {
+    this.dispatch("active", { detail: { controller: this } })
+  }
+
+  updateToolbar(buttons = this.formatTargets) {
     if (!this.editor || this.editor.isDestroyed) return
-    this.formatTargets.forEach(button => {
+    if (this.embeddedValue && !buttons.length) this.dispatch("toolbar", { detail: { controller: this } })
+    buttons.forEach(button => {
       const command = button.dataset.command
       let active = false
       let enabled = true
@@ -147,6 +156,7 @@ export default class extends Controller {
     this.syncContent()
     const savedSnapshot = this.snapshot()
     const formData = new FormData(this.element)
+    if (this.embeddedValue && !this.titleTarget.value.trim()) formData.set("writing_scene[title]", this.defaultTitleValue)
     this.saving = true
     this.saveTarget.disabled = true
     this.setStatus(`Salvando ${this.labelValue}…`)
@@ -175,9 +185,12 @@ export default class extends Controller {
       }
       method.value = "patch"
       this.lockVersionTarget.value = result.lock_version
-      this.exportTarget.href = result.export_url
-      this.exportTarget.removeAttribute("aria-disabled")
-      history.replaceState(history.state, "", result.edit_url)
+      if (this.hasExportTarget) {
+        this.exportTarget.href = result.export_url
+        this.exportTarget.removeAttribute("aria-disabled")
+      }
+      if (!this.embeddedValue) history.replaceState(history.state, "", result.edit_url)
+      this.element.dataset.contextUrl = result.context_url
       this.savedSnapshot = savedSnapshot
       this.element.dataset.savedSnapshot = savedSnapshot
       this.dirty = this.snapshot() !== savedSnapshot
@@ -189,6 +202,7 @@ export default class extends Controller {
     } finally {
       this.saving = false
       this.saveTarget.disabled = this.conflicted === true
+      this.dispatch("status", { detail: { controller: this } })
       if (this.dirty && !this.conflicted && this.snapshot() !== savedSnapshot) this.scheduleAutosave()
     }
   }
@@ -201,7 +215,9 @@ export default class extends Controller {
   }
 
   setStatus(message, error = false) {
+    this.error = error
     this.statusTarget.textContent = message
     this.statusTarget.classList.toggle("literary-editor-status--error", error)
+    this.dispatch("status", { detail: { controller: this } })
   }
 }

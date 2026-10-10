@@ -1,3 +1,3 @@
-<%= render layout: "shared/form_page", locals: { resource: @book, title: "Editar Livro", eyebrow: "Estúdio de Escrita", description: "Organize as informações da sua obra.", icon: "auto_stories", back_path: writing_books_path } do %>
+<%= render layout: "shared/form_page", locals: { page_class: "writing-studio", resource: @book, title: "Editar Livro", eyebrow: "Estúdio de Escrita", description: "Organize as informações da sua obra.", icon: "auto_stories", back_path: writing_books_path } do %>
   <%= render "form", book: @book %>
 <% end %>

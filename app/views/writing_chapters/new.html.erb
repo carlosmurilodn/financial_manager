@@ -1,1 +1,15 @@
-<%= render "editor" %>
+<% if @chapter.is_a?(WritingScene) %>
+  <%= render "editor" %>
+<% else %>
+  <%= render "shared/breadcrumbs", items: [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, writing_book_path(@book)], ["Novo capítulo", nil]] %>
+  <%= render layout: "shared/form_page", locals: { resource: @chapter, page_class: "writing-studio", title: "Novo capítulo", eyebrow: @book.title, icon: "menu_book", back_path: writing_book_path(@book), description: "Defina o título. Depois, crie as cenas que compõem este capítulo." } do %>
+    <%= form_with model: [@book, @chapter], class: "app-form-page__form" do |f| %>
+      <%= f.label :title, "Título do capítulo" %>
+      <%= f.text_field :title, required: true, maxlength: 200, class: "app-form-control", autofocus: true %>
+      <div class="app-form-page__actions">
+        <%= link_to writing_action_label("close", "Cancelar"), writing_book_path(@book), class: "app-btn app-btn--outline" %>
+        <%= f.button writing_action_label("save", "Criar capítulo"), class: "app-btn app-btn--primary" %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

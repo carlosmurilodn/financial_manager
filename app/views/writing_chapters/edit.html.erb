@@ -1,1 +1,5 @@
-<%= render "editor" %>
+<% if @chapter.is_a?(WritingChapter) %>
+  <%= render "composition" %>
+<% else %>
+  <%= render "editor" %>
+<% end %>

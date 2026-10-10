@@ -1,4 +1,15 @@
 module WritingChaptersHelper
+  def literary_manuscript_html(document)
+    return literary_document_html(document.content) unless document.is_a?(WritingChapter)
+
+    parts = []
+    document.writing_scenes.ordered.each do |scene|
+      parts << tag.hr(class: "literary-scene-break") if parts.any?(&:present?)
+      parts << literary_document_html(scene.content)
+    end
+    safe_join(parts)
+  end
+
   def literary_document_html(document)
     safe_join(Array(document["content"]).map { |node| literary_node_html(node) })
   end

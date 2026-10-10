@@ -1,4 +1,37 @@
-<section class="app-panel writing-detail"><div class="writing-chapters__heading"><h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">movie</span>Cenas</h2><%= link_to writing_action_label("add", "Nova cena"), new_writing_book_writing_scene_path(@book, writing_chapter_id: @chapter.id), class: "app-btn app-btn--primary" %></div>
-  <% scenes = @chapter.writing_scenes.ordered %>
-  <% if scenes.empty? %><p class="writing-muted">Nenhuma cena cadastrada. Cenas têm texto e elementos próprios, independentes do capítulo.</p><% else %><ul class="writing-scenes-list"><% scenes.each do |scene| %><li><%= link_to scene.title, writing_book_writing_scene_path(@book, scene), class: "writing-chapters__link" %><div class="writing-character-actions"><%= link_to writing_action_label("edit", "Editar cena"), edit_writing_book_writing_scene_path(@book, scene), class: "app-btn app-btn--secondary" %><%= button_to writing_action_label("delete", "Excluir cena"), writing_book_writing_scene_path(@book, scene), method: :delete, class: "app-btn app-btn--secondary writing-book-delete", form: { data: { turbo_confirm: "Excluir #{scene.title} e seu texto?" } } %></div></li><% end %></ul><% end %>
+<% scenes = @chapter.writing_scenes.ordered.to_a %>
+<section class="app-panel writing-detail writing-scenes-card"><div class="writing-chapters__heading"><h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">movie</span>Cenas <span class="writing-book-tool__badge"><%= scenes.size %></span></h2><%= link_to writing_action_label("add", "Nova cena"), new_writing_book_writing_scene_path(@book, writing_chapter_id: @chapter.id), class: "app-btn app-btn--primary" %></div>
+  <p class="writing-muted">Partes do capítulo, na ordem de leitura. Abra uma cena para consultar ou editar seu texto.</p>
+  <% if scenes.empty? %>
+    <p class="writing-muted">Crie a primeira cena para começar a escrever este capítulo.</p>
+  <% else %>
+    <ol class="writing-manuscript-cards">
+      <% scenes.each_with_index do |scene, index| %>
+        <li class="writing-manuscript-card writing-manuscript-card--compact">
+          <div class="writing-manuscript-card__identity">
+            <span class="writing-manuscript-card__icon material-symbols-rounded" aria-hidden="true">movie</span>
+            <div class="writing-manuscript-card__copy">
+              <%= link_to scene.title, writing_book_writing_scene_path(@book, scene), class: "writing-manuscript-card__title" %>
+            </div>
+          </div>
+          <div class="writing-manuscript-card__meta">
+            <span class="material-symbols-rounded" aria-hidden="true">calendar_month</span>
+            <div><small>Atualizada em</small><time datetime="<%= scene.updated_at.iso8601 %>"><%= l(scene.updated_at.to_date) %></time></div>
+          </div>
+          <div class="writing-character-actions writing-manuscript-card__actions">
+            <%= link_to edit_writing_book_writing_scene_path(@book, scene), class: "writing-record-action", title: "Editar cena", aria: { label: "Editar cena #{scene.title}" } do %>
+              <span class="material-symbols-rounded" aria-hidden="true">edit</span><span class="writing-record-action__label">Editar</span>
+            <% end %>
+            <% [["up", "arrow_upward", "Subir cena", index.zero?], ["down", "arrow_downward", "Descer cena", index == scenes.size - 1]].each do |direction, icon, label, disabled| %>
+              <%= button_to reorder_writing_book_writing_scene_path(@book, scene), method: :patch, params: { direction: direction }, class: "writing-record-action writing-record-action--icon", disabled: disabled, title: label, aria: { label: "#{label}: #{scene.title}" } do %>
+                <span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span>
+              <% end %>
+            <% end %>
+            <%= button_to writing_book_writing_scene_path(@book, scene), method: :delete, class: "writing-record-action writing-record-action--danger", title: "Excluir cena", aria: { label: "Excluir cena #{scene.title}" }, form: { data: { turbo_confirm: "Excluir #{scene.title} e seu texto?" } } do %>
+              <span class="material-symbols-rounded" aria-hidden="true">delete</span><span class="writing-record-action__label">Excluir</span>
+            <% end %>
+          </div>
+        </li>
+      <% end %>
+    </ol>
+  <% end %>
 </section>

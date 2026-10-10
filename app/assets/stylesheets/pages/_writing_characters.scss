@@ -1,7 +1,7 @@
 .writing-characters-heading, .writing-character-heading { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
 .writing-characters-heading { justify-content: space-between; }
 .writing-character-filters { grid-template-columns: 2fr 1fr 1fr; }
-.writing-character-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 20px; }
+.writing-character-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: var(--writing-card-gap, 14px); }
 .writing-character-card { display: grid; gap: 12px; color: var(--text-main); text-decoration: none; align-content: start; }
 .writing-character-card h2, .writing-character-card p { margin: 0; overflow-wrap: anywhere; }
 .writing-character-card h2 { font-size: 1.2rem; }
@@ -13,7 +13,7 @@
 .writing-character-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .writing-character-actions form { margin: 0; }
 .writing-character-status { color: var(--text-soft); font-size: .85rem; }
-.writing-character-sections { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+.writing-character-sections { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--writing-card-gap, 14px); align-items: start; }
 .writing-character-section h2, .writing-character-relationships h2 { margin-top: 0; font-size: 1.2rem; }
 .writing-character-section dl { display: grid; gap: 16px; margin: 0; }
 .writing-character-section dt { font-weight: 700; color: var(--text-soft); margin-bottom: 5px; }

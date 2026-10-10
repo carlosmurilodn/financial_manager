@@ -1,5 +1,5 @@
 <%= render "breadcrumbs" %>
-<%= render layout: "shared/form_page", locals: { resource: @record, title: "#{@record.persisted? ? 'Editar' : 'Cadastrar'} #{narrative_model::SINGULAR_LABEL.downcase}", eyebrow: @book.title, icon: "edit_note", back_path: narrative_collection_path, description: "Preencha os detalhes gradualmente. Somente o título ou nome é obrigatório." } do %>
+<%= render layout: "shared/form_page", locals: { page_class: "writing-studio", resource: @record, title: "#{@record.persisted? ? 'Editar' : 'Cadastrar'} #{narrative_model::SINGULAR_LABEL.downcase}", eyebrow: @book.title, icon: "edit_note", back_path: narrative_collection_path, description: "Preencha os detalhes gradualmente. Somente o título ou nome é obrigatório." } do %>
   <%= render "tabs" %>
   <%= form_with model: [@book, @record], local: true, class: "app-form-page__form" do |f| %>
     <fieldset class="writing-form-section"><legend>Informações</legend><div class="writing-fields">

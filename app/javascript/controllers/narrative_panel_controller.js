@@ -24,6 +24,8 @@ export default class extends Controller {
   }
 
   get editorController() {
+    const chapter = this.application.getControllerForElementAndIdentifier(this.element, "chapter-editor")
+    if (chapter) return chapter.activeScene
     const form = this.element.querySelector(".literary-editor")
     return form ? this.application.getControllerForElementAndIdentifier(form, "literary-editor") : null
   }
@@ -68,6 +70,7 @@ export default class extends Controller {
     if (!event.detail.context_url) return
     const changed = this.urlValue !== event.detail.context_url
     this.urlValue = event.detail.context_url
+    if (changed) this.selection = null
     if (changed && this.open) this.load()
   }
 

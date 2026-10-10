@@ -1,5 +1,5 @@
 class WritingScenesController < WritingChaptersController
-  before_action :set_chapter, only: :move
+  before_action :set_chapter, only: %i[show edit update destroy export move reorder]
 
   def new
     parent = @book.writing_chapters.find(params[:writing_chapter_id])
@@ -13,9 +13,12 @@ class WritingScenesController < WritingChaptersController
 
   def create
     attributes = chapter_params
-    attributes[:position] = attributes[:writing_chapter].writing_scenes.maximum(:position).to_i + 1
-    @chapter = @book.writing_scenes.new(attributes)
-    if @chapter.save
+    saved = @book.with_lock do
+      attributes[:position] = attributes[:writing_chapter].writing_scenes.maximum(:position).to_i + 1
+      @chapter = @book.writing_scenes.new(attributes)
+      @chapter.save
+    end
+    if saved
       saved_response(:created)
     else
       invalid_response(:new)
@@ -29,9 +32,24 @@ class WritingScenesController < WritingChaptersController
   end
 
   def move
-    parent = @book.writing_chapters.find(params.require(:writing_chapter_id))
+    parent = @book.writing_chapters.where.not(id: @chapter.writing_chapter_id).find(params.require(:writing_chapter_id))
     @book.with_lock { @chapter.update_columns(writing_chapter_id: parent.id, position: parent.writing_scenes.maximum(:position).to_i + 1) }
     redirect_to writing_book_writing_scene_path(@book, @chapter), notice: "Cena movida. Texto e associações preservados.", status: :see_other
+  end
+
+  def reorder
+    @book.with_lock do
+      @chapter.reload
+      scenes = @chapter.writing_chapter.writing_scenes.ordered.to_a
+      index = scenes.index { |scene| scene.id == @chapter.id }
+      offset = { "up" => -1, "down" => 1 }.fetch(params[:direction], 0)
+      destination = index + offset
+      if offset.nonzero? && destination.between?(0, scenes.length - 1)
+        scenes[index], scenes[destination] = scenes[destination], scenes[index]
+        scenes.each_with_index { |scene, position| scene.update_columns(position: position) }
+      end
+    end
+    redirect_to edit_writing_book_writing_chapter_path(@book, @chapter.writing_chapter), notice: "Ordem das cenas atualizada.", status: :see_other
   end
 
   private

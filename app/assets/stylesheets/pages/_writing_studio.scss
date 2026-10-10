@@ -1,5 +1,8 @@
-.writing-studio { min-width: 0; }
-.writing-library, .writing-detail-grid, .writing-fields { display: grid; gap: 1.25rem; }
+.writing-studio { --writing-card-gap: 14px; min-width: 0; }
+.app-page.writing-studio { gap: var(--writing-card-gap); }
+.writing-studio + .app-footer { margin-top: var(--writing-card-gap, 14px); }
+.writing-library, .writing-detail-grid { display: grid; gap: var(--writing-card-gap, 14px); }
+.writing-fields { display: grid; gap: 1.25rem; }
 .writing-library { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
 .writing-book-card { display: flex; flex-direction: column; padding: 0; overflow: hidden; color: inherit; text-decoration: none; transition: transform .15s; }
 .writing-book-card:hover { transform: translateY(-3px); }
@@ -19,7 +22,7 @@
 .writing-empty > .material-symbols-rounded { font-size: 3rem; }
 .writing-fields, .writing-detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .writing-field-wide { grid-column: 1 / -1; }
-.writing-form-section { border: 1px solid var(--card-border); border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem; min-width: 0; }
+.writing-form-section { border: 1px solid var(--card-border); border-radius: 1rem; padding: 1.5rem; margin-bottom: 14px; min-width: 0; }
 .writing-form-section legend { float: none; width: auto; padding: 0 .5rem; font-size: 1.1rem; font-weight: 700; }
 .writing-secondary-genres { min-width: 0; display: flex; flex-wrap: wrap; gap: .75rem; }
 .writing-secondary-genres legend { font-size: .95rem; }
@@ -31,7 +34,7 @@
 .writing-book-heading { padding: 1.5rem; display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 2rem; }
 .writing-book-heading h1 { overflow-wrap: anywhere; }
 .writing-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
-.writing-detail { padding: 1.5rem; margin-top: 1.25rem; overflow-wrap: anywhere; }
+.writing-detail { padding: 1.5rem; margin: 0; overflow-wrap: anywhere; }
 .writing-detail h2 { font-size: 1.2rem; }
 .writing-detail dd { margin: .25rem 0 1rem; }
 .writing-muted { color: var(--text-soft); }
@@ -79,7 +82,7 @@
   .writing-hero__action { grid-column: 1 / -1; grid-row: auto; min-height: 48px; }
 }
 
-.writing-book-page { gap: 20px; }
+.writing-book-page { gap: var(--writing-card-gap); }
 .writing-book-page .writing-book-heading { grid-template-columns: 150px minmax(0, 1fr); gap: 1.5rem; align-items: center; }
 .writing-book-heading__copy { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; min-width: 0; }
 .writing-book-heading__subtitle { margin: .5rem 0 0; color: var(--text-soft); }
@@ -88,8 +91,8 @@
 .writing-book-page .writing-actions { margin: 0; align-items: center; }
 .writing-book-page .writing-actions .material-symbols-rounded { font-size: 1rem; }
 .writing-book-delete { color: var(--danger); }
-.writing-book-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 20px; align-items: start; }
-.writing-book-narrative { display: grid; gap: 20px; min-width: 0; }
+.writing-book-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--writing-card-gap, 14px); align-items: start; }
+.writing-book-narrative { display: grid; gap: var(--writing-card-gap, 14px); min-width: 0; }
 .writing-book-page .writing-detail { margin: 0; padding: 1.25rem 1.5rem; min-width: 0; }
 .writing-book-page .writing-detail__title { display: flex; align-items: center; gap: .6rem; margin: 0 0 1rem; font-size: 1rem; }
 .writing-detail__title .material-symbols-rounded { color: var(--primary); font-size: 1.25rem; flex-shrink: 0; }
@@ -137,7 +140,7 @@
 .literary-editor-meta p { margin: 0; }
 .literary-editor-status--error { color: var(--danger); }
 .literary-editor-desk { padding: 1.5rem; border-radius: var(--radius-lg); background: var(--app-bg-accent); }
-.literary-editor-sheet { width: min(100%, 210mm); min-height: 65vh; margin: auto; padding: 20mm 22mm; border: 1px solid #e6e3dd; background: #fffefa; box-shadow: 0 6px 24px rgba(0, 0, 0, .08); }
+.literary-editor-sheet { width: min(100%, 210mm); min-height: 65vh; margin: auto; padding: 20mm 22mm; border: 1px solid #e6e3dd; border-radius: var(--radius-lg); background: #fffefa; box-shadow: 0 6px 24px rgba(0, 0, 0, .08); }
 .literary-editor-sheet .literary-manuscript { min-height: 50vh; }
 @media (max-width: 700px) {
   .literary-editor-desk { padding: .5rem; }
@@ -158,3 +161,5 @@
 @media (max-width: 700px) {
   .writing-book-page .writing-book-heading { grid-template-columns: minmax(0, 1fr); }
 }
+
+.literary-editor-sheet > .literary-manuscript { border-radius: var(--radius-md); }

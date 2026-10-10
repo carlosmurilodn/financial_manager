@@ -25,28 +25,7 @@
     <%= f.hidden_field :content, value: @chapter.content.to_json, data: { literary_editor_target: "content" } %>
     <%= f.hidden_field :writing_chapter_id if is_scene %>
     <%= f.hidden_field :lock_version, data: { literary_editor_target: "lockVersion" } %>
-    <div class="app-panel literary-editor-tools">
-      <div class="literary-editor-toolbar" role="group" aria-label="Formatação do manuscrito">
-        <% [
-          ["undo", "undo", "Desfazer"], ["redo", "redo", "Refazer"],
-          ["paragraph", "notes", "Parágrafo narrativo"], ["heading1", "title", "Título"], ["heading2", "text_fields", "Subtítulo"],
-          ["bold", "format_bold", "Negrito"], ["italic", "format_italic", "Itálico"], ["strike", "format_strikethrough", "Tachado"],
-          ["indent", "format_indent_increase", "Aplicar recuo de primeira linha (1,25 cm)"],
-          ["outdent", "format_indent_decrease", "Remover recuo de primeira linha"],
-          ["left", "format_align_left", "Alinhar à esquerda"], ["justify", "format_align_justify", "Justificar"],
-          ["bulletList", "format_list_bulleted", "Lista com marcadores"], ["orderedList", "format_list_numbered", "Lista numerada"],
-          ["sceneBreak", "horizontal_rule", "Separador de cena"]
-        ].each do |command, icon, label| %>
-          <button type="button" class="literary-editor-tool" data-command="<%= command %>" data-action="click->literary-editor#format" data-literary-editor-target="format<%= ' indent' if command == 'indent' %>" title="<%= label %>" aria-label="<%= label %>" <%= 'aria-pressed=false' unless %w[undo redo sceneBreak].include?(command) %> disabled>
-            <span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span>
-          </button>
-        <% end %>
-      </div>
-      <div class="literary-editor-meta">
-        <p id="literary-editor-help">Enter: novo parágrafo · Shift + Enter: quebra de linha · Tab / Shift + Tab: aplicar / remover recuo · Ctrl/Cmd + S: salvar · Esc: sair da área de escrita para os controles.</p>
-        <span class="literary-editor-status" role="status" aria-live="polite" data-literary-editor-target="status">Carregando editor…</span>
-      </div>
-    </div>
+    <%= render "writing_chapters/toolbar", editor_controller: "literary-editor" %>
     <div class="literary-editor-desk"><div class="literary-editor-sheet" data-literary-editor-target="host"></div></div>
     <noscript><div class="app-alert app-alert--danger">Ative JavaScript para usar o Editor Literário. Nenhum conteúdo salvo será alterado.</div></noscript>
   <% end %>

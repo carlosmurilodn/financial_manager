@@ -26,3 +26,5 @@ application.register("literary-editor", LiteraryEditorController)
 
 import NarrativePanelController from "./narrative_panel_controller"
 application.register("narrative-panel", NarrativePanelController)
+import ChapterEditorController from "./chapter_editor_controller"
+application.register("chapter-editor", ChapterEditorController)

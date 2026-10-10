@@ -13,7 +13,7 @@ module McpIntegration
 
       input = env["rack.input"]
       if input
-        body = input.read(Settings::MAX_REQUEST_BYTES + 1)
+        body = input.read(Settings::MAX_REQUEST_BYTES + 1) || ""
         return too_large if body.bytesize > Settings::MAX_REQUEST_BYTES
 
         env["rack.input"] = StringIO.new(body)

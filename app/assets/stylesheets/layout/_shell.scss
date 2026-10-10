@@ -86,6 +86,16 @@
   color: var(--text-soft);
 }
 
+.app-sidebar--projects .app-sidebar__brand,
+.app-sidebar--projects .app-sidebar__brand-main {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.app-sidebar--projects .app-sidebar__brand-copy {
+  align-items: flex-start;
+}
+
 .app-sidebar__brand-logout-form {
   display: none;
 }

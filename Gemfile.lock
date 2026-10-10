@@ -452,6 +452,7 @@ DEPENDENCIES
   csv
   debug
   devise
+  diff-lcs (~> 1.6)
   dotenv-rails
   factory_bot_rails
   jbuilder

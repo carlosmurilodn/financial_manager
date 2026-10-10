@@ -1,0 +1,38 @@
+<section class="app-page writing-studio writing-statistics-page writing-productivity-page">
+  <%= render "shared/breadcrumbs", items: [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, writing_book_path(@book)], ["Estatísticas", writing_book_writing_statistics_path(@book)], ["Produtividade", nil]] %>
+  <header class="app-panel writing-narrative-heading"><div><p class="app-page__eyebrow"><%= @book.title %> · Estúdio De Escrita</p><h1 class="app-page__title">Minha Produtividade</h1><p class="writing-muted">Acompanhe a evolução do texto salvo. Fuso horário: <%= @zone.name %>.</p></div><%= link_to writing_action_label("arrow_back", "Voltar Ao Livro"), writing_book_path(@book), class: "app-btn app-btn--outline" %></header>
+  <%= render "writing_statistics/navigation" %>
+  <section class="app-panel">
+    <%= form_with url: writing_book_writing_productivity_path(@book), method: :get, class: "writing-statistics-filters" do %>
+      <div><%= label_tag :period, "Período" %><%= select_tag :period, options_for_select(Writing::ProductivityReport::PERIODS.invert, @period), class: "app-form-select" %></div>
+      <div><%= label_tag :chapter_id, "Capítulo" %><%= select_tag :chapter_id, options_for_select(@chapter_options.map { |id, title| [title, id] }, @chapter&.id), include_blank: "Livro Completo", class: "app-form-select" %></div>
+      <%= button_tag "Aplicar", class: "app-btn app-btn--primary" %>
+    <% end %>
+    <% metrics = [["edit", "Palavras Adicionadas", @report.added], ["backspace", "Palavras Removidas", @report.removed], ["trending_up", "Variação Líquida", @report.added - @report.removed], ["event_available", "Dias Com Escrita", @report.active_days], ["bar_chart", "Média Por Dia Ativo", @report.average], ["local_fire_department", "Sequência Atual", @report.current_streak], ["flag", "Maior Sequência", @report.longest_streak]] %>
+    <dl class="writing-statistics-metrics"><% metrics.each do |icon, label, value| %><div><dt><span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span><%= label %></dt><dd><%= number_with_delimiter(value, delimiter: ".") %></dd></div><% end %></dl>
+    <p class="writing-muted">Média usa palavras adicionadas por dia ativo. Sequências consideram todo o histórico<%= " do capítulo selecionado" if @chapter %>. Dias sem escrita não representam desempenho negativo.</p>
+    <p class="writing-muted"><% if @book.writing_history_started_at %>Registro iniciado em <%= l(@book.writing_history_started_at.in_time_zone(@zone), format: :short) %>, com <%= number_with_delimiter(@book.writing_history_initial_words, delimiter: ".") %> palavras existentes. Esse conteúdo não conta como escrita nova.<% else %>Histórico começará no próximo salvamento ou exclusão. Escrita anterior não será reconstruída.<% end %></p>
+  </section>
+  <section class="app-panel"><h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">show_chart</span>Evolução <%= @chapter ? "Do Capítulo" : "Do Manuscrito" %></h2>
+    <% if @report.points.any? %><div class="writing-statistics-chart" data-controller="productivity-chart" data-productivity-chart-points-value="<%= @report.points.to_json %>"><canvas data-productivity-chart-target="canvas" role="img" aria-label="Total de palavras ao final de cada dia; valores na lista abaixo.">Valores disponíveis na lista abaixo.</canvas></div>
+      <details class="writing-productivity-details"><summary>Consultar Valores Diários</summary><ol class="writing-productivity-points"><% @report.points.reverse_each do |point| %><li><time datetime="<%= point[:date] %>"><%= l(Date.iso8601(point[:date])) %></time><strong><%= number_with_delimiter(point[:words], delimiter: ".") %> palavras</strong></li><% end %></ol></details>
+    <% else %><p class="writing-muted">Ainda não há histórico registrado.</p><% end %>
+  </section>
+  <section class="app-panel"><h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">history</span>Resumo Diário E Atividades</h2>
+    <% if @report.days.empty? %><p class="writing-muted">Nenhuma alteração registrada neste período.</p><% else %><ol class="writing-manuscript-cards">
+      <% @report.days.each do |date, events| %>
+        <li class="writing-manuscript-card writing-manuscript-card--compact writing-productivity-day">
+          <details class="writing-productivity-details"><summary><time datetime="<%= date.iso8601 %>"><%= l(date) %></time><span>+<%= number_with_delimiter(events.sum(&:added_words), delimiter: ".") %> adicionadas · −<%= number_with_delimiter(events.sum(&:removed_words), delimiter: ".") %> removidas</span><strong>Saldo: <%= number_with_delimiter(events.sum(&:net_words), delimiter: ".") %></strong></summary>
+            <ol class="writing-productivity-events"><% events.reverse_each do |event| %><li><div><time datetime="<%= event.occurred_at.iso8601 %>"><%= event.occurred_at.in_time_zone(@zone).strftime("%H:%M:%S") %></time> · <strong><%= WritingActivityEvent::OPERATIONS.fetch(event.operation) %></strong></div><p><%= event.chapter_title %><%= " · #{event.scene_title}" if event.scene_title.present? %></p><p>+<%= event.added_words %> adicionadas · −<%= event.removed_words %> removidas · Saldo <%= event.net_words %> · Livro: <%= number_with_delimiter(event.book_words, delimiter: ".") %> palavras</p></li><% end %></ol>
+          </details>
+        </li>
+      <% end %>
+    </ol><% end %>
+  </section>
+  <section class="app-panel"><h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">menu_book</span>Evolução Por Capítulo</h2>
+    <% if @report.chapter_rows.empty? %><p class="writing-muted">Ainda não há capítulos.</p><% else %><ol class="writing-manuscript-cards"><% @report.chapter_rows.each do |chapter| %>
+      <li class="writing-manuscript-card writing-manuscript-card--compact writing-statistics-chapter"><div class="writing-manuscript-card__identity"><span class="writing-manuscript-card__icon material-symbols-rounded" aria-hidden="true">menu_book</span><div class="writing-manuscript-card__copy"><% if chapter[:deleted] %><span class="writing-manuscript-card__title"><%= chapter[:title] %> (Excluído)</span><% else %><%= link_to chapter[:title], writing_book_writing_chapter_path(@book, chapter[:id]), class: "writing-manuscript-card__title" %><% end %><span class="writing-manuscript-card__position">Última alteração textual: <%= chapter[:last_activity] ? l(chapter[:last_activity].in_time_zone(@zone), format: :short) : "Sem Registro" %></span></div></div>
+        <dl class="writing-statistics-chapter__metrics"><% [["Palavras Atuais", chapter[:words]], ["Dias Ativos", chapter[:active_days]], ["Adicionadas", chapter[:added]], ["Removidas", chapter[:removed]], ["Saldo", chapter[:added] - chapter[:removed]]].each do |label, value| %><div><dt><%= label %></dt><dd><%= number_with_delimiter(value, delimiter: ".") %></dd></div><% end %></dl>
+      </li><% end %></ol><% end %>
+  </section>
+</section>

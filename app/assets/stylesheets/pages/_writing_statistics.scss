@@ -40,3 +40,25 @@
   .writing-statistics-filters > div { flex: 1 1 100%; }
   .writing-statistics-filters .app-btn { min-height: 44px; }
 }
+
+.writing-statistics-tabs { display: flex; flex-wrap: wrap; gap: 10px; }
+.writing-productivity-page .writing-productivity-day { display: block; }
+.writing-productivity-details { width: 100%; min-width: 0; color: var(--text-main); }
+.writing-productivity-details > summary { cursor: pointer; min-height: 44px; align-content: center; overflow-wrap: anywhere; }
+.writing-productivity-details > summary:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; border-radius: 6px; }
+.writing-productivity-day summary { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.writing-productivity-day summary::before { content: "＋"; color: var(--primary); }
+.writing-productivity-day details[open] summary::before { content: "−"; }
+.writing-productivity-day summary > time { font-weight: 700; }
+.writing-productivity-day summary > span { color: var(--text-soft); font-size: .85rem; }
+.writing-productivity-day summary > strong { margin-left: auto; }
+.writing-productivity-events, .writing-productivity-points { list-style: none; padding: 0; margin: 14px 0 0; }
+.writing-productivity-events > li { padding: 12px 0; border-top: 1px solid var(--card-border); font-size: .85rem; overflow-wrap: anywhere; }
+.writing-productivity-events p { margin: 6px 0 0; color: var(--text-soft); }
+.writing-productivity-points { max-height: 320px; overflow-y: auto; }
+.writing-productivity-points > li { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--card-border); font-size: .85rem; }
+@media (max-width: 700px) {
+  .writing-statistics-tabs .app-btn { flex: 1 1 auto; min-height: 44px; }
+  .writing-productivity-day summary > span { flex-basis: 100%; }
+  .writing-productivity-day summary > strong { margin-left: 0; }
+}

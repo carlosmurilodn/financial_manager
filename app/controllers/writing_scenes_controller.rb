@@ -33,7 +33,9 @@ class WritingScenesController < WritingChaptersController
 
   def move
     parent = @book.writing_chapters.where.not(id: @chapter.writing_chapter_id).find(params.require(:writing_chapter_id))
-    @book.with_lock { @chapter.update_columns(writing_chapter_id: parent.id, position: parent.writing_scenes.maximum(:position).to_i + 1) }
+    Writing::ActivityRecorder.move(@chapter, parent) do
+      @chapter.update_columns(writing_chapter_id: parent.id, position: parent.writing_scenes.maximum(:position).to_i + 1)
+    end
     redirect_to writing_book_writing_scene_path(@book, @chapter), notice: "Cena movida. Texto e associações preservados.", status: :see_other
   end
 

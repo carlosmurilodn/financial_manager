@@ -37,3 +37,6 @@ application.register("publication", PublicationController)
 
 import ManuscriptChartController from "./manuscript_chart_controller"
 application.register("manuscript-chart", ManuscriptChartController)
+
+import ProductivityChartController from "./productivity_chart_controller"
+application.register("productivity-chart", ProductivityChartController)

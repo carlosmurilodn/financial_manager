@@ -13,6 +13,7 @@ class WritingBook < ApplicationRecord
   COVER_TYPES = %w[image/jpeg image/png image/webp].freeze
   MAX_COVER_SIZE = 5.megabytes
 
+  has_many :writing_activity_events, dependent: :delete_all
   has_many :writing_timeline_links, dependent: :destroy
   has_many :writing_timeline_events, dependent: :destroy
   has_many :writing_narrative_associations, dependent: :destroy
@@ -29,6 +30,8 @@ class WritingBook < ApplicationRecord
   has_many :writing_chapters, dependent: :destroy
   belongs_to :user
   has_one_attached :cover
+
+  around_destroy :suppress_writing_history, prepend: true
 
   before_validation :normalize_fields
   validates :title, presence: true, length: { maximum: 200 }
@@ -47,6 +50,15 @@ class WritingBook < ApplicationRecord
   end
 
   private
+
+  def suppress_writing_history
+    key = "writing_activity_#{id}"
+    previous = Thread.current[key]
+    Thread.current[key] = true
+    yield
+  ensure
+    Thread.current[key] = previous
+  end
 
   def normalize_fields
     self.title = title.to_s.strip

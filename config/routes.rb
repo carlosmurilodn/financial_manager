@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :writing_books, path: "projetos/estudio-de-escrita" do
     member { get :cover, path: "capa" }
     member { get :read, path: "ler" }
+    resource :writing_productivity, controller: "writing_productivity", path: "estatisticas/produtividade", only: :show
     resource :writing_statistics, controller: "writing_statistics", path: "estatisticas", only: :show
     resource :writing_publication, path: "publicacao", only: %i[show create] do
       get :status

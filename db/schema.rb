@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_10_210000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_11_001000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -452,6 +452,28 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_210000) do
     t.check_constraint "weight_kg > 0::numeric", name: "weight_entries_positive_weight"
   end
 
+  create_table "writing_activity_events", force: :cascade do |t|
+    t.bigint "writing_book_id", null: false
+    t.bigint "chapter_id"
+    t.bigint "scene_id"
+    t.string "chapter_title", null: false
+    t.string "scene_title"
+    t.string "operation", null: false
+    t.datetime "occurred_at", null: false
+    t.bigint "previous_words", null: false
+    t.bigint "current_words", null: false
+    t.bigint "added_words", null: false
+    t.bigint "removed_words", null: false
+    t.bigint "net_words", null: false
+    t.bigint "book_words", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["writing_book_id", "chapter_id", "occurred_at"], name: "idx_writing_activity_chapter"
+    t.index ["writing_book_id", "occurred_at", "id"], name: "idx_writing_activity_history"
+    t.index ["writing_book_id"], name: "index_writing_activity_events_on_writing_book_id"
+    t.check_constraint "previous_words >= 0 AND current_words >= 0 AND added_words >= 0 AND removed_words >= 0 AND book_words >= 0 AND net_words = (added_words - removed_words)", name: "writing_activity_valid_counts"
+  end
+
   create_table "writing_books", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "title", null: false
@@ -468,6 +490,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_210000) do
     t.date "expected_completion_on"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "writing_history_started_at"
+    t.bigint "writing_history_initial_words"
+    t.jsonb "writing_history_initial_chapters", default: {}, null: false
     t.index ["user_id", "genre"], name: "index_writing_books_on_user_id_and_genre"
     t.index ["user_id", "status"], name: "index_writing_books_on_user_id_and_status"
     t.index ["user_id"], name: "index_writing_books_on_user_id"
@@ -839,6 +864,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_210000) do
   add_foreign_key "weekly_wellbeings", "users"
   add_foreign_key "weight_entries", "users"
   add_foreign_key "writing_books", "users"
+  add_foreign_key "writing_activity_events", "writing_books"
   add_foreign_key "writing_chapters", "writing_books"
   add_foreign_key "writing_characters", "writing_books"
   add_foreign_key "writing_relationships", "writing_books"

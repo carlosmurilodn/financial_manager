@@ -51,6 +51,7 @@
             <%= render "shared/flash_messages" %>
           </div>
 
+          <%= render "writing_github_syncs/schedule" if controller_name.start_with?("writing_") %>
           <%= yield %>
 
           <% unless controller_name == "entry" %>

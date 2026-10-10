@@ -1,4 +1,7 @@
 class WritingConflict < ApplicationRecord
+  include WritingGithubTracking
+  self.github_export_fields = %i[title description kind origin intensity status consequences planned_resolution]
+
   has_many :writing_timeline_links, dependent: :destroy
   has_many :writing_narrative_associations, dependent: :destroy
   has_many :writing_note_links, dependent: :destroy

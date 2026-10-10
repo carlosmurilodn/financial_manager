@@ -1,4 +1,7 @@
 class WritingNote < ApplicationRecord
+  include WritingGithubTracking
+  self.github_export_fields = %i[title description category status]
+
   LABEL = "Notas e Ideias"
   SINGULAR_LABEL = "Nota"
   NAME_FIELD = :title

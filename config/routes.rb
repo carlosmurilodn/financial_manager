@@ -59,6 +59,7 @@ Rails.application.routes.draw do
       end
     end
   end
+  resources :writing_github_sync_statuses, path: "estudio-de-escrita/sincronizacoes-github", only: :index
   get "financeiro", to: "home#index", as: :financial_dashboard
   get "progresso", to: "progress#index", as: :progress
   resource :health_profile, path: "progresso/perfil", only: %i[show create update]

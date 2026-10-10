@@ -107,10 +107,15 @@ class WritingNarrativeController < ApplicationController
 
   def save_record
     attributes = record_params
+    selected_links = {}
+    %i[writing_character_ids writing_plot_ids].each do |field|
+      selected_links[field] = attributes.delete(field) if attributes.key?(field)
+    end
     saved = false
     @book.with_lock do
       @record.assign_attributes(attributes)
       saved = @record.save
+      sync_exported_links(selected_links) if saved
       after_narrative_save if saved
       raise ActiveRecord::Rollback unless saved
     end
@@ -127,6 +132,21 @@ class WritingNarrativeController < ApplicationController
   end
 
   def after_narrative_save
+  end
+
+  def sync_exported_links(selected)
+    selected.each do |field, ids|
+      association = field == :writing_character_ids ? :writing_character : :writing_plot
+      collection = if association == :writing_plot
+        :writing_conflict_plots
+      elsif @record.is_a?(WritingPlot)
+        :writing_plot_characters
+      else
+        :writing_conflict_characters
+      end
+      targets = @book.public_send(association.to_s.pluralize).find(ids).map { |record| [ association, record ] }
+      Writing::SyncLinks.new(@book, @record.public_send(collection), [ association ]).call(targets)
+    end
   end
 
   def remove_reference_image

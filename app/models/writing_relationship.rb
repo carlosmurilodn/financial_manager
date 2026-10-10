@@ -1,6 +1,9 @@
 require "digest"
 
 class WritingRelationship < ApplicationRecord
+  include WritingGithubTracking
+  self.github_export_fields = %i[source_character_id target_character_id relation_type description current_situation]
+
   TYPES = {
     "friendship" => "Amizade",
     "best_friendship" => "Melhor amizade",

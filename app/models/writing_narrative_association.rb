@@ -1,4 +1,7 @@
 class WritingNarrativeAssociation < ApplicationRecord
+  include WritingGithubTracking
+  self.github_export_fields = %i[writing_chapter_id writing_scene_id writing_character_id writing_plot_id writing_conflict_id writing_location_id writing_organization_id]
+
   OWNERS = %i[writing_chapter writing_scene].freeze
   ELEMENTS = %i[writing_character writing_plot writing_conflict writing_location writing_organization].freeze
   belongs_to :writing_book

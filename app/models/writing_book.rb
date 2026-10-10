@@ -1,4 +1,7 @@
 class WritingBook < ApplicationRecord
+  include WritingGithubTracking
+  self.github_export_fields = %i[title subtitle author genre secondary_genres target_audience synopsis premise notes status started_on expected_completion_on]
+
   GENRES = {
     "fantasy" => "Fantasia", "science_fiction" => "Ficção científica",
     "romance" => "Romance", "thriller" => "Suspense", "mystery" => "Mistério",

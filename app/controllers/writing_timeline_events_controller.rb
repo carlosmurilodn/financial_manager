@@ -58,7 +58,7 @@ class WritingTimelineEventsController < ApplicationController
         destination = index + (params[:direction] == "up" ? -1 : 1)
         if destination.between?(0, events.length - 1)
           events[index], events[destination] = events[destination], events[index]
-          events.each_with_index { |event, position| event.update_columns(position: position) }
+          events.each_with_index { |event, position| event.update!(position: position) if event.position != position }
         end
       end
     end
@@ -94,8 +94,7 @@ class WritingTimelineEventsController < ApplicationController
       @event.position = (@book.writing_timeline_events.maximum(:position) || -1) + 1 if @event.new_record?
       saved = @event.save
       if saved
-        @event.writing_timeline_links.destroy_all
-        @targets.each { |target, record| @event.writing_timeline_links.create!(writing_book: @book, target => record) }
+        Writing::SyncLinks.new(@book, @event.writing_timeline_links, WritingTimelineLink::TARGETS.keys).call(@targets)
       else
         raise ActiveRecord::Rollback
       end

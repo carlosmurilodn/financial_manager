@@ -1,4 +1,7 @@
 class WritingOrganization < ApplicationRecord
+  include WritingGithubTracking
+  self.github_export_fields = %i[name kind description history purpose structure notes writing_location_id]
+
   has_many :writing_narrative_associations, dependent: :destroy
   LABEL = "Organizações"
   SINGULAR_LABEL = "Organização"

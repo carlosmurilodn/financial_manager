@@ -52,7 +52,7 @@ class WritingChaptersController < ApplicationController
       destination = index + offset
       if offset.nonzero? && destination.between?(0, chapters.length - 1)
         chapters[index], chapters[destination] = chapters[destination], chapters[index]
-        chapters.each_with_index { |chapter, position| chapter.update_columns(position: position) }
+        chapters.each_with_index { |chapter, position| chapter.update!(position: position) if chapter.position != position }
       end
     end
     redirect_to writing_book_path(@book), notice: "Ordem dos capítulos atualizada.", status: :see_other

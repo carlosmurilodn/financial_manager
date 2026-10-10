@@ -1,7 +1,7 @@
-<section class="app-page writing-studio writing-publication-page" data-controller="github-sync">
+<section class="app-page writing-studio writing-publication-page" data-controller="github-sync" data-github-sync-book-id-value="<%= @book.id %>" data-action="github-schedule:published@document->github-sync#publicationFinished">
   <%= render "shared/breadcrumbs", items: [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, writing_book_path(@book)], ["Sincronização GitHub", nil]] %>
   <header class="app-panel writing-narrative-heading">
-    <div><p class="app-page__eyebrow"><%= @book.title %> · Estúdio de Escrita</p><h1 class="app-page__title">Sincronização GitHub</h1><p class="writing-muted">Publique manualmente uma cópia do conteúdo salvo em um repositório privado.</p></div>
+    <div><p class="app-page__eyebrow"><%= @book.title %> · Estúdio de Escrita</p><h1 class="app-page__title">Sincronização GitHub</h1><p class="writing-muted">Alterações salvas são enviadas automaticamente enquanto o Estúdio estiver aberto. Você também pode sincronizar agora.</p></div>
     <%= link_to writing_action_label("arrow_back", "Voltar ao livro"), writing_book_path(@book), class: "app-btn app-btn--outline" %>
   </header>
   <section class="app-panel writing-detail">

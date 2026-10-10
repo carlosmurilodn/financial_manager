@@ -1,4 +1,7 @@
 class WritingTimelineLink < ApplicationRecord
+  include WritingGithubTracking
+  self.github_export_fields = %i[writing_timeline_event_id writing_character_id writing_location_id writing_plot_id writing_conflict_id writing_chapter_id writing_scene_id]
+
   TARGETS = {
     writing_character: "Personagens", writing_location: "Locais", writing_plot: "Tramas",
     writing_conflict: "Conflitos", writing_chapter: "Capítulos", writing_scene: "Cenas"

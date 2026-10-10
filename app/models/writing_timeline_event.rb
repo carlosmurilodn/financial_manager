@@ -1,4 +1,7 @@
 class WritingTimelineEvent < ApplicationRecord
+  include WritingGithubTracking
+  self.github_export_fields = %i[title description kind status date_mode temporal_reference occurred_on occurred_at position reference_event_id]
+
   LABEL = "Linha do Tempo"
   SINGULAR_LABEL = "Acontecimento"
   NAME_FIELD = :title

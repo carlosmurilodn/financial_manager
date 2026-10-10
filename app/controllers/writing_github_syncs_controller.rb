@@ -8,7 +8,7 @@ class WritingGithubSyncsController < ApplicationController
   end
 
   def create
-    result = Writing::GithubSync.new(@book).call
+    result = Writing::GithubSchedule.new(@book, automatic: params[:mode] == "automatic").call
     respond_to do |format|
       format.json { render json: state_payload(result.state).merge(message: result.message, success: result.success), status: result.success ? :ok : :unprocessable_content }
       format.html { redirect_to writing_book_writing_github_sync_path(@book), **(result.success ? { notice: result.message } : { alert: result.message }), status: :see_other }

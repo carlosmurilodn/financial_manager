@@ -1,0 +1,14 @@
+<% book = @book if @book.is_a?(WritingBook) && @book.persisted? %>
+<section class="app-panel writing-detail" data-controller="github-schedule"
+  data-github-schedule-url-value="<%= writing_github_sync_statuses_path(writing_book_id: book&.id) %>"
+  data-action="literary-editor:saved@document->github-schedule#changed writing:saved@document->github-schedule#changed github-sync:finished@document->github-schedule#changed visibilitychange@document->github-schedule#returned focus@window->github-schedule#returned pageshow@window->github-schedule#returned">
+  <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">cloud_sync</span>Sincronização GitHub</h2>
+  <div data-github-schedule-target="states" role="status" aria-live="polite">Consultando sincronização…</div>
+  <p class="writing-muted" data-github-schedule-target="message"></p>
+  <% if book && controller_name != "writing_github_syncs" %>
+    <%= form_with url: writing_book_writing_github_sync_path(book), method: :post, data: { action: "submit->github-schedule#manual", turbo: false } do |f| %>
+      <%= f.button writing_action_label("sync", "Sincronizar agora"), class: "app-btn app-btn--outline", data: { github_schedule_target: "submit" }, disabled: !Writing::GithubConfiguration.new.configured? %>
+    <% end %>
+  <% end %>
+  <p class="writing-muted">Alterações salvas são agrupadas em janelas de cinco minutos. Com o Estúdio fechado, o envio aguarda seu retorno.</p>
+</section>

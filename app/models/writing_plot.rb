@@ -1,4 +1,7 @@
 class WritingPlot < ApplicationRecord
+  include WritingGithubTracking
+  self.github_export_fields = %i[title description kind status narrative_goal planned_development planned_outcome parent_plot_id]
+
   has_many :writing_timeline_links, dependent: :destroy
   has_many :writing_narrative_associations, dependent: :destroy
   has_many :writing_note_links, dependent: :destroy

@@ -1,4 +1,7 @@
 class WritingNoteLink < ApplicationRecord
+  include WritingGithubTracking
+  self.github_export_fields = %i[writing_note_id writing_character_id writing_plot_id writing_conflict_id writing_chapter_id writing_scene_id]
+
   TARGETS = %i[writing_character writing_plot writing_conflict writing_chapter writing_scene].freeze
   belongs_to :writing_book
   belongs_to :writing_note

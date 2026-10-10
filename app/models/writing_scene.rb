@@ -1,4 +1,7 @@
 class WritingScene < ApplicationRecord
+  include WritingGithubTracking
+  self.github_export_fields = %i[title content position writing_chapter_id]
+
   belongs_to :writing_book
   belongs_to :writing_chapter
   normalizes :title, with: ->(value) { value.to_s.strip }

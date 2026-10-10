@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_11_012100) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_11_012200) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -669,7 +669,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_012100) do
     t.jsonb "obsolete_files", default: [], null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "pending_changes", default: false, null: false
+    t.datetime "first_pending_at"
+    t.datetime "scheduled_at"
+    t.datetime "retry_at"
+    t.datetime "next_pending_at"
+    t.bigint "content_revision", default: 0, null: false
+    t.bigint "synced_revision", default: 0, null: false
+    t.bigint "sending_revision"
+    t.index ["scheduled_at"], name: "index_writing_github_syncs_pending_schedule", where: "pending_changes"
     t.index ["writing_book_id"], name: "index_writing_github_syncs_on_writing_book_id", unique: true
+    t.check_constraint "NOT pending_changes OR first_pending_at IS NOT NULL AND scheduled_at IS NOT NULL", name: "writing_github_syncs_pending_schedule"
+    t.check_constraint "content_revision >= synced_revision AND synced_revision >= 0", name: "writing_github_syncs_valid_revisions"
     t.check_constraint "created_count >= 0 AND updated_count >= 0 AND unchanged_count >= 0", name: "writing_github_syncs_valid_counts"
     t.check_constraint "status::text = ANY (ARRAY['never'::character varying, 'processing'::character varying, 'succeeded'::character varying, 'failed'::character varying]::text[])", name: "writing_github_syncs_valid_status"
   end

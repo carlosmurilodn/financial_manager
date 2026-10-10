@@ -1,0 +1,22 @@
+<%= form_with model: thought, local: true, class: "app-form-page__form" do |f| %>
+  <fieldset class="writing-form-section">
+    <legend>Identificação</legend>
+    <div class="writing-fields">
+      <div><%= f.label :title, "Título" %><%= f.text_field :title, class: "app-form-control", required: true, maxlength: 200 %></div>
+      <div><%= f.label :kind, "Tipo" %><%= f.select :kind, PhilosophicalWorkshopThought::KINDS.invert, {}, class: "app-form-select", required: true %></div>
+      <div><%= f.label :status, "Situação" %><%= f.select :status, PhilosophicalWorkshopThought::STATUSES.invert, {}, class: "app-form-select", required: true %></div>
+    </div>
+  </fieldset>
+  <fieldset class="writing-form-section">
+    <legend>Conteúdo e reflexões</legend>
+    <div class="writing-fields">
+      <% { central_idea: "Ideia central", supporting_arguments: "Argumentos favoráveis", counterpoints: "Contrapontos", provisional_conclusion: "Conclusão provisória" }.each do |field, label| %>
+        <div class="writing-field-wide"><%= f.label field, label %><%= f.text_area field, class: "app-form-control", rows: 5, required: field == :central_idea %></div>
+      <% end %>
+    </div>
+  </fieldset>
+  <div class="app-form-page__actions">
+    <%= link_to "Cancelar", thought.persisted? ? philosophical_workshop_thought_path(thought) : philosophical_workshop_thoughts_path, class: "app-btn app-btn--outline" %>
+    <%= f.button class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">save</span> Salvar<% end %>
+  </div>
+<% end %>

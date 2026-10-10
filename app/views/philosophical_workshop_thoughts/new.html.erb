@@ -1,0 +1,4 @@
+<%= render "breadcrumbs" %>
+<%= render layout: "shared/form_page", locals: { page_class: "writing-studio", resource: @thought, title: "Novo Pensamento", eyebrow: "Oficina Filosófica", description: "Título e ideia central são obrigatórios.", icon: "psychology", back_path: philosophical_workshop_thoughts_path } do %>
+  <%= render "form", thought: @thought %>
+<% end %>

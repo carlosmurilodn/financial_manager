@@ -1,0 +1,15 @@
+<%= form_with model: insight, local: true, class: "app-form-page__form" do |f| %>
+  <div class="writing-fields">
+    <div class="writing-field-wide">
+      <%= f.label :content, "Conteúdo" %>
+      <%= f.text_area :content, class: "app-form-control", rows: 7, required: true, autofocus: true, placeholder: "Qual ideia você quer registrar?" %>
+    </div>
+    <div><%= f.label :origin, "Origem" %><%= f.text_area :origin, class: "app-form-control", rows: 2 %></div>
+    <div><%= f.label :status, "Situação" %><%= f.select :status, PhilosophicalWorkshopInsight::STATUSES.invert, {}, class: "app-form-select", required: true %></div>
+    <div class="writing-field-wide"><%= f.label :notes, "Observações" %><%= f.text_area :notes, class: "app-form-control", rows: 3 %></div>
+  </div>
+  <div class="app-form-page__actions">
+    <%= link_to "Cancelar", insight.persisted? ? philosophical_workshop_insight_path(insight) : philosophical_workshop_insights_path, class: "app-btn app-btn--outline" %>
+    <%= f.button class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">save</span> Salvar Insight<% end %>
+  </div>
+<% end %>

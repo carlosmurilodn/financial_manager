@@ -1,0 +1,10 @@
+<% items = [["Projetos", personal_development_path], ["Oficina Filosófica", philosophical_workshop_path], ["Insights", philosophical_workshop_insights_path]] %>
+<% if action_name == "index" %>
+  <% items[-1][1] = nil %>
+<% elsif @insight.persisted? %>
+  <% items << [truncate(@insight.content, length: 60), action_name == "show" ? nil : philosophical_workshop_insight_path(@insight)] %>
+  <% items << ["Editar", nil] if action_name.in?(%w[edit update]) %>
+<% else %>
+  <% items << ["Novo Insight", nil] %>
+<% end %>
+<%= render "shared/breadcrumbs", items: items %>

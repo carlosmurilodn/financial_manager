@@ -1,0 +1,4 @@
+<%= render "breadcrumbs" %>
+<%= render layout: "shared/form_page", locals: { page_class: "writing-studio", resource: @insight, title: "Novo Insight", eyebrow: "Oficina Filosófica", description: "Capture sua ideia. Somente o conteúdo é obrigatório.", icon: "lightbulb", back_path: philosophical_workshop_insights_path } do %>
+  <%= render "form", insight: @insight %>
+<% end %>

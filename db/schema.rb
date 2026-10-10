@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_11_014000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_11_020000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -376,6 +376,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_014000) do
     t.check_constraint "kind::text = ANY (ARRAY['concept'::character varying, 'thesis'::character varying]::text[])", name: "philosophical_workshop_concepts_valid_kind"
   end
 
+  create_table "philosophical_workshop_insights", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.text "content", null: false
+    t.text "origin"
+    t.text "notes"
+    t.string "status", default: "captured", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_philosophical_workshop_insights_on_user_id"
+    t.check_constraint "status::text = ANY (ARRAY['captured'::character varying, 'reflecting'::character varying, 'developed'::character varying, 'archived'::character varying]::text[])", name: "philosophical_workshop_insights_valid_status"
+  end
+
   create_table "philosophical_workshop_philosophers", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "name", null: false
@@ -388,6 +400,22 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_014000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_philosophical_workshop_philosophers_on_user_id"
+  end
+
+  create_table "philosophical_workshop_thoughts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "title", null: false
+    t.text "central_idea", null: false
+    t.text "supporting_arguments"
+    t.text "counterpoints"
+    t.text "provisional_conclusion"
+    t.string "kind", default: "reflection", null: false
+    t.string "status", default: "developing", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_philosophical_workshop_thoughts_on_user_id"
+    t.check_constraint "kind::text = ANY (ARRAY['reflection'::character varying, 'hypothesis'::character varying, 'conviction'::character varying]::text[])", name: "philosophical_workshop_thoughts_valid_kind"
+    t.check_constraint "status::text = ANY (ARRAY['developing'::character varying, 'consolidated'::character varying, 'revision'::character varying]::text[])", name: "philosophical_workshop_thoughts_valid_status"
   end
 
   create_table "solid_cache_entries", force: :cascade do |t|
@@ -973,7 +1001,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_014000) do
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id", on_delete: :cascade
   add_foreign_key "passkey_credentials", "users"
   add_foreign_key "philosophical_workshop_concepts", "users"
+  add_foreign_key "philosophical_workshop_insights", "users"
   add_foreign_key "philosophical_workshop_philosophers", "users"
+  add_foreign_key "philosophical_workshop_thoughts", "users"
   add_foreign_key "strength_exercise_catalogs", "muscle_groups"
   add_foreign_key "strength_exercise_catalogs", "users"
   add_foreign_key "strength_exercise_logs", "exercise_items"

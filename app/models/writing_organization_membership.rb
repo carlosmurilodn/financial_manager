@@ -1,4 +1,7 @@
 class WritingOrganizationMembership < ApplicationRecord
+  include WritingGithubTracking
+  self.github_export_fields = %i[writing_organization_id writing_character_id role]
+
   LINK_ASSOCIATIONS = %i[writing_organization writing_character].freeze
   belongs_to :writing_book
   belongs_to :writing_organization

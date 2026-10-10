@@ -20,7 +20,24 @@
 .writing-publication-status.app-alert--success { background: color-mix(in srgb, var(--success) 10%, var(--app-bg)); }
 .writing-publication-status.app-alert--danger { background: color-mix(in srgb, var(--danger) 10%, var(--app-bg)); }
 .writing-publication-frame { display: block; width: 100%; height: min(80vh, 900px); min-height: 420px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--app-bg-soft); }
+.writing-github-page .writing-detail__title { display: flex; align-items: center; gap: .6rem; margin: 0 0 1rem; font-size: 1rem; font-weight: 700; line-height: 1.4; color: var(--text-soft); }
+.writing-github-page .writing-detail__title > .material-symbols-rounded { display: grid; place-items: center; width: 24px; height: 24px; flex: 0 0 24px; font-size: 20px; line-height: 1; }
+.writing-github-heading__copy { display: flex; align-items: center; gap: 16px; }
+.writing-github-heading__copy > div { min-width: 0; }
+.writing-github-heading__copy > .app-page__hero-icon { flex-shrink: 0; }
+.writing-github-page .writing-detail > p:has(> strong) { display: grid; grid-template-columns: minmax(160px, 240px) minmax(0, 1fr); gap: 8px 16px; align-items: baseline; margin: 0 0 12px; overflow-wrap: anywhere; }
+.writing-github-page .writing-detail > p > strong { color: var(--text-soft); font-size: .85rem; font-weight: 600; }
+.writing-github-page .writing-detail > p > code { justify-self: start; max-width: 100%; white-space: normal; }
+.writing-github-page .writing-detail > .writing-muted:last-child { margin: 16px 0 0; }
+.writing-github-page [data-github-sync-target="counts"] { margin: 20px 0 16px; }
+.writing-github-page .writing-publication-status { margin: 0 0 20px; }
+.writing-github-page form[data-github-sync-target="form"] { margin: 0 0 20px; }
+.writing-github-schedule [data-github-schedule-target="states"] p { margin: 0 0 8px; line-height: 1.6; overflow-wrap: anywhere; }
+.writing-github-schedule [data-github-schedule-target="states"] a { display: inline-block; }
+.writing-github-schedule [data-github-schedule-target="message"]:empty { display: none; }
 @media (max-width: 700px) {
+  .writing-github-page .writing-detail > p:has(> strong) { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .writing-github-heading__copy { align-items: flex-start; gap: 12px; }
   .writing-publication-page .writing-narrative-heading > div { flex-basis: 100%; }
   .writing-publication-page .writing-fields { grid-template-columns: minmax(0, 1fr); }
   .writing-publication-page .app-checkbox { min-height: 44px; }

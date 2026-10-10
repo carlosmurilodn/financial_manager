@@ -1,4 +1,7 @@
 class WritingBook < ApplicationRecord
+  include WritingGithubTracking
+  self.github_export_fields = %i[title subtitle author genre secondary_genres target_audience synopsis premise notes status started_on expected_completion_on]
+
   GENRES = {
     "fantasy" => "Fantasia", "science_fiction" => "Ficção científica",
     "romance" => "Romance", "thriller" => "Suspense", "mystery" => "Mistério",
@@ -29,6 +32,7 @@ class WritingBook < ApplicationRecord
   has_many :writing_characters, dependent: :destroy
   has_many :writing_chapters, dependent: :destroy
   belongs_to :user
+  has_one :writing_github_sync, dependent: :destroy
   has_one_attached :cover
 
   around_destroy :suppress_writing_history, prepend: true

@@ -7,6 +7,14 @@ require "active_record/connection_adapters/postgresql/schema_dumper"
 module PostgreSQLSchemaDumperWithIdempotentSchemas
   private
 
+  def table(table, stream)
+    super
+    return unless table == "writing_github_syncs"
+    return unless @connection.select_value("SELECT relrowsecurity FROM pg_class WHERE oid = 'writing_github_syncs'::regclass")
+
+    stream.puts '  execute "ALTER TABLE writing_github_syncs ENABLE ROW LEVEL SECURITY"'
+  end
+
   def schemas(stream)
     schema_names = @connection.schema_names - [ "public" ]
 

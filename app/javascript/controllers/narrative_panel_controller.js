@@ -169,6 +169,7 @@ export default class extends Controller {
     const url = this.contextURL()
     try {
       const data = await this.requestJSON(url, { method: record.associated ? "DELETE" : "POST", body: JSON.stringify({ record_id: record.id }), signal: this.mutation.signal })
+      document.dispatchEvent(new CustomEvent("writing:saved"))
       // Load the currently selected section, even if it changed during the mutation.
       await this.load()
       this.setStatus(data.message)

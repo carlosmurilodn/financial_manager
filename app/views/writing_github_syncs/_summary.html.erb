@@ -1,0 +1,16 @@
+<% state = book.writing_github_sync || book.build_writing_github_sync %>
+<% configured = Writing::GithubConfiguration.new.configured? %>
+<% kind, label = if !configured
+  ["neutral", "Não configurado"]
+elsif state.actively_processing?
+  ["info", "Sincronizando"]
+elsif state.status == "failed" || state.status == "processing"
+  ["danger", "Falha"]
+elsif state.pending_changes?
+  ["warning", "Pendente · #{l(state.next_attempt_at, format: '%H:%M')}"]
+elsif state.last_success_at.present?
+  ["success", "Sincronizado"]
+else
+  ["neutral", "Nunca sincronizado"]
+end %>
+<span class="writing-github-summary" data-github-sync-summary-book-id="<%= book.id %>" data-kind="<%= kind %>" role="status" aria-live="polite" title="<%= state.error_message.presence || (state.last_success_at ? "Última sincronização: #{l(state.last_success_at, format: :long)}" : state.scheduling_label) %>"><%= label %></span>

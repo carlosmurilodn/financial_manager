@@ -1,4 +1,7 @@
 class WritingCharacter < ApplicationRecord
+  include WritingGithubTracking
+  self.github_export_fields = %i[name surname nicknames role status age appearance height distinguishing_features usual_clothing personality virtues flaws fears desires motivations beliefs internal_contradictions origin past family education profession secrets goals internal_needs conflicts initial_situation planned_transformations planned_outcome]
+
   has_many :writing_timeline_links, dependent: :destroy
   has_many :writing_narrative_associations, dependent: :destroy
   has_many :writing_note_links, dependent: :destroy

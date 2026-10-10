@@ -117,6 +117,7 @@ export default class extends Controller {
       if (!this.element.isConnected) return
       this.lockVersionTarget.value = result.lock_version
       this.savedTitle = title
+      document.dispatchEvent(new CustomEvent("writing:saved"))
     } catch (error) {
       this.titleError = true
       this.statusTarget.textContent = error.message

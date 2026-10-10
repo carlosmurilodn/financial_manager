@@ -35,6 +35,14 @@ application.register("timeline-date", TimelineDateController)
 import PublicationController from "./publication_controller"
 application.register("publication", PublicationController)
 
+import ContextExportController from "./context_export_controller"
+application.register("context-export", ContextExportController)
+
+import GithubSyncController from "./github_sync_controller"
+application.register("github-sync", GithubSyncController)
+import GithubScheduleController from "./github_schedule_controller"
+application.register("github-schedule", GithubScheduleController)
+
 import ManuscriptChartController from "./manuscript_chart_controller"
 application.register("manuscript-chart", ManuscriptChartController)
 

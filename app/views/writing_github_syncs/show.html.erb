@@ -1,0 +1,38 @@
+<section class="app-page writing-studio writing-publication-page writing-github-page" data-controller="github-sync" data-github-sync-book-id-value="<%= @book.id %>" data-action="github-schedule:published@document->github-sync#publicationFinished">
+  <%= render "shared/breadcrumbs", items: [["Projetos", personal_development_path], ["Estúdio de Escrita", writing_books_path], [@book.title, writing_book_path(@book)], ["Sincronização GitHub", nil]] %>
+  <%= render "schedule", visible: true %>
+  <header class="app-panel writing-narrative-heading">
+    <div class="writing-github-heading__copy"><span class="app-page__hero-icon"><span class="material-symbols-rounded" aria-hidden="true">cloud_sync</span></span><div><p class="app-page__eyebrow"><%= @book.title %> · Estúdio de Escrita</p><h1 class="app-page__title">Sincronização GitHub</h1><p class="writing-muted">Alterações salvas são enviadas automaticamente enquanto o Estúdio estiver aberto. Você também pode sincronizar agora.</p></div></div>
+    <%= link_to writing_action_label("arrow_back", "Voltar ao livro"), writing_book_path(@book), class: "app-btn app-btn--outline" %>
+  </header>
+  <section class="app-panel writing-detail">
+    <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">settings</span>Integração</h2>
+    <p><strong>Situação:</strong> <%= @configuration.configured? ? "Configurada no servidor" : "Não configurada" %></p>
+    <p><strong>Livro:</strong> <%= @book.title %></p>
+    <% if @configuration.configured? %>
+      <p><strong>Repositório:</strong> <%= @configuration.repository %></p>
+      <p><strong>Branch:</strong> <%= @configuration.branch %></p>
+    <% else %>
+      <div class="app-alert app-alert--info"><%= @configuration.error_message %> A configuração é feita pelo responsável pelo servidor, nas variáveis de ambiente do Render.</div>
+    <% end %>
+    <p><strong>Pasta do livro:</strong> <code>livros/livro-<%= @book.id %>/</code></p>
+    <p class="writing-muted">Manuscrito, personagens, relacionamentos, narrativa, universo, cronologia, notas e dossiê serão incluídos. Capítulos sem texto também são preservados.</p>
+  </section>
+  <section class="app-panel writing-detail">
+    <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">sync</span>Última sincronização</h2>
+    <p><strong>Resultado da última tentativa:</strong> <span data-github-sync-target="result"><%= @sync.status_label %></span></p>
+    <p><strong>Última tentativa:</strong> <span data-github-sync-target="attempt"><%= @sync.last_attempt_at ? l(@sync.last_attempt_at, format: :long) : "Ainda não registrada" %></span></p>
+    <p><strong>Última sincronização bem-sucedida:</strong> <span data-github-sync-target="success"><%= @sync.last_success_at ? l(@sync.last_success_at, format: :long) : "Ainda não registrada" %></span></p>
+    <p data-github-sync-target="counts"><%= @sync.created_count %> criados · <%= @sync.updated_count %> atualizados · <%= @sync.unchanged_count %> sem alterações</p>
+    <div class="app-alert <%= @sync.status == 'failed' ? 'app-alert--danger' : @sync.status == 'succeeded' ? 'app-alert--success' : 'app-alert--info' %> writing-publication-status" role="status" aria-live="polite" data-github-sync-target="message"><%= @sync.error_message.presence || (@sync.status == "succeeded" ? "Sincronização concluída. Arquivos idênticos foram preservados sem novos commits." : @sync.status == "processing" ? "Há uma tentativa em andamento ou interrompida. Uma nova tentativa será permitida quando o processamento anterior encerrar." : "Salve alterações no editor antes de sincronizar.") %></div>
+    <%= form_with url: writing_book_writing_github_sync_path(@book), method: :post, data: { github_sync_target: "form", action: "submit->github-sync#synchronize", turbo: false } do |f| %>
+      <div class="writing-character-actions"><%= f.button writing_action_label("sync", "Sincronizar agora"), class: "app-btn app-btn--primary", disabled: !@configuration.configured?, data: { github_sync_target: "submit" } %></div>
+    <% end %>
+    <p class="writing-muted">Aguarde a conclusão. Arquivos remotos obsoletos serão listados e preservados. A cópia no GitHub não altera a obra original.</p>
+  </section>
+  <section class="app-panel writing-detail" data-github-sync-target="obsoleteSection" <%= 'hidden' if @sync.obsolete_files.empty? %>>
+    <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">inventory_2</span>Arquivos obsoletos preservados</h2>
+    <p class="writing-muted">Documentos presentes na pasta remota que não fazem parte da exportação atual. Nenhum será excluído automaticamente.</p>
+    <ul data-github-sync-target="obsolete"><% @sync.obsolete_files.each do |path| %><li><%= path %></li><% end %></ul>
+  </section>
+</section>

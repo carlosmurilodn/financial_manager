@@ -1,0 +1,4 @@
+pt-BR:
+  time:
+    formats:
+      long: "%d/%m/%Y às %H:%M"

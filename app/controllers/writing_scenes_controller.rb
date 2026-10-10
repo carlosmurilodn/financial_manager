@@ -34,7 +34,7 @@ class WritingScenesController < WritingChaptersController
   def move
     parent = @book.writing_chapters.where.not(id: @chapter.writing_chapter_id).find(params.require(:writing_chapter_id))
     Writing::ActivityRecorder.move(@chapter, parent) do
-      @chapter.update_columns(writing_chapter_id: parent.id, position: parent.writing_scenes.maximum(:position).to_i + 1)
+      @chapter.update!(writing_chapter_id: parent.id, position: parent.writing_scenes.maximum(:position).to_i + 1)
     end
     redirect_to writing_book_writing_scene_path(@book, @chapter), notice: "Cena movida. Texto e associações preservados.", status: :see_other
   end
@@ -48,7 +48,7 @@ class WritingScenesController < WritingChaptersController
       destination = index + offset
       if offset.nonzero? && destination.between?(0, scenes.length - 1)
         scenes[index], scenes[destination] = scenes[destination], scenes[index]
-        scenes.each_with_index { |scene, position| scene.update_columns(position: position) }
+        scenes.each_with_index { |scene, position| scene.update!(position: position) if scene.position != position }
       end
     end
     redirect_to edit_writing_book_writing_chapter_path(@book, @chapter.writing_chapter), notice: "Ordem das cenas atualizada.", status: :see_other

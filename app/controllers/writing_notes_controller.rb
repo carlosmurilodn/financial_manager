@@ -19,9 +19,6 @@ class WritingNotesController < WritingNarrativeController
   def after_narrative_save
     return unless @note_targets
 
-    @record.writing_note_links.destroy_all
-    @note_targets.each do |association, record|
-      @record.writing_note_links.create!(writing_book: @book, association => record)
-    end
+    Writing::SyncLinks.new(@book, @record.writing_note_links, WritingNoteLink::TARGETS).call(@note_targets)
   end
 end

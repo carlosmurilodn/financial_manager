@@ -1,4 +1,7 @@
 class WritingLocation < ApplicationRecord
+  include WritingGithubTracking
+  self.github_export_fields = %i[name kind description location physical_features atmosphere narrative_importance parent_location_id]
+
   has_many :writing_timeline_links, dependent: :destroy
   has_many :writing_narrative_associations, dependent: :destroy
   LABEL = "Locais"

@@ -1,4 +1,7 @@
 class WritingChapter < ApplicationRecord
+  include WritingGithubTracking
+  self.github_export_fields = %i[title content position]
+
   belongs_to :writing_book, touch: true
   has_many :writing_scenes, dependent: :destroy
   include WritingActivityTracking

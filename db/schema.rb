@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_09_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_09_130000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -452,6 +452,27 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_09_120000) do
     t.check_constraint "weight_kg > 0::numeric", name: "weight_entries_positive_weight"
   end
 
+  create_table "writing_books", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "title", null: false
+    t.string "subtitle"
+    t.string "author"
+    t.string "genre", null: false
+    t.string "secondary_genres", default: [], null: false, array: true
+    t.string "target_audience"
+    t.text "synopsis"
+    t.text "premise"
+    t.text "notes"
+    t.string "status", default: "idea", null: false
+    t.date "started_on"
+    t.date "expected_completion_on"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "genre"], name: "index_writing_books_on_user_id_and_genre"
+    t.index ["user_id", "status"], name: "index_writing_books_on_user_id_and_status"
+    t.index ["user_id"], name: "index_writing_books_on_user_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cards", "users"
@@ -485,4 +506,5 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_09_120000) do
   add_foreign_key "weekly_health_reviews", "users"
   add_foreign_key "weekly_wellbeings", "users"
   add_foreign_key "weight_entries", "users"
+  add_foreign_key "writing_books", "users"
 end

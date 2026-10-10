@@ -1,0 +1,19 @@
+pt-BR:
+  activerecord:
+    models:
+      writing_book: Livro
+    attributes:
+      writing_book:
+        title: Título
+        subtitle: Subtítulo
+        author: Autor
+        genre: Gênero principal
+        secondary_genres: Gêneros secundários
+        target_audience: Público-alvo
+        synopsis: Sinopse
+        premise: Premissa
+        notes: Observações
+        status: Situação
+        started_on: Data de início
+        expected_completion_on: Previsão de conclusão
+        cover: Capa

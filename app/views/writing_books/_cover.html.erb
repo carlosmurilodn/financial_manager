@@ -1,0 +1,11 @@
+<div class="writing-cover">
+  <% if book.cover.attached? && book.persisted? %>
+    <%= image_tag cover_writing_book_path(book), alt: "Capa de #{book.title}", loading: "lazy" %>
+  <% else %>
+    <div class="writing-cover__placeholder" aria-label="Capa padrão">
+      <span class="material-symbols-rounded" aria-hidden="true">auto_stories</span>
+      <strong><%= book.title.presence || "Sua próxima história" %></strong>
+      <small><%= book.author.presence || "Estúdio de Escrita" %></small>
+    </div>
+  <% end %>
+</div>

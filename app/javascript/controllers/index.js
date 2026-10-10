@@ -17,3 +17,6 @@ application.register("calorie-status", CalorieStatusController)
 
 import ExerciseEntryFormController from "./exercise_entry_form_controller"
 application.register("exercise-entry-form", ExerciseEntryFormController)
+
+import BookCoverController from "./book_cover_controller"
+application.register("book-cover", BookCoverController)

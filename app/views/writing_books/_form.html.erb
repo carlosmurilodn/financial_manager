@@ -1,0 +1,38 @@
+<%= form_with model: book, local: true, html: { class: "app-form-page__form" } do |f| %>
+  <fieldset class="writing-form-section"><legend>Informações da Obra</legend><div class="writing-fields">
+    <% { title: "Título", subtitle: "Subtítulo", author: "Autor", target_audience: "Público-alvo" }.each do |field, label| %>
+      <div><%= f.label field, label %><%= f.text_field field, class: "app-form-control", required: field == :title, maxlength: 200, aria: writing_book_field_accessibility(book, field) %><%= writing_book_field_errors(book, field) %></div>
+    <% end %>
+    <div><%= f.label :genre, "Gênero principal" %><%= f.select :genre, WritingBook::GENRES.invert, { include_blank: "Selecione um gênero" }, class: "app-form-select", required: true, aria: writing_book_field_accessibility(book, :genre) %><%= writing_book_field_errors(book, :genre) %></div>
+    <fieldset class="writing-secondary-genres"><legend>Gêneros secundários (opcionais)</legend>
+      <%= hidden_field_tag "writing_book[secondary_genres][]", "" %>
+      <% WritingBook::GENRES.each do |key, label| %>
+        <label class="app-checkbox"><%= check_box_tag "writing_book[secondary_genres][]", key, book.secondary_genres.include?(key), id: "writing_book_secondary_genre_#{key}" %><span><%= label %></span></label>
+      <% end %>
+      <%= writing_book_field_errors(book, :secondary_genres) %>
+    </fieldset>
+  </div></fieldset>
+  <fieldset class="writing-form-section"><legend>Planejamento Narrativo</legend><div class="writing-fields">
+    <% { synopsis: "Sinopse", premise: "Premissa", notes: "Observações" }.each do |field, label| %>
+      <div class="writing-field-wide"><%= f.label field, label %><%= f.text_area field, class: "app-form-control", rows: 4, aria: writing_book_field_accessibility(book, field) %><%= writing_book_field_errors(book, field) %></div>
+    <% end %>
+  </div></fieldset>
+  <fieldset class="writing-form-section"><legend>Acompanhamento</legend><div class="writing-fields">
+    <div><%= f.label :status, "Situação" %><%= f.select :status, WritingBook::STATUSES.invert, {}, class: "app-form-select", required: true, aria: writing_book_field_accessibility(book, :status) %><%= writing_book_field_errors(book, :status) %></div>
+    <% { started_on: "Data de início", expected_completion_on: "Previsão de conclusão" }.each do |field, label| %>
+      <div><%= f.label field, label %><%= f.date_field field, class: "app-form-control", aria: writing_book_field_accessibility(book, field) %><%= writing_book_field_errors(book, field) %></div>
+    <% end %>
+  </div></fieldset>
+  <fieldset class="writing-form-section" data-controller="book-cover"><legend>Identidade Visual</legend>
+    <%= f.label :cover, "Imagem de capa" %>
+    <%= f.file_field :cover, class: "app-form-control", accept: WritingBook::COVER_TYPES.join(","), data: { action: "change->book-cover#preview" }, aria: writing_book_field_accessibility(book, :cover) %>
+    <small>JPEG, PNG ou WebP. Máximo: 5 MB. Escolher nova imagem substitui a capa atual.</small><%= writing_book_field_errors(book, :cover) %>
+    <img class="writing-cover-preview" data-book-cover-target="preview" alt="Prévia da capa selecionada" hidden>
+    <p data-book-cover-target="error" class="writing-field-error" role="alert" hidden></p>
+    <% if book.persisted? && book.cover.attached? %>
+      <div class="writing-current-cover"><%= render "cover", book: book %></div>
+      <label class="app-checkbox"><%= check_box_tag "writing_book[remove_cover]", "1", ActiveModel::Type::Boolean.new.cast(params.dig(:writing_book, :remove_cover)) %><span>Remover capa atual</span></label>
+    <% end %>
+  </fieldset>
+  <div class="app-form-page__actions"><%= link_to "Cancelar", book.persisted? ? writing_book_path(book) : writing_books_path, class: "app-btn app-btn--outline" %><%= f.submit "Salvar Livro", class: "app-btn app-btn--primary" %></div>
+<% end %>

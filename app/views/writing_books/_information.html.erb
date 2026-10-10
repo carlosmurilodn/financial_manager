@@ -1,0 +1,8 @@
+<section class="writing-book-info writing-book-heading__info">
+  <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">info</span>Informações da obra</h2>
+  <dl class="writing-book-facts">
+    <% [["Gênero principal", @book.genre_label], ["Gêneros secundários", @book.secondary_genres.map { |genre| WritingBook::GENRES[genre] }.join(" · ")], ["Público-alvo", @book.target_audience], ["Situação", @book.status_label], ["Data de início", @book.started_on && l(@book.started_on)], ["Previsão de conclusão", @book.expected_completion_on && l(@book.expected_completion_on)], ["Criado em", l(@book.created_at.to_date)], ["Atualizado em", l(@book.updated_at.to_date)]].each do |label, value| %>
+      <div class="writing-book-facts__item"><dt><%= label %></dt><dd><%= value.presence || "Não informado" %></dd></div>
+    <% end %>
+  </dl>
+</section>

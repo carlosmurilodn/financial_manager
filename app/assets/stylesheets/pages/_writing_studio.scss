@@ -145,3 +145,16 @@
   .literary-editor-heading { padding: 1rem; }
   .literary-editor-actions { width: 100%; }
 }
+
+.writing-book-page .writing-book-heading { grid-template-columns: 150px minmax(0, 1fr) minmax(320px, 1.15fr); }
+.writing-book-heading__info { align-self: stretch; padding-left: 24px; border-left: 1px solid var(--card-border); min-width: 0; overflow-wrap: anywhere; }
+.writing-book-layout { grid-template-columns: minmax(0, 1fr); }
+.writing-book-narrative { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+@media (max-width: 1100px) {
+  .writing-book-page .writing-book-heading { grid-template-columns: 150px minmax(0, 1fr); }
+  .writing-book-heading__info { grid-column: 1 / -1; padding: 20px 0 0; border-left: 0; border-top: 1px solid var(--card-border); }
+  .writing-book-narrative { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 700px) {
+  .writing-book-page .writing-book-heading { grid-template-columns: minmax(0, 1fr); }
+}

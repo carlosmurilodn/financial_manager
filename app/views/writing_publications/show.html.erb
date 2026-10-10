@@ -7,7 +7,7 @@
     <%= link_to writing_action_label("folder_zip", "Exportar para ChatGPT"), writing_book_writing_context_export_path(@book), class: "app-btn app-btn--primary" %>
   </section>
   <section class="app-panel writing-publication-export">
-    <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">sync</span>Sincronização GitHub</h2>
+    <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true">sync</span>Sincronização GitHub <%= render "writing_github_syncs/summary", book: @book %></h2>
     <p class="writing-muted">Publique manualmente uma cópia Markdown do livro e acompanhe o resultado da última sincronização.</p>
     <%= link_to writing_action_label("sync", "Sincronização GitHub"), writing_book_writing_github_sync_path(@book), class: "app-btn app-btn--primary" %>
   </section>

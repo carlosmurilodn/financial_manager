@@ -29,6 +29,9 @@
 .writing-github-page .writing-detail > p > strong { color: var(--text-soft); font-size: .85rem; font-weight: 600; }
 .writing-github-page .writing-detail > p > code { justify-self: start; max-width: 100%; white-space: normal; }
 .writing-github-page .writing-detail > .writing-muted:last-child { margin: 16px 0 0; }
+.writing-github-page [data-github-sync-target="counts"] { margin: 20px 0 16px; }
+.writing-github-page .writing-publication-status { margin: 0 0 20px; }
+.writing-github-page form[data-github-sync-target="form"] { margin: 0 0 20px; }
 .writing-github-schedule [data-github-schedule-target="states"] p { margin: 0 0 8px; line-height: 1.6; overflow-wrap: anywhere; }
 .writing-github-schedule [data-github-schedule-target="states"] a { display: inline-block; }
 .writing-github-schedule [data-github-schedule-target="message"]:empty { display: none; }

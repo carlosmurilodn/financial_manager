@@ -6,12 +6,12 @@
   { title: "Linha Do Tempo", icon: "timeline", count: @book.writing_timeline_events.count, description: "Organize acontecimentos e referências temporais da história.", action: "Gerenciar Linha Do Tempo", path: writing_book_writing_timeline_events_path(@book) },
   { title: "Estatísticas", icon: "bar_chart", description: "Acompanhe palavras, capítulos e características do manuscrito salvo.", action: "Ver Estatísticas", path: writing_book_writing_statistics_path(@book) },
   { title: "Publicação E Exportação", icon: "picture_as_pdf", description: "Gere o PDF do livro ou exporte contexto literário para ChatGPT em ZIP.", action: "Publicação E Exportação", path: writing_book_writing_publication_path(@book) },
-  { title: "Sincronização GitHub", icon: "sync", description: "Publique uma cópia Markdown do livro em um repositório privado.", action: "Sincronização GitHub", path: writing_book_writing_github_sync_path(@book) }
+  { title: "Sincronização GitHub", icon: "sync", github: true, description: "Publique uma cópia Markdown do livro em um repositório privado.", action: "Sincronização GitHub", path: writing_book_writing_github_sync_path(@book) }
 ] %>
 <div class="writing-book-tools">
   <% tools.each do |tool| %>
     <section class="app-panel writing-detail writing-book-tool">
-      <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true"><%= tool[:icon] %></span><%= tool[:title] %><% if tool.key?(:count) %><span class="writing-book-tool__badge" aria-label="<%= tool[:count] %> registros em <%= tool[:title] %>"><%= tool[:count] %></span><% end %></h2>
+      <h2 class="writing-detail__title"><span class="material-symbols-rounded" aria-hidden="true"><%= tool[:icon] %></span><%= tool[:title] %><% if tool.key?(:count) %><span class="writing-book-tool__badge" aria-label="<%= tool[:count] %> registros em <%= tool[:title] %>"><%= tool[:count] %></span><% end %><%= render "writing_github_syncs/summary", book: @book if tool[:github] %></h2>
       <p class="writing-muted"><%= tool[:description] %></p>
       <%= link_to writing_action_label(tool[:icon], tool[:action]), tool[:path], class: "app-btn app-btn--primary" %>
     </section>

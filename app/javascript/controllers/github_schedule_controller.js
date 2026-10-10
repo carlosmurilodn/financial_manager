@@ -60,6 +60,7 @@ export default class extends Controller {
       this.renderStates()
       const due = this.configured && this.states.find(state => state.due)
       if (due) {
+        this.updateSummary({ ...due, processing: true })
         this.messageTarget.textContent = `Sincronizando ${due.title} com GitHub…`
         const url = new URL(due.sync_url, window.location.origin)
         url.searchParams.set("mode", "automatic")
@@ -93,6 +94,7 @@ export default class extends Controller {
 
   renderStates() {
     if (!this.connected) return
+    this.states.forEach(state => this.updateSummary(state))
     const rows = this.states.map(state => {
       const row = document.createElement("p")
       const heading = document.createElement("strong")
@@ -114,6 +116,29 @@ export default class extends Controller {
     }
     this.statesTarget.replaceChildren(...rows)
     this.submitTargets.forEach(button => { button.disabled = !this.configured })
+  }
+
+  updateSummary(state) {
+    let kind = "neutral"
+    let label = "Nunca sincronizado"
+    if (!this.configured) {
+      label = "Não configurado"
+    } else if (state.processing) {
+      kind = "info"; label = "Sincronizando"
+    } else if (state.error_message) {
+      kind = "danger"; label = "Falha"
+    } else if (state.pending) {
+      kind = "warning"; label = "Pendente"
+      if (state.scheduled_at) label += ` · ${new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: "America/Sao_Paulo" }).format(new Date(state.scheduled_at))}`
+    } else if (state.last_success) {
+      kind = "success"; label = "Sincronizado"
+    }
+    document.querySelectorAll("[data-github-sync-summary-book-id]").forEach(pill => {
+      if (Number(pill.dataset.githubSyncSummaryBookId) !== state.book_id) return
+      pill.textContent = label
+      pill.dataset.kind = kind
+      pill.title = state.error_message || (state.pending && state.scheduled_display ? `Próximo envio: ${state.scheduled_display}` : state.last_success ? `Última sincronização: ${state.last_success}` : state.status_label)
+    })
   }
 
   async manual(event) {

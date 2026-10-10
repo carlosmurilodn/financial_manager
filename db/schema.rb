@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_11_020000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_11_021000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -400,6 +400,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_020000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_philosophical_workshop_philosophers_on_user_id"
+  end
+
+  create_table "philosophical_workshop_questions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.text "question", null: false
+    t.text "context"
+    t.text "personal_reflection"
+    t.string "status", default: "investigating", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_philosophical_workshop_questions_on_user_id"
+    t.check_constraint "status::text = ANY (ARRAY['investigating'::character varying, 'provisionally_answered'::character varying, 'archived'::character varying]::text[])", name: "philosophical_workshop_questions_valid_status"
   end
 
   create_table "philosophical_workshop_thoughts", force: :cascade do |t|
@@ -1003,6 +1015,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_020000) do
   add_foreign_key "philosophical_workshop_concepts", "users"
   add_foreign_key "philosophical_workshop_insights", "users"
   add_foreign_key "philosophical_workshop_philosophers", "users"
+  add_foreign_key "philosophical_workshop_questions", "users"
   add_foreign_key "philosophical_workshop_thoughts", "users"
   add_foreign_key "strength_exercise_catalogs", "muscle_groups"
   add_foreign_key "strength_exercise_catalogs", "users"

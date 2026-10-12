@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_12_011000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_12_020000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -76,6 +76,29 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_12_011000) do
     t.bigint "user_id"
     t.string "color", default: "#2563EB", null: false
     t.index ["user_id"], name: "index_categories_on_user_id"
+  end
+
+  create_table "custom_foods", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name", null: false
+    t.string "category", null: false
+    t.decimal "calories", precision: 12, scale: 4
+    t.decimal "carbohydrates", precision: 12, scale: 4
+    t.decimal "proteins", precision: 12, scale: 4
+    t.decimal "fats", precision: 12, scale: 4
+    t.decimal "fiber", precision: 12, scale: 4
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "category"], name: "index_custom_foods_on_user_id_and_category"
+    t.index ["user_id", "name"], name: "index_custom_foods_on_user_id_and_name"
+    t.index ["user_id"], name: "index_custom_foods_on_user_id"
+    t.check_constraint "calories IS NULL OR calories >= 0::numeric", name: "custom_foods_nonnegative_calories"
+    t.check_constraint "carbohydrates IS NULL OR carbohydrates >= 0::numeric", name: "custom_foods_nonnegative_carbohydrates"
+    t.check_constraint "fats IS NULL OR fats >= 0::numeric", name: "custom_foods_nonnegative_fats"
+    t.check_constraint "fiber IS NULL OR fiber >= 0::numeric", name: "custom_foods_nonnegative_fiber"
+    t.check_constraint "length(TRIM(BOTH FROM category)) > 0", name: "custom_foods_nonempty_category"
+    t.check_constraint "length(TRIM(BOTH FROM name)) > 0", name: "custom_foods_nonempty_name"
+    t.check_constraint "proteins IS NULL OR proteins >= 0::numeric", name: "custom_foods_nonnegative_proteins"
   end
 
   create_table "daily_calorie_entries", force: :cascade do |t|
@@ -1039,6 +1062,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_12_011000) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cards", "users"
   add_foreign_key "categories", "users"
+  add_foreign_key "custom_foods", "users"
   add_foreign_key "daily_calorie_entries", "users"
   add_foreign_key "exercise_entries", "users"
   add_foreign_key "exercise_items", "exercise_entries"

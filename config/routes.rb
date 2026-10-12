@@ -125,6 +125,9 @@ Rails.application.routes.draw do
     end
   end
   resources :taco_foods, path: "progresso/cadastros/alimentos", only: %i[index show]
+  resources :nutrition_recipes, path: "progresso/cadastros/receitas" do
+    collection { get :foods, path: "alimentos" }
+  end
   resources :custom_foods, path: "progresso/cadastros/meus-alimentos", only: %i[new create show edit update destroy]
   resources :muscle_groups, path: "progresso/cadastros/grupos-musculares", only: %i[index new create edit update destroy] do
     collection do

@@ -138,6 +138,10 @@
               <span class="material-symbols-rounded app-nav-link__icon">restaurant</span>
               <span class="link-text">Alimentos</span>
             <% end %>
+            <%= link_to nutrition_recipes_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:recipes)}", id: "link-health-recipes", title: "Receitas", data: { turbo: false } do %>
+              <span class="material-symbols-rounded app-nav-link__icon">menu_book</span>
+              <span class="link-text">Receitas</span>
+            <% end %>
             <%= link_to strength_exercise_catalogs_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:strength_exercises)}", id: "link-health-strength-exercises", title: "Exercícios de Musculação", data: { turbo: false } do %>
               <span class="material-symbols-rounded app-nav-link__icon">fitness_center</span>
               <span class="link-text">Exercícios de Musculação</span>

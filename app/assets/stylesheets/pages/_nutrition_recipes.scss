@@ -1,0 +1,14 @@
+.nutrition-recipe-search { display: flex; flex-direction: column; gap: 12px; min-width: 0; padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; }
+.nutrition-recipe-search legend { color: var(--text-main); font-size: 1rem; font-weight: 700; }
+.nutrition-recipe-results, .nutrition-recipe-ingredients { display: flex; flex-direction: column; gap: 12px; }
+.nutrition-recipe-result, .nutrition-recipe-ingredient__header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.nutrition-recipe-result { padding: 12px; border: 1px solid var(--card-border); border-radius: 10px; background: var(--surface); color: var(--text-main); }
+.nutrition-recipe-ingredient { display: flex; flex-direction: column; gap: 12px; padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); color: var(--text-main); }
+.nutrition-recipe-ingredient[hidden] { display: none; }
+.nutrition-recipe-ingredient__header small { display: block; color: var(--text-soft); }
+.nutrition-recipe-note { margin: 0; color: var(--text-soft); font-size: .85rem; overflow-wrap: anywhere; }
+.nutrition-recipe-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.app-table.nutrition-recipe-table > :not(caption) > * > * { border: 1px solid var(--table-border-color); }
+.app-table.nutrition-recipe-table tbody tr:nth-child(even) > * { background: color-mix(in srgb, var(--surface-muted) 65%, var(--table-surface)); }
+.app-table.nutrition-recipe-table thead th { background: var(--surface-muted); }
+.app-table.nutrition-recipe-table tbody tr:hover > * { background: var(--table-hover-bg); }

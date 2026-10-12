@@ -1,0 +1,21 @@
+pt-BR:
+  activerecord:
+    models:
+      nutrition_recipe: Receita
+      nutrition_recipe_ingredient: Ingrediente
+    attributes:
+      nutrition_recipe:
+        name: Nome
+        description: Descrição
+        final_weight_grams: Peso final da preparação
+        servings: Número de porções
+        nutrition_recipe_ingredients: Ingredientes
+        nutrition_recipe_ingredients.quantity_grams: Quantidade do ingrediente
+        nutrition_recipe_ingredients.source: Origem do ingrediente
+        nutrition_recipe_ingredients.source_id: Alimento do ingrediente
+        nutrition_recipe_ingredients.name: Nome do ingrediente
+      nutrition_recipe_ingredient:
+        name: Nome
+        source: Origem
+        source_id: Alimento
+        quantity_grams: Quantidade em gramas

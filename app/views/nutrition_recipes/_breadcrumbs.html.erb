@@ -1,0 +1,4 @@
+<% items = [["Saúde e Bem-Estar", progress_path], ["Cadastros Básicos", nutrition_recipes_path], ["Receitas", nutrition_recipes_path]] %>
+<% items << [@recipe.name, nutrition_recipe_path(@recipe)] if @recipe&.persisted? %>
+<% items << [action_name.in?(%w[new create]) ? "Nova Receita" : "Editar Receita", nil] if action_name.in?(%w[new create edit update]) %>
+<%= render "shared/breadcrumbs", items: items %>

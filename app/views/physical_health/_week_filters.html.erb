@@ -6,7 +6,7 @@
         <div class="app-filter-field"><%= f.label :date_from, "Da semana" %><%= f.select :date_from, options_for_select(@week_options, @date_from&.iso8601), { include_blank: "Todas as semanas" }, class: "app-form-select" %></div>
         <div class="app-filter-field"><%= f.label :date_to, "Até a semana" %><%= f.select :date_to, options_for_select(@week_options, @date_to&.iso8601), { include_blank: "Todas as semanas" }, class: "app-form-select" %></div>
       </div>
-      <div class="app-filter-actions"><%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %><span class="material-symbols-rounded" aria-hidden="true">filter_alt</span><span>Filtrar</span><% end %><%= link_to path, class: "app-btn app-btn--secondary app-page__secondary-btn" do %><span class="material-symbols-rounded" aria-hidden="true">filter_alt_off</span><span>Limpar Filtros</span><% end %><%= render "shared/per_page_select" %></div>
+      <div class="app-filter-actions"><%= f.button class: "app-btn app-btn--primary app-page__primary-btn app-filter-action" do %><span class="material-symbols-rounded" aria-hidden="true">filter_alt</span><span>Filtrar</span><% end %><%= link_to path, class: "app-btn app-btn--secondary app-page__secondary-btn app-filter-action" do %><span class="material-symbols-rounded" aria-hidden="true">filter_alt_off</span><span>Limpar Filtros</span><% end %><%= render "shared/per_page_select" %></div>
     <% end %>
   <% end %>
 </div>

@@ -14,8 +14,8 @@
           <div class="app-filter-field"><%= f.label :status, "Situação" %><%= f.select :status, options_for_select(PhilosophicalWorkshopInsight::STATUSES.invert, params[:status]), { include_blank: "Todas" }, class: "app-form-select" %></div>
         </div>
         <div class="app-filter-actions">
-          <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %><span class="material-symbols-rounded" aria-hidden="true">filter_alt</span> Filtrar<% end %>
-          <%= link_to philosophical_workshop_insights_path, class: "app-btn app-btn--secondary app-page__secondary-btn" do %><span class="material-symbols-rounded" aria-hidden="true">filter_alt_off</span> Limpar Filtros<% end %>
+          <%= f.button class: "app-btn app-btn--primary app-page__primary-btn app-filter-action" do %><span class="material-symbols-rounded" aria-hidden="true">filter_alt</span> Filtrar<% end %>
+          <%= link_to philosophical_workshop_insights_path, class: "app-btn app-btn--secondary app-page__secondary-btn app-filter-action" do %><span class="material-symbols-rounded" aria-hidden="true">filter_alt_off</span> Limpar Filtros<% end %>
           <div class="app-per-page-control"><%= f.label :per_page, "Exibir", class: "app-per-page-control__label" %><%= f.select :per_page, options_for_select(per_page_options, @per_page), {}, class: "form-select app-per-page-control__select", onchange: "this.form.requestSubmit()" %><span class="app-per-page-control__suffix">por página</span></div>
         </div>
       <% end %>

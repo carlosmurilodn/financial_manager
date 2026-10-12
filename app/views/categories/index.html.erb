@@ -75,12 +75,12 @@
         </div>
 
         <div class="app-filter-actions">
-          <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>
+          <%= f.button class: "app-btn app-btn--primary app-page__primary-btn app-filter-action" do %>
             <span class="material-symbols-rounded" aria-hidden="true">filter_alt</span> <%= t("buttons.filter") %>
           <% end %>
 
           <%= link_to categories_path,
-                      class: "app-btn app-btn--secondary app-page__secondary-btn" do %>
+                      class: "app-btn app-btn--secondary app-page__secondary-btn app-filter-action" do %>
             <span class="material-symbols-rounded" aria-hidden="true">filter_alt_off</span> Limpar Filtros
           <% end %>
         </div>

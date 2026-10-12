@@ -27,13 +27,21 @@
   </div>
   <div class="app-panel app-panel--table">
     <% if @recipes.any? %>
-      <div class="app-table-responsive"><table class="app-table" role="table">
-        <caption class="philosophical-table__caption">Ordenar por</caption>
-        <thead><tr><th scope="col"><%= sortable_table_header("Nome", :name) %></th><th scope="col"><%= sortable_table_header("Peso final (g)", :final_weight_grams) %></th><th scope="col"><%= sortable_table_header("Porções", :servings) %></th><th scope="col">Ações</th></tr></thead>
+      <div class="app-show-card__installments-table-wrapper"><table class="app-show-card__installments-table">
+        <thead><tr>
+          <% { "name" => "Nome", "final_weight_grams" => "Peso final (g)", "servings" => "Porções" }.each do |field, label| %>
+            <th scope="col">
+              <%= link_to nutrition_recipes_path(request.query_parameters.merge(sort: field, direction: (@sort == field && @direction == "asc") ? "desc" : "asc", page: 1)), class: "app-table-sort-link #{'is-active' if @sort == field}" do %>
+                <%= label %>
+                <% if @sort == field %><span class="material-symbols-rounded" aria-hidden="true"><%= @direction == "asc" ? "arrow_upward" : "arrow_downward" %></span><% end %>
+              <% end %>
+            </th>
+          <% end %>
+          <th scope="col">Ações</th>
+        </tr></thead>
         <tbody><% @recipes.each do |recipe| %><tr>
-          <td data-label="Nome"><%= link_to recipe.name, nutrition_recipe_path(recipe) %></td><td data-label="Peso final (g)"><%= taco_nutrient_value(recipe.final_weight_grams) %></td><td data-label="Porções"><%= recipe.servings %></td>
+          <td data-label="Nome"><%= link_to recipe.name, nutrition_recipe_path(recipe), class: "stealth-link" %></td><td data-label="Peso final (g)"><%= taco_nutrient_value(recipe.final_weight_grams) %></td><td data-label="Porções"><%= recipe.servings %></td>
           <td data-label="Ações"><div class="writing-character-actions">
-            <%= link_to nutrition_recipe_path(recipe), class: "app-btn app-btn--secondary", title: "Visualizar receita", aria: { label: "Ver #{recipe.name}" } do %><span class="material-symbols-rounded" aria-hidden="true">visibility</span> Ver<% end %>
             <%= link_to edit_nutrition_recipe_path(recipe), class: "app-btn app-btn--primary", title: "Editar receita", aria: { label: "Editar #{recipe.name}" } do %><span class="material-symbols-rounded" aria-hidden="true">edit</span> Editar<% end %>
             <%= button_to nutrition_recipe_path(recipe), method: :delete, class: "app-btn app-btn--danger", title: "Excluir receita", aria: { label: "Excluir #{recipe.name}" }, form: { data: { turbo_confirm: "Excluir #{recipe.name}? Esta ação não poderá ser desfeita." } } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span> Excluir<% end %>
           </div></td>

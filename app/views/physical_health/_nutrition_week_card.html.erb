@@ -1,16 +1,15 @@
-<% goal = @plans_by_week[week]&.weekly_health_goals&.find { |item| item.name.parameterize == "alimentacao" } %>
-<% average = @calorie_summaries.fetch(week)[:consumed][:mean] %>
+<% summary = @nutrition_summaries.fetch(week) %>
+<% average = summary[:calories][:mean] %>
 <article class="health-weight-goal-card health-weight-goal-card--success exercise-entry-card" style="--health-card-accent: #5c6df2;">
   <div class="health-weight-goal-card__content">
     <div class="health-weight-goal-card__identity-main">
       <div class="health-weight-goal-card__icon-wrapper"><span class="material-symbols-rounded health-weight-goal-card__icon" aria-hidden="true">restaurant</span></div>
       <div class="health-weight-goal-card__description-link"><div class="exercise-entry-card__heading">
         <h3 class="health-weight-goal-card__title"><%= link_to "Semana de #{week.strftime('%d/%m/%Y')} a #{(week + 6.days).strftime('%d/%m/%Y')}", health_nutrition_week_path(week.iso8601), class: "exercise-entry-card__show-link", data: { turbo: false } %></h3>
-        <div class="exercise-entry-card__chips"><span>Ingestão média: <%= average ? "#{number_with_precision(average, precision: 0, delimiter: '.')} kcal" : "Sem dados" %></span></div>
+        <div class="exercise-entry-card__chips"><span>Média diária: <%= average ? "#{number_with_precision(average, precision: 2, strip_insignificant_zeros: true, separator: ",", delimiter: '.')} kcal" : "Sem dados" %></span></div>
       </div></div>
     </div>
-    <div class="health-weight-goal-card__meta-item"><span class="material-symbols-rounded" aria-hidden="true">task_alt</span><span><small>Alimentação</small><strong><%= goal&.completed_count || 0 %> / 7 dias</strong></span></div>
-    <div class="health-weight-goal-card__meta-item"><span class="material-symbols-rounded" aria-hidden="true">local_fire_department</span><span><small>Calorias Preenchidas</small><strong><%= @calorie_counts[week] || 0 %> / 7 dias</strong></span></div>
+    <div class="health-weight-goal-card__meta-item"><span class="material-symbols-rounded" aria-hidden="true">task_alt</span><span><small>Dias registrados</small><strong><%= summary[:registered_days].positive? ? "#{summary[:registered_days]} / 7 dias" : "Sem dados" %></strong></span></div>
     <div class="health-weight-goal-card__actions">
       <%= link_to edit_health_nutrition_week_path(week.iso8601), class: "health-weight-goal-card__action", title: "Editar semana", data: { turbo: false } do %><span class="material-symbols-rounded" aria-hidden="true">edit</span><span class="health-weight-goal-card__action-label">Editar</span><% end %>
       <%= link_to health_nutrition_week_path(week.iso8601), class: "health-weight-goal-card__action health-weight-goal-card__action--danger", title: "Excluir semana", data: { turbo_method: :delete, turbo_confirm: "Excluir os registros de alimentação e calorias desta semana?" } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span><span class="health-weight-goal-card__action-label">Excluir</span><% end %>

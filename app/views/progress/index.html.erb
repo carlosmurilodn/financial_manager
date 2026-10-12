@@ -19,7 +19,10 @@
     </div>
   </div>
 
-  <%= render "physical_summary" %>
+  <div class="progress-physical-overview">
+    <%= render "physical_summary" %>
+    <%= render "weight_goals" %>
+  </div>
   <%= render "weekly_progress" %>
 
   <div id="historico-peso" class="progress-weight-overview">

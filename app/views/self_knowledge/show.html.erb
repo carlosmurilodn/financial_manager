@@ -18,9 +18,6 @@
           <div>
             <p><%= weekly? ? { mood: 'Humor Médio', energy: 'Energia Média', tension: 'Tensão / Ansiedade Média' }.fetch(field) : label %></p>
             <strong><%= value ? "#{weekly? ? number_with_precision(value, precision: 1, separator: ',') : value} / 5" : 'Sem registro' %></strong>
-            <% if weekly? %>
-              <small><%= pluralize(week_summary.averages.fetch(field)[:count], 'resposta diária', 'respostas diárias') %></small>
-            <% elsif value %><small><%= descriptions[value - 1] %></small><% end %>
           </div>
         </article>
       <% end %>

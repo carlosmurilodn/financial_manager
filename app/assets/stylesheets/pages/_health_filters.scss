@@ -22,3 +22,17 @@
   .health-inline-filters .health-index-filters, .health-food-filters > .health-index-filters { display: grid; grid-template-columns: minmax(0, 1fr); }
   .health-food-filters > .app-filter-actions { grid-column: 1; }
 }
+
+.nutrition-page.self-knowledge-page .app-page__hero-top.self-knowledge-section-hero { grid-template-columns: minmax(160px, 1.1fr) minmax(145px, 1fr) repeat(5, minmax(0, 1fr)); }
+.nutrition-page .self-knowledge-section-hero__heading { grid-column: auto; }
+@media (min-width: 768px) and (max-width: 1199px) {
+  .nutrition-page.self-knowledge-page .app-page__hero-top.self-knowledge-section-hero { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .nutrition-page .self-knowledge-section-hero__heading { grid-column: span 2; }
+}
+@media (max-width: 767px) {
+  .nutrition-page.self-knowledge-page .app-page__hero-top.self-knowledge-section-hero { grid-template-columns: minmax(0, 1fr); }
+  .nutrition-page .self-knowledge-section-hero__heading { grid-column: auto; }
+}
+
+.nutrition-lucide-icon { flex-shrink: 0; width: 28px; height: 28px; }
+.self-knowledge-hero-kpi > .nutrition-lucide-icon { color: var(--mental-kpi-color); }

@@ -1,14 +1,14 @@
 <div id="health-weight-goals-hero-kpis" class="physical-health-hero-kpis">
   <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--green">
     <span class="material-symbols-rounded" aria-hidden="true">monitor_weight</span>
-    <div><p>Peso Atual</p><strong><%= @latest_weight_entry ? "#{number_with_precision(@latest_weight_entry.weight_kg, precision: 2)} kg" : "Sem registro" %></strong><small><%= @latest_weight_entry&.measured_on&.strftime("%d/%m/%Y") %></small></div>
+    <div><p>Peso Atual</p><strong><%= @latest_weight_entry ? "#{number_with_precision(@latest_weight_entry.weight_kg, precision: 2)} kg" : "Sem registro" %></strong></div>
   </article>
   <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--yellow">
     <span class="material-symbols-rounded" aria-hidden="true">flag</span>
-    <div><p>Objetivo Final</p><strong><%= @final_health_weight_goal ? "#{number_with_precision(@final_health_weight_goal.target_weight, precision: 2)} kg" : "Não definido" %></strong><small><%= "Meta final cadastrada" %></small></div>
+    <div><p>Objetivo Final</p><strong><%= @final_health_weight_goal ? "#{number_with_precision(@final_health_weight_goal.target_weight, precision: 2)} kg" : "Não definido" %></strong></div>
   </article>
   <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--purple">
     <span class="material-symbols-rounded" aria-hidden="true">format_list_numbered</span>
-    <div><p>Marcos e Metas Filtrados</p><strong><%= @filtered_count || 0 %></strong><small><%= "Conforme os filtros selecionados" %></small></div>
+    <div><p>Marcos e Metas Filtrados</p><strong><%= @filtered_count || 0 %></strong></div>
   </article>
 </div>

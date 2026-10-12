@@ -1,33 +1,47 @@
 <% summary = @physical_progress[:summary] %>
-<article class="app-panel progress-panel">
+<% explanation = "Consumo calculado pelas refeições. Médias consideram apenas dias com dados. Gasto estimado já inclui o fator das atividades; exercícios não são somados novamente. Evolução do peso: última medição menos primeira na semana." %>
+<article class="app-panel progress-panel progress-physical-summary">
   <div class="progress-history__header">
-    <div class="progress-panel__header"><span class="material-symbols-rounded" aria-hidden="true">monitoring</span><div><p class="app-page__eyebrow">Saúde Física · Semana selecionada</p><h2>Alimentação, peso e exercícios</h2></div></div>
-    <div class="nutrition-recipe-actions"><%= link_to "Alimentação", health_nutrition_path, class: "app-btn app-btn--outline", data: { turbo: false } %><%= link_to "Balança", weight_entries_path, class: "app-btn app-btn--outline", data: { turbo: false } %><%= link_to "Exercícios", health_exercises_path, class: "app-btn app-btn--outline", data: { turbo: false } %></div>
+    <div class="progress-physical-summary__heading">
+      <div class="progress-panel__header"><span class="material-symbols-rounded" aria-hidden="true">monitoring</span><div><p class="app-page__eyebrow">Saúde Física · Semana selecionada</p><h2>Alimentação, peso e exercícios</h2></div></div>
+      <div class="progress-physical-summary__badges">
+        <% { consumed: ["Consumo da Semana", "calories"], bmr: ["Basal médio", "fats"], tdee: ["Gasto médio", "proteins"], deficit: [summary[:deficit][:mean]&.negative? ? "Superávit médio" : "Déficit médio", "carbohydrates"] }.each do |field, (label, color)| %>
+          <% value = field == :consumed ? summary[field][:total] : summary[field][:mean]&.abs %>
+          <span class="nutrition-recipe-result__badge nutrition-recipe-result__badge--<%= color %>" title="<%= summary[field][:count] %> / 7 dias com dados"><%= label %>: <%= progress_metric(value) %></span>
+        <% end %>
+        <span class="nutrition-recipe-result__badge progress-physical-summary__weight" title="<%= summary[:weight_count] %> medições na semana">Variação do peso: <%= progress_metric(summary[:weight_change], unit: "kg", signed: true) %></span>
+        <span class="material-symbols-rounded progress-physical-summary__info" tabindex="0" role="img" title="<%= explanation %>" aria-label="<%= explanation %>">info</span>
+      </div>
+    </div>
   </div>
-  <div class="progress-physical-kpis">
-    <% { consumed: ["Calorias consumidas", "restaurant", "blue"], bmr: ["Metabolismo basal médio", "local_fire_department", "yellow"], tdee: ["Gasto diário médio", "fitness_center", "red"], deficit: [summary[:deficit][:mean]&.negative? ? "Superávit médio" : "Déficit médio", "balance", "green"] }.each do |field, (label, icon, color)| %>
-      <% value = field == :consumed ? summary[field][:total] : summary[field][:mean]&.abs %>
-      <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--<%= color %>"><span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span><div><p><%= label %></p><strong><%= progress_metric(value) %></strong><small><%= summary[field][:count] %> / 7 dias com dados</small></div></article>
-    <% end %>
-    <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--purple"><span class="material-symbols-rounded" aria-hidden="true">monitor_weight</span><div><p>Evolução do peso</p><strong><%= progress_metric(summary[:weight_change], unit: "kg", signed: true) %></strong><small><%= summary[:weight_count] %> medições na semana; última menos primeira</small></div></article>
-  </div>
-  <p class="progress-empty">Consumo vem das refeições; registros antigos são usados apenas em dias sem itens. Médias consideram somente dias com dados. O gasto estimado já inclui o fator das atividades registradas, sem adicionar exercícios novamente.</p>
-  <div class="nutrition-cards">
-    <% @physical_progress[:days].each do |day| %>
-      <article class="health-card progress-physical-day" style="--health-card-accent: #5c6df2;">
-        <div class="health-card__content">
-          <header class="progress-history__header"><h3><%= %w[Domingo Segunda-feira Terça-feira Quarta-feira Quinta-feira Sexta-feira Sábado][day[:date].wday] %> · <%= day[:date].strftime("%d/%m") %></h3><small class="progress-empty"><%= { meals: "Refeições registradas", legacy: "Registro anterior de calorias", none: "Sem dados de alimentação" }[day[:source]] %></small></header>
-          <dl class="progress-physical-day__metrics">
-            <div><dt>Calorias consumidas</dt><dd><%= progress_metric(day[:consumed]) %></dd></div>
-            <div><dt>Basal estimado</dt><dd><%= progress_metric(day[:bmr]) %></dd></div>
-            <div><dt>Gasto diário estimado</dt><dd><%= progress_metric(day[:tdee]) %></dd></div>
-            <div><dt><%= day[:deficit]&.negative? ? "Superávit" : "Déficit" %></dt><dd><%= progress_metric(day[:deficit]&.abs) %></dd></div>
-            <div><dt>Peso registrado</dt><dd><%= progress_metric(day[:weight], unit: "kg") %></dd></div>
-            <div><dt>Atividades realizadas</dt><dd><%= day[:activities].presence&.join(" · ") || "Sem dados" %><%= " · #{day[:duration]} min" if day[:duration] %></dd></div>
-          </dl>
-          <% if day[:reference_weight_date] && day[:reference_weight_date] != day[:date] %><p class="progress-empty">Estimativas usam pesagem de <%= day[:reference_weight_date].strftime("%d/%m/%Y") %>.</p><% end %>
-        </div>
-      </article>
-    <% end %>
+  <div class="progress-physical-table-wrap" role="region" aria-label="Indicadores diários da semana" tabindex="0">
+    <table class="progress-physical-table">
+      <thead>
+        <tr><th scope="col">Dia</th><th scope="col">Consumo</th><th scope="col">Basal estimado</th><th scope="col">Gasto estimado</th><th scope="col">Déficit / Superávit</th><th scope="col">Peso</th><th scope="col">Atividades</th></tr>
+      </thead>
+      <tbody>
+        <% @physical_progress[:days].each do |day| %>
+          <% has_data = %i[consumed bmr tdee deficit weight].any? { |field| !day[field].nil? } || day[:activities].present? %>
+          <tr>
+            <th scope="row"><span><%= %w[Domingo Segunda-feira Terça-feira Quarta-feira Quinta-feira Sexta-feira Sábado][day[:date].wday] %></span><time datetime="<%= day[:date].iso8601 %>"><%= day[:date].strftime("%d/%m") %></time></th>
+            <% if has_data %>
+              <% { consumed: "calories", bmr: "fats", tdee: "proteins", deficit: "carbohydrates", weight: "weight" }.each do |field, color| %>
+                <td class="progress-physical-table__number">
+                  <% if day[field].nil? %>
+                    <span class="progress-physical-table__empty">Sem dados</span>
+                  <% else %>
+                    <span class="progress-physical-table__value progress-physical-table__value--<%= color %>"><%= "Superávit · " if field == :deficit && day[field].negative? %><%= progress_metric(field == :deficit ? day[field].abs : day[field], unit: field == :weight ? "kg" : "kcal") %></span>
+                  <% end %>
+                  <% if field == :bmr && day[:reference_weight_date] && day[:reference_weight_date] != day[:date] %><span class="material-symbols-rounded progress-physical-summary__info" tabindex="0" role="img" title="Estimativas usam pesagem de <%= day[:reference_weight_date].strftime("%d/%m/%Y") %>." aria-label="Estimativas usam pesagem de <%= day[:reference_weight_date].strftime("%d/%m/%Y") %>.">info</span><% end %>
+                </td>
+              <% end %>
+              <td><span class="<%= "progress-physical-table__empty" if day[:activities].blank? %>"><%= day[:activities].presence&.join(" · ") || "Sem dados" %></span><%= " · #{day[:duration]} min" if day[:duration] %></td>
+            <% else %>
+              <td colspan="6" class="progress-physical-table__empty">Sem dados</td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   </div>
 </article>

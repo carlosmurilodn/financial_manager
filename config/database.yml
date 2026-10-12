@@ -32,11 +32,12 @@ test:
     <<: *taco_catalog
 
 production:
-  taco:
-    <<: *taco_catalog
   primary:
     <<: *default
     url: <%= ENV["DATABASE_URL_FINANCIAL_MANAGER"] %>
+
+  taco:
+    <<: *taco_catalog
 
   cache:
     <<: *default

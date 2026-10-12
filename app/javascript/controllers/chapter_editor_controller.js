@@ -85,8 +85,11 @@ export default class extends Controller {
 
   summary() {
     if (!this.hasStatusTarget) return
-    const failed = this.titleError || this.editors.some(scene => scene.error || scene.conflicted)
-    this.statusTarget.textContent = failed ? "Há alterações que não puderam ser salvas. Confira os avisos nas cenas." : this.pending ? "Alterações pendentes · salvamento automático após pausa." : "Todas as alterações salvas."
+    const failedScene = this.editors.find(scene => scene.error || scene.conflicted)
+    const failed = this.titleError || failedScene
+    const sceneName = failedScene?.titleTarget.value.trim() || failedScene?.defaultTitleValue || "Cena"
+    const failure = this.titleError ? `Título do capítulo: ${this.titleErrorMessage || "Não foi possível salvar."}` : `${sceneName}: ${failedScene?.errorMessage || "Não foi possível salvar."}`
+    this.statusTarget.textContent = failed ? failure : this.pending ? "Alterações pendentes · salvamento automático após pausa." : "Todas as alterações salvas."
     this.statusTarget.classList.toggle("literary-editor-status--error", !!failed)
   }
 
@@ -120,6 +123,7 @@ export default class extends Controller {
       document.dispatchEvent(new CustomEvent("writing:saved"))
     } catch (error) {
       this.titleError = true
+      this.titleErrorMessage = error.message
       this.statusTarget.textContent = error.message
       this.statusTarget.classList.add("literary-editor-status--error")
     } finally {

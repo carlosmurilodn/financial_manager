@@ -157,3 +157,6 @@
   .narrative-panel-open .literary-writing-layout { grid-template-columns: minmax(0, 1fr); }
   .literary-narrative-panel { position: fixed; top: 16px; bottom: 16px; right: 16px; z-index: 1100; width: min(380px, calc(100vw - 32px)); max-height: none; box-shadow: 0 8px 32px rgba(0, 0, 0, .18); }
 }
+
+.literary-editor--save-error > .literary-editor-status { padding: 10px 12px; border-left: 3px solid var(--danger); background: color-mix(in srgb, var(--danger) 8%, var(--surface)); color: var(--danger); font-weight: 600; }
+.literary-editor--save-error input[aria-invalid="true"], .literary-editor-sheet--invalid { outline: 2px solid var(--danger); outline-offset: 2px; }

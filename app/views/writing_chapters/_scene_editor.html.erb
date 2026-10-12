@@ -10,6 +10,6 @@
   <%= f.hidden_field :content, id: "#{token}_content", value: scene.content.to_json, data: { literary_editor_target: "content" } %>
   <%= f.hidden_field :writing_chapter_id, id: "#{token}_chapter" %>
   <%= f.hidden_field :lock_version, id: "#{token}_version", data: { literary_editor_target: "lockVersion" } %>
-  <div class="literary-editor-desk chapter-scene-editor__desk"><div class="literary-editor-sheet" data-literary-editor-target="host"></div></div>
   <span class="literary-editor-status" role="status" aria-live="polite" data-literary-editor-target="status">Carregando cena…</span>
+  <div class="literary-editor-desk chapter-scene-editor__desk"><div class="literary-editor-sheet" data-literary-editor-target="host"></div></div>
 <% end %>

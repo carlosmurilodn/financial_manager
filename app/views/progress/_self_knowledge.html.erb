@@ -8,7 +8,6 @@
         <div>
           <p><%= { mood: "Humor Médio", energy: "Energia Média", tension: "Tensão Média" }.fetch(field) %></p>
           <strong><%= average[:mean] ? "#{number_with_precision(average[:mean], precision: 1, separator: ',')} / 5" : "Sem registro" %></strong>
-          <small><%= pluralize(average[:count], "resposta diária", "respostas diárias") %></small>
         </div>
       </div>
     <% end %>

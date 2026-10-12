@@ -33,6 +33,10 @@
             <%= f.select :category, options_for_select(@categories, @category_filter), { include_blank: "Todas" }, class: "app-form-select" %>
           </div>
         </div>
+        <div class="health-index-filters">
+          <div class="app-filter-field"><%= f.label :sort, "Ordenar por" %><%= f.select :sort, options_for_select([["Nome", "name"], ["Categoria", "category"], ["Calorias", "calories"], ["Carboidratos", "carbohydrates"], ["Proteínas", "proteins"], ["Gorduras", "fats"]], @sort), {}, class: "app-form-select" %></div>
+          <div class="app-filter-field"><%= f.label :direction, "Direção" %><%= f.select :direction, options_for_select([["Crescente", "asc"], ["Decrescente", "desc"]], @direction), {}, class: "app-form-select" %></div>
+        </div>
         <div class="app-filter-actions">
           <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>
             <span class="material-symbols-rounded" aria-hidden="true">filter_alt</span> Filtrar
@@ -40,48 +44,23 @@
           <%= link_to taco_foods_path(source: @source_filter), class: "app-btn app-btn--secondary app-page__secondary-btn" do %>
             <span class="material-symbols-rounded" aria-hidden="true">filter_alt_off</span> Limpar Filtros
           <% end %>
-          <%= render "shared/per_page_select" %>
+          <%= render "shared/per_page_select", preserve_sort: false %>
         </div>
       <% end %>
     <% end %>
   </div>
 
-  <div class="app-panel app-panel--table">
+  <div class="app-panel">
     <% if @taco_foods.any? %>
-      <div class="app-table-responsive">
-        <table class="app-table taco-foods-table">
-          <caption>Valores por 100 g · <%= @filtered_count %> alimento(s) encontrado(s)</caption>
-          <thead><tr>
-            <% { name: "Nome", category: "Categoria", calories: "Calorias (kcal)", carbohydrates: "Carboidratos (g)", proteins: "Proteínas (g)", fats: "Gorduras (g)" }.each do |field, label| %>
-              <th scope="col"><%= sortable_table_header(label, field) %></th>
+      <div class="nutrition-cards">
+        <% @taco_foods.each do |food| %>
+          <%= render layout: "shared/nutrition_card", locals: { title: food.name, title_path: (@source_filter == "custom" ? custom_food_path(food) : taco_food_path(food)), icon: "restaurant", subtitle: "#{food.category} · #{@source_filter == 'custom' ? 'Meus Alimentos' : 'TACO'} · por 100 g", nutrients: NutritionMealItem::NUTRIENTS.index_with { |field| food.public_send(field) } } do %>
+            <% if @source_filter == "custom" %>
+              <%= link_to edit_custom_food_path(food), class: "health-weight-goal-card__action", title: "Editar alimento" do %><span class="material-symbols-rounded" aria-hidden="true">edit</span><span>Editar</span><% end %>
+              <%= link_to custom_food_path(food), class: "health-weight-goal-card__action health-weight-goal-card__action--danger", title: "Excluir alimento", data: { turbo_method: :delete, turbo_confirm: "Excluir este alimento?" } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span><span>Excluir</span><% end %>
             <% end %>
-            <th scope="col">Ações</th>
-          </tr></thead>
-          <tbody>
-            <% @taco_foods.each do |food| %>
-              <tr>
-                <th scope="row"><%= food.name %></th>
-                <td><%= food.category %></td>
-                <% %i[calories carbohydrates proteins fats].each do |field| %>
-                  <td><%= taco_nutrient_value(food.public_send(field)) %></td>
-                <% end %>
-                <td>
-                  <%= link_to (@source_filter == "custom" ? custom_food_path(food) : taco_food_path(food)), class: "app-btn app-btn--outline", title: "Visualizar alimento", aria: { label: "Visualizar #{food.name}" } do %>
-                    <span class="material-symbols-rounded" aria-hidden="true">visibility</span><span>Visualizar</span>
-                  <% end %>
-                  <% if @source_filter == "custom" %>
-                    <%= link_to edit_custom_food_path(food), class: "app-btn app-btn--outline", title: "Editar alimento" do %>
-                      <span class="material-symbols-rounded" aria-hidden="true">edit</span><span>Editar</span>
-                    <% end %>
-                    <%= link_to custom_food_path(food), class: "app-btn app-btn--danger", title: "Excluir alimento", data: { turbo_method: :delete, turbo_confirm: "Excluir este alimento?" } do %>
-                      <span class="material-symbols-rounded" aria-hidden="true">delete</span><span>Excluir</span>
-                    <% end %>
-                  <% end %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+          <% end %>
+        <% end %>
       </div>
     <% else %>
       <div class="dashboard-empty-state">

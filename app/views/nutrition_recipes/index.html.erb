@@ -17,36 +17,28 @@
     <%= render "shared/filter_accordion" do %>
       <%= form_with url: nutrition_recipes_path, method: :get, local: true, class: "app-filter-form" do |f| %>
         <div class="app-filter-field"><%= f.label :name, "Nome" %><%= f.search_field :name, value: @name_filter, class: "app-form-control", placeholder: "Buscar receita" %></div>
+        <div class="health-index-filters">
+          <div class="app-filter-field"><%= f.label :sort, "Ordenar por" %><%= f.select :sort, options_for_select([["Nome", "name"], ["Peso final", "final_weight_grams"], ["Porções", "servings"]], @sort), {}, class: "app-form-select" %></div>
+          <div class="app-filter-field"><%= f.label :direction, "Direção" %><%= f.select :direction, options_for_select([["Crescente", "asc"], ["Decrescente", "desc"]], @direction), {}, class: "app-form-select" %></div>
+        </div>
         <div class="app-filter-actions">
           <%= f.button class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">filter_alt</span> Filtrar<% end %>
           <%= link_to nutrition_recipes_path, class: "app-btn app-btn--secondary" do %><span class="material-symbols-rounded" aria-hidden="true">filter_alt_off</span> Limpar Filtros<% end %>
-          <%= render "shared/per_page_select" %>
+          <%= render "shared/per_page_select", preserve_sort: false %>
         </div>
       <% end %>
     <% end %>
   </div>
-  <div class="app-panel app-panel--table">
+  <div class="app-panel">
     <% if @recipes.any? %>
-      <div class="app-show-card__installments-table-wrapper"><table class="app-show-card__installments-table">
-        <thead><tr>
-          <% { "name" => "Nome", "final_weight_grams" => "Peso final (g)", "servings" => "Porções" }.each do |field, label| %>
-            <th scope="col">
-              <%= link_to nutrition_recipes_path(request.query_parameters.merge(sort: field, direction: (@sort == field && @direction == "asc") ? "desc" : "asc", page: 1)), class: "app-table-sort-link #{'is-active' if @sort == field}" do %>
-                <%= label %>
-                <% if @sort == field %><span class="material-symbols-rounded" aria-hidden="true"><%= @direction == "asc" ? "arrow_upward" : "arrow_downward" %></span><% end %>
-              <% end %>
-            </th>
+      <div class="nutrition-cards">
+        <% @recipes.each do |recipe| %>
+          <%= render layout: "shared/nutrition_card", locals: { title: recipe.name, title_path: nutrition_recipe_path(recipe), icon: "menu_book", meta: { "Peso final" => "#{taco_nutrient_value(recipe.final_weight_grams)} g", "Porções" => recipe.servings } } do %>
+            <%= link_to edit_nutrition_recipe_path(recipe), class: "health-weight-goal-card__action", title: "Editar receita" do %><span class="material-symbols-rounded" aria-hidden="true">edit</span><span>Editar</span><% end %>
+            <%= link_to nutrition_recipe_path(recipe), class: "health-weight-goal-card__action health-weight-goal-card__action--danger", title: "Excluir receita", data: { turbo_method: :delete, turbo_confirm: "Excluir esta receita?" } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span><span>Excluir</span><% end %>
           <% end %>
-          <th scope="col">Ações</th>
-        </tr></thead>
-        <tbody><% @recipes.each do |recipe| %><tr>
-          <td data-label="Nome"><%= link_to recipe.name, nutrition_recipe_path(recipe), class: "stealth-link" %></td><td data-label="Peso final (g)"><%= taco_nutrient_value(recipe.final_weight_grams) %></td><td data-label="Porções"><%= recipe.servings %></td>
-          <td data-label="Ações"><div class="writing-character-actions">
-            <%= link_to edit_nutrition_recipe_path(recipe), class: "app-btn app-btn--primary", title: "Editar receita", aria: { label: "Editar #{recipe.name}" } do %><span class="material-symbols-rounded" aria-hidden="true">edit</span> Editar<% end %>
-            <%= button_to nutrition_recipe_path(recipe), method: :delete, class: "app-btn app-btn--danger", title: "Excluir receita", aria: { label: "Excluir #{recipe.name}" }, form: { data: { turbo_confirm: "Excluir #{recipe.name}? Esta ação não poderá ser desfeita." } } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span> Excluir<% end %>
-          </div></td>
-        </tr><% end %></tbody>
-      </table></div>
+        <% end %>
+      </div>
     <% else %>
       <div class="dashboard-empty-state"><span class="material-symbols-rounded" aria-hidden="true">menu_book</span><strong>Nenhuma receita encontrada</strong><small>Cadastre uma receita ou ajuste os filtros.</small></div>
     <% end %>

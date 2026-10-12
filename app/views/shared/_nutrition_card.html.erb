@@ -1,0 +1,14 @@
+<article class="health-weight-goal-card nutrition-card" style="--health-card-accent: #5c6df2;">
+  <div class="health-weight-goal-card__content">
+    <div class="health-weight-goal-card__identity-main">
+      <div class="health-weight-goal-card__icon-wrapper"><span class="material-symbols-rounded health-weight-goal-card__icon" aria-hidden="true"><%= icon %></span></div>
+      <div class="health-weight-goal-card__description-link">
+        <h3 class="health-weight-goal-card__title"><% if local_assigns[:title_path] %><%= link_to title, title_path, class: "stealth-link" %><% else %><%= title %><% end %></h3>
+        <% if local_assigns[:subtitle].present? %><small class="nutrition-card__subtitle"><%= subtitle %></small><% end %>
+      </div>
+    </div>
+    <% if local_assigns[:meta].present? %><div class="nutrition-card__meta"><% meta.each do |label, value| %><span><small><%= label %></small><strong><%= value %></strong></span><% end %></div><% end %>
+    <% if local_assigns[:nutrients] %><%= render "shared/nutrition_badges", values: nutrients %><% end %>
+    <div class="health-weight-goal-card__actions nutrition-card__actions"><%= yield %></div>
+  </div>
+</article>

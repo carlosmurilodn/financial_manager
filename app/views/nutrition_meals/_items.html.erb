@@ -1,24 +1,17 @@
 <% items = meal.nutrition_meal_items.to_a %>
 <% context = local_assigns.fetch(:context, "card") %>
 <% if items.any? %>
-  <div class="app-table-responsive">
-    <table class="app-table nutrition-recipe-table">
-      <caption>Itens salvos nesta refeição</caption>
-      <thead><tr><th scope="col">Nome</th><th scope="col">Origem</th><th scope="col">Quantidade (g)</th><th scope="col">Calorias (kcal)</th><th scope="col">Carboidratos (g)</th><th scope="col">Proteínas (g)</th><th scope="col">Gorduras (g)</th><th scope="col">Ações</th></tr></thead>
-      <tbody>
-        <% items.each do |item| %>
-          <tr><th scope="row"><%= item.name %></th><td><%= { "taco" => "TACO", "custom" => "Meus Alimentos", "recipe" => "Receitas" }[item.source] %></td><td>
-            <%= form_with scope: :nutrition_meal_item, url: nutrition_meal_nutrition_meal_item_path(meal, item), method: :patch, class: "nutrition-meal-item-quantity", data: { action: "submit->meal-picker#updateItem" } do |f| %>
-              <%= f.number_field :quantity_grams, value: item.quantity_grams, id: "meal-item-quantity-#{item.id}-#{context}", class: "app-form-control", min: "0.0001", max: "99999999.9999", step: "0.0001", required: true, aria: { label: "Quantidade em gramas de #{item.name}" } %>
-              <%= f.button type: "submit", class: "app-btn app-btn--outline", title: "Salvar quantidade" do %><span class="material-symbols-rounded" aria-hidden="true">save</span><span>Salvar</span><% end %>
-            <% end %>
-          </td>
-            <% NutritionMealItem::NUTRIENTS.each do |field| %><td><%= taco_nutrient_value(item.public_send(field)) %></td><% end %>
-            <td><button type="button" class="app-btn app-btn--danger" title="Excluir item" data-action="meal-picker#deleteItem" data-url="<%= nutrition_meal_nutrition_meal_item_path(meal, item) %>" data-turbo-method="delete" data-turbo-confirm="Excluir este item da refeição?"><span class="material-symbols-rounded" aria-hidden="true">delete</span><span>Excluir</span></button></td>
-          </tr>
+  <div class="nutrition-cards">
+    <% items.each do |item| %>
+      <%= render layout: "shared/nutrition_card", locals: { title: item.name, icon: item.source == "recipe" ? "menu_book" : "restaurant", subtitle: { "taco" => "TACO", "custom" => "Meus Alimentos", "recipe" => "Receitas" }[item.source], nutrients: NutritionMealItem::NUTRIENTS.index_with { |field| item.public_send(field) } } do %>
+        <%= form_with scope: :nutrition_meal_item, url: nutrition_meal_nutrition_meal_item_path(meal, item), method: :patch, class: "nutrition-meal-item-quantity", data: { action: "submit->meal-picker#updateItem" } do |f| %>
+        <%= f.number_field :quantity_grams, value: item.quantity_grams, id: "meal-item-quantity-#{item.id}-#{context}", class: "app-form-control", min: "0.0001", max: "99999999.9999", step: "0.0001", required: true, aria: { label: "Quantidade em gramas de #{item.name}" } %>
+        <%= f.button type: "submit", class: "app-btn app-btn--outline", title: "Salvar quantidade" do %><span class="material-symbols-rounded" aria-hidden="true">save</span><span>Salvar</span><% end %>
         <% end %>
-      </tbody>
-      <tfoot><tr><th scope="row" colspan="3">Total da refeição</th><% Nutrition::MealSummary.totals(items).each_value do |value| %><td><%= taco_nutrient_value(value) %></td><% end %><td></td></tr></tfoot>
-    </table>
+        <button type="button" class="app-btn app-btn--danger" title="Excluir item" data-action="meal-picker#deleteItem" data-url="<%= nutrition_meal_nutrition_meal_item_path(meal, item) %>" data-turbo-method="delete" data-turbo-confirm="Excluir este item da refeição?"><span class="material-symbols-rounded" aria-hidden="true">delete</span><span>Excluir</span></button>
+      <% end %>
+    <% end %>
+    <%= render layout: "shared/nutrition_card", locals: { title: "Total da refeição", icon: "monitoring", nutrients: Nutrition::MealSummary.totals(items) } do %>
+    <% end %>
   </div>
 <% end %>

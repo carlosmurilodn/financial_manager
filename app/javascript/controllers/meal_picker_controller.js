@@ -14,6 +14,7 @@ export default class extends Controller {
   }
 
   disconnect() {
+    clearTimeout(this.searchTimer)
     this.searchRequest?.abort()
     this.registrationRequest?.abort()
     this.registrationDialogTarget.close()
@@ -38,22 +39,27 @@ export default class extends Controller {
   }
 
   async search(event) {
-    event.preventDefault()
+    event?.preventDefault()
+    clearTimeout(this.searchTimer)
+    this.searchRequest?.abort()
     const name = this.queryTarget.value.trim()
     if (!name) {
-      this.setStatus("Informe um nome para pesquisar.")
+      this.resultsTarget.replaceChildren()
+      this.setStatus("")
       return
     }
     this.searchRequest?.abort()
     this.searchRequest = new AbortController()
     const url = new URL(this.searchUrlValue, window.location.origin)
     url.searchParams.set("name", name)
-    url.searchParams.set("source", this.sourceTarget.value)
+    const source = this.selectedSource
+    url.searchParams.set("source", source)
     this.setStatus("Pesquisando…")
     try {
       const response = await fetch(url, { headers: { Accept: "application/json" }, signal: this.searchRequest.signal })
       if (!response.ok) throw new Error("search failed")
       const data = await response.json()
+      if (name !== this.queryTarget.value.trim() || source !== this.selectedSource) return
       this.resultsTarget.replaceChildren()
       data.foods.forEach(food => this.renderFood(food))
       this.setStatus(data.foods.length ? "Valores para a quantidade informada. Até 10 resultados por origem; refine a pesquisa se necessário." : "Nenhum resultado encontrado.")
@@ -61,6 +67,21 @@ export default class extends Controller {
     } catch (error) {
       if (error.name !== "AbortError") this.setStatus("Não foi possível pesquisar. Dados anteriores preservados.", true)
     }
+  }
+
+  get selectedSource() {
+    return this.sourceTargets.find(input => input.checked)?.value || "all"
+  }
+
+  scheduleSearch() {
+    clearTimeout(this.searchTimer)
+    this.searchRequest?.abort()
+    if (!this.queryTarget.value.trim()) {
+      this.resultsTarget.replaceChildren()
+      this.setStatus("")
+      return
+    }
+    this.searchTimer = setTimeout(() => this.search(), 300)
   }
 
   renderFood(food) {
@@ -78,8 +99,6 @@ export default class extends Controller {
     card.dataset.key = key
     const title = document.createElement("strong")
     title.textContent = food.name
-    const origin = document.createElement("small")
-    origin.textContent = SOURCES[food.source]
     const actions = document.createElement("div")
     actions.className = "nutrition-meal-picker__result-actions"
     const field = document.createElement("div")
@@ -131,14 +150,15 @@ export default class extends Controller {
       unitField.append(unitLabel, unitSelect)
       actions.prepend(unitField)
     }
-    const metrics = document.createElement("dl")
-    metrics.className = "exercise-entry-show__details"
+    const metrics = document.createElement("div")
+    metrics.className = "nutrition-recipe-result__nutrients"
     const values = {}
     Object.entries(NUTRIENTS).forEach(([nutrient, text]) => {
-      const wrapper = document.createElement("div")
-      const term = document.createElement("dt")
-      term.textContent = text
-      values[nutrient] = document.createElement("dd")
+      const wrapper = document.createElement("span")
+      wrapper.className = `nutrition-recipe-result__badge nutrition-recipe-result__badge--${nutrient}`
+      const term = document.createElement("span")
+      term.textContent = `${text}: `
+      values[nutrient] = document.createElement("span")
       wrapper.append(term, values[nutrient])
       metrics.append(wrapper)
     })
@@ -167,7 +187,11 @@ export default class extends Controller {
       preview()
     })
     preview()
-    card.append(title, origin, actions, conversion, metrics)
+    const identity = document.createElement("div")
+    identity.className = "nutrition-recipe-result__identity"
+    title.textContent = `${food.name} · ${SOURCES[food.source]}`
+    identity.append(title, metrics)
+    card.append(identity, actions, conversion)
     this.resultsTarget.append(card)
     return card
   }
@@ -175,6 +199,7 @@ export default class extends Controller {
   async newRegistration(event) {
     if (this.saving || this.registrationLoading) return
     const button = event.currentTarget
+    clearTimeout(this.searchTimer)
     this.searchRequest?.abort()
     this.registrationTitleTarget.textContent = button.dataset.registrationTitle
     this.registrationDialogTarget.showModal()

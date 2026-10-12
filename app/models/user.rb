@@ -14,6 +14,7 @@ class User < ApplicationRecord
   has_many :weight_entries, dependent: :destroy
   has_one :health_profile, dependent: :destroy
   has_many :daily_calorie_entries, dependent: :destroy
+  has_many :nutrition_meals, dependent: :destroy
   has_many :weekly_health_plans, dependent: :destroy
   has_many :weekly_health_goals, through: :weekly_health_plans
   has_many :health_journal_entries, dependent: :destroy

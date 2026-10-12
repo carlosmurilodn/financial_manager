@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_11_024000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_12_011000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -302,6 +302,35 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_024000) do
     t.index ["user_id", "name"], name: "index_muscle_groups_on_user_id_and_name", unique: true
     t.index ["user_id", "position"], name: "index_muscle_groups_on_user_id_and_position"
     t.index ["user_id"], name: "index_muscle_groups_on_user_id"
+  end
+
+  create_table "nutrition_meal_items", force: :cascade do |t|
+    t.bigint "nutrition_meal_id", null: false
+    t.string "source", null: false
+    t.string "source_id", null: false
+    t.string "name", null: false
+    t.decimal "quantity_grams", precision: 12, scale: 4, null: false
+    t.decimal "calories", precision: 12, scale: 4, null: false
+    t.decimal "carbohydrates", precision: 12, scale: 4, null: false
+    t.decimal "proteins", precision: 12, scale: 4, null: false
+    t.decimal "fats", precision: 12, scale: 4, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["nutrition_meal_id"], name: "index_nutrition_meal_items_on_nutrition_meal_id"
+    t.index ["source", "source_id"], name: "index_nutrition_meal_items_on_source_and_source_id"
+    t.check_constraint "calories >= 0::numeric AND carbohydrates >= 0::numeric AND proteins >= 0::numeric AND fats >= 0::numeric", name: "nutrition_meal_items_nonnegative_nutrients"
+    t.check_constraint "quantity_grams > 0::numeric", name: "nutrition_meal_items_positive_quantity"
+    t.check_constraint "source::text = ANY (ARRAY['taco'::character varying, 'custom'::character varying, 'recipe'::character varying]::text[])", name: "nutrition_meal_items_valid_source"
+  end
+
+  create_table "nutrition_meals", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "occurred_on", null: false
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "occurred_on"], name: "index_nutrition_meals_on_user_id_and_occurred_on"
+    t.index ["user_id"], name: "index_nutrition_meals_on_user_id"
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
@@ -1027,6 +1056,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_11_024000) do
   add_foreign_key "incomes", "categories"
   add_foreign_key "incomes", "users"
   add_foreign_key "muscle_groups", "users"
+  add_foreign_key "nutrition_meal_items", "nutrition_meals"
+  add_foreign_key "nutrition_meals", "users"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_grants", "users", column: "resource_owner_id", on_delete: :cascade
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"

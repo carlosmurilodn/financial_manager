@@ -1,0 +1,78 @@
+<section class="app-page health-index-page self-knowledge-page">
+  <%= render "shared/breadcrumbs", items: [["Saúde e Bem-Estar", progress_path], ["Cadastros Básicos", taco_foods_path], ["Alimentos", nil]] %>
+  <header class="app-page__hero">
+    <div class="app-page__hero-copy">
+      <span class="app-page__hero-icon"><span class="material-symbols-rounded" aria-hidden="true">restaurant</span></span>
+      <div>
+        <p class="app-page__eyebrow">Cadastros Básicos</p>
+        <h1 class="app-page__title">Alimentos</h1>
+        <p class="app-page__description">Catálogo TACO · Valores nutricionais por 100 g</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-panel">
+    <%= render "shared/filter_accordion" do %>
+      <%= form_with url: taco_foods_path, method: :get, local: true, class: "app-filter-form" do |f| %>
+        <div class="health-index-filters">
+          <div class="app-filter-field">
+            <%= f.label :name, "Nome" %>
+            <%= f.search_field :name, value: @name_filter, class: "app-form-control", placeholder: "Buscar alimento" %>
+          </div>
+          <div class="app-filter-field">
+            <%= f.label :category, "Categoria" %>
+            <%= f.select :category, options_for_select(@categories, @category_filter), { include_blank: "Todas" }, class: "app-form-select" %>
+          </div>
+        </div>
+        <div class="app-filter-actions">
+          <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>
+            <span class="material-symbols-rounded" aria-hidden="true">filter_alt</span> Filtrar
+          <% end %>
+          <%= link_to taco_foods_path, class: "app-btn app-btn--secondary app-page__secondary-btn" do %>
+            <span class="material-symbols-rounded" aria-hidden="true">filter_alt_off</span> Limpar Filtros
+          <% end %>
+          <%= render "shared/per_page_select" %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="app-panel app-panel--table">
+    <% if @taco_foods.any? %>
+      <div class="app-table-responsive">
+        <table class="app-table">
+          <caption>Valores por 100 g · <%= @filtered_count %> alimento(s) encontrado(s)</caption>
+          <thead><tr>
+            <% { name: "Nome", category: "Categoria", calories: "Calorias (kcal)", carbohydrates: "Carboidratos (g)", proteins: "Proteínas (g)", fats: "Gorduras (g)" }.each do |field, label| %>
+              <th scope="col"><%= sortable_table_header(label, field) %></th>
+            <% end %>
+            <th scope="col">Ações</th>
+          </tr></thead>
+          <tbody>
+            <% @taco_foods.each do |food| %>
+              <tr>
+                <th scope="row"><%= food.name %></th>
+                <td><%= food.category %></td>
+                <% %i[calories carbohydrates proteins fats].each do |field| %>
+                  <td><%= taco_nutrient_value(food.public_send(field)) %></td>
+                <% end %>
+                <td>
+                  <%= link_to taco_food_path(food), class: "app-btn app-btn--outline", title: "Visualizar alimento", aria: { label: "Visualizar #{food.name}" } do %>
+                    <span class="material-symbols-rounded" aria-hidden="true">visibility</span><span>Visualizar</span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="dashboard-empty-state">
+        <span class="material-symbols-rounded" aria-hidden="true">restaurant</span>
+        <strong>Nenhum alimento encontrado</strong>
+        <small>Ajuste os filtros para consultar o catálogo.</small>
+      </div>
+    <% end %>
+    <%= render "shared/pagination", current_page: @current_page, total_pages: @total_pages, base_params: request.query_parameters.except(:page), aria_label: "Paginação de alimentos" %>
+  </div>
+</section>

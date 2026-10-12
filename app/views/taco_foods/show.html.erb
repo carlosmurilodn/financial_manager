@@ -1,0 +1,28 @@
+<section class="app-page exercise-entry-show self-knowledge-page">
+  <%= render "shared/breadcrumbs", items: [["Saúde e Bem-Estar", progress_path], ["Cadastros Básicos", taco_foods_path], ["Alimentos", taco_foods_path], [@taco_food.name, nil]] %>
+  <header class="app-page__hero">
+    <div class="exercise-entry-show__header">
+      <div class="app-page__hero-copy">
+        <span class="app-page__hero-icon"><span class="material-symbols-rounded" aria-hidden="true">restaurant</span></span>
+        <div>
+          <p class="app-page__eyebrow">Cadastros Básicos · Alimentos</p>
+          <h1 class="app-page__title"><%= @taco_food.name %></h1>
+          <p class="app-page__description"><%= @taco_food.category %> · TACO #<%= @taco_food.id %></p>
+        </div>
+      </div>
+      <div class="exercise-entry-show__actions">
+        <%= link_to taco_foods_path, class: "app-btn app-btn--outline" do %>
+          <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span><span>Voltar aos Alimentos</span>
+        <% end %>
+      </div>
+    </div>
+  </header>
+  <article class="app-panel exercise-entry-show__item">
+    <header class="exercise-entry-show__item-header"><h2>Informações nutricionais por 100 g</h2></header>
+    <dl class="exercise-entry-show__details">
+      <% { calories: "Calorias (kcal)", carbohydrates: "Carboidratos (g)", proteins: "Proteínas (g)", fats: "Gorduras (g)", fiber: "Fibras (g)" }.each do |field, label| %>
+        <div><dt><%= label %></dt><dd><%= taco_nutrient_value(@taco_food.public_send(field)) %></dd></div>
+      <% end %>
+    </dl>
+  </article>
+</section>

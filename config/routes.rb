@@ -124,6 +124,7 @@ Rails.application.routes.draw do
       delete :clear_filters
     end
   end
+  resources :taco_foods, path: "progresso/cadastros/alimentos", only: %i[index show]
   resources :muscle_groups, path: "progresso/cadastros/grupos-musculares", only: %i[index new create edit update destroy] do
     collection do
       delete :clear_filters

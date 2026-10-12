@@ -76,13 +76,13 @@
 
         <div class="app-filter-actions">
           <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>
-            <i class="bi bi-funnel app-me-1"></i> <%= t("buttons.filter") %>
+            <span class="material-symbols-rounded" aria-hidden="true">filter_alt</span> <%= t("buttons.filter") %>
           <% end %>
 
           <%= link_to clear_filters_cards_path,
                       class: "app-btn app-btn--secondary app-page__secondary-btn",
                       data: { turbo_method: :delete } do %>
-            <i class="bi bi-x-circle app-me-1"></i> Limpar Filtros
+            <span class="material-symbols-rounded" aria-hidden="true">filter_alt_off</span> Limpar Filtros
           <% end %>
 
           <%= render "shared/per_page_select" %>

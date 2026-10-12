@@ -14,7 +14,7 @@
 
   <div class="app-panel">
     <%= render "shared/filter_accordion" do %>
-      <%= form_with url: taco_foods_path, method: :get, local: true, class: "app-filter-form" do |f| %>
+      <%= form_with url: taco_foods_path, method: :get, local: true, class: "app-filter-form health-food-filters" do |f| %>
         <div class="health-index-filters">
           <div class="app-filter-field">
             <%= f.label :source, "Origem" %>
@@ -29,9 +29,9 @@
             <%= f.select :category, options_for_select(@categories, @category_filter), { include_blank: "Todas" }, class: "app-form-select" %>
           </div>
         </div>
-        <div class="health-index-filters">
-          <div class="app-filter-field"><%= f.label :sort, "Ordenar por" %><%= f.select :sort, options_for_select([["Nome", "name"], ["Categoria", "category"], ["Calorias", "calories"], ["Carboidratos", "carbohydrates"], ["Proteínas", "proteins"], ["Gorduras", "fats"]], @sort), {}, class: "app-form-select" %></div>
-          <div class="app-filter-field"><%= f.label :direction, "Direção" %><%= f.select :direction, options_for_select([["Crescente", "asc"], ["Decrescente", "desc"]], @direction), {}, class: "app-form-select" %></div>
+        <div class="app-filter-field health-food-filters__sort">
+          <%= f.label :sort_option, "Ordenar por" %>
+          <%= f.select :sort_option, options_for_select(health_combined_sort_options({ "name" => "Nome", "category" => "Categoria", "calories" => "Calorias", "carbohydrates" => "Carboidratos", "proteins" => "Proteínas", "fats" => "Gorduras" }), "#{@sort}:#{@direction}"), {}, class: "app-form-select" %>
         </div>
         <div class="app-filter-actions">
           <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>

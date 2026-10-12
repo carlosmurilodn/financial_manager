@@ -6,8 +6,9 @@ class NutritionRecipesController < ApplicationController
 
   def index
     @name_filter = params[:name].to_s.strip
-    @sort = %w[name final_weight_grams servings].include?(params[:sort]) ? params[:sort] : "name"
-    @direction = params[:direction] == "desc" ? "desc" : "asc"
+    requested_sort, requested_direction = params[:sort_option].present? ? params[:sort_option].split(":", 2) : [ params[:sort], params[:direction] ]
+    @sort = %w[name final_weight_grams servings].include?(requested_sort) ? requested_sort : "name"
+    @direction = requested_direction == "desc" ? "desc" : "asc"
     recipes = current_user.nutrition_recipes.search_by_name(@name_filter)
     @filtered_count = recipes.count
     @total_recipe_count = current_user.nutrition_recipes.count

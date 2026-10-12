@@ -7,8 +7,9 @@ class TacoFoodsController < ApplicationController
     @source_filter = params[:source] == "custom" ? "custom" : "taco"
     catalog = @source_filter == "custom" ? current_user.custom_foods : TacoFood.all
     @categories = catalog.distinct.order(:category).pluck(:category)
-    @sort = SORT_COLUMNS.include?(params[:sort]) ? params[:sort] : "name"
-    @direction = params[:direction] == "desc" ? "desc" : "asc"
+    requested_sort, requested_direction = params[:sort_option].present? ? params[:sort_option].split(":", 2) : [ params[:sort], params[:direction] ]
+    @sort = SORT_COLUMNS.include?(requested_sort) ? requested_sort : "name"
+    @direction = requested_direction == "desc" ? "desc" : "asc"
 
     foods = catalog.search_by_name(@name_filter).by_category(@category_filter)
     @filtered_count = foods.count

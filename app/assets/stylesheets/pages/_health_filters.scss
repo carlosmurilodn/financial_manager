@@ -1,0 +1,24 @@
+.app-filter-form.health-inline-filters { display: grid; grid-template-columns: minmax(0, 1fr) max-content; align-items: end; gap: 12px; }
+.health-inline-filters .health-index-filters { margin-bottom: 0; min-width: 0; }
+.health-inline-filters .health-index-filters > .app-filter-field { min-width: 0; }
+.app-filter-form.health-inline-filters--recipes { grid-template-columns: minmax(0, 40fr) minmax(0, 20fr) minmax(max-content, 40fr); }
+.health-inline-filters--recipes > .app-filter-field { min-width: 0; }
+.health-inline-filters--strength { grid-template-columns: minmax(0, 75fr) minmax(max-content, 25fr); }
+.health-inline-filters--strength .health-index-filters { display: grid; grid-template-columns: minmax(0, 40fr) minmax(0, 20fr) minmax(0, 15fr); }
+.health-inline-filters .app-filter-actions, .health-food-filters .app-filter-actions { display: flex; flex-wrap: nowrap; align-items: center; gap: 8px; margin: 0; }
+.health-inline-filters .app-filter-actions > *, .health-food-filters .app-filter-actions > * { flex: 0 0 auto; }
+.health-inline-filters .app-filter-actions .app-btn, .health-food-filters .app-filter-actions .app-btn { white-space: nowrap; }
+.app-filter-form.health-food-filters { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; align-items: end; }
+.health-food-filters > .health-index-filters { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 20fr) minmax(0, 50fr) minmax(0, 30fr); margin-bottom: 0; }
+.health-food-filters .app-filter-field { min-width: 0; }
+.health-food-filters > .app-filter-actions { grid-column: 2 / -1; }
+@media (max-width: 1199px) {
+  .app-filter-form.health-inline-filters, .app-filter-form.health-inline-filters--recipes { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+  .health-inline-filters > .health-index-filters, .health-inline-filters > .app-filter-actions { grid-column: 1 / -1; }
+  .health-inline-filters .app-filter-actions, .health-food-filters .app-filter-actions { flex-wrap: wrap; }
+}
+@media (max-width: 640px) {
+  .app-filter-form.health-inline-filters, .app-filter-form.health-inline-filters--recipes, .app-filter-form.health-food-filters { grid-template-columns: minmax(0, 1fr); }
+  .health-inline-filters .health-index-filters, .health-food-filters > .health-index-filters { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .health-food-filters > .app-filter-actions { grid-column: 1; }
+}

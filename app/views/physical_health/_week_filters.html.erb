@@ -1,7 +1,7 @@
 <% path = health_nutrition_path %>
 <div class="app-panel">
   <%= render "shared/filter_accordion" do %>
-    <%= form_with url: path, method: :get, local: true, class: "app-filter-form" do |f| %>
+    <%= form_with url: path, method: :get, local: true, class: "app-filter-form health-inline-filters health-inline-filters--compact" do |f| %>
       <div class="health-index-filters">
         <div class="app-filter-field"><%= f.label :date_from, "Da semana" %><%= f.select :date_from, options_for_select(@week_options, @date_from&.iso8601), { include_blank: "Todas as semanas" }, class: "app-form-select" %></div>
         <div class="app-filter-field"><%= f.label :date_to, "Até a semana" %><%= f.select :date_to, options_for_select(@week_options, @date_to&.iso8601), { include_blank: "Todas as semanas" }, class: "app-form-select" %></div>

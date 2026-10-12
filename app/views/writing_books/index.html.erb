@@ -26,10 +26,10 @@
         </div>
         <div class="app-filter-actions writing-filter-toolbar">
           <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>
-            <i class="bi bi-funnel me-1" aria-hidden="true"></i> Filtrar
+            <span class="material-symbols-rounded" aria-hidden="true">filter_alt</span> Filtrar
           <% end %>
           <%= link_to writing_books_path, class: "app-btn app-btn--secondary app-page__secondary-btn" do %>
-            <i class="bi bi-x-circle me-1" aria-hidden="true"></i> Limpar Filtros
+            <span class="material-symbols-rounded" aria-hidden="true">filter_alt_off</span> Limpar Filtros
           <% end %>
           <div class="app-per-page-control app-sort-control">
             <%= f.label :order_by, "Ordenar", class: "app-per-page-control__label" %>

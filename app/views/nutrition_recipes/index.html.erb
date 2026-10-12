@@ -15,11 +15,11 @@
   </header>
   <div class="app-panel">
     <%= render "shared/filter_accordion" do %>
-      <%= form_with url: nutrition_recipes_path, method: :get, local: true, class: "app-filter-form" do |f| %>
+      <%= form_with url: nutrition_recipes_path, method: :get, local: true, class: "app-filter-form health-inline-filters health-inline-filters--recipes" do |f| %>
         <div class="app-filter-field"><%= f.label :name, "Nome" %><%= f.search_field :name, value: @name_filter, class: "app-form-control", placeholder: "Buscar receita" %></div>
-        <div class="health-index-filters">
-          <div class="app-filter-field"><%= f.label :sort, "Ordenar por" %><%= f.select :sort, options_for_select([["Nome", "name"], ["Peso final", "final_weight_grams"], ["Porções", "servings"]], @sort), {}, class: "app-form-select" %></div>
-          <div class="app-filter-field"><%= f.label :direction, "Direção" %><%= f.select :direction, options_for_select([["Crescente", "asc"], ["Decrescente", "desc"]], @direction), {}, class: "app-form-select" %></div>
+        <div class="app-filter-field">
+          <%= f.label :sort_option, "Ordenar por" %>
+          <%= f.select :sort_option, options_for_select(health_combined_sort_options({ "name" => "Nome", "final_weight_grams" => "Peso final", "servings" => "Porções" }), "#{@sort}:#{@direction}"), {}, class: "app-form-select" %>
         </div>
         <div class="app-filter-actions">
           <%= f.button class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">filter_alt</span> Filtrar<% end %>

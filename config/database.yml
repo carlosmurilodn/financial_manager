@@ -3,25 +3,37 @@ default: &default
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
-development:
-  <<: *default
-  #username: <%= ENV["DEV_USERNAME"] %>
-  #host: <%= ENV["DEV_HOST"] %>
-  #password: <%= ENV["DEV_PASSWORD"] %>
-  #port: <%= ENV["DEV_PORT"] %>
-  #database: financial_manager_development
-  url: <%= ENV["DATABASE_URL_FINANCIAL_MANAGER"] %>
+taco_catalog: &taco_catalog
+  adapter: sqlite3
+  database: <%= Rails.root.join("db/catalog/taco.sqlite3") %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  flags: 1
+  database_tasks: false
+  pragmas:
+    journal_mode: delete
+    query_only: true
 
+development:
+  primary:
+    <<: *default
+    url: <%= ENV["DATABASE_URL_FINANCIAL_MANAGER"] %>
+  taco:
+    <<: *taco_catalog
 
 test:
-  <<: *default
-  username: <%= ENV["TEST_USERNAME"] %>
-  host: <%= ENV["TEST_HOST"] %>
-  password: <%= ENV["TEST_PASSWORD"] %>
-  port: <%= ENV["TEST_PORT"] %>
-  database: financial_manager_test
+  primary:
+    <<: *default
+    username: <%= ENV["TEST_USERNAME"] %>
+    host: <%= ENV["TEST_HOST"] %>
+    password: <%= ENV["TEST_PASSWORD"] %>
+    port: <%= ENV["TEST_PORT"] %>
+    database: financial_manager_test
+  taco:
+    <<: *taco_catalog
 
 production:
+  taco:
+    <<: *taco_catalog
   primary:
     <<: *default
     url: <%= ENV["DATABASE_URL_FINANCIAL_MANAGER"] %>

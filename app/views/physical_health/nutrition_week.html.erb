@@ -25,15 +25,6 @@
           </div>
           <% meals = @nutrition_meals_by_date.fetch(date, []) %>
           <div data-nutrition-meal-form-target="daySummary" aria-live="polite"><%= render "nutrition_meals/day_summary", meals: meals %></div>
-          <%= form_with scope: :nutrition_meal, url: nutrition_week_meals_path(@week_start.iso8601), class: "app-filter-form", data: { action: "submit->nutrition-meal-form#create" } do |f| %>
-            <%= f.hidden_field :occurred_on, value: date.iso8601 %>
-            <div class="app-filter-field">
-              <%= f.label :name, "Nova refeição", for: "meal-name-#{date.iso8601}" %>
-              <%= f.text_field :name, id: "meal-name-#{date.iso8601}", class: "app-form-control", required: true, list: "meal-names-#{date.iso8601}", placeholder: "Escolha ou digite o nome da refeição" %>
-              <datalist id="meal-names-<%= date.iso8601 %>"><% ["Café da manhã", "Almoço", "Jantar", "Lanche", "Ceia"].each do |name| %><option value="<%= name %>"></option><% end %></datalist>
-            </div>
-            <div class="app-filter-actions"><%= f.button type: "submit", class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">add</span><span>Adicionar Refeição</span><% end %></div>
-          <% end %>
           <p class="nutrition-meal-picker__status" role="status" aria-live="polite" data-nutrition-meal-form-target="status"></p>
           <p class="nutrition-week__empty" data-nutrition-meal-form-target="empty" <%= "hidden" if meals.any? %>>Nenhuma refeição registrada</p>
           <div class="nutrition-meals" data-nutrition-meal-form-target="meals"><%= render partial: "nutrition_meals/meal", collection: meals, as: :meal %></div>

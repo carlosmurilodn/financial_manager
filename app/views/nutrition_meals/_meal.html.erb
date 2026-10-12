@@ -1,7 +1,7 @@
 <article class="nutrition-meal" data-controller="meal-picker" data-meal-picker-search-url-value="<%= search_nutrition_meal_nutrition_meal_items_path(meal) %>" data-meal-picker-save-url-value="<%= nutrition_meal_nutrition_meal_items_path(meal) %>">
   <header class="nutrition-meal__header nutrition-meal__header--inline">
     <h3><%= meal.name %></h3>
-    <button type="button" class="app-btn app-btn--primary" data-action="meal-picker#open"><span class="material-symbols-rounded" aria-hidden="true">add</span><span>Adicionar Alimento ou Receita</span></button>
+    <button type="button" class="app-btn app-btn--primary" title="Adicionar alimento ou receita" data-action="meal-picker#open"><span class="material-symbols-rounded" aria-hidden="true">add</span><span>Adicionar item</span></button>
   </header>
   <p class="nutrition-meal-picker__status" role="status" aria-live="polite" data-meal-picker-target="managementStatus"></p>
   <div data-meal-picker-target="summary"><%= render "nutrition_meals/items", meal: meal %></div>

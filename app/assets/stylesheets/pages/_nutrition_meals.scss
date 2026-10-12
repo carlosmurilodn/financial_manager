@@ -2,7 +2,9 @@
 .nutrition-meal { padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); color: var(--text-main); }
 .nutrition-meal__header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .nutrition-meal__header h2, .nutrition-meal__header h3 { margin: 0; font-size: 1.1rem; overflow-wrap: anywhere; }
-.nutrition-meal__header--inline { justify-content: flex-start; }
+.nutrition-meal__header--inline { display: grid; grid-template-columns: 140px max-content; justify-content: start; margin-bottom: 0; }
+.nutrition-meal > .nutrition-meal-picker__status:empty { display: none; }
+.nutrition-meal > [data-meal-picker-target="summary"]:has(.nutrition-cards) { margin-top: 12px; }
 .nutrition-meal-picker__header-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
 .nutrition-meal-picker { width: min(1000px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); margin: auto; padding: 20px; border: 1px solid var(--card-border); border-radius: 16px; background: var(--surface); color: var(--text-main); overflow-y: auto; }
 .nutrition-meal-picker::backdrop { background: rgba(0, 0, 0, .45); }
@@ -25,3 +27,4 @@
 .nutrition-meal-picker__result.is-selected { border-color: var(--nav-active-bar); box-shadow: 0 0 0 1px var(--nav-active-bar); }
 .nutrition-quick-registration { width: min(1000px, calc(100vw - 32px)); }
 @media (max-width: 640px) { .nutrition-meal { padding: 12px; } .nutrition-meal-picker { padding: 12px; } .nutrition-meal__header .app-btn { width: 100%; } }
+@media (max-width: 640px) { .nutrition-meal__header--inline { grid-template-columns: minmax(0, 1fr); } .nutrition-meal__header--inline .app-btn { width: auto; justify-self: start; } }

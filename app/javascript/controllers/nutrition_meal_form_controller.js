@@ -6,6 +6,9 @@ export default class extends Controller {
   refresh(event) {
     const data = event.detail
     this.daySummaryTarget.innerHTML = data.day_html
+    const tab = document.getElementById(this.element.getAttribute("aria-labelledby"))
+    const calories = tab?.querySelector(".nutrition-week__tab-calories")
+    if (calories && data.tab_calories) calories.textContent = data.tab_calories
     this.emptyTarget.hidden = data.has_meals
     this.statusTarget.textContent = data.message
   }

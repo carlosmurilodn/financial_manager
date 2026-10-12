@@ -21,11 +21,19 @@
 .calorie-day__form .app-btn { min-height: 44px; }
 @media (max-width: 640px) { .calorie-day { flex-basis: 100%; } }
 
-.nutrition-week { display: flex; flex-direction: column; gap: 16px; width: 100%; min-width: 0; }
-.nutrition-week__tabs { display: flex; gap: 8px; overflow-x: auto; padding: 4px; }
-.nutrition-week__tab { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1 0 auto; gap: 6px; min-height: 44px; padding: 12px 16px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); color: var(--text-soft); font: inherit; font-size: .85rem; font-weight: 700; cursor: pointer; }
+.nutrition-week { display: flex; flex-direction: column; gap: 0; width: 100%; min-width: 0; }
+.nutrition-week__tabs { position: relative; z-index: 1; display: flex; align-items: end; gap: 4px; overflow-x: auto; padding: 4px 0 0; }
+.nutrition-week__tab { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1 0 auto; gap: 6px; min-height: 44px; padding: 10px 16px; border: 1px solid var(--card-border); border-bottom-color: transparent; border-radius: 10px 10px 0 0; background: var(--surface-muted); color: var(--text-soft); font: inherit; font-size: .85rem; font-weight: 700; cursor: pointer; }
 .nutrition-week__tab time { font-size: .8rem; font-weight: 400; }
-.nutrition-week__tab:hover, .nutrition-week__tab[aria-selected="true"] { border-color: var(--nav-active-bar); background: var(--hero-badge-icon-bg); color: var(--nav-active-bar); }
+.nutrition-week__tab { flex-direction: row; justify-content: space-between; gap: 12px; text-align: left; padding: 10px 12px; }
+.nutrition-week__tab-date { display: flex; flex-direction: column; gap: 6px; }
+.nutrition-week__tab-calories { color: var(--text-soft); font-size: .72rem; font-weight: 700; white-space: nowrap; }
+.nutrition-week__tab[aria-selected="true"] .nutrition-week__tab-calories { color: var(--nav-active-bar); }
+.nutrition-week__tab:hover { background: var(--hero-badge-icon-bg); color: var(--nav-active-bar); }
+.nutrition-week__tab[aria-selected="true"] { position: relative; z-index: 1; border-top: 3px solid var(--nav-active-bar); border-bottom-color: var(--surface); background: var(--surface); color: var(--nav-active-bar); }
+.nutrition-week__panel.calorie-day { position: relative; margin-top: -1px; border-radius: 0 0 12px 12px; }
+.nutrition-week:has(.nutrition-week__tab:first-child[aria-selected="false"]) .nutrition-week__panel.calorie-day { border-top-left-radius: 8px; }
+.nutrition-week:has(.nutrition-week__tab:last-child[aria-selected="false"]) .nutrition-week__panel.calorie-day { border-top-right-radius: 8px; }
 .nutrition-week__tab:focus-visible, .nutrition-week__panel:focus-visible { outline: 2px solid var(--nav-active-bar); outline-offset: 2px; }
 .nutrition-week__panel[hidden] { display: none; }
 .nutrition-week__title { margin: 0; font-size: 1rem; font-weight: 700; }

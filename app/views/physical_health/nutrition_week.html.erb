@@ -1,9 +1,6 @@
 <section class="app-page weekly-health-plan-show">
   <div class="app-page__hero"><div class="weekly-health-plan-show__header"><div class="app-page__hero-copy"><span class="app-page__hero-icon"><span class="material-symbols-rounded">restaurant</span></span><div><p class="app-page__eyebrow">Saúde Física</p><h1 class="app-page__title">Alimentação</h1><p class="app-page__description">Semana de <%= @week_start.strftime('%d/%m/%Y') %> a <%= (@week_start + 6.days).strftime('%d/%m/%Y') %></p></div></div><%= link_to edit_health_nutrition_week_path(@week_start.iso8601), class: "app-btn app-btn--primary", data: { turbo: false } do %><span class="material-symbols-rounded">edit</span><span>Editar Semana</span><% end %><%= link_to health_nutrition_week_path(@week_start.iso8601), class: "app-btn app-btn--danger", data: { turbo_method: :delete, turbo_confirm: "Excluir os registros de alimentação e calorias desta semana?" } do %><span class="material-symbols-rounded">delete</span><span>Excluir Semana</span><% end %><%= link_to "Voltar às Semanas", health_nutrition_path, class: "app-btn app-btn--outline", data: { turbo: false } %></div></div>
   <article class="health-card weekly-health-plan-card" style="--health-card-accent: #5c6df2;"><div class="health-card__content">
-    <div class="weekly-health-plan-days"><div class="weekly-health-plan-days__goal">
-      <div class="weekly-health-plan-days__goal-header"><strong>Alimentação e Calorias da Semana</strong><span><%= @nutrition_goal&.completed_count || 0 %> / 7 totalmente</span></div>
-    </div></div>
     <% dates = (0..6).map { |offset| @week_start + offset.days } %>
     <% selected_date = dates.include?(Date.current) ? Date.current : @week_start %>
     <% day_names = %w[Domingo Segunda-feira Terça-feira Quarta-feira Quinta-feira Sexta-feira Sábado] %>
@@ -11,9 +8,11 @@
       <div class="nutrition-week__tabs" role="tablist" aria-label="Dias da semana" aria-orientation="horizontal">
         <% dates.each do |date| %>
           <% selected = date == selected_date %>
+          <% day_items = @nutrition_meals_by_date.fetch(date, []).flat_map { |meal| meal.nutrition_meal_items.to_a } %>
+          <% day_calories = Nutrition::MealSummary.totals(day_items)[:calories] %>
           <button type="button" id="nutrition-tab-<%= date.iso8601 %>" class="nutrition-week__tab" role="tab" aria-controls="nutrition-panel-<%= date.iso8601 %>" aria-selected="<%= selected %>" tabindex="<%= selected ? 0 : -1 %>" data-nutrition-tabs-target="tab" data-action="click->nutrition-tabs#select keydown->nutrition-tabs#navigate">
-            <span><%= day_names[date.wday] %></span>
-            <time datetime="<%= date.iso8601 %>"><%= date.strftime("%d/%m") %></time>
+            <span class="nutrition-week__tab-date"><span><%= day_names[date.wday] %></span><time datetime="<%= date.iso8601 %>"><%= date.strftime("%d/%m") %></time></span>
+            <span class="nutrition-week__tab-calories" aria-live="polite"><%= day_items.empty? ? "Sem registro" : (day_calories.nil? ? "— kcal" : "#{taco_nutrient_value(day_calories)} kcal") %></span>
           </button>
         <% end %>
       </div>

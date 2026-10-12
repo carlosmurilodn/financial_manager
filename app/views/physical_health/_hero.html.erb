@@ -3,11 +3,11 @@
     <div class="app-page__hero-unit app-page__hero-copy self-knowledge-section-hero__heading"><span class="app-page__hero-icon"><%= render "shared/icons/lucide_utensils" %></span><div><p class="app-page__eyebrow">Saúde Física</p><h1 class="app-page__title">Alimentação</h1></div></div>
     <div class="app-page__hero-unit self-knowledge-page-actions"><%= link_to new_health_nutrition_week_path, class: "app-btn app-btn--primary", data: { turbo: false } do %><span><%= render "shared/icons/lucide_plus" %></span><span><strong>Nova Semana</strong></span><% end %></div>
     <div class="app-page__hero-kpis"><div class="physical-health-hero-kpis">
-    <% { calories: ["Média diária de calorias", "flame", "kcal", "blue"], proteins: ["Média diária de proteínas", "ham", "g", "red"], carbohydrates: ["Média diária de carboidratos", "wheat", "g", "green"], fats: ["Média diária de gorduras", "droplet", "g", "yellow"] }.each do |field, (label, icon, unit, color)| %>
+    <% { calories: ["Média de Calorias", "flame", "kcal", "blue"], proteins: ["Média de Proteínas", "ham", "g", "red"], carbohydrates: ["Média de Carboidratos", "wheat", "g", "green"], fats: ["Média de Gorduras", "droplet", "g", "yellow"] }.each do |field, (label, icon, unit, color)| %>
       <% metric = @nutrition_period_summary.fetch(field) %>
-      <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--<%= color %>"><%= render "shared/icons/lucide_#{icon}" %><div><p><%= label %></p><strong><%= metric[:mean].nil? ? "Sem dados" : "#{number_with_precision(metric[:mean], precision: 2, strip_insignificant_zeros: true, separator: ',', delimiter: '.')} #{unit}" %></strong><small><%= metric[:count] %> dias com dados no período filtrado</small></div></article>
+      <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--<%= color %>"><%= render "shared/icons/lucide_#{icon}" %><div><p><%= label %></p><strong><%= metric[:mean].nil? ? "Sem dados" : "#{number_with_precision(metric[:mean], precision: 2, strip_insignificant_zeros: true, separator: ',', delimiter: '.')} #{unit}" %></strong></div></article>
     <% end %>
-    <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--purple"><%= render "shared/icons/lucide_calendar_days" %><div><p>Dias com alimentação registrada</p><strong><%= @nutrition_period_summary[:registered_days].positive? ? @nutrition_period_summary[:registered_days] : "Sem dados" %></strong><small>No período filtrado</small></div></article>
+    <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--purple"><%= render "shared/icons/lucide_calendar_days" %><div><p>Dias Registrados</p><strong><%= @nutrition_period_summary[:registered_days].positive? ? @nutrition_period_summary[:registered_days] : "Sem dados" %></strong></div></article>
     </div></div>
   </div>
 </div>

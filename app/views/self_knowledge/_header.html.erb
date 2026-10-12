@@ -32,7 +32,6 @@
         <div>
           <p><%= kpi[:label] %></p>
           <strong><%= kpi[:value].nil? ? "Sem registro" : kpi[:scale] ? "#{number_with_precision(kpi[:value], precision: 1)} / 5" : kpi[:value] %></strong>
-          <small>No período selecionado</small>
         </div>
       </article>
     <% end %>

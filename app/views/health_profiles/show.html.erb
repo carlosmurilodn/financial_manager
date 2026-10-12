@@ -14,7 +14,7 @@
         ["yellow", "Nascimento", "cake", @health_profile.birth_date&.strftime("%d/%m/%Y") || "Sem registro"],
         ["purple", "Sexo Para Cálculo", "person", HealthProfile::FORMULA_SEXES.key(@health_profile.formula_sex) || "Sem registro"]
       ].each do |color, label, icon, value| %>
-        <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--<%= color %>"><span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span><div><p><%= label %></p><strong><%= value %></strong><small>Dados do perfil</small></div></article>
+        <article class="self-knowledge-hero-kpi self-knowledge-hero-kpi--<%= color %>"><span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span><div><p><%= label %></p><strong><%= value %></strong></div></article>
       <% end %>
     </div>
   </div>

@@ -85,7 +85,7 @@ export default class extends Controller {
   updateDirty() {
     if (!this.editor) return
     this.dirty = this.snapshot() !== this.savedSnapshot
-    if (!this.saving && !this.conflicted) this.setStatus(this.dirty ? "Alterações não salvas. Salvamento automático após pausa na escrita." : "Pronto para escrever.")
+    if (!this.saving && !this.conflicted && !this.error) this.setStatus(this.dirty ? "Alterações não salvas. Salvamento automático após pausa na escrita." : "Pronto para escrever.")
     this.scheduleAutosave()
   }
 
@@ -171,6 +171,7 @@ export default class extends Controller {
       }
       const result = await response.json()
       if (!response.ok) {
+        this.errorFields = result.error_fields || []
         if (response.status === 409) this.conflicted = true
         throw new Error((result.errors || ["Não foi possível salvar."]).join(" "))
       }
@@ -216,6 +217,13 @@ export default class extends Controller {
 
   setStatus(message, error = false) {
     this.error = error
+    this.errorMessage = error ? message : null
+    if (!error) this.errorFields = []
+    this.element.classList.toggle("literary-editor--save-error", error)
+    if (this.hasTitleTarget) this.titleTarget.setAttribute("aria-invalid", String(error && this.errorFields?.includes("title")))
+    const textInvalid = error && this.errorFields?.includes("content")
+    this.hostTarget.classList.toggle("literary-editor-sheet--invalid", !!textInvalid)
+    this.editor?.view?.dom.setAttribute("aria-invalid", String(!!textInvalid))
     this.statusTarget.textContent = message
     this.statusTarget.classList.toggle("literary-editor-status--error", error)
     this.dispatch("status", { detail: { controller: this } })

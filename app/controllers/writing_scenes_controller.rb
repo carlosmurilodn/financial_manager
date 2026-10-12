@@ -87,7 +87,7 @@ class WritingScenesController < WritingChaptersController
 
   def invalid_response(template)
     respond_to do |format|
-      format.json { render json: { errors: @chapter.errors.full_messages }, status: :unprocessable_content }
+      format.json { render json: { errors: @chapter.errors.full_messages, error_fields: @chapter.errors.attribute_names }, status: :unprocessable_content }
       format.html { render "writing_chapters/#{template}", status: :unprocessable_content }
     end
   end

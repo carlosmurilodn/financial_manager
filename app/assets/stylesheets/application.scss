@@ -57,3 +57,16 @@
 @import "pages/writing_publication";
 
 @import "pages/writing_statistics";
+@import "pages/nutrition_recipes";
+@import "pages/nutrition_meals";
+@import "pages/health_spacing";
+@import "pages/health_filters";
+
+// Mesma largura para aplicar e limpar filtros em todos os módulos.
+.app-filter-action.app-btn,
+.app-filter-action.btn {
+  min-width: 168px;
+  width: 168px;
+  flex: 0 0 168px;
+  white-space: nowrap;
+}

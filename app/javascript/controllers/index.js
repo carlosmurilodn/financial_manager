@@ -8,12 +8,20 @@ application.register("select2", Select2Controller)
 import WeeklyGoalsController from "./weekly_goals_controller"
 import HealthWinFormController from "./health_win_form_controller"
 import WeightChartController from "./weight_chart_controller"
-import CalorieStatusController from "./calorie_status_controller"
+import NutritionTabsController from "./nutrition_tabs_controller"
+import NutritionRecipeFormController from "./nutrition_recipe_form_controller"
+import NutritionMealFormController from "./nutrition_meal_form_controller"
+import MealPickerController from "./meal_picker_controller"
+import MealCopyController from "./meal_copy_controller"
 
 application.register("weekly-goals", WeeklyGoalsController)
 application.register("health-win-form", HealthWinFormController)
 application.register("weight-chart", WeightChartController)
-application.register("calorie-status", CalorieStatusController)
+application.register("nutrition-tabs", NutritionTabsController)
+application.register("nutrition-recipe-form", NutritionRecipeFormController)
+application.register("nutrition-meal-form", NutritionMealFormController)
+application.register("meal-picker", MealPickerController)
+application.register("meal-copy", MealCopyController)
 
 import ExerciseEntryFormController from "./exercise_entry_form_controller"
 application.register("exercise-entry-form", ExerciseEntryFormController)

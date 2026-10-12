@@ -1,0 +1,21 @@
+<section class="app-page exercise-entry-show self-knowledge-page">
+  <%= render "breadcrumbs" %>
+  <header class="app-page__hero"><div class="exercise-entry-show__header">
+    <div class="app-page__hero-copy"><span class="app-page__hero-icon"><span class="material-symbols-rounded" aria-hidden="true">menu_book</span></span><div><p class="app-page__eyebrow">Cadastros Básicos · Receitas</p><h1 class="app-page__title"><%= @recipe.name %></h1><p class="app-page__description"><%= taco_nutrient_value(@recipe.final_weight_grams) %> g de preparação pronta · <%= @recipe.servings %> porção(ões)</p></div></div>
+    <div class="exercise-entry-show__actions">
+      <%= link_to nutrition_recipes_path, class: "app-btn app-btn--outline" do %><span class="material-symbols-rounded" aria-hidden="true">arrow_back</span> Voltar<% end %>
+      <%= link_to edit_nutrition_recipe_path(@recipe), class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">edit</span> Editar<% end %>
+      <%= link_to nutrition_recipe_path(@recipe), class: "app-btn app-btn--danger", data: { turbo_method: :delete, turbo_confirm: "Excluir esta receita?" } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span> Excluir<% end %>
+    </div>
+  </div></header>
+  <% if @recipe.description.present? %><article class="app-panel"><h2>Descrição</h2><%= simple_format(@recipe.description) %></article><% end %>
+  <article class="app-panel"><h2>Ingredientes</h2>
+    <div class="nutrition-cards">
+      <% @recipe.nutrition_recipe_ingredients.each do |ingredient| %>
+        <%= render layout: "shared/nutrition_card", locals: { title: ingredient.name, title_path: (ingredient.source == "custom" ? custom_food_path(ingredient.source_id) : taco_food_path(ingredient.source_id)), icon: "restaurant", subtitle: ingredient.source == "custom" ? "Meus Alimentos" : "TACO", meta: { "Quantidade" => "#{taco_nutrient_value(ingredient.quantity_grams)} g" }, nutrients: @calculator.ingredient_totals(ingredient) } do %>
+        <% end %>
+      <% end %>
+    </div>
+  </article>
+  <article class="app-panel"><h2>Totais nutricionais</h2><%= render "totals", totals: @calculator.totals %></article>
+</section>

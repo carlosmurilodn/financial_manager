@@ -64,7 +64,7 @@
         </div>
 
         <div class="app-filter-actions">
-          <%= f.submit "Filtrar", class: "btn app-page__primary-btn" %>
+          <%= f.button class: "btn app-page__primary-btn app-filter-action" do %><span class="material-symbols-rounded" aria-hidden="true">filter_alt</span> Filtrar<% end %>
           <%= link_to "Gerar PDF",
                       report_pdf_expenses_path(format: :pdf, **params.to_unsafe_h),
                       class: "btn app-page__danger-btn" %>

@@ -53,7 +53,7 @@ function buildConfirmModal(message, element) {
     </div>
   `;
 
-  document.body.appendChild(modal);
+  (element?.closest("dialog[open]") || document.body).appendChild(modal);
   return modal;
 }
 
@@ -70,7 +70,7 @@ function closeConfirmModal(modalElement) {
   modalElement.remove();
 }
 
-function showConfirmDialog(message, element) {
+export function showConfirmDialog(message, element) {
   return new Promise((resolve) => {
     const modalElement = buildConfirmModal(message, element);
     let settled = false;
@@ -85,6 +85,7 @@ function showConfirmDialog(message, element) {
 
     const handleKeydown = (event) => {
       if (event.key === "Escape") {
+        event.preventDefault();
         settle(false);
       }
     };

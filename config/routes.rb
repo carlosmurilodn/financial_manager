@@ -70,6 +70,13 @@ Rails.application.routes.draw do
   get "progresso", to: "progress#index", as: :progress
   resource :health_profile, path: "progresso/perfil", only: %i[show create update]
   get "progresso/alimentacao", to: "physical_health#nutrition", as: :health_nutrition
+  post "progresso/alimentacao/:week_start/refeicoes", to: "nutrition_meals#create", as: :nutrition_week_meals
+  resources :nutrition_meals, path: "progresso/alimentacao/refeicoes", only: :destroy do
+    member { post :copy, path: "copiar" }
+    resources :nutrition_meal_items, path: "itens", only: %i[create update destroy] do
+      collection { get :search, path: "pesquisa" }
+    end
+  end
   get "progresso/alimentacao/nova", to: "physical_health#new_nutrition_week", as: :new_health_nutrition_week
   post "progresso/alimentacao", to: "physical_health#create_nutrition_week"
   get "progresso/alimentacao/:week_start/editar", to: "physical_health#edit_nutrition_week", as: :edit_health_nutrition_week
@@ -86,7 +93,6 @@ Rails.application.routes.draw do
       delete :clear_filters
     end
   end
-  resources :daily_calorie_entries, path: "progresso/calorias", param: :occurred_on, only: %i[show create]
   resources :weight_entries, path: "progresso/pesagens", only: %i[index new create edit update destroy] do
     collection do
       delete :clear_filters
@@ -124,6 +130,11 @@ Rails.application.routes.draw do
       delete :clear_filters
     end
   end
+  resources :taco_foods, path: "progresso/cadastros/alimentos", only: %i[index show]
+  resources :nutrition_recipes, path: "progresso/cadastros/receitas" do
+    collection { get :foods, path: "alimentos" }
+  end
+  resources :custom_foods, path: "progresso/cadastros/meus-alimentos", only: %i[new create show edit update destroy]
   resources :muscle_groups, path: "progresso/cadastros/grupos-musculares", only: %i[index new create edit update destroy] do
     collection do
       delete :clear_filters

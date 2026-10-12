@@ -9,7 +9,6 @@ class WeeklyHealthGoalsController < ApplicationController
       day.completed = !day.completed?
       day.save!
       goal.sync_completed_count!
-      Health::RecalculateDailyCalories.new(user: current_user, dates: [ occurred_on ]).call
     end
 
     redirect_to weekly_health_plan_path(goal.weekly_health_plan.week_start.iso8601), notice: "Meta atualizada com sucesso!", status: :see_other

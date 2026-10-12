@@ -1,0 +1,70 @@
+<section class="app-page health-index-page self-knowledge-page">
+  <header class="app-page__hero">
+    <div class="app-page__hero-top self-knowledge-section-hero">
+      <div class="app-page__hero-unit app-page__hero-copy self-knowledge-section-hero__heading">
+        <span class="app-page__hero-icon"><span class="material-symbols-rounded" aria-hidden="true">restaurant</span></span>
+        <div><p class="app-page__eyebrow">Cadastros Básicos</p><h1 class="app-page__title">Alimentos</h1></div>
+      </div>
+      <div class="app-page__hero-unit self-knowledge-page-actions">
+        <%= link_to new_custom_food_path, class: "app-btn app-btn--primary", data: { turbo: false } do %><span><span class="material-symbols-rounded" aria-hidden="true">add</span></span><span><strong>Novo Alimento</strong></span><% end %>
+      </div>
+      <div class="app-page__hero-kpis"><%= render "hero_kpis" %></div>
+    </div>
+  </header>
+
+  <div class="app-panel">
+    <%= render "shared/filter_accordion" do %>
+      <%= form_with url: taco_foods_path, method: :get, local: true, class: "app-filter-form health-food-filters" do |f| %>
+        <div class="health-index-filters">
+          <div class="app-filter-field">
+            <%= f.label :source, "Origem" %>
+            <%= f.select :source, options_for_select([["TACO", "taco"], ["Meus Alimentos", "custom"]], @source_filter), {}, class: "app-form-select" %>
+          </div>
+          <div class="app-filter-field">
+            <%= f.label :name, "Nome" %>
+            <%= f.search_field :name, value: @name_filter, class: "app-form-control", placeholder: "Buscar alimento" %>
+          </div>
+          <div class="app-filter-field">
+            <%= f.label :category, "Categoria" %>
+            <%= f.select :category, options_for_select(@categories, @category_filter), { include_blank: "Todas" }, class: "app-form-select" %>
+          </div>
+        </div>
+        <div class="app-filter-field health-food-filters__sort">
+          <%= f.label :sort_option, "Ordenar por" %>
+          <%= f.select :sort_option, options_for_select(health_combined_sort_options({ "name" => "Nome", "category" => "Categoria", "calories" => "Calorias", "carbohydrates" => "Carboidratos", "proteins" => "Proteínas", "fats" => "Gorduras" }), "#{@sort}:#{@direction}"), {}, class: "app-form-select" %>
+        </div>
+        <div class="app-filter-actions">
+          <%= f.button class: "app-btn app-btn--primary app-page__primary-btn app-filter-action" do %>
+            <span class="material-symbols-rounded" aria-hidden="true">filter_alt</span> Filtrar
+          <% end %>
+          <%= link_to taco_foods_path(source: @source_filter), class: "app-btn app-btn--secondary app-page__secondary-btn app-filter-action" do %>
+            <span class="material-symbols-rounded" aria-hidden="true">filter_alt_off</span> Limpar Filtros
+          <% end %>
+          <%= render "shared/per_page_select", preserve_sort: false %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="app-panel">
+    <% if @taco_foods.any? %>
+      <div class="nutrition-cards">
+        <% @taco_foods.each do |food| %>
+          <%= render layout: "shared/nutrition_card", locals: { title: food.name, title_path: (@source_filter == "custom" ? custom_food_path(food) : taco_food_path(food)), icon: "restaurant", subtitle: "#{food.category} · #{@source_filter == 'custom' ? 'Meus Alimentos' : 'TACO'} · por 100 g", nutrients: NutritionMealItem::NUTRIENTS.index_with { |field| food.public_send(field) } } do %>
+            <% if @source_filter == "custom" %>
+              <%= link_to edit_custom_food_path(food), class: "health-weight-goal-card__action", title: "Editar alimento" do %><span class="material-symbols-rounded" aria-hidden="true">edit</span><span>Editar</span><% end %>
+              <%= link_to custom_food_path(food), class: "health-weight-goal-card__action health-weight-goal-card__action--danger", title: "Excluir alimento", data: { turbo_method: :delete, turbo_confirm: "Excluir este alimento?" } do %><span class="material-symbols-rounded" aria-hidden="true">delete</span><span>Excluir</span><% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="dashboard-empty-state">
+        <span class="material-symbols-rounded" aria-hidden="true">restaurant</span>
+        <strong>Nenhum alimento encontrado</strong>
+        <small>Ajuste os filtros para consultar o catálogo.</small>
+      </div>
+    <% end %>
+    <%= render "shared/pagination", current_page: @current_page, total_pages: @total_pages, base_params: request.query_parameters.except(:page), aria_label: "Paginação de alimentos" %>
+  </div>
+</section>

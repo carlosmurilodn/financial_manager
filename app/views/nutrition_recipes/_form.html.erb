@@ -1,0 +1,57 @@
+<% quick = local_assigns.fetch(:quick_registration, false) %>
+<% from_meal = @source_meal.present? %>
+<% source_input_id = quick ? "recipe-food-source-#{origin_meal.id}" : "recipe_food_source" %>
+<% query_input_id = quick ? "recipe-food-query-#{origin_meal.id}" : "recipe_food_query" %>
+<%= form_with model: recipe, namespace: ("meal_#{origin_meal.id}" if quick), local: true, html: { class: "app-form-page__form", data: { controller: "nutrition-recipe-form", nutrition_recipe_form_search_url_value: foods_nutrition_recipes_path, turbo: false, action: ("submit->meal-picker#saveRegistration" if quick) } } do |f| %>
+  <%= hidden_field_tag :nutrition_meal_id, origin_meal.id, id: nil if quick %>
+  <%= hidden_field_tag :from_meal_id, @source_meal.id, id: nil if from_meal %>
+  <div class="progress-review-form nutrition-recipe-basic-fields">
+    <div><%= f.label :name, "Nome" %><%= f.text_field :name, class: "app-form-control", required: true, placeholder: "Ex.: Bolo de banana" %></div>
+    <div><%= f.label :final_weight_grams, "Peso final da preparação (g)" %><%= f.number_field :final_weight_grams, class: "app-form-control", min: "0.0001", max: "99999999.9999", step: "0.0001", required: true, data: { nutrition_recipe_form_target: "weight", action: "input->nutrition-recipe-form#update" } %></div>
+    <div><%= f.label :servings, from_meal ? "Número de porções (opcional)" : "Número de porções" %><%= f.number_field :servings, class: "app-form-control", min: 1, max: 2147483647, step: 1, required: !from_meal, data: { nutrition_recipe_form_target: "servings", action: "input->nutrition-recipe-form#update" } %><% if from_meal %><small>Se vazio, será considerada 1 porção.</small><% end %></div>
+  </div>
+  <% if from_meal %>
+    <div class="app-filter-field"><%= f.label :description, "Descrição (opcional)" %><%= f.text_area :description, class: "app-form-control", rows: 3 %></div>
+  <% end %>
+
+  <fieldset class="nutrition-recipe-search">
+    <legend>Adicionar ingredientes</legend>
+    <div class="health-index-filters nutrition-recipe-search-fields">
+      <div class="app-filter-field">
+        <span id="<%= source_input_id %>-label">Origem</span>
+        <div class="nutrition-recipe-origins" role="radiogroup" aria-labelledby="<%= source_input_id %>-label">
+          <% [["Todas", "all"], ["TACO", "taco"], ["Meus Alimentos", "custom"]].each do |label, value| %>
+            <label class="app-checkbox" for="<%= source_input_id %>-<%= value %>">
+              <%= radio_button_tag :recipe_food_source, value, value == "all", id: "#{source_input_id}-#{value}", data: { nutrition_recipe_form_target: "source", action: "change->nutrition-recipe-form#scheduleSearch" } %>
+              <span><%= label %></span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+      <div class="app-filter-field"><%= label_tag query_input_id, "Nome do alimento" %><%= search_field_tag :recipe_food_query, nil, id: query_input_id, class: "app-form-control", placeholder: "Pesquisar alimento", data: { nutrition_recipe_form_target: "query", action: "input->nutrition-recipe-form#scheduleSearch keydown.enter->nutrition-recipe-form#search" } %></div>
+    </div>
+    <p class="nutrition-recipe-note" role="status" aria-live="polite" data-nutrition-recipe-form-target="status"></p>
+    <div class="nutrition-recipe-results" data-nutrition-recipe-form-target="results"></div>
+  </fieldset>
+
+  <h2>Ingredientes</h2>
+  <div class="nutrition-recipe-ingredients" data-nutrition-recipe-form-target="items">
+    <%= f.fields_for :nutrition_recipe_ingredients do |ingredient_form| %>
+      <%= render "ingredient_fields", f: ingredient_form %>
+    <% end %>
+  </div>
+  <template data-nutrition-recipe-form-target="template">
+    <%= f.fields_for :nutrition_recipe_ingredients, NutritionRecipeIngredient.new, child_index: "NEW_RECORD" do |ingredient_form| %>
+      <%= render "ingredient_fields", f: ingredient_form %>
+    <% end %>
+  </template>
+  <%= render "totals", totals: Nutrition::RecipeCalculator.new(recipe).totals %>
+  <div class="app-form-page__actions">
+    <% if quick %>
+      <button type="button" class="app-btn app-btn--outline" data-action="meal-picker#cancelRegistration">Cancelar</button>
+    <% else %>
+      <%= link_to "Cancelar", from_meal ? health_nutrition_week_path(@source_meal.occurred_on.beginning_of_week(:monday).iso8601) : nutrition_recipes_path, class: "app-btn app-btn--outline" %>
+    <% end %>
+    <%= f.submit "Salvar Receita", class: "app-btn app-btn--primary" %>
+  </div>
+<% end %>

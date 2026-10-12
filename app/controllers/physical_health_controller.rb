@@ -1,9 +1,10 @@
 class PhysicalHealthController < ApplicationController
+  helper TacoFoodsHelper
+
   def destroy_nutrition_week
     current_user.with_lock do
       load_nutrition_week
       @nutrition_goal&.destroy!
-      current_user.daily_calorie_entries.where(occurred_on: @week_start..(@week_start + 6.days)).destroy_all
       @plan.destroy! if @plan && !@plan.weekly_health_goals.exists?
     end
     redirect_to health_nutrition_path, notice: "Semana excluída.", status: :see_other
@@ -62,10 +63,10 @@ class PhysicalHealthController < ApplicationController
       week = Date.iso8601(params[:week_start].to_s).beginning_of_week(:monday)
       return redirect_to health_nutrition_week_path(week.iso8601)
     end
-    dates = @registered_weeks + current_user.daily_calorie_entries.pluck(:occurred_on)
+    dates = @registered_weeks + current_user.nutrition_meals.distinct.pluck(:occurred_on)
     @weeks = paginate_collection(filter_weeks(dates), per_page: pagination_per_page)
     @plans_by_week = current_user.weekly_health_plans.where(week_start: @weeks).includes(:weekly_health_goals).index_by(&:week_start)
-    @calorie_summaries = Health::WeeklyCalorieSummaryQuery.new(user: current_user, weeks: @weeks).call
+    @calorie_summaries = Health::WeeklyNutritionSummaryQuery.new(user: current_user, weeks: @weeks).call
     @calorie_counts = @calorie_summaries.transform_values { |summary| summary[:consumed][:count] }
   rescue ArgumentError
     redirect_to health_nutrition_path, alert: "Semana inválida."
@@ -73,8 +74,12 @@ class PhysicalHealthController < ApplicationController
 
   def nutrition_week
     load_nutrition_week
-    @daily_calorie_entries_by_date = current_user.daily_calorie_entries.where(occurred_on: @week_start..@week_start + 6.days).index_by(&:occurred_on)
-    @health_profile = current_user.health_profile
+    Nutrition::EnsureWeekMeals.new(user: current_user, week_start: @week_start).call
+    @nutrition_meals_by_date = current_user.nutrition_meals.includes(:nutrition_meal_items)
+      .where(occurred_on: @week_start..@week_start + 6.days).order(:created_at, :id).group_by(&:occurred_on)
+    @nutrition_meals_by_date.transform_values! do |meals|
+      meals.sort_by { |meal| Nutrition::EnsureWeekMeals::DEFAULT_NAMES.index(meal.name) || 5 }
+    end
   rescue ArgumentError
     redirect_to health_nutrition_path, alert: "Semana inválida."
   end
@@ -120,10 +125,14 @@ class PhysicalHealthController < ApplicationController
   def load_nutrition_hero
     goals = current_user.weekly_health_goals.includes(:weekly_health_plan).select { |goal| goal.name.parameterize == "alimentacao" }
     @registered_weeks = goals.map { |goal| goal.weekly_health_plan.week_start }.uniq
+    meal_dates = current_user.nutrition_meals.distinct.pluck(:occurred_on)
+    @registered_weeks |= meal_dates.map { |date| date.beginning_of_week(:monday) }
+    consumption_dates = meal_dates
+    consumption = Health::DailyConsumptionQuery.new(user: current_user, dates: consumption_dates).call
     @hero_kpis = [
       ["Semanas Registradas", "calendar_month", @registered_weeks.size],
       ["Dias de Alimentação", "restaurant", goals.sum(&:completed_count)],
-      ["Calorias Preenchidas", "local_fire_department", current_user.daily_calorie_entries.where.not(consumed_calories: nil).count]
+      ["Calorias Preenchidas", "local_fire_department", consumption.values.count { |day| !day[:calories].nil? }]
     ]
   end
 

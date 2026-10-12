@@ -1,0 +1,39 @@
+.nutrition-recipe-search { display: flex; flex-direction: column; gap: 12px; min-width: 0; padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; }
+.nutrition-recipe-search legend { color: var(--text-main); font-size: 1rem; font-weight: 700; }
+.nutrition-recipe-results, .nutrition-recipe-ingredients { display: flex; flex-direction: column; gap: 12px; }
+.nutrition-recipe-result, .nutrition-recipe-ingredient__header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.nutrition-recipe-result { padding: 12px; border: 1px solid var(--card-border); border-radius: 10px; background: var(--surface); color: var(--text-main); }
+.nutrition-recipe-result__identity { display: flex; flex: 1; flex-wrap: wrap; align-items: center; gap: 12px 16px; min-width: 0; }
+.nutrition-recipe-result__nutrients { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: .72rem; }
+.nutrition-recipe-result__nutrients span { white-space: nowrap; }
+.nutrition-recipe-result__badge { padding: 3px 7px; border: 1px solid color-mix(in srgb, var(--nutrient-color) 40%, var(--card-border)); border-radius: 999px; background: color-mix(in srgb, var(--nutrient-color) 14%, var(--surface)); color: color-mix(in srgb, var(--nutrient-color) 70%, var(--text-main)); font-weight: 700; }
+.nutrition-recipe-result__badge--calories { --nutrient-color: #5c6df2; }
+.nutrition-recipe-result__badge--carbohydrates { --nutrient-color: #22a06b; }
+.nutrition-recipe-result__badge--proteins { --nutrient-color: #dc3545; }
+.nutrition-recipe-result__badge--fats { --nutrient-color: #d9a620; }
+.nutrition-recipe-ingredient { display: flex; flex-direction: column; gap: 12px; padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); color: var(--text-main); }
+.nutrition-recipe-ingredient[hidden] { display: none; }
+.nutrition-recipe-ingredient__header small { display: block; color: var(--text-soft); }
+.nutrition-recipe-note { margin: 0; color: var(--text-soft); font-size: .85rem; overflow-wrap: anywhere; }
+.nutrition-recipe-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.nutrition-cards { display: flex; flex-direction: column; gap: 12px; }
+.nutrition-card .health-weight-goal-card__content { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.nutrition-card .health-weight-goal-card__identity-main { flex: 1; min-width: min(220px, 100%); }
+.nutrition-card__subtitle { color: var(--text-soft); }
+.nutrition-card__meta { display: flex; flex-wrap: wrap; gap: 16px; }
+.nutrition-card__meta small, .nutrition-card__meta strong { display: block; }
+.nutrition-card__meta small { color: var(--text-soft); }
+.nutrition-card__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.nutrition-card__actions:empty { display: none; }
+.nutrition-recipe-origins { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; min-height: 44px; }
+.nutrition-recipe-origins input[type="radio"] { accent-color: var(--nav-active-bar); }
+.health-index-filters.nutrition-recipe-search-fields { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 16px; align-items: end; }
+.nutrition-recipe-search-fields > .app-filter-field { min-width: 0; }
+@media (max-width: 640px) { .health-index-filters.nutrition-recipe-search-fields { grid-template-columns: minmax(0, 1fr); } }
+.progress-review-form.nutrition-recipe-basic-fields { display: grid; grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+.nutrition-recipe-basic-fields > div { min-width: 0; }
+@media (max-width: 640px) { .progress-review-form.nutrition-recipe-basic-fields { grid-template-columns: minmax(0, 1fr); } }
+.app-table.nutrition-recipe-table > :not(caption) > * > * { border: 1px solid var(--table-border-color); }
+.app-table.nutrition-recipe-table tbody tr:nth-child(even) > * { background: color-mix(in srgb, var(--surface-muted) 65%, var(--table-surface)); }
+.app-table.nutrition-recipe-table thead th { background: var(--surface-muted); }
+.app-table.nutrition-recipe-table tbody tr:hover > * { background: var(--table-hover-bg); }

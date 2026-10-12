@@ -1,0 +1,34 @@
+<section class="app-page exercise-entry-show self-knowledge-page">
+  <%= render "breadcrumbs" %>
+  <header class="app-page__hero">
+    <div class="exercise-entry-show__header">
+      <div class="app-page__hero-copy">
+        <span class="app-page__hero-icon"><span class="material-symbols-rounded" aria-hidden="true">restaurant</span></span>
+        <div>
+          <p class="app-page__eyebrow">Cadastros Básicos · Alimentos</p>
+          <h1 class="app-page__title"><%= @custom_food.name %></h1>
+          <p class="app-page__description"><%= @custom_food.category %> · Meus Alimentos</p>
+        </div>
+      </div>
+      <div class="exercise-entry-show__actions">
+        <%= link_to edit_custom_food_path(@custom_food), class: "app-btn app-btn--primary", title: "Editar alimento" do %>
+          <span class="material-symbols-rounded" aria-hidden="true">edit</span><span>Editar</span>
+        <% end %>
+        <%= link_to custom_food_path(@custom_food), class: "app-btn app-btn--danger", title: "Excluir alimento", data: { turbo_method: :delete, turbo_confirm: "Excluir este alimento?" } do %>
+          <span class="material-symbols-rounded" aria-hidden="true">delete</span><span>Excluir</span>
+        <% end %>
+        <%= link_to taco_foods_path(source: "custom"), class: "app-btn app-btn--outline" do %>
+          <span class="material-symbols-rounded" aria-hidden="true">arrow_back</span><span>Voltar aos Alimentos</span>
+        <% end %>
+      </div>
+    </div>
+  </header>
+  <article class="app-panel exercise-entry-show__item">
+    <header class="exercise-entry-show__item-header"><h2>Informações nutricionais por 100 g</h2></header>
+    <dl class="exercise-entry-show__details">
+      <% { calories: "Calorias (kcal)", carbohydrates: "Carboidratos (g)", proteins: "Proteínas (g)", fats: "Gorduras (g)", fiber: "Fibras (g)" }.each do |field, label| %>
+        <div><dt><%= label %></dt><dd><%= taco_nutrient_value(@custom_food.public_send(field)) %></dd></div>
+      <% end %>
+    </dl>
+  </article>
+</section>

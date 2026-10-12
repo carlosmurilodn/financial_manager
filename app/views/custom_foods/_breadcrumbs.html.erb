@@ -1,0 +1,4 @@
+<% items = [["Saúde e Bem-Estar", progress_path], ["Cadastros Básicos", taco_foods_path], ["Alimentos", taco_foods_path(source: "custom")]] %>
+<% items << [@custom_food.name, custom_food_path(@custom_food)] if @custom_food.persisted? %>
+<% items << [action_name == "new" || action_name == "create" ? "Novo Alimento" : "Editar Alimento", nil] unless action_name == "show" %>
+<%= render "shared/breadcrumbs", items: items %>

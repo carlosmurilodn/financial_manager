@@ -48,4 +48,11 @@ module ProgressHelper
       "#{sign}#{pluralize(amount, 'registro', 'registros')}"
     end
   end
+
+  def progress_metric(value, unit: "kcal", signed: false)
+    return "Sem dados" if value.nil?
+
+    prefix = signed && value.positive? ? "+" : ""
+    "#{prefix}#{number_with_precision(value, precision: 2, strip_insignificant_zeros: true, separator: ',', delimiter: '.')} #{unit}"
+  end
 end

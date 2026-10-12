@@ -65,7 +65,6 @@
 
     <% if local_assigns[:show_details] %>
       <%= render "daily_goals", weekly_health_plan: weekly_health_plan %>
-      <%= render "daily_calorie_entries/week", week_start: weekly_health_plan.week_start, entries_by_date: @daily_calorie_entries_by_date, health_profile: @health_profile %>
     <% end %>
   </div>
 </div>

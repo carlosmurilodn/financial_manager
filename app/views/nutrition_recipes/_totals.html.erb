@@ -1,0 +1,12 @@
+<div class="nutrition-cards">
+  <% { whole: "Receita inteira", per_100g: "Por 100 g", per_serving: "Por porção" }.each do |basis, label| %>
+    <%= render layout: "shared/nutrition_card", locals: { title: label, icon: "monitoring" } do %>
+      <div class="nutrition-recipe-result__nutrients">
+        <% { calories: "Calorias (kcal)", carbohydrates: "Carboidratos (g)", proteins: "Proteínas (g)", fats: "Gorduras (g)" }.each do |field, name| %>
+          <span class="nutrition-recipe-result__badge nutrition-recipe-result__badge--<%= field %>"><%= name %>: <span data-nutrition-recipe-form-target="total" data-basis="<%= basis %>" data-nutrient="<%= field %>"><%= taco_nutrient_value(totals.dig(basis, field)) %></span></span>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+<p class="nutrition-recipe-note">“—” indica informação nutricional ausente ou quantidade ainda não informada. Nutrientes ausentes em um ingrediente deixam o respectivo total não informado.</p>

@@ -22,10 +22,12 @@ module ApplicationHelper
     health_wins
     health_profiles
     physical_health
-    daily_calorie_entries
     exercise_entries
     muscle_groups
     strength_exercise_catalogs
+    taco_foods
+    custom_foods
+    nutrition_recipes
   ].freeze
 
   def personal_development_section?
@@ -59,7 +61,11 @@ module ApplicationHelper
     when :milestones
       controller_name == "health_weight_goals"
     when :basic_registries
-      health_nav_active?(:profile) || health_nav_active?(:milestones) || health_nav_active?(:muscle_groups) || health_nav_active?(:strength_exercises)
+      health_nav_active?(:profile) || health_nav_active?(:milestones) || health_nav_active?(:muscle_groups) || health_nav_active?(:strength_exercises) || health_nav_active?(:foods) || health_nav_active?(:recipes)
+    when :recipes
+      controller_name == "nutrition_recipes"
+    when :foods
+      controller_name.in?(%w[taco_foods custom_foods])
     when :muscle_groups
       controller_name == "muscle_groups"
     when :strength_exercises
@@ -73,7 +79,7 @@ module ApplicationHelper
     when :beyond_scale
       controller_name.in?(%w[self_knowledge health_journal_entries health_weekly_reflections weekly_wellbeings weekly_health_reviews])
     when :goals
-      controller_name.in?(%w[weekly_health_plans daily_calorie_entries])
+      controller_name.in?(%w[weekly_health_plans])
     when :questions
       controller_name == "weekly_health_reviews"
     when :wins

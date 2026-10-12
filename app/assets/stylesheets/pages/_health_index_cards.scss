@@ -1296,3 +1296,16 @@ html[data-theme="night"] .progress-activity-day.is-not-done { color: #fb8ba1; }
   .exercise-entry-show__actions .app-btn { flex: 1 1 auto; justify-content: center; }
   .exercise-entry-show__exercise-image { height: 280px; }
 }
+
+.nutrition-page .nutrition-week-card .health-card__identity-block { flex: 0 1 auto; }
+.nutrition-page .nutrition-week-card__badges { display: flex; flex: 1 1 360px; flex-wrap: wrap; gap: 8px; }
+.nutrition-page .nutrition-week-card .health-card__actions { flex: 0 0 auto; margin-left: 0; }
+.nutrition-week-card__badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 8px; border: 1px solid color-mix(in srgb, var(--week-badge-color) 35%, var(--card-border)); border-radius: 999px; background: color-mix(in srgb, var(--week-badge-color) 10%, var(--surface)); color: var(--text-main); font-size: .72rem; white-space: nowrap; }
+.nutrition-week-card__badge .material-symbols-rounded { color: var(--week-badge-color); font-size: 16px; }
+.nutrition-week-card__badge--blue { --week-badge-color: #5c6df2; }
+.nutrition-week-card__badge--red { --week-badge-color: #dc3545; }
+.nutrition-week-card__badge--green { --week-badge-color: #22a06b; }
+@media (max-width: 640px) {
+  .nutrition-page .nutrition-week-card .health-card__identity-block, .nutrition-page .nutrition-week-card__badges { flex-basis: 100%; }
+  .nutrition-page .nutrition-week-card .health-card__actions { margin-left: auto; }
+}

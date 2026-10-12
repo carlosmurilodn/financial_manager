@@ -19,6 +19,7 @@
     </div>
   </div>
 
+  <%= render "physical_summary" %>
   <%= render "weekly_progress" %>
 
   <div id="historico-peso" class="progress-weight-overview">
@@ -27,8 +28,8 @@
       <div class="progress-panel__header">
         <span class="material-symbols-rounded">monitor_weight</span>
         <div>
-          <p class="app-page__eyebrow">Referência geral</p>
-          <h2>Histórico de peso</h2>
+          <p class="app-page__eyebrow">Semana selecionada</p>
+          <h2>Registros de peso</h2>
         </div>
       </div>
       <%= link_to "Registrar peso", new_weight_entry_path, class: "app-btn app-btn--primary", data: { turbo: false } %>
@@ -51,7 +52,7 @@
         <% end %>
       </ul>
     <% else %>
-      <p class="progress-empty">Nenhum peso registrado ainda. Comece quando fizer sentido para você; consistência vale mais que uma medição isolada.</p>
+      <p class="progress-empty">Sem dados de peso na semana selecionada.</p>
     <% end %>
     </div>
   </article>

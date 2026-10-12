@@ -1,0 +1,17 @@
+<% items = meals.flat_map { |meal| meal.nutrition_meal_items.to_a } %>
+<section class="nutrition-day-summary" aria-label="Total consumido no dia">
+  <h3>Total consumido no dia</h3>
+  <% if items.empty? %>
+    <p class="nutrition-week__empty">Nenhum alimento registrado neste dia</p>
+  <% else %>
+    <% totals = Nutrition::MealSummary.totals(items) %>
+    <div class="nutrition-day-summary__kpis">
+      <% { calories: ["Calorias", "kcal", "local_fire_department"], carbohydrates: ["Carboidratos", "g", "grain"], proteins: ["Proteínas", "g", "fitness_center"], fats: ["Gorduras", "g", "water_drop"] }.each do |field, (label, unit, icon)| %>
+        <article class="self-knowledge-hero-kpi nutrition-day-kpi nutrition-day-kpi--<%= field %>">
+          <span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span>
+          <div><p><%= label %></p><strong><%= taco_nutrient_value(totals[field]) %></strong></div>
+        </article>
+      <% end %>
+    </div>
+  <% end %>
+</section>

@@ -1,0 +1,23 @@
+<% ingredient = f.object %>
+<article class="nutrition-recipe-ingredient" data-nutrition-recipe-form-target="ingredient" data-nutrients="<%= ingredient.attributes.slice(*NutritionRecipeIngredient::NUTRIENTS.map(&:to_s)).to_json %>" <%= "hidden" if ingredient.marked_for_destruction? %>>
+  <%= f.hidden_field :id if ingredient.persisted? %>
+  <%= f.hidden_field :source, data: { ingredient_field: "source" } %>
+  <%= f.hidden_field :source_id, data: { ingredient_field: "source_id" } %>
+  <%= f.hidden_field :_destroy, value: ingredient.marked_for_destruction? ? "1" : "0", data: { ingredient_field: "destroy" } %>
+  <header class="nutrition-recipe-ingredient__header">
+    <div><strong data-ingredient-name><%= ingredient.name.presence || "Alimento indisponível" %></strong><small data-ingredient-source><%= ingredient.source == "custom" ? "Meus Alimentos" : "TACO" %></small></div>
+    <button type="button" class="app-btn app-btn--danger" title="Remover ingrediente" data-action="nutrition-recipe-form#remove"><span class="material-symbols-rounded" aria-hidden="true">delete</span><span>Remover</span></button>
+  </header>
+  <div class="app-filter-field">
+    <%= f.label :quantity_grams, "Quantidade (g)" %>
+    <%= f.number_field :quantity_grams, class: "app-form-control", min: "0.0001", max: "99999999.9999", step: "0.0001", required: true, disabled: ingredient.marked_for_destruction?, data: { ingredient_field: "quantity", action: "input->nutrition-recipe-form#update" } %>
+  </div>
+  <dl class="exercise-entry-show__details">
+    <% { calories: "Calorias (kcal)", carbohydrates: "Carboidratos (g)", proteins: "Proteínas (g)", fats: "Gorduras (g)" }.each do |field, label| %>
+      <div><dt><%= label %></dt><dd data-ingredient-nutrient="<%= field %>">—</dd></div>
+    <% end %>
+  </dl>
+  <% if ingredient.errors.any? %>
+    <div class="app-alert app-alert--danger" role="alert"><%= ingredient.errors.full_messages.join(". ") %></div>
+  <% end %>
+</article>

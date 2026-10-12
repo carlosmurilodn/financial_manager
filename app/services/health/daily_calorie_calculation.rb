@@ -12,10 +12,13 @@ module Health
       [ true, true, true ] => BigDecimal("1.725")
     }.freeze
 
-    def initialize(user:, occurred_on:, consumed_calories:)
+    def initialize(user:, occurred_on:, consumed_calories:, profile: :load, reference_weight: :load, exercise_types: nil)
       @user = user
       @date = occurred_on
       @consumed_calories = consumed_calories
+      @profile = profile
+      @reference_weight = reference_weight
+      @exercise_types = exercise_types
     end
 
     def call
@@ -24,8 +27,8 @@ module Health
         height_cm: nil, birth_date: nil, age: nil, formula_sex: nil,
         bmr: nil, tdee: nil, calorie_deficit: nil, calculated_at: Time.current
       )
-      profile = @user.health_profile
-      weight = @user.weight_entries.where("measured_on <= ?", @date).order(measured_on: :desc).first
+      profile = @profile == :load ? @user.health_profile : @profile
+      weight = @reference_weight == :load ? @user.weight_entries.where("measured_on <= ?", @date).order(measured_on: :desc).first : @reference_weight
       snapshot.merge!(reference_weight_kg: weight.weight_kg, reference_weight_date: weight.measured_on) if weight
       return pending(snapshot, "missing_profile") unless profile
 
@@ -51,7 +54,7 @@ module Health
     private
 
     def activity_snapshot
-      exercise_types = @user.exercise_entries
+      exercise_types = @exercise_types || @user.exercise_entries
         .joins(:exercise_items)
         .where(performed_on: @date)
         .distinct

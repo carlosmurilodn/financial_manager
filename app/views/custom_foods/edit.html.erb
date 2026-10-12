@@ -1,0 +1,3 @@
+<%= render layout: "shared/form_page", locals: { resource: @custom_food, title: "Editar Alimento", eyebrow: "Cadastros Básicos", description: "Informe os valores nutricionais por 100 g.", icon: "restaurant", back_path: custom_food_path(@custom_food), breadcrumb_partial: "custom_foods/breadcrumbs" } do %>
+  <%= render "form", custom_food: @custom_food %>
+<% end %>

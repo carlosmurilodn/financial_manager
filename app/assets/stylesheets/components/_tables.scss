@@ -31,3 +31,19 @@
   color: var(--table-row-text);
   font-size: 0.82rem;
 }
+
+.app-table.taco-foods-table > :not(caption) > * > * {
+  border: 1px solid var(--table-border-color);
+}
+
+.app-table.taco-foods-table thead th {
+  background-color: var(--surface-muted);
+}
+
+.app-table.taco-foods-table tbody tr:nth-child(even) > * {
+  background-color: color-mix(in srgb, var(--surface-muted) 65%, var(--table-surface));
+}
+
+.app-table.taco-foods-table tbody tr:hover > * {
+  background-color: var(--table-hover-bg);
+}

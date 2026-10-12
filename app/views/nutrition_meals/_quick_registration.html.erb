@@ -1,0 +1,13 @@
+<div class="app-panel app-form-page__panel">
+  <p class="app-page__eyebrow"><%= meal.name %> · <%= meal.occurred_on.strftime("%d/%m/%Y") %></p>
+  <%= render "shared/breadcrumbs", items: [[title, nil]] %>
+  <div data-registration-errors>
+  <% if resource.errors.any? %>
+    <div class="app-alert app-alert--danger app-form-page__errors" role="alert">
+      <strong>Revise os campos abaixo:</strong>
+      <ul><% resource.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul>
+    </div>
+  <% end %>
+  </div>
+  <%= render form_partial, **form_locals.merge(quick_registration: true, origin_meal: meal) %>
+</div>

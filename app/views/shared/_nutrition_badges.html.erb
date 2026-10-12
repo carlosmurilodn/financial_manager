@@ -1,0 +1,5 @@
+<div class="nutrition-recipe-result__nutrients">
+  <% { calories: ["Calorias", "kcal"], carbohydrates: ["Carboidratos", "g"], proteins: ["Proteínas", "g"], fats: ["Gorduras", "g"] }.each do |field, (label, unit)| %>
+    <span class="nutrition-recipe-result__badge nutrition-recipe-result__badge--<%= field %>"><%= label %>: <%= taco_nutrient_value(values[field]) %><%= " #{unit}" unless values[field].nil? %></span>
+  <% end %>
+</div>

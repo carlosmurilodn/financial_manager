@@ -1,0 +1,3 @@
+<%= render layout: "shared/form_page", locals: { resource: @recipe, title: "Nova Receita", eyebrow: "Cadastros Básicos", description: "Adicione ingredientes e informe o peso final da preparação e o número de porções.", icon: "menu_book", back_path: nutrition_recipes_path } do %>
+  <%= render "form", recipe: @recipe %>
+<% end %>

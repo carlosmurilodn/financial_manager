@@ -18,11 +18,13 @@
         <% end %>
       </div>
       <% dates.each do |date| %>
-        <section id="nutrition-panel-<%= date.iso8601 %>" class="nutrition-week__panel calorie-day" role="tabpanel" aria-labelledby="nutrition-tab-<%= date.iso8601 %>" tabindex="0" data-nutrition-tabs-target="panel" data-controller="nutrition-meal-form" <%= "hidden" unless date == selected_date %>>
+        <section id="nutrition-panel-<%= date.iso8601 %>" class="nutrition-week__panel calorie-day" role="tabpanel" aria-labelledby="nutrition-tab-<%= date.iso8601 %>" tabindex="0" data-nutrition-tabs-target="panel" data-controller="nutrition-meal-form" data-action="nutrition-meals:changed->nutrition-meal-form#refresh" <%= "hidden" unless date == selected_date %>>
           <div class="calorie-day__header">
             <h2 class="nutrition-week__title"><%= day_names[date.wday] %></h2>
             <time datetime="<%= date.iso8601 %>"><%= date.strftime("%d/%m/%Y") %></time>
           </div>
+          <% meals = @nutrition_meals_by_date.fetch(date, []) %>
+          <div data-nutrition-meal-form-target="daySummary" aria-live="polite"><%= render "nutrition_meals/day_summary", meals: meals %></div>
           <%= form_with scope: :nutrition_meal, url: nutrition_week_meals_path(@week_start.iso8601), class: "app-filter-form", data: { action: "submit->nutrition-meal-form#create" } do |f| %>
             <%= f.hidden_field :occurred_on, value: date.iso8601 %>
             <div class="app-filter-field">
@@ -33,7 +35,6 @@
             <div class="app-filter-actions"><%= f.button type: "submit", class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">add</span><span>Adicionar Refeição</span><% end %></div>
           <% end %>
           <p class="nutrition-meal-picker__status" role="status" aria-live="polite" data-nutrition-meal-form-target="status"></p>
-          <% meals = @nutrition_meals_by_date.fetch(date, []) %>
           <p class="nutrition-week__empty" data-nutrition-meal-form-target="empty" <%= "hidden" if meals.any? %>>Nenhuma refeição registrada</p>
           <div class="nutrition-meals" data-nutrition-meal-form-target="meals"><%= render partial: "nutrition_meals/meal", collection: meals, as: :meal %></div>
         </section>

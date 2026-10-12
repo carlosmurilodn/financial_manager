@@ -71,8 +71,8 @@ Rails.application.routes.draw do
   resource :health_profile, path: "progresso/perfil", only: %i[show create update]
   get "progresso/alimentacao", to: "physical_health#nutrition", as: :health_nutrition
   post "progresso/alimentacao/:week_start/refeicoes", to: "nutrition_meals#create", as: :nutrition_week_meals
-  resources :nutrition_meals, path: "progresso/alimentacao/refeicoes", only: [] do
-    resources :nutrition_meal_items, path: "itens", only: :create do
+  resources :nutrition_meals, path: "progresso/alimentacao/refeicoes", only: :destroy do
+    resources :nutrition_meal_items, path: "itens", only: %i[create update destroy] do
       collection { get :search, path: "pesquisa" }
     end
   end

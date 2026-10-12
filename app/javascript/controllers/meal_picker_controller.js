@@ -1,10 +1,11 @@
 import { Controller } from "@hotwired/stimulus"
+import { showConfirmDialog } from "../confirm_dialog"
 
 const NUTRIENTS = { calories: "Calorias (kcal)", carbohydrates: "Carboidratos (g)", proteins: "Proteínas (g)", fats: "Gorduras (g)" }
 const SOURCES = { taco: "TACO", custom: "Meus Alimentos", recipe: "Receitas" }
 
 export default class extends Controller {
-  static targets = ["dialog", "source", "query", "results", "status", "summary", "done"]
+  static targets = ["dialog", "source", "query", "results", "status", "managementStatus", "summary", "done"]
   static values = { searchUrl: String, saveUrl: String }
 
   connect() {
@@ -140,7 +141,7 @@ export default class extends Controller {
       const data = await response.json()
       confirmed = response.ok || response.status === 422
       if (!response.ok) throw new Error(data.error || "Não foi possível salvar.")
-      this.summaryTargets.forEach(summary => { summary.innerHTML = data.html })
+      this.applyResponse(data)
       state.token = null
       state.uncertain = false
       this.setStatus(data.message)
@@ -154,6 +155,60 @@ export default class extends Controller {
     }
   }
 
+  updateItem(event) {
+    event.preventDefault()
+    const form = event.currentTarget
+    if (!form.reportValidity()) return
+    this.manage(form.action, "PATCH", new FormData(form))
+  }
+
+  deleteItem(event) {
+    const button = event.currentTarget
+    this.manage(button.dataset.url, "DELETE", null, button)
+  }
+
+  deleteMeal(event) {
+    const button = event.currentTarget
+    this.manage(button.dataset.url, "DELETE", null, button, true)
+  }
+
+  async manage(url, method, body, confirmation = null, removeMeal = false) {
+    if (this.saving) return
+    this.saving = true
+    this.updateBusyState()
+    try {
+      if (confirmation && !await showConfirmDialog(confirmation.dataset.turboConfirm, confirmation)) return
+      this.setStatus("Atualizando refeição…")
+      const response = await fetch(url, {
+        method, body,
+        headers: { Accept: "application/json", "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content }
+      })
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || "Não foi possível atualizar a refeição.")
+      if (removeMeal) {
+        const day = this.element.closest("[data-controller~='nutrition-meal-form']")
+        this.dialogTarget.close()
+        this.element.remove()
+        day.dispatchEvent(new CustomEvent("nutrition-meals:changed", { detail: data }))
+      } else {
+        this.applyResponse(data)
+        this.setStatus(data.message)
+      }
+    } catch (error) {
+      this.setStatus(error.message === "Failed to fetch" ? "Falha de conexão. Dados informados preservados; tente novamente." : error.message, true)
+    } finally {
+      this.saving = false
+      this.updateBusyState()
+    }
+  }
+
+  applyResponse(data) {
+    this.summaryTargets.forEach(summary => {
+      summary.innerHTML = summary.closest("dialog") ? data.picker_html : data.html
+    })
+    this.element.dispatchEvent(new CustomEvent("nutrition-meals:changed", { bubbles: true, detail: data }))
+  }
+
   updateBusyState() {
     this.doneTarget.disabled = Boolean(this.saving)
     this.resultsTarget.querySelectorAll("[data-add]").forEach(button => { button.disabled = Boolean(this.saving) })
@@ -162,10 +217,15 @@ export default class extends Controller {
       input.disabled = Boolean(this.saving)
       input.readOnly = state.uncertain
     })
+    this.element.querySelectorAll(".nutrition-meal-item-quantity button, .nutrition-meal-item-quantity input[type='number'], [data-action='meal-picker#deleteItem'], [data-action='meal-picker#deleteMeal']").forEach(control => {
+      control.disabled = Boolean(this.saving)
+    })
   }
 
   setStatus(message, error = false) {
     this.statusTarget.textContent = message
     this.statusTarget.classList.toggle("is-error", error)
+    this.managementStatusTarget.textContent = message
+    this.managementStatusTarget.classList.toggle("is-error", error)
   }
 }

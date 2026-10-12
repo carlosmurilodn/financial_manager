@@ -2,7 +2,9 @@
   <header class="nutrition-meal__header">
     <h3><%= meal.name %></h3>
     <button type="button" class="app-btn app-btn--primary" data-action="meal-picker#open"><span class="material-symbols-rounded" aria-hidden="true">add</span><span>Adicionar Alimento ou Receita</span></button>
+    <button type="button" class="app-btn app-btn--danger" title="Excluir refeição" data-action="meal-picker#deleteMeal" data-url="<%= nutrition_meal_path(meal) %>" data-turbo-method="delete" data-turbo-confirm="Excluir esta refeição e todos os seus itens?"><span class="material-symbols-rounded" aria-hidden="true">delete</span><span>Excluir Refeição</span></button>
   </header>
+  <p class="nutrition-meal-picker__status" role="status" aria-live="polite" data-meal-picker-target="managementStatus"></p>
   <div data-meal-picker-target="summary"><%= render "nutrition_meals/items", meal: meal %></div>
   <dialog class="nutrition-meal-picker" aria-labelledby="meal-picker-title-<%= meal.id %>" data-meal-picker-target="dialog" data-action="cancel->meal-picker#cancel">
     <div class="nutrition-meal-picker__content">
@@ -16,7 +18,7 @@
       </form>
       <p class="nutrition-meal-picker__status" role="status" aria-live="polite" data-meal-picker-target="status"></p>
       <div class="nutrition-meal-picker__results" data-meal-picker-target="results"></div>
-      <section class="nutrition-meal-picker__summary"><h3>Itens adicionados</h3><div data-meal-picker-target="summary"><%= render "nutrition_meals/items", meal: meal %></div></section>
+      <section class="nutrition-meal-picker__summary"><h3>Itens adicionados</h3><div data-meal-picker-target="summary"><%= render "nutrition_meals/items", meal: meal, context: "picker" %></div></section>
       <div class="app-form-page__actions"><button type="button" class="app-btn app-btn--primary" data-meal-picker-target="done" data-action="meal-picker#close">Concluir</button></div>
     </div>
   </dialog>

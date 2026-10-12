@@ -1,7 +1,14 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["meals", "empty", "status"]
+  static targets = ["meals", "empty", "status", "daySummary"]
+
+  refresh(event) {
+    const data = event.detail
+    this.daySummaryTarget.innerHTML = data.day_html
+    this.emptyTarget.hidden = data.has_meals
+    this.statusTarget.textContent = data.message
+  }
 
   async create(event) {
     event.preventDefault()
@@ -21,7 +28,7 @@ export default class extends Controller {
       const data = await response.json()
       if (!response.ok) throw new Error(data.error || "Não foi possível salvar a refeição.")
       this.mealsTarget.insertAdjacentHTML("beforeend", data.html)
-      this.emptyTarget.hidden = true
+      this.refresh({ detail: data })
       form.reset()
       this.statusTarget.textContent = data.message
     } catch (error) {

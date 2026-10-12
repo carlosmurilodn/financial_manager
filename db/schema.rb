@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_12_031000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_12_040000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -333,12 +333,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_12_031000) do
     t.string "source_id", null: false
     t.string "name", null: false
     t.decimal "quantity_grams", precision: 12, scale: 4, null: false
-    t.decimal "calories", precision: 12, scale: 4, null: false
-    t.decimal "carbohydrates", precision: 12, scale: 4, null: false
-    t.decimal "proteins", precision: 12, scale: 4, null: false
-    t.decimal "fats", precision: 12, scale: 4, null: false
+    t.decimal "calories", precision: 12, scale: 4
+    t.decimal "carbohydrates", precision: 12, scale: 4
+    t.decimal "proteins", precision: 12, scale: 4
+    t.decimal "fats", precision: 12, scale: 4
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "addition_tokens", default: [], null: false
     t.index ["nutrition_meal_id"], name: "index_nutrition_meal_items_on_nutrition_meal_id"
     t.index ["source", "source_id"], name: "index_nutrition_meal_items_on_source_and_source_id"
     t.check_constraint "calories >= 0::numeric AND carbohydrates >= 0::numeric AND proteins >= 0::numeric AND fats >= 0::numeric", name: "nutrition_meal_items_nonnegative_nutrients"

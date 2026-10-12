@@ -12,4 +12,12 @@
 .nutrition-meal-picker__summary { border-top: 1px solid var(--card-border); padding-top: 16px; }
 .nutrition-meal-picker__status.is-error { color: var(--danger); }
 .nutrition-meals [hidden], .nutrition-week__empty[hidden] { display: none; }
+.nutrition-meal-item-quantity { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; min-width: 160px; }
+.nutrition-meal-item-quantity .app-form-control { width: 120px; }
+.nutrition-day-summary { padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface-muted); }
+.nutrition-day-summary h3 { margin: 0 0 12px; color: var(--text-main); font-size: 1rem; }
+.nutrition-day-summary__metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 0; }
+.nutrition-day-summary__metrics dt { color: var(--text-soft); font-size: .85rem; }
+.nutrition-day-summary__metrics dd { margin: 4px 0 0; color: var(--text-main); font-size: 1.1rem; font-weight: 800; }
+.nutrition-meal button:disabled { opacity: .6; cursor: wait; }
 @media (max-width: 640px) { .nutrition-meal { padding: 12px; } .nutrition-meal-picker { padding: 12px; } .nutrition-meal__header .app-btn { width: 100%; } }

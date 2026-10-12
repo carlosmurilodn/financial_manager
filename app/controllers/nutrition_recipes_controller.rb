@@ -1,4 +1,5 @@
 class NutritionRecipesController < ApplicationController
+  include MealQuickRegistration
   helper TacoFoodsHelper
   before_action :set_recipe, only: %i[show edit update destroy]
 
@@ -20,6 +21,7 @@ class NutritionRecipesController < ApplicationController
 
   def new
     @recipe = current_user.nutrition_recipes.new(servings: 1)
+    render_quick_recipe if @registration_meal
   end
 
   def edit
@@ -28,9 +30,17 @@ class NutritionRecipesController < ApplicationController
   def create
     @recipe = current_user.nutrition_recipes.new(recipe_params)
     if Nutrition::SaveRecipe.new(@recipe).call
-      redirect_to nutrition_recipe_path(@recipe), notice: "Receita criada com sucesso!", status: :see_other
+      if @registration_meal
+        render_registered_food(@recipe, "recipe")
+      else
+        redirect_to nutrition_recipe_path(@recipe), notice: "Receita criada com sucesso!", status: :see_other
+      end
     else
-      render :new, status: :unprocessable_entity
+      if @registration_meal
+        render_quick_recipe(status: :unprocessable_entity)
+      else
+        render :new, status: :unprocessable_entity
+      end
     end
   end
 
@@ -55,6 +65,11 @@ class NutritionRecipesController < ApplicationController
   end
 
   private
+
+  def render_quick_recipe(status: :ok)
+    render_meal_registration(resource: @recipe, partial: "nutrition_recipes/form",
+      locals: { recipe: @recipe }, title: "Nova Receita", status: status)
+  end
 
   def set_recipe
     @recipe = current_user.nutrition_recipes.includes(:nutrition_recipe_ingredients).find(params[:id])

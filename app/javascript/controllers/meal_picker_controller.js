@@ -5,7 +5,7 @@ const NUTRIENTS = { calories: "Calorias (kcal)", carbohydrates: "Carboidratos (g
 const SOURCES = { taco: "TACO", custom: "Meus Alimentos", recipe: "Receitas" }
 
 export default class extends Controller {
-  static targets = ["dialog", "source", "query", "results", "status", "managementStatus", "summary", "done"]
+  static targets = ["dialog", "source", "query", "results", "status", "managementStatus", "summary", "done", "registrationDialog", "registrationTitle", "registrationStatus", "registrationBody"]
   static values = { searchUrl: String, saveUrl: String }
 
   connect() {
@@ -15,6 +15,8 @@ export default class extends Controller {
 
   disconnect() {
     this.searchRequest?.abort()
+    this.registrationRequest?.abort()
+    this.registrationDialogTarget.close()
     this.dialogTarget.close()
   }
 
@@ -123,6 +125,90 @@ export default class extends Controller {
     preview()
     card.append(title, origin, actions, metrics)
     this.resultsTarget.append(card)
+    return card
+  }
+
+  async newRegistration(event) {
+    if (this.saving || this.registrationLoading) return
+    const button = event.currentTarget
+    this.searchRequest?.abort()
+    this.registrationTitleTarget.textContent = button.dataset.registrationTitle
+    this.registrationDialogTarget.showModal()
+    if (this.registrationUrl === button.dataset.url && this.registrationBodyTarget.querySelector("form")) {
+      this.registrationBodyTarget.querySelector("input:not([type='hidden'])")?.focus()
+      return
+    }
+
+    this.registrationLoading = true
+    this.registrationRequest = new AbortController()
+    this.registrationBodyTarget.replaceChildren()
+    this.registrationStatusTarget.textContent = "Carregando formulário…"
+    try {
+      const response = await fetch(button.dataset.url, { headers: { Accept: "text/html" }, signal: this.registrationRequest.signal })
+      if (!response.ok) throw new Error("form failed")
+      this.registrationBodyTarget.innerHTML = await response.text()
+      this.registrationUrl = button.dataset.url
+      this.registrationStatusTarget.textContent = "O cadastro só será vinculado à refeição após clicar em +."
+      this.registrationBodyTarget.querySelector("input:not([type='hidden'])")?.focus()
+    } catch (error) {
+      if (error.name !== "AbortError") this.registrationStatusTarget.textContent = "Não foi possível abrir o formulário. Volte à pesquisa e tente novamente."
+    } finally {
+      this.registrationLoading = false
+    }
+  }
+
+  cancelRegistration(event) {
+    event?.preventDefault()
+    if (this.saving) return
+    this.registrationRequest?.abort()
+    this.registrationDialogTarget.close()
+    this.queryTarget.focus()
+  }
+
+  async saveRegistration(event) {
+    event.preventDefault()
+    if (this.saving) return
+    const form = event.currentTarget
+    if (!form.reportValidity()) return
+    const body = new FormData(form)
+    this.saving = true
+    form.inert = true
+    this.updateBusyState()
+    this.registrationStatusTarget.textContent = "Salvando cadastro…"
+    try {
+      const response = await fetch(form.action, {
+        method: "POST", body,
+        headers: { Accept: "application/json, text/html", "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content }
+      })
+      if (response.status === 422) {
+        const template = document.createElement("template")
+        template.innerHTML = await response.text()
+        const errors = template.content.querySelector("[data-registration-errors]")
+        if (errors) this.registrationBodyTarget.querySelector("[data-registration-errors]").innerHTML = errors.innerHTML
+        this.registrationStatusTarget.textContent = "Revise os campos indicados. Dados informados preservados."
+        return
+      }
+      if (!response.ok) throw new Error("registration failed")
+      const data = await response.json()
+      this.registrationDialogTarget.close()
+      this.registrationBodyTarget.replaceChildren()
+      this.registrationUrl = null
+      this.resultsTarget.querySelectorAll(".is-selected").forEach(row => row.classList.remove("is-selected"))
+      const row = this.renderFood(data.food)
+      this.resultsTarget.prepend(row)
+      row.classList.add("is-selected")
+      const quantity = row.querySelector("[data-quantity]")
+      quantity.focus()
+      quantity.select()
+      row.scrollIntoView({ block: "nearest" })
+      this.setStatus(data.message)
+    } catch (error) {
+      this.registrationStatusTarget.textContent = "Não foi possível confirmar o cadastro. Formulário, pesquisa e itens anteriores preservados."
+    } finally {
+      this.saving = false
+      form.inert = false
+      this.updateBusyState()
+    }
   }
 
   async save(food, state, input) {
@@ -218,6 +304,9 @@ export default class extends Controller {
       input.readOnly = state.uncertain
     })
     this.element.querySelectorAll(".nutrition-meal-item-quantity button, .nutrition-meal-item-quantity input[type='number'], [data-action='meal-picker#deleteItem'], [data-action='meal-picker#deleteMeal']").forEach(control => {
+      control.disabled = Boolean(this.saving)
+    })
+    this.element.querySelectorAll("[data-action='meal-picker#newRegistration'], [data-action='meal-picker#cancelRegistration']").forEach(control => {
       control.disabled = Boolean(this.saving)
     })
   }

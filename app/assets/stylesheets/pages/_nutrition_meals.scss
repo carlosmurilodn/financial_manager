@@ -20,4 +20,6 @@
 .nutrition-day-summary__metrics dt { color: var(--text-soft); font-size: .85rem; }
 .nutrition-day-summary__metrics dd { margin: 4px 0 0; color: var(--text-main); font-size: 1.1rem; font-weight: 800; }
 .nutrition-meal button:disabled { opacity: .6; cursor: wait; }
+.nutrition-meal-picker__result.is-selected { border-color: var(--nav-active-bar); box-shadow: 0 0 0 1px var(--nav-active-bar); }
+.nutrition-quick-registration { width: min(1000px, calc(100vw - 32px)); }
 @media (max-width: 640px) { .nutrition-meal { padding: 12px; } .nutrition-meal-picker { padding: 12px; } .nutrition-meal__header .app-btn { width: 100%; } }

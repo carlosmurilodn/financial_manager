@@ -1,4 +1,6 @@
-<%= form_with model: custom_food, local: true, html: { class: "app-form-page__form", data: { turbo: false } } do |f| %>
+<% quick = local_assigns.fetch(:quick_registration, false) %>
+<%= form_with model: custom_food, namespace: ("meal_#{origin_meal.id}" if quick), local: true, html: { class: "app-form-page__form", data: { turbo: false, action: ("submit->meal-picker#saveRegistration" if quick) } } do |f| %>
+  <%= hidden_field_tag :nutrition_meal_id, origin_meal.id, id: nil if quick %>
   <div class="progress-review-form">
     <div><%= f.label :name, "Nome" %><%= f.text_field :name, class: "app-form-control", required: true, placeholder: "Ex.: Iogurte natural" %></div>
     <div><%= f.label :category, "Categoria" %><%= f.text_field :category, class: "app-form-control", required: true, placeholder: "Ex.: Leites e derivados" %></div>
@@ -7,7 +9,11 @@
     <% end %>
   </div>
   <div class="app-form-page__actions">
-    <%= link_to "Cancelar", taco_foods_path(source: "custom"), class: "app-btn app-btn--outline" %>
+    <% if quick %>
+      <button type="button" class="app-btn app-btn--outline" data-action="meal-picker#cancelRegistration">Cancelar</button>
+    <% else %>
+      <%= link_to "Cancelar", taco_foods_path(source: "custom"), class: "app-btn app-btn--outline" %>
+    <% end %>
     <%= f.submit "Salvar Alimento", class: "app-btn app-btn--primary" %>
   </div>
 <% end %>

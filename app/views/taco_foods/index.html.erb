@@ -1,13 +1,18 @@
 <section class="app-page health-index-page self-knowledge-page">
   <%= render "shared/breadcrumbs", items: [["Saúde e Bem-Estar", progress_path], ["Cadastros Básicos", taco_foods_path], ["Alimentos", nil]] %>
   <header class="app-page__hero">
+    <div class="exercise-entry-show__header">
     <div class="app-page__hero-copy">
       <span class="app-page__hero-icon"><span class="material-symbols-rounded" aria-hidden="true">restaurant</span></span>
       <div>
         <p class="app-page__eyebrow">Cadastros Básicos</p>
         <h1 class="app-page__title">Alimentos</h1>
-        <p class="app-page__description">Catálogo TACO · Valores nutricionais por 100 g</p>
+        <p class="app-page__description"><%= @source_filter == "custom" ? "Meus Alimentos" : "Catálogo TACO" %> · Valores nutricionais por 100 g</p>
       </div>
+    </div>
+    <%= link_to new_custom_food_path, class: "app-btn app-btn--primary" do %>
+      <span class="material-symbols-rounded" aria-hidden="true">add</span><span>Novo Alimento</span>
+    <% end %>
     </div>
   </header>
 
@@ -15,6 +20,10 @@
     <%= render "shared/filter_accordion" do %>
       <%= form_with url: taco_foods_path, method: :get, local: true, class: "app-filter-form" do |f| %>
         <div class="health-index-filters">
+          <div class="app-filter-field">
+            <%= f.label :source, "Origem" %>
+            <%= f.select :source, options_for_select([["TACO", "taco"], ["Meus Alimentos", "custom"]], @source_filter), {}, class: "app-form-select" %>
+          </div>
           <div class="app-filter-field">
             <%= f.label :name, "Nome" %>
             <%= f.search_field :name, value: @name_filter, class: "app-form-control", placeholder: "Buscar alimento" %>
@@ -28,7 +37,7 @@
           <%= f.button class: "app-btn app-btn--primary app-page__primary-btn" do %>
             <span class="material-symbols-rounded" aria-hidden="true">filter_alt</span> Filtrar
           <% end %>
-          <%= link_to taco_foods_path, class: "app-btn app-btn--secondary app-page__secondary-btn" do %>
+          <%= link_to taco_foods_path(source: @source_filter), class: "app-btn app-btn--secondary app-page__secondary-btn" do %>
             <span class="material-symbols-rounded" aria-hidden="true">filter_alt_off</span> Limpar Filtros
           <% end %>
           <%= render "shared/per_page_select" %>
@@ -57,8 +66,16 @@
                   <td><%= taco_nutrient_value(food.public_send(field)) %></td>
                 <% end %>
                 <td>
-                  <%= link_to taco_food_path(food), class: "app-btn app-btn--outline", title: "Visualizar alimento", aria: { label: "Visualizar #{food.name}" } do %>
+                  <%= link_to (@source_filter == "custom" ? custom_food_path(food) : taco_food_path(food)), class: "app-btn app-btn--outline", title: "Visualizar alimento", aria: { label: "Visualizar #{food.name}" } do %>
                     <span class="material-symbols-rounded" aria-hidden="true">visibility</span><span>Visualizar</span>
+                  <% end %>
+                  <% if @source_filter == "custom" %>
+                    <%= link_to edit_custom_food_path(food), class: "app-btn app-btn--outline", title: "Editar alimento" do %>
+                      <span class="material-symbols-rounded" aria-hidden="true">edit</span><span>Editar</span>
+                    <% end %>
+                    <%= link_to custom_food_path(food), class: "app-btn app-btn--danger", title: "Excluir alimento", data: { turbo_method: :delete, turbo_confirm: "Excluir este alimento?" } do %>
+                      <span class="material-symbols-rounded" aria-hidden="true">delete</span><span>Excluir</span>
+                    <% end %>
                   <% end %>
                 </td>
               </tr>

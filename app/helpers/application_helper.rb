@@ -27,6 +27,7 @@ module ApplicationHelper
     muscle_groups
     strength_exercise_catalogs
     taco_foods
+    custom_foods
   ].freeze
 
   def personal_development_section?
@@ -62,7 +63,7 @@ module ApplicationHelper
     when :basic_registries
       health_nav_active?(:profile) || health_nav_active?(:milestones) || health_nav_active?(:muscle_groups) || health_nav_active?(:strength_exercises) || health_nav_active?(:foods)
     when :foods
-      controller_name == "taco_foods"
+      controller_name.in?(%w[taco_foods custom_foods])
     when :muscle_groups
       controller_name == "muscle_groups"
     when :strength_exercises

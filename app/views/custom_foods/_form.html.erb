@@ -1,0 +1,13 @@
+<%= form_with model: custom_food, local: true, html: { class: "app-form-page__form", data: { turbo: false } } do |f| %>
+  <div class="progress-review-form">
+    <div><%= f.label :name, "Nome" %><%= f.text_field :name, class: "app-form-control", required: true, placeholder: "Ex.: Iogurte natural" %></div>
+    <div><%= f.label :category, "Categoria" %><%= f.text_field :category, class: "app-form-control", required: true, placeholder: "Ex.: Leites e derivados" %></div>
+    <% { calories: "Calorias (kcal)", carbohydrates: "Carboidratos (g)", proteins: "Proteínas (g)", fats: "Gorduras (g)", fiber: "Fibras (g)" }.each do |field, label| %>
+      <div><%= f.label field, "#{label} por 100 g" %><%= f.number_field field, class: "app-form-control", min: 0, max: "99999999.9999", step: "0.0001", placeholder: "Não informado" %></div>
+    <% end %>
+  </div>
+  <div class="app-form-page__actions">
+    <%= link_to "Cancelar", taco_foods_path(source: "custom"), class: "app-btn app-btn--outline" %>
+    <%= f.submit "Salvar Alimento", class: "app-btn app-btn--primary" %>
+  </div>
+<% end %>

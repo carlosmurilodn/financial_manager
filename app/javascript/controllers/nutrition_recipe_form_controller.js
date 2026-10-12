@@ -90,7 +90,7 @@ export default class extends Controller {
 
   add(food, source) {
     const fragment = document.createElement("template")
-    fragment.innerHTML = this.templateTarget.innerHTML.replaceAll("NEW_RECORD", `new_${Date.now()}_${this.sequence++}`)
+    fragment.innerHTML = this.templateTarget.innerHTML.replaceAll("NEW_RECORD", `${Date.now()}${this.sequence++}`)
     const row = fragment.content.querySelector("[data-nutrition-recipe-form-target='ingredient']")
     row.dataset.nutrients = JSON.stringify(Object.fromEntries(NUTRIENTS.map(field => [field, food[field]])))
     row.querySelector("[data-ingredient-field='source']").value = source

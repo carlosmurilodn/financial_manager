@@ -84,7 +84,14 @@ class NutritionRecipesController < ApplicationController
   end
 
   def recipe_params
-    params.require(:nutrition_recipe).permit(
+    attributes = params.require(:nutrition_recipe)
+    ingredients = attributes[:nutrition_recipe_ingredients_attributes]
+    if ingredients.is_a?(ActionController::Parameters)
+      attributes = attributes.deep_dup
+      attributes[:nutrition_recipe_ingredients_attributes] = ingredients.values
+    end
+
+    attributes.permit(
       :name, :description, :final_weight_grams, :servings,
       nutrition_recipe_ingredients_attributes: %i[id source source_id quantity_grams _destroy]
     )

@@ -1,0 +1,18 @@
+pt-BR:
+  activerecord:
+    models:
+      nutrition_meal: Refeição
+      nutrition_meal_item: Item da refeição
+    attributes:
+      nutrition_meal:
+        name: Nome
+        occurred_on: Data da refeição
+      nutrition_meal_item:
+        name: Nome
+        source: Origem
+        source_id: Alimento ou receita
+        quantity_grams: Quantidade em gramas
+        calories: Calorias
+        carbohydrates: Carboidratos
+        proteins: Proteínas
+        fats: Gorduras

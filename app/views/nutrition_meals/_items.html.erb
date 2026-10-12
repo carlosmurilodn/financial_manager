@@ -1,0 +1,19 @@
+<% items = meal.nutrition_meal_items.to_a %>
+<% if items.empty? %>
+  <p class="nutrition-week__empty">Nenhum item adicionado</p>
+<% else %>
+  <div class="app-table-responsive">
+    <table class="app-table nutrition-recipe-table">
+      <caption>Itens salvos nesta refeição</caption>
+      <thead><tr><th scope="col">Nome</th><th scope="col">Origem</th><th scope="col">Quantidade (g)</th><th scope="col">Calorias (kcal)</th><th scope="col">Carboidratos (g)</th><th scope="col">Proteínas (g)</th><th scope="col">Gorduras (g)</th></tr></thead>
+      <tbody>
+        <% items.each do |item| %>
+          <tr><th scope="row"><%= item.name %></th><td><%= { "taco" => "TACO", "custom" => "Meus Alimentos", "recipe" => "Receitas" }[item.source] %></td><td><%= taco_nutrient_value(item.quantity_grams) %></td>
+            <% NutritionMealItem::NUTRIENTS.each do |field| %><td><%= taco_nutrient_value(item.public_send(field)) %></td><% end %>
+          </tr>
+        <% end %>
+      </tbody>
+      <tfoot><tr><th scope="row" colspan="3">Total da refeição</th><% Nutrition::MealSummary.totals(items).each_value do |value| %><td><%= taco_nutrient_value(value) %></td><% end %></tr></tfoot>
+    </table>
+  </div>
+<% end %>

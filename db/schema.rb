@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_12_020000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_12_031000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -354,6 +354,39 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_12_020000) do
     t.datetime "updated_at", null: false
     t.index ["user_id", "occurred_on"], name: "index_nutrition_meals_on_user_id_and_occurred_on"
     t.index ["user_id"], name: "index_nutrition_meals_on_user_id"
+  end
+
+  create_table "nutrition_recipe_ingredients", force: :cascade do |t|
+    t.bigint "nutrition_recipe_id", null: false
+    t.string "source", null: false
+    t.string "source_id", null: false
+    t.string "name", null: false
+    t.decimal "quantity_grams", precision: 12, scale: 4, null: false
+    t.float "calories"
+    t.float "carbohydrates"
+    t.float "proteins"
+    t.float "fats"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["nutrition_recipe_id"], name: "index_nutrition_recipe_ingredients_on_nutrition_recipe_id"
+    t.index ["source", "source_id"], name: "index_nutrition_recipe_ingredients_on_source_and_source_id"
+    t.check_constraint "quantity_grams > 0::numeric", name: "nutrition_recipe_ingredients_positive_quantity"
+    t.check_constraint "source::text = ANY (ARRAY['taco'::character varying, 'custom'::character varying]::text[])", name: "nutrition_recipe_ingredients_valid_source"
+  end
+
+  create_table "nutrition_recipes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.decimal "final_weight_grams", precision: 12, scale: 4, null: false
+    t.integer "servings", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "name"], name: "index_nutrition_recipes_on_user_id_and_name"
+    t.index ["user_id"], name: "index_nutrition_recipes_on_user_id"
+    t.check_constraint "final_weight_grams > 0::numeric", name: "nutrition_recipes_positive_weight"
+    t.check_constraint "length(TRIM(BOTH FROM name)) > 0", name: "nutrition_recipes_nonempty_name"
+    t.check_constraint "servings > 0", name: "nutrition_recipes_positive_servings"
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
@@ -1082,6 +1115,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_12_020000) do
   add_foreign_key "muscle_groups", "users"
   add_foreign_key "nutrition_meal_items", "nutrition_meals"
   add_foreign_key "nutrition_meals", "users"
+  add_foreign_key "nutrition_recipe_ingredients", "nutrition_recipes"
+  add_foreign_key "nutrition_recipes", "users"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_grants", "users", column: "resource_owner_id", on_delete: :cascade
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"

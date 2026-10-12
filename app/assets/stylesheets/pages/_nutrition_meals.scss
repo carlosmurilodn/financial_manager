@@ -1,0 +1,15 @@
+.nutrition-meals, .nutrition-meal-picker__content, .nutrition-meal-picker__results { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.nutrition-meal { padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); color: var(--text-main); }
+.nutrition-meal__header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.nutrition-meal__header h2, .nutrition-meal__header h3 { margin: 0; font-size: 1.1rem; overflow-wrap: anywhere; }
+.nutrition-meal-picker { width: min(1000px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); margin: auto; padding: 20px; border: 1px solid var(--card-border); border-radius: 16px; background: var(--surface); color: var(--text-main); overflow-y: auto; }
+.nutrition-meal-picker::backdrop { background: rgba(0, 0, 0, .45); }
+.nutrition-meal-picker__status { margin: 0; min-height: 1.4em; color: var(--text-soft); font-size: .85rem; }
+.nutrition-meal-picker__result { display: flex; flex-direction: column; gap: 12px; padding: 14px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface-muted); }
+.nutrition-meal-picker__result small { color: var(--text-soft); }
+.nutrition-meal-picker__result-actions { display: flex; align-items: end; flex-wrap: wrap; gap: 12px; }
+.nutrition-meal-picker__result-actions .app-filter-field { flex: 1; min-width: 150px; }
+.nutrition-meal-picker__summary { border-top: 1px solid var(--card-border); padding-top: 16px; }
+.nutrition-meal-picker__status.is-error { color: var(--danger); }
+.nutrition-meals [hidden], .nutrition-week__empty[hidden] { display: none; }
+@media (max-width: 640px) { .nutrition-meal { padding: 12px; } .nutrition-meal-picker { padding: 12px; } .nutrition-meal__header .app-btn { width: 100%; } }

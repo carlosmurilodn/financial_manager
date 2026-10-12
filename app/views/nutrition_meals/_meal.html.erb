@@ -1,0 +1,23 @@
+<article class="nutrition-meal" data-controller="meal-picker" data-meal-picker-search-url-value="<%= search_nutrition_meal_nutrition_meal_items_path(meal) %>" data-meal-picker-save-url-value="<%= nutrition_meal_nutrition_meal_items_path(meal) %>">
+  <header class="nutrition-meal__header">
+    <h3><%= meal.name %></h3>
+    <button type="button" class="app-btn app-btn--primary" data-action="meal-picker#open"><span class="material-symbols-rounded" aria-hidden="true">add</span><span>Adicionar Alimento ou Receita</span></button>
+  </header>
+  <div data-meal-picker-target="summary"><%= render "nutrition_meals/items", meal: meal %></div>
+  <dialog class="nutrition-meal-picker" aria-labelledby="meal-picker-title-<%= meal.id %>" data-meal-picker-target="dialog" data-action="cancel->meal-picker#cancel">
+    <div class="nutrition-meal-picker__content">
+      <header class="nutrition-meal__header"><h2 id="meal-picker-title-<%= meal.id %>">Adicionar à refeição: <%= meal.name %></h2></header>
+      <form class="app-filter-form" data-action="submit->meal-picker#search">
+        <div class="health-index-filters">
+          <div class="app-filter-field"><%= label_tag "meal-source-#{meal.id}", "Origem" %><%= select_tag :source, options_for_select([["Todas", "all"], ["TACO", "taco"], ["Meus Alimentos", "custom"], ["Receitas", "recipe"]]), id: "meal-source-#{meal.id}", class: "app-form-select", data: { meal_picker_target: "source" } %></div>
+          <div class="app-filter-field"><%= label_tag "meal-query-#{meal.id}", "Nome" %><%= search_field_tag :name, nil, id: "meal-query-#{meal.id}", class: "app-form-control", placeholder: "Pesquisar alimento ou receita", data: { meal_picker_target: "query" } %></div>
+        </div>
+        <div class="app-filter-actions"><button type="submit" class="app-btn app-btn--secondary"><span class="material-symbols-rounded" aria-hidden="true">search</span><span>Pesquisar</span></button></div>
+      </form>
+      <p class="nutrition-meal-picker__status" role="status" aria-live="polite" data-meal-picker-target="status"></p>
+      <div class="nutrition-meal-picker__results" data-meal-picker-target="results"></div>
+      <section class="nutrition-meal-picker__summary"><h3>Itens adicionados</h3><div data-meal-picker-target="summary"><%= render "nutrition_meals/items", meal: meal %></div></section>
+      <div class="app-form-page__actions"><button type="button" class="app-btn app-btn--primary" data-meal-picker-target="done" data-action="meal-picker#close">Concluir</button></div>
+    </div>
+  </dialog>
+</article>

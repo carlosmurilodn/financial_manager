@@ -70,6 +70,12 @@ Rails.application.routes.draw do
   get "progresso", to: "progress#index", as: :progress
   resource :health_profile, path: "progresso/perfil", only: %i[show create update]
   get "progresso/alimentacao", to: "physical_health#nutrition", as: :health_nutrition
+  post "progresso/alimentacao/:week_start/refeicoes", to: "nutrition_meals#create", as: :nutrition_week_meals
+  resources :nutrition_meals, path: "progresso/alimentacao/refeicoes", only: [] do
+    resources :nutrition_meal_items, path: "itens", only: :create do
+      collection { get :search, path: "pesquisa" }
+    end
+  end
   get "progresso/alimentacao/nova", to: "physical_health#new_nutrition_week", as: :new_health_nutrition_week
   post "progresso/alimentacao", to: "physical_health#create_nutrition_week"
   get "progresso/alimentacao/:week_start/editar", to: "physical_health#edit_nutrition_week", as: :edit_health_nutrition_week

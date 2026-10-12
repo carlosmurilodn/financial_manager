@@ -1,4 +1,6 @@
 class PhysicalHealthController < ApplicationController
+  helper TacoFoodsHelper
+
   def destroy_nutrition_week
     current_user.with_lock do
       load_nutrition_week
@@ -73,6 +75,8 @@ class PhysicalHealthController < ApplicationController
 
   def nutrition_week
     load_nutrition_week
+    @nutrition_meals_by_date = current_user.nutrition_meals.includes(:nutrition_meal_items)
+      .where(occurred_on: @week_start..@week_start + 6.days).order(:created_at, :id).group_by(&:occurred_on)
     @daily_calorie_entries_by_date = current_user.daily_calorie_entries.where(occurred_on: @week_start..@week_start + 6.days).index_by(&:occurred_on)
     @health_profile = current_user.health_profile
   rescue ArgumentError

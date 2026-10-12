@@ -13,7 +13,16 @@ export default class extends Controller {
   }
 
   disconnect() {
+    clearTimeout(this.searchTimer)
     this.request?.abort()
+  }
+
+  scheduleSearch() {
+    clearTimeout(this.searchTimer)
+    this.clearResults()
+    if (!this.queryTarget.value.trim()) return
+
+    this.searchTimer = setTimeout(() => this.search(), 300)
   }
 
   clearResults() {
@@ -23,7 +32,8 @@ export default class extends Controller {
   }
 
   async search(event) {
-    event.preventDefault()
+    event?.preventDefault()
+    clearTimeout(this.searchTimer)
     this.clearResults()
     const query = this.queryTarget.value.trim()
     if (!query) {
@@ -32,7 +42,7 @@ export default class extends Controller {
       return
     }
 
-    const source = this.sourceTarget.value
+    const source = this.sourceTargets.find(input => input.checked).value
     const url = new URL(this.searchUrlValue, window.location.origin)
     url.searchParams.set("source", source)
     url.searchParams.set("name", query)
@@ -43,19 +53,30 @@ export default class extends Controller {
       const response = await fetch(url, { headers: { Accept: "application/json" }, signal: this.request.signal })
       if (!response.ok) throw new Error("search failed")
       const foods = await response.json()
+      if (query !== this.queryTarget.value.trim() || source !== this.sourceTargets.find(input => input.checked).value) return
       this.statusTarget.textContent = foods.length ? "Selecione um alimento. Até 20 resultados; refine a pesquisa se necessário." : "Nenhum alimento encontrado."
       foods.forEach(food => {
         const row = document.createElement("div")
         row.className = "nutrition-recipe-result"
         const name = document.createElement("strong")
-        name.textContent = food.name
+        name.textContent = `${food.name} · ${food.source === "custom" ? "Meus Alimentos" : "TACO"}`
+        const nutrients = document.createElement("div")
+        nutrients.className = "nutrition-recipe-result__nutrients"
+        nutrients.setAttribute("aria-label", "Valores nutricionais por 100 g")
+        Object.entries({ calories: ["Calorias", "kcal"], carbohydrates: ["Carboidratos", "g"], proteins: ["Proteínas", "g"], fats: ["Gorduras", "g"] }).forEach(([field, [label, unit]]) => {
+          const metric = document.createElement("span")
+          const value = food[field] == null ? null : Number(food[field])
+          metric.textContent = `${label}: ${this.format(value)}${value === null ? "" : ` ${unit}`}`
+          metric.title = `${label} por 100 g`
+          nutrients.append(metric)
+        })
         const button = document.createElement("button")
         button.type = "button"
         button.className = "app-btn app-btn--secondary"
         button.textContent = "Adicionar"
         button.setAttribute("aria-label", `Adicionar ${food.name}`)
-        button.addEventListener("click", () => this.add(food, source))
-        row.append(name, button)
+        button.addEventListener("click", () => this.add(food, food.source))
+        row.append(name, nutrients, button)
         this.resultsTarget.append(row)
       })
     } catch (error) {

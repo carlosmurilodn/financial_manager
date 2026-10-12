@@ -3,20 +3,28 @@
 <% query_input_id = quick ? "recipe-food-query-#{origin_meal.id}" : "recipe_food_query" %>
 <%= form_with model: recipe, namespace: ("meal_#{origin_meal.id}" if quick), local: true, html: { class: "app-form-page__form", data: { controller: "nutrition-recipe-form", nutrition_recipe_form_search_url_value: foods_nutrition_recipes_path, turbo: false, action: ("submit->meal-picker#saveRegistration" if quick) } } do |f| %>
   <%= hidden_field_tag :nutrition_meal_id, origin_meal.id, id: nil if quick %>
-  <div class="progress-review-form">
+  <div class="progress-review-form nutrition-recipe-basic-fields">
     <div><%= f.label :name, "Nome" %><%= f.text_field :name, class: "app-form-control", required: true, placeholder: "Ex.: Bolo de banana" %></div>
-    <div><%= f.label :description, "Descrição (opcional)" %><%= f.text_area :description, class: "app-form-control", rows: 3 %></div>
     <div><%= f.label :final_weight_grams, "Peso final da preparação (g)" %><%= f.number_field :final_weight_grams, class: "app-form-control", min: "0.0001", max: "99999999.9999", step: "0.0001", required: true, data: { nutrition_recipe_form_target: "weight", action: "input->nutrition-recipe-form#update" } %></div>
     <div><%= f.label :servings, "Número de porções" %><%= f.number_field :servings, class: "app-form-control", min: 1, max: 2147483647, step: 1, required: true, data: { nutrition_recipe_form_target: "servings", action: "input->nutrition-recipe-form#update" } %></div>
   </div>
 
   <fieldset class="nutrition-recipe-search">
     <legend>Adicionar ingredientes</legend>
-    <div class="health-index-filters">
-      <div class="app-filter-field"><%= label_tag source_input_id, "Origem" %><%= select_tag :recipe_food_source, options_for_select([["TACO", "taco"], ["Meus Alimentos", "custom"]]), id: source_input_id, class: "app-form-select", data: { nutrition_recipe_form_target: "source", action: "change->nutrition-recipe-form#clearResults" } %></div>
-      <div class="app-filter-field"><%= label_tag query_input_id, "Nome do alimento" %><%= search_field_tag :recipe_food_query, nil, id: query_input_id, class: "app-form-control", placeholder: "Pesquisar alimento", data: { nutrition_recipe_form_target: "query", action: "keydown.enter->nutrition-recipe-form#search" } %></div>
+    <div class="health-index-filters nutrition-recipe-search-fields">
+      <div class="app-filter-field">
+        <span id="<%= source_input_id %>-label">Origem</span>
+        <div class="nutrition-recipe-origins" role="radiogroup" aria-labelledby="<%= source_input_id %>-label">
+          <% [["Todas", "all"], ["TACO", "taco"], ["Meus Alimentos", "custom"]].each do |label, value| %>
+            <label class="app-checkbox" for="<%= source_input_id %>-<%= value %>">
+              <%= radio_button_tag :recipe_food_source, value, value == "all", id: "#{source_input_id}-#{value}", data: { nutrition_recipe_form_target: "source", action: "change->nutrition-recipe-form#scheduleSearch" } %>
+              <span><%= label %></span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+      <div class="app-filter-field"><%= label_tag query_input_id, "Nome do alimento" %><%= search_field_tag :recipe_food_query, nil, id: query_input_id, class: "app-form-control", placeholder: "Pesquisar alimento", data: { nutrition_recipe_form_target: "query", action: "input->nutrition-recipe-form#scheduleSearch keydown.enter->nutrition-recipe-form#search" } %></div>
     </div>
-    <button type="button" class="app-btn app-btn--secondary" data-action="nutrition-recipe-form#search"><span class="material-symbols-rounded" aria-hidden="true">search</span><span>Pesquisar</span></button>
     <p class="nutrition-recipe-note" role="status" aria-live="polite" data-nutrition-recipe-form-target="status"></p>
     <div class="nutrition-recipe-results" data-nutrition-recipe-form-target="results"></div>
   </fieldset>

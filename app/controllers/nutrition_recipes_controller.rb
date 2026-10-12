@@ -61,9 +61,15 @@ class NutritionRecipesController < ApplicationController
   end
 
   def foods
-    catalog = params[:source] == "custom" ? current_user.custom_foods : TacoFood.all
-    foods = catalog.search_by_name(params[:name].to_s.strip).order(:name, :id).limit(20)
-    render json: foods.map { |food| food.as_json(only: %i[id name calories carbohydrates proteins fats]) }
+    catalogs = { "taco" => TacoFood.all, "custom" => current_user.custom_foods }
+    source = params[:source].presence || "all"
+    catalogs.select! { |origin, _| origin == source } unless source == "all"
+    foods = catalogs.flat_map do |origin, catalog|
+      catalog.search_by_name(params[:name].to_s.strip).order(:name, :id).limit(20).map do |food|
+        food.as_json(only: %i[id name calories carbohydrates proteins fats]).merge("source" => origin)
+      end
+    end
+    render json: foods.sort_by { |food| [ I18n.transliterate(food["name"]).downcase, food["source"], food["id"] ] }.first(20)
   end
 
   private

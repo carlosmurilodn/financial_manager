@@ -58,16 +58,17 @@ class PhysicalHealthController < ApplicationController
   end
 
   def nutrition
-    load_nutrition_hero
+    load_registered_nutrition_weeks
     if params[:week_start].present?
       week = Date.iso8601(params[:week_start].to_s).beginning_of_week(:monday)
       return redirect_to health_nutrition_week_path(week.iso8601)
     end
     dates = @registered_weeks + current_user.nutrition_meals.distinct.pluck(:occurred_on)
-    @weeks = paginate_collection(filter_weeks(dates), per_page: pagination_per_page)
-    @plans_by_week = current_user.weekly_health_plans.where(week_start: @weeks).includes(:weekly_health_goals).index_by(&:week_start)
-    @calorie_summaries = Health::WeeklyNutritionSummaryQuery.new(user: current_user, weeks: @weeks).call
-    @calorie_counts = @calorie_summaries.transform_values { |summary| summary[:consumed][:count] }
+    filtered_weeks = filter_weeks(dates)
+    query = Health::WeeklyNutritionSummaryQuery.new(user: current_user, weeks: filtered_weeks)
+    @nutrition_summaries = query.call
+    @nutrition_period_summary = query.period_summary
+    @weeks = paginate_collection(filtered_weeks, per_page: pagination_per_page)
   rescue ArgumentError
     redirect_to health_nutrition_path, alert: "Semana inválida."
   end
@@ -122,18 +123,9 @@ class PhysicalHealthController < ApplicationController
     weeks.select { |week| (!@date_from || week >= @date_from) && (!@date_to || week <= @date_to) }
   end
 
-  def load_nutrition_hero
+  def load_registered_nutrition_weeks
     goals = current_user.weekly_health_goals.includes(:weekly_health_plan).select { |goal| goal.name.parameterize == "alimentacao" }
     @registered_weeks = goals.map { |goal| goal.weekly_health_plan.week_start }.uniq
-    meal_dates = current_user.nutrition_meals.distinct.pluck(:occurred_on)
-    @registered_weeks |= meal_dates.map { |date| date.beginning_of_week(:monday) }
-    consumption_dates = meal_dates
-    consumption = Health::DailyConsumptionQuery.new(user: current_user, dates: consumption_dates).call
-    @hero_kpis = [
-      ["Semanas Registradas", "calendar_month", @registered_weeks.size],
-      ["Dias de Alimentação", "restaurant", goals.sum(&:completed_count)],
-      ["Calorias Preenchidas", "local_fire_department", consumption.values.count { |day| !day[:calories].nil? }]
-    ]
   end
 
   def load_nutrition_week

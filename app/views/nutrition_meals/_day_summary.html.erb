@@ -9,7 +9,7 @@
       <% { calories: ["Calorias", "kcal", "local_fire_department"], carbohydrates: ["Carboidratos", "g", "grain"], proteins: ["Proteínas", "g", "fitness_center"], fats: ["Gorduras", "g", "water_drop"] }.each do |field, (label, unit, icon)| %>
         <article class="self-knowledge-hero-kpi nutrition-day-kpi nutrition-day-kpi--<%= field %>">
           <span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span>
-          <div><p><%= label %></p><strong><%= taco_nutrient_value(totals[field]) %></strong><small><%= unit %> consumidos no dia</small></div>
+          <div><p><%= label %></p><strong><%= taco_nutrient_value(totals[field]) %></strong></div>
         </article>
       <% end %>
     </div>

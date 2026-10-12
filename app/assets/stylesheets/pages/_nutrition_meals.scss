@@ -18,6 +18,9 @@
 .nutrition-meals [hidden], .nutrition-week__empty[hidden] { display: none; }
 .nutrition-meal-item-quantity { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; min-width: 160px; }
 .nutrition-meal-item-quantity .app-form-control { width: 120px; }
+.nutrition-meal-item-quantity__field { position: relative; display: inline-flex; }
+.nutrition-meal-item-quantity__field .app-form-control { padding-right: 32px; }
+.nutrition-meal-item-quantity__unit { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-soft); font-size: .85rem; pointer-events: none; }
 .nutrition-day-summary { padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface-muted); }
 .nutrition-day-summary h3 { margin: 0 0 12px; color: var(--text-main); font-size: 1rem; }
 .nutrition-day-summary__metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 0; }

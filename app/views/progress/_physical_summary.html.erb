@@ -5,7 +5,7 @@
     <div class="progress-physical-summary__heading">
       <div class="progress-panel__header"><span class="material-symbols-rounded" aria-hidden="true">monitoring</span><div><p class="app-page__eyebrow">Saúde Física · Semana selecionada</p><h2>Alimentação, peso e exercícios</h2></div></div>
       <div class="progress-physical-summary__badges">
-        <% { consumed: ["Consumo", "calories"], bmr: ["Basal médio", "fats"], tdee: ["Gasto médio", "proteins"], deficit: [summary[:deficit][:mean]&.negative? ? "Superávit médio" : "Déficit médio", "carbohydrates"] }.each do |field, (label, color)| %>
+        <% { consumed: ["Consumo da Semana", "calories"], bmr: ["Basal médio", "fats"], tdee: ["Gasto médio", "proteins"], deficit: [summary[:deficit][:mean]&.negative? ? "Superávit médio" : "Déficit médio", "carbohydrates"] }.each do |field, (label, color)| %>
           <% value = field == :consumed ? summary[field][:total] : summary[field][:mean]&.abs %>
           <span class="nutrition-recipe-result__badge nutrition-recipe-result__badge--<%= color %>" title="<%= summary[field][:count] %> / 7 dias com dados"><%= label %>: <%= progress_metric(value) %></span>
         <% end %>

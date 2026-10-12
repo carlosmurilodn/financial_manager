@@ -719,7 +719,8 @@
 }
 .progress-physical-summary { gap: 10px; }
 .progress-physical-summary__heading { display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: center; gap: 10px 12px; min-width: 0; flex: 1; }
-.progress-physical-summary__badges { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: .75rem; }
+.progress-physical-summary__badges { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-size: .65rem; }
+.progress-physical-summary__badges .nutrition-recipe-result__badge { padding: 3px 5px; white-space: nowrap; }
 .progress-physical-summary__weight { --nutrient-color: #8950da; }
 .progress-physical-summary__info { color: var(--text-soft); font-size: 18px; cursor: help; }
 .progress-physical-summary__info:focus-visible, .progress-physical-table-wrap:focus-visible { outline: 2px solid var(--nav-active-bar); outline-offset: 3px; border-radius: 4px; }

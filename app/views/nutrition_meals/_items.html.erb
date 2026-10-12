@@ -1,8 +1,6 @@
 <% items = meal.nutrition_meal_items.to_a %>
 <% context = local_assigns.fetch(:context, "card") %>
-<% if items.empty? %>
-  <p class="nutrition-week__empty">Nenhum item adicionado</p>
-<% else %>
+<% if items.any? %>
   <div class="app-table-responsive">
     <table class="app-table nutrition-recipe-table">
       <caption>Itens salvos nesta refeição</caption>

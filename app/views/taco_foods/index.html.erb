@@ -40,7 +40,7 @@
   <div class="app-panel app-panel--table">
     <% if @taco_foods.any? %>
       <div class="app-table-responsive">
-        <table class="app-table">
+        <table class="app-table taco-foods-table">
           <caption>Valores por 100 g · <%= @filtered_count %> alimento(s) encontrado(s)</caption>
           <thead><tr>
             <% { name: "Nome", category: "Categoria", calories: "Calorias (kcal)", carbohydrates: "Carboidratos (g)", proteins: "Proteínas (g)", fats: "Gorduras (g)" }.each do |field, label| %>

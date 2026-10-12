@@ -9,6 +9,8 @@ class NutritionRecipesController < ApplicationController
     @direction = params[:direction] == "desc" ? "desc" : "asc"
     recipes = current_user.nutrition_recipes.search_by_name(@name_filter)
     @filtered_count = recipes.count
+    @total_recipe_count = current_user.nutrition_recipes.count
+    @filtered_servings = recipes.sum(:servings)
     @per_page = pagination_per_page
     @total_pages = [ (@filtered_count.to_f / @per_page).ceil, 1 ].max
     @current_page = params[:page].to_i.clamp(1, @total_pages)

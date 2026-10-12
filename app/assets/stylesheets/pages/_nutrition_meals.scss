@@ -23,6 +23,15 @@
 .nutrition-day-summary__metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 0; }
 .nutrition-day-summary__metrics dt { color: var(--text-soft); font-size: .85rem; }
 .nutrition-day-summary__metrics dd { margin: 4px 0 0; color: var(--text-main); font-size: 1.1rem; font-weight: 800; }
+.nutrition-day-summary__kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.nutrition-day-kpi--calories { --nutrition-kpi-color: #5c6df2; }
+.nutrition-day-kpi--carbohydrates { --nutrition-kpi-color: #22a06b; }
+.nutrition-day-kpi--proteins { --nutrition-kpi-color: #dc3545; }
+.nutrition-day-kpi--fats { --nutrition-kpi-color: #d9a620; }
+.nutrition-day-kpi.self-knowledge-hero-kpi { --mental-kpi-color: var(--nutrition-kpi-color); min-width: 0; border: 1px solid color-mix(in srgb, var(--nutrition-kpi-color) 35%, var(--card-border)); background: color-mix(in srgb, var(--nutrition-kpi-color) 10%, var(--surface)); }
+.nutrition-day-kpi.self-knowledge-hero-kpi > .material-symbols-rounded { color: var(--nutrition-kpi-color); background: color-mix(in srgb, var(--nutrition-kpi-color) 14%, transparent); }
+@media (max-width: 900px) { .nutrition-day-summary__kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 400px) { .nutrition-day-summary__kpis { grid-template-columns: minmax(0, 1fr); } }
 .nutrition-meal button:disabled { opacity: .6; cursor: wait; }
 .nutrition-meal-picker__result.is-selected { border-color: var(--nav-active-bar); box-shadow: 0 0 0 1px var(--nav-active-bar); }
 .nutrition-quick-registration { width: min(1000px, calc(100vw - 32px)); }

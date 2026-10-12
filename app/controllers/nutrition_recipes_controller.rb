@@ -2,6 +2,7 @@ class NutritionRecipesController < ApplicationController
   include MealQuickRegistration
   helper TacoFoodsHelper
   before_action :set_recipe, only: %i[show edit update destroy]
+  before_action :load_recipe_source_meal, only: %i[new create]
 
   def index
     @name_filter = params[:name].to_s.strip
@@ -22,7 +23,7 @@ class NutritionRecipesController < ApplicationController
   end
 
   def new
-    @recipe = current_user.nutrition_recipes.new(servings: 1)
+    @recipe = @source_meal ? Nutrition::MealRecipeDraft.new(@source_meal).call : current_user.nutrition_recipes.new(servings: 1)
     render_quick_recipe if @registration_meal
   end
 
@@ -74,6 +75,15 @@ class NutritionRecipesController < ApplicationController
 
   private
 
+  def load_recipe_source_meal
+    return if params[:from_meal_id].blank?
+
+    @source_meal = current_user.nutrition_meals.includes(:nutrition_meal_items).find(params[:from_meal_id])
+    Nutrition::MealRecipeDraft.new(@source_meal).call
+  rescue ArgumentError => error
+    redirect_to health_nutrition_week_path(@source_meal.occurred_on.beginning_of_week(:monday).iso8601), alert: error.message
+  end
+
   def render_quick_recipe(status: :ok)
     render_meal_registration(resource: @recipe, partial: "nutrition_recipes/form",
       locals: { recipe: @recipe }, title: "Nova Receita", status: status)
@@ -91,9 +101,11 @@ class NutritionRecipesController < ApplicationController
       attributes[:nutrition_recipe_ingredients_attributes] = ingredients.values
     end
 
-    attributes.permit(
+    permitted = attributes.permit(
       :name, :description, :final_weight_grams, :servings,
       nutrition_recipe_ingredients_attributes: %i[id source source_id quantity_grams _destroy]
     )
+    permitted[:servings] = 1 if @source_meal && permitted[:servings].blank?
+    permitted
   end
 end

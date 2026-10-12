@@ -3,6 +3,7 @@
     <h3><%= meal.name %></h3>
     <button type="button" class="app-btn app-btn--primary" title="Adicionar alimento ou receita" data-action="meal-picker#open"><span class="material-symbols-rounded" aria-hidden="true">add</span><span>Adicionar item</span></button>
     <button type="button" class="app-btn app-btn--outline" title="Copiar refeição para outros dias" data-action="meal-copy#open"><span class="material-symbols-rounded" aria-hidden="true">content_copy</span><span>Copiar Refeição</span></button>
+    <%= link_to new_nutrition_recipe_path(from_meal_id: meal.id), class: "app-btn app-btn--outline", title: "Criar receita com os alimentos desta refeição", data: { turbo: false } do %><span class="material-symbols-rounded" aria-hidden="true">menu_book</span><span>Salvar como Receita</span><% end %>
   </header>
   <p class="nutrition-meal-picker__status" role="status" aria-live="polite" data-meal-picker-target="managementStatus"></p>
   <div data-meal-picker-target="summary"><%= render "nutrition_meals/items", meal: meal %></div>

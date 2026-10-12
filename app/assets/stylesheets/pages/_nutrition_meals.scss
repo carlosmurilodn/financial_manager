@@ -2,7 +2,7 @@
 .nutrition-meal { padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); color: var(--text-main); }
 .nutrition-meal__header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .nutrition-meal__header h2, .nutrition-meal__header h3 { margin: 0; font-size: 1.1rem; overflow-wrap: anywhere; }
-.nutrition-meal__header--inline { display: grid; grid-template-columns: 140px max-content max-content; justify-content: start; margin-bottom: 0; }
+.nutrition-meal__header--inline { display: grid; grid-template-columns: 140px repeat(3, max-content); justify-content: start; margin-bottom: 0; }
 .nutrition-meal-copy { width: min(560px, calc(100vw - 32px)); }
 .nutrition-meal-copy__days { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; }
 .nutrition-meal-copy__days legend { color: var(--text-main); font-weight: 700; }

@@ -4,6 +4,28 @@
     <div class="weekly-health-plan-days"><div class="weekly-health-plan-days__goal">
       <div class="weekly-health-plan-days__goal-header"><strong>Alimentação e Calorias da Semana</strong><span><%= @nutrition_goal&.completed_count || 0 %> / 7 totalmente</span></div>
     </div></div>
-    <%= render "daily_calorie_entries/week", week_start: @week_start, entries_by_date: @daily_calorie_entries_by_date, health_profile: @health_profile, nutrition_goal: @nutrition_goal, nutrition: true %>
+    <% dates = (0..6).map { |offset| @week_start + offset.days } %>
+    <% selected_date = dates.include?(Date.current) ? Date.current : @week_start %>
+    <% day_names = %w[Domingo Segunda-feira Terça-feira Quarta-feira Quinta-feira Sexta-feira Sábado] %>
+    <div class="nutrition-week" data-controller="nutrition-tabs">
+      <div class="nutrition-week__tabs" role="tablist" aria-label="Dias da semana" aria-orientation="horizontal">
+        <% dates.each do |date| %>
+          <% selected = date == selected_date %>
+          <button type="button" id="nutrition-tab-<%= date.iso8601 %>" class="nutrition-week__tab" role="tab" aria-controls="nutrition-panel-<%= date.iso8601 %>" aria-selected="<%= selected %>" tabindex="<%= selected ? 0 : -1 %>" data-nutrition-tabs-target="tab" data-action="click->nutrition-tabs#select keydown->nutrition-tabs#navigate">
+            <span><%= day_names[date.wday] %></span>
+            <time datetime="<%= date.iso8601 %>"><%= date.strftime("%d/%m") %></time>
+          </button>
+        <% end %>
+      </div>
+      <% dates.each do |date| %>
+        <section id="nutrition-panel-<%= date.iso8601 %>" class="nutrition-week__panel calorie-day" role="tabpanel" aria-labelledby="nutrition-tab-<%= date.iso8601 %>" tabindex="0" data-nutrition-tabs-target="panel" <%= "hidden" unless date == selected_date %>>
+          <div class="calorie-day__header">
+            <h2 class="nutrition-week__title"><%= day_names[date.wday] %></h2>
+            <time datetime="<%= date.iso8601 %>"><%= date.strftime("%d/%m/%Y") %></time>
+          </div>
+          <p class="nutrition-week__empty">Nenhuma refeição registrada</p>
+        </section>
+      <% end %>
+    </div>
   </div></article>
 </section>

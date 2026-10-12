@@ -21,6 +21,16 @@
 .calorie-day__form .app-btn { min-height: 44px; }
 @media (max-width: 640px) { .calorie-day { flex-basis: 100%; } }
 
+.nutrition-week { display: flex; flex-direction: column; gap: 16px; width: 100%; min-width: 0; }
+.nutrition-week__tabs { display: flex; gap: 8px; overflow-x: auto; padding: 4px; }
+.nutrition-week__tab { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1 0 auto; gap: 6px; min-height: 44px; padding: 12px 16px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); color: var(--text-soft); font: inherit; font-size: .85rem; font-weight: 700; cursor: pointer; }
+.nutrition-week__tab time { font-size: .8rem; font-weight: 400; }
+.nutrition-week__tab:hover, .nutrition-week__tab[aria-selected="true"] { border-color: var(--nav-active-bar); background: var(--hero-badge-icon-bg); color: var(--nav-active-bar); }
+.nutrition-week__tab:focus-visible, .nutrition-week__panel:focus-visible { outline: 2px solid var(--nav-active-bar); outline-offset: 2px; }
+.nutrition-week__panel[hidden] { display: none; }
+.nutrition-week__title { margin: 0; font-size: 1rem; font-weight: 700; }
+.nutrition-week__empty { margin: 0; color: var(--text-soft); font-size: .85rem; }
+
 .weekly-health-plan-show { display: flex; flex-direction: column; min-width: 0; }
 .weekly-health-plan-show__header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
 .weekly-health-plan-show__header > .app-page__hero-copy { flex: 1 1 280px; }

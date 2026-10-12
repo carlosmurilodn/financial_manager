@@ -43,7 +43,6 @@ class ExerciseEntriesController < ApplicationController
     normalize_items
 
     if @exercise_entry.save
-      Health::RecalculateDailyCalories.new(user: current_user, dates: [@exercise_entry.performed_on]).call
       redirect_to health_exercises_path, notice: "Exercício criado com sucesso!", status: :see_other
     else
       build_missing_strength_logs
@@ -52,12 +51,10 @@ class ExerciseEntriesController < ApplicationController
   end
 
   def update
-    previous_date = @exercise_entry.performed_on
     @exercise_entry.assign_attributes(exercise_entry_params)
     normalize_items
 
     if @exercise_entry.save
-      Health::RecalculateDailyCalories.new(user: current_user, dates: [previous_date, @exercise_entry.performed_on].uniq).call
       redirect_to health_exercises_path, notice: "Exercício atualizado com sucesso!", status: :see_other
     else
       build_missing_strength_logs
@@ -66,9 +63,7 @@ class ExerciseEntriesController < ApplicationController
   end
 
   def destroy
-    date = @exercise_entry.performed_on
     @exercise_entry.destroy!
-    Health::RecalculateDailyCalories.new(user: current_user, dates: [date]).call
     redirect_to health_exercises_path, notice: "Exercício excluído com sucesso!", status: :see_other
   end
 

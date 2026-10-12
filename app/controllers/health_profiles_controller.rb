@@ -28,12 +28,7 @@ class HealthProfilesController < ApplicationController
     saved = current_user.with_lock do
       set_health_profile
       @health_profile.assign_attributes(health_profile_params)
-      if @health_profile.save
-        Health::RecalculateDailyCalories.new(user: current_user).call
-        true
-      else
-        false
-      end
+      @health_profile.save
     end
 
     if saved

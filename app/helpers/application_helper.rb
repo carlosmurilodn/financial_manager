@@ -22,7 +22,6 @@ module ApplicationHelper
     health_wins
     health_profiles
     physical_health
-    daily_calorie_entries
     exercise_entries
     muscle_groups
     strength_exercise_catalogs
@@ -80,7 +79,7 @@ module ApplicationHelper
     when :beyond_scale
       controller_name.in?(%w[self_knowledge health_journal_entries health_weekly_reflections weekly_wellbeings weekly_health_reviews])
     when :goals
-      controller_name.in?(%w[weekly_health_plans daily_calorie_entries])
+      controller_name.in?(%w[weekly_health_plans])
     when :questions
       controller_name == "weekly_health_reviews"
     when :wins

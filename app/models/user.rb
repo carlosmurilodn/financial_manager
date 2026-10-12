@@ -13,7 +13,6 @@ class User < ApplicationRecord
   has_many :categories, dependent: :destroy
   has_many :weight_entries, dependent: :destroy
   has_one :health_profile, dependent: :destroy
-  has_many :daily_calorie_entries, dependent: :destroy
   has_many :nutrition_meals, dependent: :destroy
   has_many :custom_foods, dependent: :destroy
   has_many :nutrition_recipes, dependent: :destroy

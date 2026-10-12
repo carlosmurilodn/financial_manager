@@ -93,7 +93,6 @@ Rails.application.routes.draw do
       delete :clear_filters
     end
   end
-  resources :daily_calorie_entries, path: "progresso/calorias", param: :occurred_on, only: %i[show create]
   resources :weight_entries, path: "progresso/pesagens", only: %i[index new create edit update destroy] do
     collection do
       delete :clear_filters

@@ -3,9 +3,14 @@
 .nutrition-recipe-results, .nutrition-recipe-ingredients { display: flex; flex-direction: column; gap: 12px; }
 .nutrition-recipe-result, .nutrition-recipe-ingredient__header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
 .nutrition-recipe-result { padding: 12px; border: 1px solid var(--card-border); border-radius: 10px; background: var(--surface); color: var(--text-main); }
-.nutrition-recipe-result > strong { flex: 1; min-width: 180px; }
-.nutrition-recipe-result__nutrients { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; color: var(--text-soft); font-size: .85rem; }
+.nutrition-recipe-result__identity { display: flex; flex: 1; flex-wrap: wrap; align-items: center; gap: 12px 16px; min-width: 0; }
+.nutrition-recipe-result__nutrients { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: .72rem; }
 .nutrition-recipe-result__nutrients span { white-space: nowrap; }
+.nutrition-recipe-result__badge { padding: 3px 7px; border: 1px solid color-mix(in srgb, var(--nutrient-color) 40%, var(--card-border)); border-radius: 999px; background: color-mix(in srgb, var(--nutrient-color) 14%, var(--surface)); color: color-mix(in srgb, var(--nutrient-color) 70%, var(--text-main)); font-weight: 700; }
+.nutrition-recipe-result__badge--calories { --nutrient-color: #5c6df2; }
+.nutrition-recipe-result__badge--carbohydrates { --nutrient-color: #22a06b; }
+.nutrition-recipe-result__badge--proteins { --nutrient-color: #dc3545; }
+.nutrition-recipe-result__badge--fats { --nutrient-color: #d9a620; }
 .nutrition-recipe-ingredient { display: flex; flex-direction: column; gap: 12px; padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); color: var(--text-main); }
 .nutrition-recipe-ingredient[hidden] { display: none; }
 .nutrition-recipe-ingredient__header small { display: block; color: var(--text-soft); }

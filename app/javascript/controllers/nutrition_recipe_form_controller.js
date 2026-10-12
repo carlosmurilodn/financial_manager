@@ -65,6 +65,7 @@ export default class extends Controller {
         nutrients.setAttribute("aria-label", "Valores nutricionais por 100 g")
         Object.entries({ calories: ["Calorias", "kcal"], carbohydrates: ["Carboidratos", "g"], proteins: ["Proteínas", "g"], fats: ["Gorduras", "g"] }).forEach(([field, [label, unit]]) => {
           const metric = document.createElement("span")
+          metric.className = `nutrition-recipe-result__badge nutrition-recipe-result__badge--${field}`
           const value = food[field] == null ? null : Number(food[field])
           metric.textContent = `${label}: ${this.format(value)}${value === null ? "" : ` ${unit}`}`
           metric.title = `${label} por 100 g`
@@ -76,7 +77,10 @@ export default class extends Controller {
         button.textContent = "Adicionar"
         button.setAttribute("aria-label", `Adicionar ${food.name}`)
         button.addEventListener("click", () => this.add(food, food.source))
-        row.append(name, nutrients, button)
+        const identity = document.createElement("div")
+        identity.className = "nutrition-recipe-result__identity"
+        identity.append(name, nutrients)
+        row.append(identity, button)
         this.resultsTarget.append(row)
       })
     } catch (error) {

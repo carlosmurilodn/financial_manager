@@ -38,6 +38,16 @@ export default class extends Controller {
     this.close()
   }
 
+  closeOutside(event) {
+    const dialog = event.currentTarget
+    if (event.target !== dialog) return
+    const bounds = dialog.getBoundingClientRect()
+    if (event.clientX >= bounds.left && event.clientX <= bounds.right && event.clientY >= bounds.top && event.clientY <= bounds.bottom) return
+
+    if (dialog === this.registrationDialogTarget) this.cancelRegistration(event)
+    else this.close()
+  }
+
   async search(event) {
     event?.preventDefault()
     clearTimeout(this.searchTimer)

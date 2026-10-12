@@ -3,6 +3,7 @@
 .nutrition-meal__header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .nutrition-meal__header h2, .nutrition-meal__header h3 { margin: 0; font-size: 1.1rem; overflow-wrap: anywhere; }
 .nutrition-meal__header--inline { justify-content: flex-start; }
+.nutrition-meal-picker__header-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
 .nutrition-meal-picker { width: min(1000px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); margin: auto; padding: 20px; border: 1px solid var(--card-border); border-radius: 16px; background: var(--surface); color: var(--text-main); overflow-y: auto; }
 .nutrition-meal-picker::backdrop { background: rgba(0, 0, 0, .45); }
 .nutrition-meal-picker__status { margin: 0; min-height: 1.4em; color: var(--text-soft); font-size: .85rem; }

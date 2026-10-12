@@ -5,9 +5,14 @@
   </header>
   <p class="nutrition-meal-picker__status" role="status" aria-live="polite" data-meal-picker-target="managementStatus"></p>
   <div data-meal-picker-target="summary"><%= render "nutrition_meals/items", meal: meal %></div>
-  <dialog class="nutrition-meal-picker" aria-labelledby="meal-picker-title-<%= meal.id %>" data-meal-picker-target="dialog" data-action="cancel->meal-picker#cancel">
+  <dialog class="nutrition-meal-picker" aria-labelledby="meal-picker-title-<%= meal.id %>" data-meal-picker-target="dialog" data-action="cancel->meal-picker#cancel click->meal-picker#closeOutside">
     <div class="nutrition-meal-picker__content">
-      <header class="nutrition-meal__header"><h2 id="meal-picker-title-<%= meal.id %>">Adicionar à refeição: <%= meal.name %></h2></header>
+      <header class="nutrition-meal__header"><h2 id="meal-picker-title-<%= meal.id %>">Adicionar à refeição: <%= meal.name %></h2>
+      <div class="nutrition-meal-picker__header-actions">
+        <button type="button" class="app-btn app-btn--primary" data-action="meal-picker#newRegistration" data-url="<%= new_custom_food_path(nutrition_meal_id: meal.id) %>" data-registration-title="Novo Alimento"><span class="material-symbols-rounded" aria-hidden="true">add</span><span>Novo Alimento</span></button>
+        <button type="button" class="app-btn app-btn--primary" data-action="meal-picker#newRegistration" data-url="<%= new_nutrition_recipe_path(nutrition_meal_id: meal.id) %>" data-registration-title="Nova Receita"><span class="material-symbols-rounded" aria-hidden="true">menu_book</span><span>Nova Receita</span></button>
+      </div>
+      </header>
       <form class="app-filter-form" data-action="submit->meal-picker#search">
         <div class="health-index-filters nutrition-recipe-search-fields">
           <div class="app-filter-field">
@@ -21,17 +26,14 @@
           <div class="app-filter-field"><%= label_tag "meal-query-#{meal.id}", "Nome" %><%= search_field_tag :name, nil, id: "meal-query-#{meal.id}", class: "app-form-control", placeholder: "Pesquisar alimento ou receita", data: { meal_picker_target: "query", action: "input->meal-picker#scheduleSearch" } %></div>
         </div>
       </form>
-      <div class="app-filter-actions">
-        <button type="button" class="app-btn app-btn--outline" data-action="meal-picker#newRegistration" data-url="<%= new_custom_food_path(nutrition_meal_id: meal.id) %>" data-registration-title="Novo Alimento"><span class="material-symbols-rounded" aria-hidden="true">add</span><span>Novo Alimento</span></button>
-        <button type="button" class="app-btn app-btn--outline" data-action="meal-picker#newRegistration" data-url="<%= new_nutrition_recipe_path(nutrition_meal_id: meal.id) %>" data-registration-title="Nova Receita"><span class="material-symbols-rounded" aria-hidden="true">menu_book</span><span>Nova Receita</span></button>
-      </div>
+
       <p class="nutrition-meal-picker__status" role="status" aria-live="polite" data-meal-picker-target="status"></p>
       <div class="nutrition-meal-picker__results" data-meal-picker-target="results"></div>
       <section class="nutrition-meal-picker__summary"><h3>Itens adicionados</h3><div data-meal-picker-target="summary"><%= render "nutrition_meals/items", meal: meal, context: "picker" %></div></section>
       <div class="app-form-page__actions"><button type="button" class="app-btn app-btn--primary" data-meal-picker-target="done" data-action="meal-picker#close">Concluir</button></div>
     </div>
   </dialog>
-  <dialog class="nutrition-meal-picker nutrition-quick-registration" aria-labelledby="meal-registration-title-<%= meal.id %>" data-meal-picker-target="registrationDialog" data-action="cancel->meal-picker#cancelRegistration">
+  <dialog class="nutrition-meal-picker nutrition-quick-registration" aria-labelledby="meal-registration-title-<%= meal.id %>" data-meal-picker-target="registrationDialog" data-action="cancel->meal-picker#cancelRegistration click->meal-picker#closeOutside">
     <div class="nutrition-meal-picker__content">
       <header class="nutrition-meal__header"><h2 id="meal-registration-title-<%= meal.id %>" data-meal-picker-target="registrationTitle">Novo cadastro</h2><button type="button" class="app-btn app-btn--outline" data-action="meal-picker#cancelRegistration">Voltar à pesquisa</button></header>
       <p class="nutrition-meal-picker__status" role="status" aria-live="polite" data-meal-picker-target="registrationStatus"></p>

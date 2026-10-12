@@ -42,7 +42,7 @@
   <%= render "shared/calculator_modal" %>
 
   <body>
-    <div id="wrapper" class="app-shell <%= "app-shell--entry" if controller_name == "entry" %>">
+    <div id="wrapper" class="app-shell <%= "app-shell--entry" if controller_name == "entry" %> <%= "app-shell--health" if health_section? %>">
       <%= render "shared/sidebar" unless controller_name == "entry" %>
 
       <main id="page-content-wrapper" class="app-content">

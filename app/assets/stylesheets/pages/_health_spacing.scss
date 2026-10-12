@@ -1,0 +1,7 @@
+.app-shell--health { --health-layout-gap: 16px; }
+.app-shell--health .app-page { gap: var(--health-layout-gap); }
+.app-shell--health .app-footer { margin-top: var(--health-layout-gap); }
+.app-shell--health .progress-panels,
+.app-shell--health .progress-physical-column,
+.app-shell--health .progress-weight-overview { gap: var(--health-layout-gap); }
+@media (max-width: 991px) { .app-shell--health { --health-layout-gap: 12px; } }

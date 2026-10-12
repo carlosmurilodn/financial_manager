@@ -725,12 +725,12 @@
 .progress-physical-summary__info:focus-visible, .progress-physical-table-wrap:focus-visible { outline: 2px solid var(--nav-active-bar); outline-offset: 3px; border-radius: 4px; }
 .progress-physical-table-wrap { overflow-x: auto; min-width: 0; border: 1px solid var(--card-border); border-radius: 10px; }
 .progress-physical-table { width: 100%; min-width: 920px; border-collapse: collapse; font-size: .8rem; color: var(--text-main); }
-.progress-physical-table thead th { padding: 10px 12px; background: color-mix(in srgb, var(--text-main) 18%, var(--surface)); color: var(--text-main); font-size: .72rem; font-weight: 700; text-align: left; white-space: nowrap; }
+.progress-physical-table thead th { padding: 10px 12px; background: color-mix(in srgb, var(--primary) 24%, var(--surface)); color: var(--text-main); font-size: .72rem; font-weight: 700; text-align: left; white-space: nowrap; }
 .progress-physical-table tbody th, .progress-physical-table tbody td { padding: 10px 12px; border-top: 1px solid var(--card-border); text-align: left; vertical-align: middle; }
 .progress-physical-table tbody th { white-space: nowrap; font-weight: 700; }
 .progress-physical-table tbody th time { margin-left: 8px; color: var(--text-soft); font-weight: 400; }
 .progress-physical-table tbody tr:nth-child(odd) > * { background: var(--surface); }
-.progress-physical-table tbody tr:nth-child(even) > * { background: color-mix(in srgb, var(--text-main) 6%, var(--surface)); }
+.progress-physical-table tbody tr:nth-child(even) > * { background: color-mix(in srgb, var(--primary) 8%, var(--surface)); }
 .progress-physical-table tbody tr:hover > * { background: var(--hero-badge-icon-bg); }
 .progress-physical-table__number { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .progress-physical-table__value { color: color-mix(in srgb, var(--metric-color) 65%, var(--text-main)); font-weight: 700; }
@@ -741,3 +741,13 @@
 .progress-physical-table__value--weight { --metric-color: #8950da; }
 .progress-physical-table__empty { color: var(--text-soft); font-weight: 400; }
 .progress-physical-table .progress-physical-summary__info { margin-left: 4px; font-size: 14px; vertical-align: middle; }
+
+.progress-physical-overview { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 1fr); align-items: stretch; gap: 16px; }
+.progress-physical-overview > .progress-panel { min-width: 0; margin: 0; }
+.progress-physical-overview .progress-panel--milestones .progress-milestones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.progress-physical-overview .progress-panel--milestones .progress-milestone { padding: 10px; }
+.progress-physical-overview .progress-panel--milestones .progress-history__header { flex-wrap: wrap; gap: 8px; }
+@media (max-width: 1199px) {
+  .progress-physical-overview { grid-template-columns: minmax(0, 1fr); }
+  .progress-physical-overview .progress-panel--milestones .progress-milestones { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
+}

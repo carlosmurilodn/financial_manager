@@ -9,7 +9,7 @@
           <% value = field == :consumed ? summary[field][:total] : summary[field][:mean]&.abs %>
           <span class="nutrition-recipe-result__badge nutrition-recipe-result__badge--<%= color %>" title="<%= summary[field][:count] %> / 7 dias com dados"><%= label %>: <%= progress_metric(value) %></span>
         <% end %>
-        <span class="nutrition-recipe-result__badge progress-physical-summary__weight" title="<%= summary[:weight_count] %> medições na semana">Peso: <%= progress_metric(summary[:weight_change], unit: "kg", signed: true) %></span>
+        <span class="nutrition-recipe-result__badge progress-physical-summary__weight" title="<%= summary[:weight_count] %> medições na semana">Variação do peso: <%= progress_metric(summary[:weight_change], unit: "kg", signed: true) %></span>
         <span class="material-symbols-rounded progress-physical-summary__info" tabindex="0" role="img" title="<%= explanation %>" aria-label="<%= explanation %>">info</span>
       </div>
     </div>

@@ -1,0 +1,70 @@
+.app-shell--health .self-knowledge-hero-kpi > div { min-width: 0; overflow-wrap: anywhere; }
+.app-shell--health .progress-physical-column,
+.app-shell--health .progress-weight-overview,
+.app-shell--health .progress-panel { min-width: 0; }
+.nutrition-meal-picker { box-sizing: border-box; max-width: calc(100vw - 24px); }
+.nutrition-meal-picker__header-actions .app-btn { white-space: normal; }
+
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .nutrition-page.self-knowledge-page .app-page__hero-top.self-knowledge-section-hero { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .nutrition-page .self-knowledge-section-hero__heading { grid-column: span 2; }
+}
+
+@media (max-width: 1199px) {
+  .app-shell--health .progress-panels--activity { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .app-shell--health .progress-panels--activity > * { width: 100%; }
+  .app-shell--health .progress-physical-summary__heading { grid-template-columns: minmax(0, 1fr); }
+  .nutrition-meal__header--inline { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .nutrition-meal__header--inline > h3 { grid-column: 1 / -1; }
+  .nutrition-meal__header--inline .app-btn { min-width: 0; white-space: normal; }
+  .health-index-filters.nutrition-recipe-search-fields { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 767px) {
+  .app-shell--health .progress-panels--activity .progress-panel.progress-mental-panel { height: auto; overflow: visible; }
+  .app-shell--health .progress-weight-overview { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .app-shell--health .progress-panel__header > div { min-width: 0; }
+  .app-shell--health .progress-physical-summary__badges { font-size: .75rem; }
+  .app-shell--health .progress-physical-summary__badges .nutrition-recipe-result__badge { white-space: normal; }
+  .app-shell--health .progress-physical-table { height: auto; }
+  .app-shell--health .progress-physical-table-wrap { flex: initial; }
+  .app-shell--health .progress-diary-days { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+  .app-shell--health .progress-diary-day { min-width: 0; }
+  .app-shell--health .progress-panel .app-form-page__actions { flex-wrap: wrap; gap: 8px; }
+  .app-shell--health .progress-panel .app-form-page__actions .app-btn { flex: 1 1 140px; white-space: normal; }
+}
+
+@media (max-width: 640px) {
+  .app-shell--health .app-filter-actions,
+  .app-shell--health .self-knowledge-record-filters .app-filter-actions { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; }
+  .app-shell--health .app-filter-actions > .app-filter-action,
+  .app-shell--health .app-filter-actions > .app-per-page-control { min-width: 0; width: 100%; }
+  .app-shell--health .self-knowledge-record-filters .health-index-filters { flex-wrap: wrap; }
+  .app-shell--health .self-knowledge-record-filters .app-filter-field { flex: 1 1 100%; min-width: 0; }
+  .app-shell--health .app-btn,
+  .app-shell--health .health-weight-goal-card__action { min-height: 44px; }
+  .app-shell--health .app-filter-field input,
+  .app-shell--health .app-filter-field select,
+  .app-shell--health .app-form-control,
+  .app-shell--health .app-form-select { min-width: 0; max-width: 100%; font-size: 16px; }
+  .app-shell--health .progress-week-selector { width: 100%; min-width: 0; }
+  .nutrition-meal__header--inline { grid-template-columns: minmax(0, 1fr); }
+  .nutrition-meal__header--inline .app-btn { width: 100%; justify-self: stretch; }
+  .nutrition-meal-picker { width: calc(100vw - 24px); max-height: calc(100dvh - 24px); padding: 12px; }
+  .nutrition-meal-copy { width: min(560px, calc(100vw - 24px)); }
+  .nutrition-meal-picker__header-actions { margin-left: 0; width: 100%; }
+  .nutrition-meal-picker__header-actions .app-btn { flex: 1 1 120px; min-height: 44px; }
+  .nutrition-card__actions, .nutrition-meal-item-quantity { width: 100%; min-width: 0; }
+  .nutrition-meal-item-quantity__field { flex: 1 1 100%; }
+  .nutrition-meal-item-quantity__field .app-form-control { width: 100%; }
+  .nutrition-card__actions .app-btn { flex: 1 1 100px; min-height: 44px; }
+  .nutrition-recipe-origins label { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
+  .nutrition-recipe-result__identity { align-items: flex-start; }
+  .nutrition-recipe-result__badge { overflow-wrap: anywhere; }
+}
+
+@media (max-width: 400px) {
+  .app-shell--health .progress-diary-days { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .app-shell--health .self-knowledge-daily-grid,
+  .app-shell--health .self-knowledge-evolution-kpis { grid-template-columns: minmax(0, 1fr); }
+}

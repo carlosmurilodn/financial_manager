@@ -5,6 +5,7 @@ export default class extends Controller {
 
   refresh(event) {
     const data = event.detail
+    if (data.meals_html !== undefined) this.mealsTarget.innerHTML = data.meals_html
     this.daySummaryTarget.innerHTML = data.day_html
     const tab = document.getElementById(this.element.getAttribute("aria-labelledby"))
     const calories = tab?.querySelector(".nutrition-week__tab-calories")

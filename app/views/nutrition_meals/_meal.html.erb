@@ -1,10 +1,30 @@
-<article class="nutrition-meal" data-controller="meal-picker" data-meal-picker-search-url-value="<%= search_nutrition_meal_nutrition_meal_items_path(meal) %>" data-meal-picker-save-url-value="<%= nutrition_meal_nutrition_meal_items_path(meal) %>">
+<article class="nutrition-meal" data-controller="meal-picker meal-copy" data-meal-picker-search-url-value="<%= search_nutrition_meal_nutrition_meal_items_path(meal) %>" data-meal-picker-save-url-value="<%= nutrition_meal_nutrition_meal_items_path(meal) %>">
   <header class="nutrition-meal__header nutrition-meal__header--inline">
     <h3><%= meal.name %></h3>
     <button type="button" class="app-btn app-btn--primary" title="Adicionar alimento ou receita" data-action="meal-picker#open"><span class="material-symbols-rounded" aria-hidden="true">add</span><span>Adicionar item</span></button>
+    <button type="button" class="app-btn app-btn--outline" title="Copiar refeição para outros dias" data-action="meal-copy#open"><span class="material-symbols-rounded" aria-hidden="true">content_copy</span><span>Copiar Refeição</span></button>
   </header>
   <p class="nutrition-meal-picker__status" role="status" aria-live="polite" data-meal-picker-target="managementStatus"></p>
   <div data-meal-picker-target="summary"><%= render "nutrition_meals/items", meal: meal %></div>
+  <dialog class="nutrition-meal-picker nutrition-meal-copy" aria-labelledby="meal-copy-title-<%= meal.id %>" data-meal-copy-target="dialog" data-action="cancel->meal-copy#close click->meal-copy#closeOutside">
+    <div class="nutrition-meal-picker__content">
+      <h2 id="meal-copy-title-<%= meal.id %>">Copiar Refeição: <%= meal.name %></h2>
+      <p class="nutrition-recipe-note">Selecione os dias de destino. Itens existentes serão mantidos e os repetidos serão somados.</p>
+      <form action="<%= copy_nutrition_meal_path(meal) %>" method="post" data-action="submit->meal-copy#copy">
+        <fieldset class="nutrition-meal-copy__days"><legend>Dias da semana</legend>
+          <% week = meal.occurred_on.beginning_of_week(:monday) %>
+          <% names = %w[Domingo Segunda-feira Terça-feira Quarta-feira Quinta-feira Sexta-feira Sábado] %>
+          <% 7.times do |offset| %>
+            <% date = week + offset.days %>
+            <% next if date == meal.occurred_on %>
+            <label class="app-checkbox"><%= check_box_tag "dates[]", date.iso8601, false, id: "meal-copy-#{meal.id}-#{date.iso8601}" %><span><%= names[date.wday] %> · <%= date.strftime("%d/%m") %></span></label>
+          <% end %>
+        </fieldset>
+        <p class="nutrition-meal-picker__status" role="status" aria-live="polite" data-meal-copy-target="status"></p>
+        <div class="app-form-page__actions"><button type="button" class="app-btn app-btn--outline" data-action="meal-copy#close">Cancelar</button><button type="submit" class="app-btn app-btn--primary"><span class="material-symbols-rounded" aria-hidden="true">content_copy</span> Copiar Refeição</button></div>
+      </form>
+    </div>
+  </dialog>
   <dialog class="nutrition-meal-picker" aria-labelledby="meal-picker-title-<%= meal.id %>" data-meal-picker-target="dialog" data-action="cancel->meal-picker#cancel click->meal-picker#closeOutside">
     <div class="nutrition-meal-picker__content">
       <header class="nutrition-meal__header"><h2 id="meal-picker-title-<%= meal.id %>">Adicionar à refeição: <%= meal.name %></h2>

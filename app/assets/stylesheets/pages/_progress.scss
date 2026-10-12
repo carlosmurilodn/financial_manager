@@ -751,3 +751,9 @@
   .progress-physical-overview { grid-template-columns: minmax(0, 1fr); }
   .progress-physical-overview .progress-panel--milestones .progress-milestones { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
 }
+
+.progress-panels--activity .progress-physical-column { align-self: flex-start; }
+.progress-panel.progress-activity-panel { max-height: 440px; overflow: hidden; }
+.progress-activity-panel > .progress-history__header { flex-shrink: 0; }
+.progress-activity-panel .progress-activity-scroll { min-height: 0; max-height: 312px; overflow: auto; }
+.progress-activity-panel .progress-activity-table tbody tr { height: 62px; }

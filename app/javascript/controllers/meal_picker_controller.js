@@ -65,8 +65,14 @@ export default class extends Controller {
 
   renderFood(food) {
     const key = `${food.source}:${food.id}`
-    if (!this.states.has(key)) this.states.set(key, { quantity: "100", token: null, uncertain: false })
+    if (!this.states.has(key)) this.states.set(key, { quantity: "100", unit: "grams", quantities: { grams: "100", servings: "1" }, token: null, uncertain: false })
     const state = this.states.get(key)
+    const portionGrams = Number(food.portion_grams)
+    const supportsServings = food.source === "recipe" && Number.isFinite(portionGrams) && portionGrams > 0
+    if (!supportsServings && state.unit === "servings" && !state.uncertain) {
+      state.unit = "grams"
+      state.quantity = state.quantities.grams
+    }
     const card = document.createElement("article")
     card.className = "nutrition-meal-picker__result"
     card.dataset.key = key
@@ -102,6 +108,29 @@ export default class extends Controller {
     button.addEventListener("click", () => this.save(food, state, input))
     field.append(label, input)
     actions.append(field, button)
+    const conversion = document.createElement("small")
+    let unitSelect
+    if (supportsServings) {
+      const unitField = document.createElement("div")
+      unitField.className = "app-filter-field"
+      const unitLabel = document.createElement("label")
+      unitLabel.textContent = "Unidade"
+      unitSelect = document.createElement("select")
+      unitSelect.id = `${input.id}-unit`
+      unitLabel.htmlFor = unitSelect.id
+      unitSelect.className = "app-form-select"
+      unitSelect.dataset.unit = "true"
+      for (const [value, text] of [["grams", "Gramas"], ["servings", "Porções"]]) {
+        const option = document.createElement("option")
+        option.value = value
+        option.textContent = text
+        unitSelect.append(option)
+      }
+      unitSelect.value = state.unit
+      unitSelect.disabled = state.uncertain
+      unitField.append(unitLabel, unitSelect)
+      actions.prepend(unitField)
+    }
     const metrics = document.createElement("dl")
     metrics.className = "exercise-entry-show__details"
     const values = {}
@@ -115,15 +144,30 @@ export default class extends Controller {
     })
     const preview = () => {
       const quantity = Number(state.quantity)
+      label.textContent = state.unit === "servings" ? "Quantidade (porções)" : "Quantidade (g)"
+      const rawGrams = state.unit === "servings" ? quantity * portionGrams : quantity
+      const grams = Number.isFinite(rawGrams) && rawGrams > 0 ? Number(rawGrams.toFixed(4)) : null
+      conversion.textContent = supportsServings ? `1 porção = ${this.formatter.format(portionGrams)} g · Equivale a ${grams > 0 ? this.formatter.format(grams) : "—"} g` : ""
       Object.keys(NUTRIENTS).forEach(nutrient => {
         const value = food.nutrients[nutrient]
-        const amount = value != null && Number.isFinite(quantity) && quantity > 0 ? Number(value) * quantity / 100 : null
+        const amount = value != null && grams > 0 ? Number(value) * grams / 100 : null
         values[nutrient].textContent = amount != null && Number.isFinite(amount) ? this.formatter.format(amount) : "—"
       })
     }
-    input.addEventListener("input", () => { state.quantity = input.value; preview() })
+    input.addEventListener("input", () => {
+      state.quantity = input.value
+      state.quantities[state.unit] = input.value
+      preview()
+    })
+    unitSelect?.addEventListener("change", () => {
+      state.quantities[state.unit] = state.quantity
+      state.unit = unitSelect.value
+      state.quantity = state.quantities[state.unit]
+      input.value = state.quantity
+      preview()
+    })
     preview()
-    card.append(title, origin, actions, metrics)
+    card.append(title, origin, actions, conversion, metrics)
     this.resultsTarget.append(card)
     return card
   }
@@ -222,7 +266,7 @@ export default class extends Controller {
       const response = await fetch(this.saveUrlValue, {
         method: "POST",
         headers: { Accept: "application/json", "Content-Type": "application/json", "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content },
-        body: JSON.stringify({ nutrition_meal_item: { source: food.source, source_id: food.id, quantity_grams: state.quantity, request_token: state.token } })
+        body: JSON.stringify({ nutrition_meal_item: { source: food.source, source_id: food.id, quantity: state.quantity, unit: state.unit, request_token: state.token } })
       })
       const data = await response.json()
       confirmed = response.ok || response.status === 422
@@ -302,6 +346,10 @@ export default class extends Controller {
       const state = this.states.get(input.closest("[data-key]").dataset.key)
       input.disabled = Boolean(this.saving)
       input.readOnly = state.uncertain
+    })
+    this.resultsTarget.querySelectorAll("[data-unit]").forEach(select => {
+      const state = this.states.get(select.closest("[data-key]").dataset.key)
+      select.disabled = Boolean(this.saving) || state.uncertain
     })
     this.element.querySelectorAll(".nutrition-meal-item-quantity button, .nutrition-meal-item-quantity input[type='number'], [data-action='meal-picker#deleteItem'], [data-action='meal-picker#deleteMeal']").forEach(control => {
       control.disabled = Boolean(this.saving)

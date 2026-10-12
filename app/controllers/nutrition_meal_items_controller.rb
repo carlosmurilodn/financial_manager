@@ -9,15 +9,15 @@ class NutritionMealItemsController < ApplicationController
   end
 
   def create
-    attributes = params.require(:nutrition_meal_item).permit(:source, :source_id, :quantity_grams, :request_token)
+    attributes = params.require(:nutrition_meal_item).permit(:source, :source_id, :quantity_grams, :quantity, :unit, :request_token)
     Nutrition::AddMealItem.new(meal: @meal, **attributes.to_h.symbolize_keys).call
     render json: item_summary_payload(@meal).merge(message: "Item salvo na refeição.")
   rescue ActiveRecord::RecordInvalid => error
     render json: { error: error.record.errors.full_messages.join(". ") }, status: :unprocessable_entity
   rescue ActiveRecord::RecordNotFound
     render json: { error: "Alimento ou receita indisponível. Pesquisa e quantidade foram preservadas." }, status: :unprocessable_entity
-  rescue ArgumentError
-    render json: { error: "Informe origem, alimento, quantidade positiva e identificador de inclusão válidos." }, status: :unprocessable_entity
+  rescue ArgumentError => error
+    render json: { error: error.message }, status: :unprocessable_entity
   end
 
   def update

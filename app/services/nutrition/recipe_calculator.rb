@@ -11,6 +11,12 @@ module Nutrition
       end
     end
 
+    def portion_weight_grams
+      return unless @recipe.final_weight_grams&.positive? && @recipe.servings.is_a?(Integer) && @recipe.servings.positive?
+
+      @recipe.final_weight_grams / @recipe.servings
+    end
+
     def totals
       ingredients = @recipe.nutrition_recipe_ingredients.reject(&:marked_for_destruction?)
       values = ingredients.map { |ingredient| ingredient_totals(ingredient) }

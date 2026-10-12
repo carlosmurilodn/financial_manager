@@ -32,7 +32,8 @@ module Nutrition
       else
         NutritionMealItem::NUTRIENTS.index_with { |field| record.public_send(field) }
       end
-      { id: record.id, source: source, name: record.name, nutrients: nutrients }
+      portion_grams = RecipeCalculator.new(record).portion_weight_grams if source == "recipe"
+      { id: record.id, source: source, name: record.name, nutrients: nutrients, portion_grams: portion_grams }
     end
   end
 end

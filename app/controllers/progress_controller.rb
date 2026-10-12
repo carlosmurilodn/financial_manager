@@ -3,15 +3,17 @@ class ProgressController < ApplicationController
     @health_weight_goals = current_user.health_weight_goals.ordered
     @final_health_weight_goal = @health_weight_goals.final_goal.first
     @intermediate_health_weight_goals = @health_weight_goals.intermediate
+    @week_start = Health::WeeklyPlan.week_start(params[:week])
+    @physical_progress = Health::PhysicalProgressQuery.new(user: current_user, week_start: @week_start).call
     entries = current_user.weight_entries.recent
     @latest_weight_entry = entries.first
     @initial_weight_entry = entries.reorder(measured_on: :asc).first
-    @weight_entries = entries
+    @weight_entries = entries.where(measured_on: @week_start..@week_start + 6.days)
     @weight_period = %w[30 90 all].include?(params[:weight_period]) ? params[:weight_period] : "30"
-    chart_entries = current_user.weight_entries.where("measured_on <= ?", Date.current)
-    chart_entries = chart_entries.where(measured_on: (Date.current - (@weight_period.to_i - 1).days)..Date.current) unless @weight_period == "all"
+    chart_end = [ @week_start + 6.days, Date.current ].min
+    chart_entries = current_user.weight_entries.where("measured_on <= ?", chart_end)
+    chart_entries = chart_entries.where(measured_on: (chart_end - (@weight_period.to_i - 1).days)..chart_end) unless @weight_period == "all"
     @weight_chart_points = chart_entries.order(:measured_on).pluck(:measured_on, :weight_kg).map { |date, weight| { date: date.iso8601, weight: weight.to_f } }
-    @week_start = Health::WeeklyPlan.week_start(params[:week])
     @weekly_health_plan = Health::WeeklyPlan.build(user: current_user, week_start: @week_start)
     @self_knowledge_week = Health::SelfKnowledgeWeek.new(current_user, @week_start)
     @self_knowledge_reflection = current_user.health_weekly_reflections.find_by(week_start: @week_start)

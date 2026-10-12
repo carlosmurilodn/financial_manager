@@ -64,10 +64,10 @@ class PhysicalHealthController < ApplicationController
       week = Date.iso8601(params[:week_start].to_s).beginning_of_week(:monday)
       return redirect_to health_nutrition_week_path(week.iso8601)
     end
-    dates = @registered_weeks + current_user.daily_calorie_entries.pluck(:occurred_on)
+    dates = @registered_weeks + current_user.daily_calorie_entries.pluck(:occurred_on) + current_user.nutrition_meals.distinct.pluck(:occurred_on)
     @weeks = paginate_collection(filter_weeks(dates), per_page: pagination_per_page)
     @plans_by_week = current_user.weekly_health_plans.where(week_start: @weeks).includes(:weekly_health_goals).index_by(&:week_start)
-    @calorie_summaries = Health::WeeklyCalorieSummaryQuery.new(user: current_user, weeks: @weeks).call
+    @calorie_summaries = Health::WeeklyNutritionSummaryQuery.new(user: current_user, weeks: @weeks).call
     @calorie_counts = @calorie_summaries.transform_values { |summary| summary[:consumed][:count] }
   rescue ArgumentError
     redirect_to health_nutrition_path, alert: "Semana inválida."
@@ -128,10 +128,14 @@ class PhysicalHealthController < ApplicationController
   def load_nutrition_hero
     goals = current_user.weekly_health_goals.includes(:weekly_health_plan).select { |goal| goal.name.parameterize == "alimentacao" }
     @registered_weeks = goals.map { |goal| goal.weekly_health_plan.week_start }.uniq
+    meal_dates = current_user.nutrition_meals.distinct.pluck(:occurred_on)
+    @registered_weeks |= meal_dates.map { |date| date.beginning_of_week(:monday) }
+    consumption_dates = (meal_dates + current_user.daily_calorie_entries.pluck(:occurred_on)).uniq
+    consumption = Health::DailyConsumptionQuery.new(user: current_user, dates: consumption_dates).call
     @hero_kpis = [
       ["Semanas Registradas", "calendar_month", @registered_weeks.size],
       ["Dias de Alimentação", "restaurant", goals.sum(&:completed_count)],
-      ["Calorias Preenchidas", "local_fire_department", current_user.daily_calorie_entries.where.not(consumed_calories: nil).count]
+      ["Calorias Preenchidas", "local_fire_department", consumption.values.count { |day| !day[:calories].nil? }]
     ]
   end
 

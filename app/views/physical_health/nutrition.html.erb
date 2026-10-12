@@ -8,12 +8,11 @@
         <div class="health-card__identity-block"><%= link_to health_nutrition_week_path(week.iso8601), class: "health-card__identity-main", data: { turbo: false } do %><div class="health-card__icon-wrapper"><span class="material-symbols-rounded health-card__icon">restaurant</span></div><h2 class="health-card__title">Semana de <%= week.strftime('%d/%m/%Y') %> a <%= (week + 6.days).strftime('%d/%m/%Y') %></h2><% end %></div>
 
         <div class="nutrition-week-card__averages nutrition-week-card__badges">
-          <% { consumed: ["Calorias Ingeridas Médias", "restaurant", "blue"], expenditure: ["Gasto Estimado Médio", "local_fire_department", "red"], deficit: ["Déficit Médio", "balance", "green"] }.each do |metric, (label, icon, color)| %>
+          <% { consumed: ["Calorias Ingeridas Médias", "restaurant", "blue"] }.each do |metric, (label, icon, color)| %>
             <% average = @calorie_summaries.fetch(week).fetch(metric) %>
-            <% label = "Superávit Médio" if metric == :deficit && average[:mean]&.negative? %>
             <span class="nutrition-week-card__badge nutrition-week-card__badge--<%= color %>" title="<%= label %>">
               <span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span>
-              <span><%= { consumed: "Ingestão média", expenditure: "Gasto médio", deficit: average[:mean]&.negative? ? "Superávit médio" : "Déficit médio" }[metric] %>: <strong><%= average[:mean] ? "#{number_with_precision(average[:mean].abs, precision: 0, delimiter: '.')} kcal" : "Sem registro" %></strong></span>
+              <span>Ingestão média: <strong><%= average[:mean] ? "#{number_with_precision(average[:mean], precision: 0, delimiter: '.')} kcal" : "Sem dados" %></strong></span>
             </span>
           <% end %>
         </div>

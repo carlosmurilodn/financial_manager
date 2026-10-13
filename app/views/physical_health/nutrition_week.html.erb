@@ -7,7 +7,7 @@
     <div class="nutrition-week" data-controller="nutrition-tabs" data-action="nutrition-meals:changed->nutrition-tabs#refreshOptions">
       <div class="nutrition-week__day-selector">
         <label for="nutrition-week-day">Dia da semana</label>
-        <select id="nutrition-week-day" class="app-form-control" data-nutrition-tabs-target="daySelect" data-action="change->nutrition-tabs#selectDay">
+        <select id="nutrition-week-day" class="app-form-select" data-select2-search="false" data-nutrition-tabs-target="daySelect" data-action="change->nutrition-tabs#selectDay">
           <% dates.each_with_index do |date, index| %>
             <% day_items = @nutrition_meals_by_date.fetch(date, []).flat_map { |meal| meal.nutrition_meal_items.to_a } %>
             <% day_calories = Nutrition::MealSummary.totals(day_items)[:calories] %>

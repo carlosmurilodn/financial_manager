@@ -51,7 +51,9 @@
             [health_profile_path, :profile, "Perfil de Saúde", "person"],
             [health_weight_goals_path, :milestones, "Marcos e Metas", "flag"],
             [muscle_groups_path, :muscle_groups, "Grupos Musculares", "accessibility_new"],
-            [strength_exercise_catalogs_path, :strength_exercises, "Exercícios de Musculação", "fitness_center"]
+            [strength_exercise_catalogs_path, :strength_exercises, "Exercícios de Musculação", "fitness_center"],
+            [taco_foods_path, :foods, "Alimentos", "restaurant"],
+            [nutrition_recipes_path, :recipes, "Receitas", "menu_book"]
           ].each do |path, section, label, icon| %>
             <% if path.present? %>
               <%= link_to path, class: "app-nav-link #{'active-menu' if health_nav_active?(section)}", title: label, aria: { label: label, current: health_nav_active?(section) ? "page" : nil }, data: { turbo: false } do %>
@@ -134,6 +136,10 @@
               <span class="material-symbols-rounded app-nav-link__icon">accessibility_new</span>
               <span class="link-text">Grupos Musculares</span>
             <% end %>
+            <%= link_to strength_exercise_catalogs_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:strength_exercises)}", id: "link-health-strength-exercises", title: "Exercícios de Musculação", data: { turbo: false } do %>
+              <span class="material-symbols-rounded app-nav-link__icon">fitness_center</span>
+              <span class="link-text">Exercícios de Musculação</span>
+            <% end %>
             <%= link_to taco_foods_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:foods)}", id: "link-health-foods", title: "Alimentos", data: { turbo: false } do %>
               <span class="material-symbols-rounded app-nav-link__icon">restaurant</span>
               <span class="link-text">Alimentos</span>
@@ -141,10 +147,6 @@
             <%= link_to nutrition_recipes_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:recipes)}", id: "link-health-recipes", title: "Receitas", data: { turbo: false } do %>
               <span class="material-symbols-rounded app-nav-link__icon">menu_book</span>
               <span class="link-text">Receitas</span>
-            <% end %>
-            <%= link_to strength_exercise_catalogs_path, class: "app-nav-link #{'active-menu' if health_nav_active?(:strength_exercises)}", id: "link-health-strength-exercises", title: "Exercícios de Musculação", data: { turbo: false } do %>
-              <span class="material-symbols-rounded app-nav-link__icon">fitness_center</span>
-              <span class="link-text">Exercícios de Musculação</span>
             <% end %>
           </div>
         </details>

@@ -30,10 +30,6 @@
       </div>
       <% dates.each do |date| %>
         <section id="nutrition-panel-<%= date.iso8601 %>" class="nutrition-week__panel calorie-day" role="tabpanel" aria-labelledby="nutrition-tab-<%= date.iso8601 %>" tabindex="0" data-nutrition-tabs-target="panel" data-controller="nutrition-meal-form" data-action="nutrition-meals:changed->nutrition-meal-form#refresh" <%= "hidden" unless date == selected_date %>>
-          <div class="calorie-day__header">
-            <h2 class="nutrition-week__title"><%= day_names[date.wday] %></h2>
-            <time datetime="<%= date.iso8601 %>"><%= date.strftime("%d/%m/%Y") %></time>
-          </div>
           <% meals = @nutrition_meals_by_date.fetch(date, []) %>
           <div data-nutrition-meal-form-target="daySummary" aria-live="polite"><%= render "nutrition_meals/day_summary", meals: meals %></div>
           <p class="nutrition-meal-picker__status" role="status" aria-live="polite" data-nutrition-meal-form-target="status"></p>

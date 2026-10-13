@@ -2,7 +2,7 @@
 .nutrition-meal { padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); color: var(--text-main); }
 .nutrition-meal__header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .nutrition-meal__header h2, .nutrition-meal__header h3 { margin: 0; font-size: 1.1rem; overflow-wrap: anywhere; }
-.nutrition-meal__header--inline { display: grid; grid-template-columns: 140px repeat(3, max-content); justify-content: start; margin-bottom: 0; }
+.nutrition-meal__header--inline { display: flex; justify-content: space-between; margin-bottom: 0; }
 .nutrition-meal-copy { width: min(560px, calc(100vw - 32px)); }
 .nutrition-meal-copy__days { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; }
 .nutrition-meal-copy__days legend { color: var(--text-main); font-weight: 700; }
@@ -43,4 +43,12 @@
 .nutrition-meal-picker__result.is-selected { border-color: var(--nav-active-bar); box-shadow: 0 0 0 1px var(--nav-active-bar); }
 .nutrition-quick-registration { width: min(1000px, calc(100vw - 32px)); }
 @media (max-width: 640px) { .nutrition-meal { padding: 12px; } .nutrition-meal-picker { padding: 12px; } .nutrition-meal__header .app-btn { width: 100%; } }
-@media (max-width: 640px) { .nutrition-meal__header--inline { grid-template-columns: minmax(0, 1fr); } .nutrition-meal__header--inline .app-btn { width: auto; justify-self: start; } }
+
+.nutrition-meal__heading { display: flex; flex: 1 1 300px; flex-wrap: wrap; align-items: center; gap: 8px 16px; min-width: 0; }
+.nutrition-meal__totals { min-width: 0; max-width: 100%; }
+.nutrition-meal__totals:empty { display: none; }
+.nutrition-meal__actions { display: flex; flex: 0 0 auto; align-items: center; gap: 8px; margin-left: auto; }
+.nutrition-week__panel > .nutrition-meal-picker__status:empty { display: none; }
+.nutrition-card--compact .health-weight-goal-card__content { padding: 8px 12px; gap: 8px 12px; width: auto; box-sizing: border-box; }
+.nutrition-card--compact .health-weight-goal-card__title { margin: 0; }
+.nutrition-meal .nutrition-cards { gap: 8px; }

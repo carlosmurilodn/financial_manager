@@ -16,6 +16,7 @@ module NutritionMealResponses
     meal.nutrition_meal_items.reload
     {
       html: render_to_string(partial: "nutrition_meals/items", formats: [ :html ], locals: { meal: meal, context: "card" }),
+      totals_html: render_to_string(partial: "nutrition_meals/totals", formats: [ :html ], locals: { meal: meal }),
       picker_html: render_to_string(partial: "nutrition_meals/items", formats: [ :html ], locals: { meal: meal, context: "picker" })
     }.merge(day_summary_payload(meal.occurred_on))
   end

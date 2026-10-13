@@ -1,0 +1,4 @@
+<% items = meal.nutrition_meal_items.to_a %>
+<% if items.any? %>
+  <%= render "shared/nutrition_badges", values: Nutrition::MealSummary.totals(items) %>
+<% end %>

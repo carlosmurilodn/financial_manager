@@ -14,8 +14,6 @@
   .app-shell--health .progress-panels--activity { display: grid; grid-template-columns: minmax(0, 1fr); }
   .app-shell--health .progress-panels--activity > * { width: 100%; }
   .app-shell--health .progress-physical-summary__heading { grid-template-columns: minmax(0, 1fr); }
-  .nutrition-meal__header--inline { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .nutrition-meal__header--inline > h3 { grid-column: 1 / -1; }
   .nutrition-meal__header--inline .app-btn { min-width: 0; white-space: normal; }
   .health-index-filters.nutrition-recipe-search-fields { grid-template-columns: minmax(0, 1fr); }
 }
@@ -48,8 +46,12 @@
   .app-shell--health .app-form-control,
   .app-shell--health .app-form-select { min-width: 0; max-width: 100%; font-size: 16px; }
   .app-shell--health .progress-week-selector { width: 100%; min-width: 0; }
-  .nutrition-meal__header--inline { grid-template-columns: minmax(0, 1fr); }
-  .nutrition-meal__header--inline .app-btn { width: 100%; justify-self: stretch; }
+  .nutrition-meal__header--inline { flex-wrap: nowrap; align-items: flex-start; gap: 8px; }
+  .nutrition-meal__heading { flex: 1 1 0; gap: 8px; }
+  .nutrition-meal__actions { gap: 4px; }
+  .nutrition-meal__totals .nutrition-recipe-result__badge { white-space: normal; overflow-wrap: anywhere; }
+  .nutrition-meal__header--inline .app-btn { width: 44px; min-width: 44px; height: 44px; padding: 0; }
+  .nutrition-meal__actions .app-btn > span:not(.material-symbols-rounded) { display: none; }
   .nutrition-meal-picker { width: calc(100vw - 24px); max-height: calc(100dvh - 24px); padding: 12px; }
   .nutrition-meal-copy { width: min(560px, calc(100vw - 24px)); }
   .nutrition-meal-picker__header-actions { margin-left: 0; width: 100%; }

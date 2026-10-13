@@ -5,7 +5,7 @@ const NUTRIENTS = { calories: "Calorias (kcal)", carbohydrates: "Carboidratos (g
 const SOURCES = { taco: "TACO", custom: "Meus Alimentos", recipe: "Receitas" }
 
 export default class extends Controller {
-  static targets = ["dialog", "source", "query", "results", "status", "managementStatus", "summary", "done", "registrationDialog", "registrationTitle", "registrationStatus", "registrationBody"]
+  static targets = ["dialog", "source", "query", "results", "status", "managementStatus", "totals", "summary", "done", "registrationDialog", "registrationTitle", "registrationStatus", "registrationBody"]
   static values = { searchUrl: String, saveUrl: String }
 
   connect() {
@@ -368,6 +368,8 @@ export default class extends Controller {
   }
 
   applyResponse(data) {
+    if (this.hasTotalsTarget) this.totalsTarget.innerHTML = data.totals_html
+
     this.summaryTargets.forEach(summary => {
       summary.innerHTML = summary.closest("dialog") ? data.picker_html : data.html
     })

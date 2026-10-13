@@ -41,3 +41,18 @@
   outline: 2px solid var(--nav-active-bar);
   outline-offset: 4px;
 }
+
+.nutrition-week__day-selector { display: none; }
+@media (max-width: 640px) {
+  .nutrition-week__tabs { display: none; }
+  .nutrition-week__day-selector { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+  .nutrition-week__day-selector label { color: var(--text-soft); font-size: .82rem; font-weight: 700; }
+  .nutrition-week__day-selector select { width: 100%; min-height: 44px; }
+  .nutrition-week .nutrition-week__panel.calorie-day { margin-top: 0; border-radius: 12px; }
+}
+
+.nutrition-week__actions { display: flex; align-items: center; gap: 8px; }
+@media (max-width: 640px) {
+  .nutrition-week__actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; gap: 6px; }
+  .nutrition-week__actions .app-btn { min-width: 0; padding: 6px; gap: 4px; font-size: .72rem; white-space: normal; text-align: center; height: 100%; }
+}

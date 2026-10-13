@@ -1,7 +1,8 @@
 <article class="nutrition-meal" data-controller="meal-picker meal-copy" data-meal-picker-search-url-value="<%= search_nutrition_meal_nutrition_meal_items_path(meal) %>" data-meal-picker-save-url-value="<%= nutrition_meal_nutrition_meal_items_path(meal) %>">
   <header class="nutrition-meal__header nutrition-meal__header--inline">
     <div class="nutrition-meal__heading">
-      <h3><%= meal.name %></h3>
+      <% meal_icon = { "Café da manhã" => "breakfast_dining", "Almoço" => "meal_lunch", "Lanche" => "fastfood", "Jantar" => "meal_dinner", "Ceia" => "cookie" }[meal.name] %>
+      <h3 class="nutrition-meal__name"><% if meal_icon %><span class="material-symbols-rounded" aria-hidden="true"><%= meal_icon %></span><% end %><span><%= meal.name %></span></h3>
       <div class="nutrition-meal__totals" aria-label="Total da refeição" aria-live="polite" data-meal-picker-target="totals"><%= render "nutrition_meals/totals", meal: meal %></div>
     </div>
     <div class="nutrition-meal__actions">

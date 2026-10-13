@@ -45,6 +45,8 @@
 @media (max-width: 640px) { .nutrition-meal { padding: 12px; } .nutrition-meal-picker { padding: 12px; } .nutrition-meal__header .app-btn { width: 100%; } }
 
 .nutrition-meal__heading { display: flex; flex: 1 1 300px; flex-wrap: wrap; align-items: center; gap: 8px 16px; min-width: 0; }
+.nutrition-meal__name { display: flex; align-items: center; gap: 8px; }
+.nutrition-meal__name > .material-symbols-rounded { font-size: 16px; line-height: 1; flex-shrink: 0; }
 .nutrition-meal__totals { min-width: 0; max-width: 100%; }
 .nutrition-meal__totals:empty { display: none; }
 .nutrition-meal__actions { display: flex; flex: 0 0 auto; align-items: center; gap: 8px; margin-left: auto; }
@@ -54,6 +56,7 @@
 .nutrition-meal .nutrition-cards { gap: 8px; }
 .nutrition-card--compact .health-weight-goal-card__title { line-height: 1.2; }
 .nutrition-card--compact .nutrition-card__subtitle { display: block; margin-top: 2px; font-size: .72rem; line-height: 1.1; }
+.nutrition-card__mobile-nutrient { display: none; }
 
 .nutrition-item-show__overview { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); }
 .nutrition-item-show__kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); flex: 1 1 560px; gap: 12px; }

@@ -46,13 +46,15 @@
   .app-shell--health .app-form-control,
   .app-shell--health .app-form-select { min-width: 0; max-width: 100%; font-size: 16px; }
   .app-shell--health .progress-week-selector { width: 100%; min-width: 0; }
-  .nutrition-meal__header--inline { flex-wrap: nowrap; align-items: flex-start; gap: 8px; }
+  .nutrition-meal__header--inline { flex-wrap: nowrap; align-items: center; gap: 8px; }
   .nutrition-meal__heading { flex: 1 1 0; gap: 8px; }
   .nutrition-meal__actions { gap: 4px; }
   .nutrition-meal__totals,
   .nutrition-meal .nutrition-card .nutrition-recipe-result__nutrients,
   .nutrition-meal [data-action="meal-picker#deleteItem"],
   .nutrition-meal .nutrition-card__actions:not(:has(form)) { display: none; }
+  .nutrition-meal .nutrition-card--compact .nutrition-card__subtitle { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
+  .nutrition-meal .nutrition-card__mobile-nutrient { display: inline; white-space: nowrap; }
   .nutrition-meal__header--inline .app-btn { width: 44px; min-width: 44px; height: 44px; padding: 0; }
   .nutrition-meal__actions .app-btn > span:not(.material-symbols-rounded) { display: none; }
   .nutrition-meal-picker { width: calc(100vw - 24px); max-height: calc(100dvh - 24px); padding: 12px; }

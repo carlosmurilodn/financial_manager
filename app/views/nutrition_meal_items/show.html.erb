@@ -45,16 +45,17 @@
       <article class="app-panel nutrition-item-show__group">
         <h2><%= group %></h2>
         <table class="nutrition-item-show__table">
-          <thead><tr><th scope="col">Nutriente</th><th scope="col"><%= taco_nutrient_value(@item.quantity_grams) %> g</th><th scope="col">100 g</th></tr></thead>
+          <thead><tr><th scope="col">Nutriente</th><th scope="col"><%= taco_nutrient_value(@item.quantity_grams) %> g</th><th scope="col">100 g</th><th scope="col" title="Percentual do valor diário de referência para a quantidade consumida">VDR (%)</th></tr></thead>
           <tbody>
             <% fields.each do |field, (label, unit, _)| %>
               <% value = @nutrients[field] %>
-              <tr><th scope="row"><%= label %> <small>(<%= unit %>)</small></th><td><%= meal_item_nutrient_value(value) %></td><td><%= meal_item_nutrient_value(value * 100 / @item.quantity_grams) unless value.nil? %><%= "—" if value.nil? %></td></tr>
+              <tr><th scope="row"><%= label %> <small>(<%= unit %>)</small></th><td><%= meal_item_nutrient_value(value) %></td><td><%= meal_item_nutrient_value(value * 100 / @item.quantity_grams) unless value.nil? %><%= "—" if value.nil? %></td><td><%= meal_item_daily_reference(field, value) %></td></tr>
             <% end %>
           </tbody>
         </table>
       </article>
     <% end %>
   </div>
+  <p class="nutrition-recipe-note">VDR (%): percentual do valor diário de referência para a quantidade consumida, conforme <%= link_to "Anvisa · IN 75/2020, Anexo II", Nutrition::DailyReference::SOURCE_URL, target: "_blank", rel: "noopener noreferrer" %>. — indica dado ausente ou referência não definida na mesma unidade nutricional.</p>
   <p class="nutrition-recipe-note">Calorias e macronutrientes correspondem ao lançamento; demais nutrientes usam o cadastro atual ou a composição atual da receita. — indica informação indisponível, não zero.</p>
 </section>

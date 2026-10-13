@@ -52,3 +52,5 @@
 .nutrition-card--compact .health-weight-goal-card__content { padding: 8px 12px; gap: 8px 12px; width: auto; box-sizing: border-box; }
 .nutrition-card--compact .health-weight-goal-card__title { margin: 0; }
 .nutrition-meal .nutrition-cards { gap: 8px; }
+.nutrition-card--compact .health-weight-goal-card__title { line-height: 1.2; }
+.nutrition-card--compact .nutrition-card__subtitle { display: block; margin-top: 2px; font-size: .72rem; line-height: 1.1; }

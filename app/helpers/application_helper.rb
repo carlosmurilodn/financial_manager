@@ -28,6 +28,7 @@ module ApplicationHelper
     taco_foods
     custom_foods
     nutrition_recipes
+    nutrition_meal_items
   ].freeze
 
   def personal_development_section?
@@ -87,7 +88,8 @@ module ApplicationHelper
     when :profile
       controller_name == "health_profiles"
     when :nutrition
-      controller_name == "physical_health" && action_name.in?(%w[nutrition nutrition_week toggle_nutrition_day new_nutrition_week create_nutrition_week edit_nutrition_week update_nutrition_week destroy_nutrition_week])
+      controller_name == "nutrition_meal_items" ||
+        (controller_name == "physical_health" && action_name.in?(%w[nutrition nutrition_week toggle_nutrition_day new_nutrition_week create_nutrition_week edit_nutrition_week update_nutrition_week destroy_nutrition_week]))
     when :exercise
       controller_name == "exercise_entries"
     else

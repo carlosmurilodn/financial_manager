@@ -6,6 +6,8 @@ class NutritionMealItemsController < ApplicationController
   def show
     @item = @meal.nutrition_meal_items.find(params[:id])
     @nutrients = Nutrition::MealItemDetails.new(@item).nutrients
+    @meal_options = current_user.nutrition_meals.where(occurred_on: @meal.occurred_on).to_a
+      .sort_by { |meal| [Nutrition::EnsureWeekMeals::DEFAULT_NAMES.index(meal.name) || 5, meal.id] }
   end
 
   def search
@@ -26,11 +28,11 @@ class NutritionMealItemsController < ApplicationController
   end
 
   def update
-    quantity = params.require(:nutrition_meal_item).permit(:quantity_grams)[:quantity_grams]
-    Nutrition::UpdateMealItem.new(meal: @meal, item_id: params[:id], quantity_grams: quantity).call
+    attributes = params.require(:nutrition_meal_item).permit(:quantity_grams, :destination_meal_id)
+    item = Nutrition::UpdateMealItem.new(meal: @meal, item_id: params[:id], **attributes.to_h.symbolize_keys).call
     respond_to do |format|
       format.json { render json: item_summary_payload(@meal).merge(message: "Quantidade e totais atualizados.") }
-      format.html { redirect_to nutrition_meal_nutrition_meal_item_path(@meal, params[:id]), notice: "Quantidade e totais atualizados.", status: :see_other }
+      format.html { redirect_to nutrition_meal_nutrition_meal_item_path(item.nutrition_meal, item), notice: "Lançamento atualizado.", status: :see_other }
     end
   rescue ActiveRecord::RecordInvalid => error
     render_update_error(error.record.errors.full_messages.join(". "))
@@ -54,6 +56,7 @@ class NutritionMealItemsController < ApplicationController
       format.html do
         show
         @quantity = params.dig(:nutrition_meal_item, :quantity_grams)
+        @destination_meal_id = params.dig(:nutrition_meal_item, :destination_meal_id)
         flash.now[:alert] = message
         render :show, status: :unprocessable_entity
       end

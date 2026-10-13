@@ -1,5 +1,4 @@
 <section class="app-page exercise-entry-show self-knowledge-page nutrition-item-show">
-  <%= render "shared/breadcrumbs", items: [["Saúde e Bem-Estar", progress_path], ["Alimentação", health_nutrition_path], ["Semana", meal_week_path], [@item.name, nil]] %>
   <header class="app-page__hero">
     <div class="exercise-entry-show__header">
       <div class="app-page__hero-copy">
@@ -22,13 +21,17 @@
   </header>
   <div class="nutrition-item-show__overview">
     <div class="nutrition-item-show__quantity">
-      <h2>Quantidade consumida</h2>
+      <h2>Quantidade consumida e refeição</h2>
       <%= form_with scope: :nutrition_meal_item, url: nutrition_meal_nutrition_meal_item_path(@meal, @item), method: :patch, class: "nutrition-meal-item-quantity" do |f| %>
         <div class="app-filter-field">
           <%= f.label :quantity_grams, "Quantidade (g)", for: "meal-item-show-quantity-#{@item.id}" %>
           <%= f.number_field :quantity_grams, value: @quantity || @item.quantity_grams, id: "meal-item-show-quantity-#{@item.id}", class: "app-form-control", min: "0.0001", max: "99999999.9999", step: "0.0001", required: true %>
         </div>
-        <%= f.button type: "submit", class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">save</span><span>Salvar quantidade</span><% end %>
+        <div class="app-filter-field">
+          <%= f.label :destination_meal_id, "Refeição", for: "meal-item-show-meal-#{@item.id}" %>
+          <%= f.select :destination_meal_id, options_from_collection_for_select(@meal_options, :id, :name, @destination_meal_id || @meal.id), {}, id: "meal-item-show-meal-#{@item.id}", class: "app-form-select" %>
+        </div>
+        <%= f.button type: "submit", class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">save</span><span>Salvar alterações</span><% end %>
       <% end %>
     </div>
     <div class="nutrition-item-show__kpis">

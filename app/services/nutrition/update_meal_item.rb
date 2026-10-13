@@ -1,6 +1,6 @@
 module Nutrition
   class UpdateMealItem
-    def initialize(meal:, item_id:, quantity_grams:, destination_meal_id: nil:)
+    def initialize(meal:, item_id:, quantity_grams:, destination_meal_id: nil)
       @meal = meal
       @destination_meal_id = destination_meal_id.presence || meal.id
       @item_id = item_id
@@ -33,8 +33,7 @@ module Nutrition
             NutritionMealItem::NUTRIENTS.each do |field|
               stored = existing.public_send(field)
               value = item.public_send(field)
-              existing.public_send("#{field}=", stored + value if stored && value)
-              existing.public_send("#{field}=", nil) if stored.nil? || value.nil?
+              existing.public_send("#{field}=", stored && value ? stored + value : nil)
             end
             existing.addition_tokens = (existing.addition_tokens + item.addition_tokens).uniq
             existing.save!

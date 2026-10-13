@@ -1,6 +1,6 @@
 module Nutrition
   class EnsureWeekMeals
-    DEFAULT_NAMES = [ "Café da manhã", "Almoço", "Jantar", "Lanche", "Ceia" ].freeze
+    DEFAULT_NAMES = [ "Café da manhã", "Almoço", "Lanche", "Jantar", "Ceia" ].freeze
 
     def initialize(user:, week_start:)
       @user = user

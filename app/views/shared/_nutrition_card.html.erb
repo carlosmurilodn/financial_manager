@@ -1,10 +1,21 @@
-<article class="health-weight-goal-card nutrition-card" style="--health-card-accent: #5c6df2;">
+<article class="health-weight-goal-card nutrition-card<%= " nutrition-card--compact" if local_assigns[:compact] %>" style="--health-card-accent: #5c6df2;">
   <div class="health-weight-goal-card__content">
     <div class="health-weight-goal-card__identity-main">
-      <div class="health-weight-goal-card__icon-wrapper"><span class="material-symbols-rounded health-weight-goal-card__icon" aria-hidden="true"><%= icon %></span></div>
+      <% unless local_assigns[:compact] %>
+        <div class="health-weight-goal-card__icon-wrapper"><span class="material-symbols-rounded health-weight-goal-card__icon" aria-hidden="true"><%= icon %></span></div>
+      <% end %>
       <div class="health-weight-goal-card__description-link">
         <h3 class="health-weight-goal-card__title"><% if local_assigns[:title_path] %><%= link_to title, title_path, class: "stealth-link" %><% else %><%= title %><% end %></h3>
-        <% if local_assigns[:subtitle].present? %><small class="nutrition-card__subtitle"><%= subtitle %></small><% end %>
+        <% if local_assigns[:subtitle].present? %>
+          <small class="nutrition-card__subtitle">
+            <span><%= subtitle %></span>
+            <% if local_assigns[:compact] && local_assigns[:nutrients] %>
+              <% { calories: ["Cal.", ""], proteins: ["Prot.", "g"], carbohydrates: ["Carb.", "g"], fats: ["Gord.", "g"] }.each do |field, (label, unit)| %>
+                <span class="nutrition-card__mobile-nutrient"><%= label %>: <%= taco_nutrient_value(nutrients[field]) %><%= unit unless nutrients[field].nil? %></span>
+              <% end %>
+            <% end %>
+          </small>
+        <% end %>
       </div>
     </div>
     <% if local_assigns[:meta].present? %><div class="nutrition-card__meta"><% meta.each do |label, value| %><span><small><%= label %></small><strong><%= value %></strong></span><% end %></div><% end %>

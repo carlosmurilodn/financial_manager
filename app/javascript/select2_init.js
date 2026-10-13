@@ -24,6 +24,7 @@ export function initSelect2(container = document) {
 
     selects.forEach((el) => {
       const options = { ...SELECT2_OPTIONS }
+      if (el.dataset.select2Search === "false") options.minimumResultsForSearch = Infinity
 
       // Keep the contextual editor dropdown above its mobile drawer.
       const narrativePanel = el.closest(".literary-narrative-panel")

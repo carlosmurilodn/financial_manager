@@ -1,7 +1,24 @@
 import { Controller } from "@hotwired/stimulus"
+import $ from "jquery"
 
 export default class extends Controller {
-  static targets = ["tab", "panel"]
+  static targets = ["tab", "panel", "daySelect"]
+
+  selectDay(event) {
+    this.activate(Number(event.currentTarget.value))
+  }
+
+  refreshOptions() {
+    if (!this.hasDaySelectTarget) return
+    Array.from(this.daySelectTarget.options).forEach((option, index) => {
+      const calories = this.tabTargets[index].querySelector(".nutrition-week__tab-calories").textContent
+      const updated = option.cloneNode(true)
+      updated.textContent = `${option.dataset.label} · ${calories}`
+      updated.selected = option.selected
+      option.replaceWith(updated)
+    })
+    $(this.daySelectTarget).trigger("change.select2")
+  }
 
   select(event) {
     this.activate(this.tabTargets.indexOf(event.currentTarget))
@@ -32,6 +49,12 @@ export default class extends Controller {
       tab.tabIndex = selected ? 0 : -1
       this.panelTargets[position].hidden = !selected
     })
-    this.tabTargets[index].scrollIntoView({ block: "nearest", inline: "nearest" })
+    if (this.hasDaySelectTarget) {
+      this.daySelectTarget.value = String(index)
+      $(this.daySelectTarget).trigger("change.select2")
+    }
+    if (this.tabTargets[index].getClientRects().length) {
+      this.tabTargets[index].scrollIntoView({ block: "nearest", inline: "nearest" })
+    }
   }
 }

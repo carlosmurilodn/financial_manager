@@ -29,9 +29,9 @@
         </div>
         <div class="app-filter-field nutrition-item-show__meal-field">
           <%= f.label :destination_meal_id, "Refeição", for: "meal-item-show-meal-#{@item.id}" %>
-          <%= f.select :destination_meal_id, options_from_collection_for_select(@meal_options, :id, :name, @destination_meal_id || @meal.id), {}, id: "meal-item-show-meal-#{@item.id}", class: "app-form-select" %>
+          <%= f.select :destination_meal_id, options_from_collection_for_select(@meal_options, :id, :name, @destination_meal_id || @meal.id), {}, id: "meal-item-show-meal-#{@item.id}", class: "app-form-select", data: { select2_search: false } %>
         </div>
-        <%= f.button type: "submit", class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">save</span><span>Salvar alterações</span><% end %>
+        <%= f.button type: "submit", class: "app-btn app-btn--primary nutrition-item-show__save" do %><span class="material-symbols-rounded" aria-hidden="true">save</span><span>Salvar<span class="nutrition-item-show__save-detail"> alterações</span></span><% end %>
       <% end %>
     </div>
     <div class="nutrition-item-show__kpis">

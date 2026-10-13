@@ -27,7 +27,7 @@
           <%= f.label :quantity_grams, "Quantidade (g)", for: "meal-item-show-quantity-#{@item.id}" %>
           <%= f.number_field :quantity_grams, value: @quantity || @item.quantity_grams, id: "meal-item-show-quantity-#{@item.id}", class: "app-form-control", min: "0.0001", max: "99999999.9999", step: "0.0001", required: true %>
         </div>
-        <div class="app-filter-field">
+        <div class="app-filter-field nutrition-item-show__meal-field">
           <%= f.label :destination_meal_id, "Refeição", for: "meal-item-show-meal-#{@item.id}" %>
           <%= f.select :destination_meal_id, options_from_collection_for_select(@meal_options, :id, :name, @destination_meal_id || @meal.id), {}, id: "meal-item-show-meal-#{@item.id}", class: "app-form-select" %>
         </div>

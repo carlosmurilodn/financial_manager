@@ -64,6 +64,8 @@
 .nutrition-item-show__quantity { flex: 1 1 100%; }
 .nutrition-item-show__quantity h2 { margin: 0 0 8px; font-size: .9rem; }
 .nutrition-item-show__quantity .nutrition-meal-item-quantity { align-items: flex-end; }
+.nutrition-item-show__meal-field { width: 180px; flex: 0 0 180px; max-width: 100%; }
+.nutrition-item-show__meal-field .app-form-select { width: 100%; }
 .nutrition-item-show__groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .nutrition-item-show__group { min-width: 0; padding: 16px; }
 .nutrition-item-show__group h2 { margin: 0 0 12px; font-size: 1rem; }

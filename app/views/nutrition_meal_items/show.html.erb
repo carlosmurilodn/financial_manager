@@ -1,4 +1,4 @@
-<section class="app-page exercise-entry-show self-knowledge-page">
+<section class="app-page exercise-entry-show self-knowledge-page nutrition-item-show">
   <%= render "shared/breadcrumbs", items: [["Saúde e Bem-Estar", progress_path], ["Alimentação", health_nutrition_path], ["Semana", meal_week_path], [@item.name, nil]] %>
   <header class="app-page__hero">
     <div class="exercise-entry-show__header">
@@ -20,23 +20,38 @@
       </div>
     </div>
   </header>
-  <article class="app-panel exercise-entry-show__item">
-    <header class="exercise-entry-show__item-header"><h2>Informações nutricionais para <%= taco_nutrient_value(@item.quantity_grams) %> g</h2></header>
-    <dl class="exercise-entry-show__details">
-      <% { calories: "Calorias (kcal)", carbohydrates: "Carboidratos (g)", proteins: "Proteínas (g)", fats: "Gorduras (g)", fiber: "Fibras (g)" }.each do |field, label| %>
-        <div><dt><%= label %></dt><dd><%= taco_nutrient_value(@nutrients[field]) %></dd></div>
+  <div class="nutrition-item-show__overview">
+    <div class="nutrition-item-show__quantity">
+      <h2>Quantidade consumida</h2>
+      <%= form_with scope: :nutrition_meal_item, url: nutrition_meal_nutrition_meal_item_path(@meal, @item), method: :patch, class: "nutrition-meal-item-quantity" do |f| %>
+        <div class="app-filter-field">
+          <%= f.label :quantity_grams, "Quantidade (g)", for: "meal-item-show-quantity-#{@item.id}" %>
+          <%= f.number_field :quantity_grams, value: @quantity || @item.quantity_grams, id: "meal-item-show-quantity-#{@item.id}", class: "app-form-control", min: "0.0001", max: "99999999.9999", step: "0.0001", required: true %>
+        </div>
+        <%= f.button type: "submit", class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">save</span><span>Salvar quantidade</span><% end %>
       <% end %>
-    </dl>
-    <p class="nutrition-recipe-note">Calorias e macronutrientes correspondem ao lançamento. Fibras calculadas pelo cadastro atual do alimento, quando disponível. Valores não disponíveis aparecem como —.</p>
-  </article>
-  <article class="app-panel exercise-entry-show__item">
-    <header class="exercise-entry-show__item-header"><h2>Quantidade consumida</h2></header>
-    <%= form_with scope: :nutrition_meal_item, url: nutrition_meal_nutrition_meal_item_path(@meal, @item), method: :patch, class: "nutrition-meal-item-quantity" do |f| %>
-      <div class="app-filter-field">
-        <%= f.label :quantity_grams, "Quantidade (g)", for: "meal-item-show-quantity-#{@item.id}" %>
-        <%= f.number_field :quantity_grams, value: @quantity || @item.quantity_grams, id: "meal-item-show-quantity-#{@item.id}", class: "app-form-control", min: "0.0001", max: "99999999.9999", step: "0.0001", required: true %>
-      </div>
-      <%= f.button type: "submit", class: "app-btn app-btn--primary" do %><span class="material-symbols-rounded" aria-hidden="true">save</span><span>Salvar quantidade</span><% end %>
+    </div>
+    <div class="nutrition-item-show__kpis">
+      <% { calories: ["Calorias", "kcal"], carbohydrates: ["Carboidratos", "g"], proteins: ["Proteínas", "g"], fats: ["Gorduras", "g"] }.each do |field, (label, unit)| %>
+        <div class="nutrition-item-show__kpi nutrition-day-kpi--<%= field %>"><span><%= label %></span><strong><%= meal_item_nutrient_value(@nutrients[field]) %> <small><%= unit %></small></strong></div>
+      <% end %>
+    </div>
+  </div>
+  <div class="nutrition-item-show__groups">
+    <% Nutrition::MealItemDetails::GROUPS.each do |group, fields| %>
+      <article class="app-panel nutrition-item-show__group">
+        <h2><%= group %></h2>
+        <table class="nutrition-item-show__table">
+          <thead><tr><th scope="col">Nutriente</th><th scope="col"><%= taco_nutrient_value(@item.quantity_grams) %> g</th><th scope="col">100 g</th></tr></thead>
+          <tbody>
+            <% fields.each do |field, (label, unit, _)| %>
+              <% value = @nutrients[field] %>
+              <tr><th scope="row"><%= label %> <small>(<%= unit %>)</small></th><td><%= meal_item_nutrient_value(value) %></td><td><%= meal_item_nutrient_value(value * 100 / @item.quantity_grams) unless value.nil? %><%= "—" if value.nil? %></td></tr>
+            <% end %>
+          </tbody>
+        </table>
+      </article>
     <% end %>
-  </article>
+  </div>
+  <p class="nutrition-recipe-note">Calorias e macronutrientes correspondem ao lançamento; demais nutrientes usam o cadastro atual ou a composição atual da receita. — indica informação indisponível, não zero.</p>
 </section>

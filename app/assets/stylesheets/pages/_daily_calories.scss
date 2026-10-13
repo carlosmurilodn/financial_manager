@@ -49,7 +49,7 @@
   .nutrition-week__day-selector label { color: var(--text-soft); font-size: .82rem; font-weight: 700; }
   .nutrition-week__day-selector select { width: 100%; min-height: 44px; }
   .nutrition-week__day-selector .select2-selection--single { min-height: 44px; }
-  .nutrition-week .nutrition-week__panel.calorie-day { margin-top: 0; border-radius: 12px; }
+  .nutrition-week .nutrition-week__panel.calorie-day { margin-top: 0; padding: 0; border: 0; border-radius: 0; background: transparent; }
   .nutrition-week__panel > [data-nutrition-meal-form-target="daySummary"] { order: 1; }
 }
 

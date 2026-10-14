@@ -6,7 +6,7 @@
         <div>
           <p class="app-page__eyebrow">Alimentação · <%= @meal.name %></p>
           <h1 class="app-page__title"><%= @item.name %></h1>
-          <p class="app-page__description"><%= @meal.occurred_on.strftime("%d/%m/%Y") %> · <%= { "taco" => "TACO", "custom" => "Meus Alimentos", "recipe" => "Receitas" }[@item.source] %> · <%= taco_nutrient_value(@item.quantity_grams) %> g consumidos</p>
+          <p class="app-page__description"><%= @meal.occurred_on.strftime("%d/%m/%Y") %> · <%= { "taco" => "TACO", "tabnut" => "TabNut", "custom" => "Meus Alimentos", "recipe" => "Receitas" }[@item.source] %> · <%= taco_nutrient_value(@item.quantity_grams) %> g consumidos</p>
         </div>
       </div>
       <div class="exercise-entry-show__actions">
@@ -41,6 +41,9 @@
     </div>
   </div>
   <div class="nutrition-item-show__groups">
+    <% if @item.source == "tabnut" %>
+      <%= render "tabnut_nutrients", item: @item %>
+    <% else %>
     <% Nutrition::MealItemDetails::GROUPS.each do |group, fields| %>
       <article class="app-panel nutrition-item-show__group">
         <h2><%= group %></h2>
@@ -55,7 +58,12 @@
         </table>
       </article>
     <% end %>
+    <% end %>
   </div>
   <p class="nutrition-recipe-note">VDR (%): percentual do valor diário de referência para a quantidade consumida, conforme <%= link_to "Anvisa · IN 75/2020, Anexo II", Nutrition::DailyReference::SOURCE_URL, target: "_blank", rel: "noopener noreferrer" %>. — indica dado ausente ou referência não definida na mesma unidade nutricional.</p>
-  <p class="nutrition-recipe-note">Calorias e macronutrientes correspondem ao lançamento; demais nutrientes usam o cadastro atual ou a composição atual da receita. — indica informação indisponível, não zero.</p>
+  <% if @item.source == "tabnut" %>
+    <p class="nutrition-recipe-note">Dados TabNut preservados no lançamento. Fonte: <%= @item.food_snapshot["data_source"] %>. Consulta em <%= l(Time.iso8601(@item.food_snapshot.fetch("captured_at")).in_time_zone, format: :short) %>. — indica informação indisponível, não zero.</p>
+  <% else %>
+    <p class="nutrition-recipe-note">Calorias e macronutrientes correspondem ao lançamento; demais nutrientes usam o cadastro atual ou a composição atual da receita. — indica informação indisponível, não zero.</p>
+  <% end %>
 </section>

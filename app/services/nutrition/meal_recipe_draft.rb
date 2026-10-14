@@ -8,6 +8,7 @@ module Nutrition
       items = @meal.nutrition_meal_items.to_a
       raise ArgumentError, "Adicione pelo menos um alimento à refeição antes de salvar como receita." if items.empty?
       raise ArgumentError, "Conversão de refeições com receitas aninhadas ainda não é suportada." if items.any? { |item| item.source == "recipe" }
+      raise ArgumentError, "Refeições com alimentos TabNut ainda não podem ser convertidas em receitas." if items.any? { |item| item.source == "tabnut" }
 
       recipe = @meal.user.nutrition_recipes.new(name: @meal.name, final_weight_grams: items.sum(&:quantity_grams), servings: 1)
       items.each do |item|

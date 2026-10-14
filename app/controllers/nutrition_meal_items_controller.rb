@@ -11,8 +11,15 @@ class NutritionMealItemsController < ApplicationController
   end
 
   def search
-    foods = Nutrition::MealCatalog.new(current_user).search(name: params[:name].to_s.strip, source: params[:source].presence || "all")
-    render json: { foods: foods }
+    catalog = Nutrition::MealCatalog.new(current_user)
+    foods = if params[:source] == "tabnut" && params[:source_id].present?
+      [catalog.find(source: "tabnut", id: params[:source_id])]
+    else
+      catalog.search(name: params[:name].to_s.strip.first(150), source: params[:source].presence || "all")
+    end
+    render json: { foods: foods, warning: catalog.warning }
+  rescue Nutrition::TabNutClient::Unavailable, ArgumentError => error
+    render json: { error: error.message }, status: :unprocessable_entity
   end
 
   def create
@@ -24,6 +31,8 @@ class NutritionMealItemsController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     render json: { error: "Alimento ou receita indisponível. Pesquisa e quantidade foram preservadas." }, status: :unprocessable_entity
   rescue ArgumentError => error
+    render json: { error: error.message }, status: :unprocessable_entity
+  rescue Nutrition::TabNutClient::Unavailable => error
     render json: { error: error.message }, status: :unprocessable_entity
   end
 

@@ -21,7 +21,12 @@ module Nutrition
         previous = @meal.nutrition_meal_items.where("addition_tokens @> ?::jsonb", [ @token ].to_json).first
         next previous if previous
 
-        food = MealCatalog.new(@meal.user).find(source: @source, id: @source_id)
+        saved = @meal.nutrition_meal_items.find_by(source: @source, source_id: @source_id) if @source == "tabnut"
+        food = if saved&.food_snapshot.present?
+          { id: saved.source_id, name: saved.name, nutrients: saved.food_snapshot.fetch("per_100g").symbolize_keys, food_snapshot: saved.food_snapshot }
+        else
+          MealCatalog.new(@meal.user).find(source: @source, id: @source_id)
+        end
         if @unit == "servings"
           portion = food[:portion_grams]
           raise ArgumentError, "Esta receita não possui rendimento válido para registrar porções." unless portion&.positive?
@@ -31,6 +36,7 @@ module Nutrition
         end
         item = @meal.nutrition_meal_items.find_or_initialize_by(source: @source, source_id: food[:id].to_s)
         existing = item.persisted?
+        item.food_snapshot = food[:food_snapshot] if !existing && food[:food_snapshot]
         item.name = food[:name]
         item.quantity_grams = (item.quantity_grams || 0) + @quantity
         NutritionMealItem::NUTRIENTS.each do |field|

@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { showConfirmDialog } from "../confirm_dialog"
 
 const NUTRIENTS = { calories: "Calorias (kcal)", carbohydrates: "Carboidratos (g)", proteins: "Proteínas (g)", fats: "Gorduras (g)" }
-const SOURCES = { taco: "TACO", custom: "Meus Alimentos", recipe: "Receitas" }
+const SOURCES = { taco: "TACO", tabnut: "TabNut", custom: "Meus Alimentos", recipe: "Receitas" }
 
 export default class extends Controller {
   static targets = ["dialog", "source", "query", "results", "status", "managementStatus", "totals", "summary", "done", "registrationDialog", "registrationTitle", "registrationStatus", "registrationBody"]
@@ -67,15 +67,16 @@ export default class extends Controller {
     this.setStatus("Pesquisando…")
     try {
       const response = await fetch(url, { headers: { Accept: "application/json" }, signal: this.searchRequest.signal })
-      if (!response.ok) throw new Error("search failed")
       const data = await response.json()
+      if (!response.ok) throw new Error(data.error || "Não foi possível pesquisar.")
       if (name !== this.queryTarget.value.trim() || source !== this.selectedSource) return
       this.resultsTarget.replaceChildren()
       data.foods.forEach(food => this.renderFood(food))
       this.setStatus(data.foods.length ? "Valores para a quantidade informada. Até 10 resultados por origem; refine a pesquisa se necessário." : "Nenhum resultado encontrado.")
+      if (data.warning) this.setStatus(`${data.warning} Resultados locais disponíveis.`, true)
       this.updateBusyState()
     } catch (error) {
-      if (error.name !== "AbortError") this.setStatus("Não foi possível pesquisar. Dados anteriores preservados.", true)
+      if (error.name !== "AbortError") this.setStatus(error.message === "Failed to fetch" ? "Não foi possível pesquisar. Dados anteriores preservados." : error.message, true)
     }
   }
 
@@ -95,6 +96,8 @@ export default class extends Controller {
   }
 
   renderFood(food) {
+    if (food.needs_details) return this.renderTabNutSummary(food)
+
     const key = `${food.source}:${food.id}`
     if (!this.states.has(key)) this.states.set(key, { quantity: "100", unit: "grams", quantities: { grams: "100", servings: "1" }, token: null, uncertain: false })
     const state = this.states.get(key)
@@ -199,9 +202,46 @@ export default class extends Controller {
     preview()
     const identity = document.createElement("div")
     identity.className = "nutrition-recipe-result__identity"
-    title.textContent = `${food.name} · ${SOURCES[food.source]}`
+    title.textContent = `${food.name} · ${SOURCES[food.source]}${food.data_source ? ` · ${food.data_source}` : ""}`
     identity.append(title, metrics)
     card.append(identity, actions, conversion)
+    this.resultsTarget.append(card)
+    return card
+  }
+
+  renderTabNutSummary(food) {
+    const card = document.createElement("article")
+    card.className = "nutrition-meal-picker__result"
+    const title = document.createElement("strong")
+    title.textContent = `${food.name} · TabNut · ${food.data_source || ""} · ${food.serving || ""}`
+    const button = document.createElement("button")
+    button.type = "button"
+    button.className = "app-btn app-btn--outline"
+    button.dataset.add = "true"
+    button.textContent = "Carregar dados"
+    button.addEventListener("click", async () => {
+      if (this.saving) return
+      button.disabled = true
+      this.setStatus("Carregando nutrientes TabNut…")
+      try {
+        const url = new URL(this.searchUrlValue, window.location.origin)
+        url.searchParams.set("source", "tabnut")
+        url.searchParams.set("source_id", food.id)
+        const response = await fetch(url, { headers: { Accept: "application/json" } })
+        const data = await response.json()
+        if (!response.ok) throw new Error(data.error || "Não foi possível carregar TabNut.")
+        if (!card.isConnected) return
+        const detailed = this.renderFood(data.foods[0])
+        card.replaceWith(detailed)
+        this.setStatus("Confira nutrientes e quantidade antes de adicionar à refeição.")
+        this.updateBusyState()
+      } catch (error) {
+        this.setStatus(error.message, true)
+      } finally {
+        button.disabled = Boolean(this.saving)
+      }
+    })
+    card.append(title, button)
     this.resultsTarget.append(card)
     return card
   }

@@ -29,6 +29,9 @@ module Nutrition
         if destination.id != @meal.id
           existing = destination.nutrition_meal_items.find_by(source: item.source, source_id: item.source_id)
           if existing
+            if item.source == "tabnut" && !existing.same_tabnut_composition?(item)
+              raise ArgumentError, "O alimento TabNut no destino possui dados diferentes. Selecione outra refeição."
+            end
             existing.quantity_grams += item.quantity_grams
             NutritionMealItem::NUTRIENTS.each do |field|
               stored = existing.public_send(field)

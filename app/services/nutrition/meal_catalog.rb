@@ -14,7 +14,11 @@ module Nutrition
       end.sort_by { |food| [ I18n.transliterate(food[:name]).downcase, food[:source], food[:id] ] }
       if %w[all tabnut].include?(source)
         begin
-          foods.concat(TabNutClient.new.search(name))
+          external_foods = TabNutClient.new.search(name)
+          if source == "all"
+            external_foods = external_foods.reject { |food| food[:data_source].to_s.match?(/\btaco\b/i) }
+          end
+          foods.concat(external_foods)
         rescue TabNutClient::Unavailable => error
           raise if source == "tabnut"
 

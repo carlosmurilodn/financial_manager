@@ -31,6 +31,10 @@ module Nutrition
           items.each do |original|
             item = target.nutrition_meal_items.find_or_initialize_by(source: original.source, source_id: original.source_id)
             existing = item.persisted?
+            if existing && original.source == "tabnut" && !item.same_tabnut_composition?(original)
+              raise ArgumentError, "O alimento TabNut no destino possui dados diferentes. Mova ou remova esse item antes de copiar."
+            end
+            item.food_snapshot = original.food_snapshot unless existing
             item.name = original.name
             item.quantity_grams = (item.quantity_grams || 0) + original.quantity_grams
             NutritionMealItem::NUTRIENTS.each do |field|

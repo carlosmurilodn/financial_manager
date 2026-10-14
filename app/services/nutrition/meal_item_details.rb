@@ -30,7 +30,12 @@ module Nutrition
     end
 
     def nutrients
-      values = composition(@item.source, @item.source_id)&.transform_values { |value| value * @item.quantity_grams / 100 if value } || {}
+      base = if @item.source == "tabnut"
+        @item.food_snapshot.fetch("per_100g", {}).symbolize_keys.transform_values { |value| decimal(value) }
+      else
+        composition(@item.source, @item.source_id)
+      end
+      values = base&.transform_values { |value| value * @item.quantity_grams / 100 if value } || {}
       values.merge(NutritionMealItem::NUTRIENTS.index_with { |field| @item.public_send(field) })
     end
 

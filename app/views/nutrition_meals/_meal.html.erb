@@ -45,7 +45,7 @@
           <div class="app-filter-field">
             <span id="meal-source-label-<%= meal.id %>">Origem</span>
             <div class="nutrition-recipe-origins" role="radiogroup" aria-labelledby="meal-source-label-<%= meal.id %>">
-              <% [["Todas", "all"], ["TACO", "taco"], ["Meus Alimentos", "custom"], ["Receitas", "recipe"]].each do |label, value| %>
+              <% [["Todas", "all"], ["TACO", "taco"], ["TabNut", "tabnut"], ["Meus Alimentos", "custom"], ["Receitas", "recipe"]].each do |label, value| %>
                 <label class="app-checkbox" for="meal-source-<%= meal.id %>-<%= value %>"><%= radio_button_tag "meal_source_#{meal.id}", value, value == "all", id: "meal-source-#{meal.id}-#{value}", data: { meal_picker_target: "source", action: "change->meal-picker#scheduleSearch" } %><span><%= label %></span></label>
               <% end %>
             </div>

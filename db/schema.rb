@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_12_040100) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_14_120000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -311,11 +311,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_12_040100) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "addition_tokens", default: [], null: false
+    t.jsonb "food_snapshot", default: {}, null: false
     t.index ["nutrition_meal_id"], name: "index_nutrition_meal_items_on_nutrition_meal_id"
     t.index ["source", "source_id"], name: "index_nutrition_meal_items_on_source_and_source_id"
     t.check_constraint "calories >= 0::numeric AND carbohydrates >= 0::numeric AND proteins >= 0::numeric AND fats >= 0::numeric", name: "nutrition_meal_items_nonnegative_nutrients"
     t.check_constraint "quantity_grams > 0::numeric", name: "nutrition_meal_items_positive_quantity"
-    t.check_constraint "source::text = ANY (ARRAY['taco'::character varying, 'custom'::character varying, 'recipe'::character varying]::text[])", name: "nutrition_meal_items_valid_source"
+    t.check_constraint "source::text = ANY (ARRAY['taco'::character varying, 'custom'::character varying, 'recipe'::character varying, 'tabnut'::character varying]::text[])", name: "nutrition_meal_items_valid_source"
   end
 
   create_table "nutrition_meals", force: :cascade do |t|

@@ -1,0 +1,10 @@
+<section class="app-panel" aria-label="Sincronização do diário com GitHub">
+  <h2>GitHub · Acompanhamento Diário</h2>
+  <% state = record.github_sync %>
+  <p role="status"><%= { "succeeded" => "Registro sincronizado com GitHub.", "processing" => "Envio iniciado. Se não concluir, tente sincronizar novamente.", "failed" => "Envio pendente. Registro permanece salvo no sistema.", "pending" => "Alterações aguardando envio ao GitHub." }.fetch(state["status"], "Este registro ainda não foi enviado ao GitHub.") %></p>
+  <% if state["error_message"].present? %><p><%= state["error_message"] %></p><% end %>
+  <% if state["last_success_at"].present? %><p>Último envio confirmado: <%= l(Time.iso8601(state["last_success_at"]).in_time_zone, format: :long) %></p><% end %>
+  <%= button_to sync_github_health_journal_entry_path(record), method: :post, class: "app-btn app-btn--outline", data: { turbo_submits_with: "Enviando…" } do %>
+    <span class="material-symbols-rounded" aria-hidden="true">cloud_sync</span>Sincronizar agora
+  <% end %>
+</section>

@@ -26,6 +26,7 @@
     <%= render 'self_knowledge/weekly_show', record: record, summary: week_summary %>
   <% else %>
     <%= render 'self_knowledge/daily_show', record: record %>
+    <%= render 'self_knowledge/journal_github_sync', record: record %>
   <% end %>
   <% if !weekly? && record.legacy_content.present? %><%= render 'self_knowledge/legacy', record: record %><% end %>
 </section>

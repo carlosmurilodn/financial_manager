@@ -9,10 +9,11 @@ module Writing
     class Conflict < Error; end
     API_VERSION = "2026-03-10"
 
-    def initialize(configuration, book_id)
+    def initialize(configuration, book_id, prefix: nil, commit_message: nil)
       @configuration = configuration
       @book_id = Integer(book_id)
-      @prefix = "livros/livro-#{@book_id}/"
+      @prefix = prefix || "livros/livro-#{@book_id}/"
+      @commit_message = commit_message || "Atualiza contexto literário de livro-#{@book_id}"
     end
 
     attr_reader :prefix
@@ -27,7 +28,7 @@ module Writing
       repository = request(:get, repository_path)
       raise Error, "Sincronização permitida somente com repositório privado." unless repository["private"] == true
 
-      ref = request(:get, "#{repository_path}/git/ref/heads/#{encode(@configuration.branch)}", missing: "Branch indisponível. Inicialize o repositório com um README e confira GITHUB_WRITING_BRANCH.")
+      ref = request(:get, "#{repository_path}/git/ref/heads/#{encode(@configuration.branch)}", missing: "Branch indisponível. Inicialize o repositório e confira a branch configurada.")
       object = ref.fetch("object")
       raise Error, "Referência de branch inválida." unless object["type"] == "commit"
 
@@ -37,7 +38,7 @@ module Writing
         entry = tree(tree_sha).find { |item| item["path"] == directory }
         return {} unless entry
         unless entry["type"] == "tree" && entry["mode"] == "040000"
-          raise Error, "A pasta do livro contém um arquivo, link ou submódulo no lugar de um diretório. Nenhum arquivo será sobrescrito."
+          raise Error, "A pasta de sincronização contém um arquivo, link ou submódulo no lugar de um diretório. Nenhum arquivo será sobrescrito."
         end
         tree_sha = valid_sha(entry.fetch("sha"))
       end
@@ -57,7 +58,7 @@ module Writing
         remaining = 1 - (Process.clock_gettime(Process::CLOCK_MONOTONIC) - @last_write_at)
         sleep(remaining) if remaining.positive?
       end
-      body = { message: "Atualiza contexto literário de livro-#{@book_id}",
+      body = { message: @commit_message,
         content: Base64.strict_encode64(content), branch: @configuration.branch }
       body[:sha] = valid_sha(sha) if sha
       request(:put, "#{repository_path}/contents/#{encode_path(prefix + path)}", body: body)

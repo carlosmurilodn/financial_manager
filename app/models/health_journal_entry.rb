@@ -8,6 +8,7 @@ class HealthJournalEntry < ApplicationRecord
   validates(*TEXT_FIELDS, length: { maximum: 2000 })
   validates :reflection_prompt_key, inclusion: { in: Health::SelfKnowledgeContent::ROTATING.keys }, allow_nil: true
   before_validation :choose_reflection_prompt
+  before_save :mark_github_pending
 
   def needs=(values)
     super(values.is_a?(Array) ? values.reject(&:blank?).uniq : values)
@@ -27,6 +28,11 @@ class HealthJournalEntry < ApplicationRecord
   end
 
   private
+
+  def mark_github_pending
+    fields = TEXT_FIELDS + METRIC_FIELDS + %i[entry_date needs reflection_prompt_key legacy_content]
+    self.github_sync = github_sync.merge("status" => "pending", "error_message" => nil) if (changes_to_save.keys & fields.map(&:to_s)).any?
+  end
 
   def choose_reflection_prompt
     self.reflection_prompt_key = prompt_key_for_date if entry_date && (reflection_prompt_key.blank? || will_save_change_to_entry_date?)

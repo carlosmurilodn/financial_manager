@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_14_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_14_140000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -200,6 +200,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_14_120000) do
     t.bigint "source_review_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "github_sync", default: {}, null: false
     t.index ["source_review_id"], name: "index_health_journal_entries_on_source_review_id", unique: true
     t.index ["user_id", "entry_date"], name: "index_health_journal_entries_on_user_id_and_entry_date", unique: true
     t.index ["user_id"], name: "index_health_journal_entries_on_user_id"

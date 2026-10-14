@@ -16,6 +16,7 @@ export default class extends Controller {
   disconnect() {
     clearTimeout(this.searchTimer)
     this.searchRequest?.abort()
+    this.detailsRequest?.abort()
     this.registrationRequest?.abort()
     this.registrationDialogTarget.close()
     this.dialogTarget.close()
@@ -52,6 +53,7 @@ export default class extends Controller {
     event?.preventDefault()
     clearTimeout(this.searchTimer)
     this.searchRequest?.abort()
+    this.detailsRequest?.abort()
     const name = this.queryTarget.value.trim()
     if (!name) {
       this.resultsTarget.replaceChildren()
@@ -71,10 +73,16 @@ export default class extends Controller {
       if (!response.ok) throw new Error(data.error || "Não foi possível pesquisar.")
       if (name !== this.queryTarget.value.trim() || source !== this.selectedSource) return
       this.resultsTarget.replaceChildren()
-      data.foods.forEach(food => this.renderFood(food))
+      const pending = []
+      data.foods.forEach(food => {
+        const card = this.renderFood(food)
+        if (food.needs_details) pending.push({ food, card })
+      })
       this.setStatus(data.foods.length ? "Valores para a quantidade informada. Até 10 resultados por origem; refine a pesquisa se necessário." : "Nenhum resultado encontrado.")
       if (data.warning) this.setStatus(`${data.warning} Resultados locais disponíveis.`, true)
       this.updateBusyState()
+      this.detailsRequest = new AbortController()
+      this.loadTabNutDetails(pending, this.detailsRequest.signal)
     } catch (error) {
       if (error.name !== "AbortError") this.setStatus(error.message === "Failed to fetch" ? "Não foi possível pesquisar. Dados anteriores preservados." : error.message, true)
     }
@@ -87,6 +95,7 @@ export default class extends Controller {
   scheduleSearch() {
     clearTimeout(this.searchTimer)
     this.searchRequest?.abort()
+    this.detailsRequest?.abort()
     if (!this.queryTarget.value.trim()) {
       this.resultsTarget.replaceChildren()
       this.setStatus("")
@@ -214,36 +223,39 @@ export default class extends Controller {
     card.className = "nutrition-meal-picker__result"
     const title = document.createElement("strong")
     title.textContent = `${food.name} · TabNut · ${food.data_source || ""} · ${food.serving || ""}`
-    const button = document.createElement("button")
-    button.type = "button"
-    button.className = "app-btn app-btn--outline"
-    button.dataset.add = "true"
-    button.textContent = "Carregar dados"
-    button.addEventListener("click", async () => {
-      if (this.saving) return
-      button.disabled = true
-      this.setStatus("Carregando nutrientes TabNut…")
-      try {
-        const url = new URL(this.searchUrlValue, window.location.origin)
-        url.searchParams.set("source", "tabnut")
-        url.searchParams.set("source_id", food.id)
-        const response = await fetch(url, { headers: { Accept: "application/json" } })
-        const data = await response.json()
-        if (!response.ok) throw new Error(data.error || "Não foi possível carregar TabNut.")
-        if (!card.isConnected) return
-        const detailed = this.renderFood(data.foods[0])
-        card.replaceWith(detailed)
-        this.setStatus("Confira nutrientes e quantidade antes de adicionar à refeição.")
-        this.updateBusyState()
-      } catch (error) {
-        this.setStatus(error.message, true)
-      } finally {
-        button.disabled = Boolean(this.saving)
-      }
-    })
-    card.append(title, button)
+    const status = document.createElement("small")
+    status.setAttribute("role", "status")
+    status.textContent = "Carregando nutrientes…"
+    card.append(title, status)
     this.resultsTarget.append(card)
     return card
+  }
+
+  async loadTabNutDetails(pending, signal) {
+    const loadNext = async () => {
+      while (pending.length && !signal.aborted) {
+        const { food, card } = pending.shift()
+        if (!card.isConnected) continue
+        try {
+          const url = new URL(this.searchUrlValue, window.location.origin)
+          url.searchParams.set("source", "tabnut")
+          url.searchParams.set("source_id", food.id)
+          const response = await fetch(url, { headers: { Accept: "application/json" }, signal })
+          const data = await response.json()
+          if (!response.ok) throw new Error(data.error || "Não foi possível carregar TabNut.")
+          if (signal.aborted || !card.isConnected) continue
+          const detailed = this.renderFood(data.foods[0])
+          card.replaceWith(detailed)
+          this.updateBusyState()
+        } catch (error) {
+          if (signal.aborted || !card.isConnected) continue
+          card.querySelector("[role='status']").textContent = error.message === "Failed to fetch"
+            ? "Falha de conexão. Pesquise novamente para tentar carregar."
+            : error.message
+        }
+      }
+    }
+    await Promise.all([loadNext(), loadNext()])
   }
 
   async newRegistration(event) {

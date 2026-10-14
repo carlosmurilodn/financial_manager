@@ -113,6 +113,7 @@ Rails.application.routes.draw do
   get "progresso/autoconhecimento/evolucao", to: "self_knowledge#evolution", as: :self_knowledge_evolution
   resources :health_journal_entries, path: "progresso/autoconhecimento/diario", param: :entry_date do
     collection { get :prompt, path: "pergunta" }
+    member { post :sync_github, path: "sincronizar-github" }
   end
   resources :health_weekly_reflections, path: "progresso/autoconhecimento/semanas", param: :week_start
   resources :weekly_health_reviews, path: "progresso/perguntas", param: :week_start, only: %i[index show new create edit update destroy] do

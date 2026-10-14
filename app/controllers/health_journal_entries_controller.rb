@@ -1,4 +1,10 @@
 class HealthJournalEntriesController < HealthPersonalRecordsController
+  def sync_github
+    @record = collection.find_by!(entry_date: valid_iso_date(params[:entry_date]))
+    result = Health::JournalGithubSync.new(@record).call
+    redirect_to record_path(@record), **(result.success ? { notice: result.message } : { alert: result.message }), status: :see_other
+  end
+
   def prompt
     date = valid_iso_date(params[:date]) || Date.current
     record = collection.find_by(entry_date: date) || collection.build(entry_date: date)
@@ -6,6 +12,18 @@ class HealthJournalEntriesController < HealthPersonalRecordsController
   end
 
   private
+
+  def finish_save(saved)
+    result = Health::JournalGithubSync.new(@record).call if saved && !@existing_record
+    super
+    if result
+      if result.success
+        flash[:notice] = "#{flash[:notice]} #{result.message}"
+      else
+        flash[:alert] = "Diário salvo. Envio ao GitHub pendente: #{result.message}"
+      end
+    end
+  end
 
   def set_area
     @area = "daily"

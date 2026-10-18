@@ -53,11 +53,11 @@ module Writing
     end
 
     def publish_documents
-      client = GithubClient.new(@configuration, @book.id)
+      @book.reload
+      client = GithubClient.new(@configuration, @book)
       remote = client.remote_files
       Dir.mktmpdir("writing-github-") do |directory|
         archive_path = File.join(directory, "book.zip")
-        @book.reload
         # Reuse the ZIP exporter verbatim; omit only the volatile export timestamp.
         ContextExport.new(@book, ContextExportOptions.new, exported_at: nil).generate(archive_path)
         Zip::File.open(archive_path) do |archive|

@@ -9,11 +9,12 @@ module Writing
     class Conflict < Error; end
     API_VERSION = "2026-03-10"
 
-    def initialize(configuration, book_id, prefix: nil, commit_message: nil)
+    def initialize(configuration, book, prefix: nil, commit_message: nil)
       @configuration = configuration
-      @book_id = Integer(book_id)
-      @prefix = prefix || "livros/livro-#{@book_id}/"
-      @commit_message = commit_message || "Atualiza contexto literário de livro-#{@book_id}"
+      book_id = Integer(book.id)
+      book_name = book.title.parameterize.presence || "livro"
+      @prefix = prefix || "livros/#{book_name}-#{book_id}/"
+      @commit_message = commit_message || "Atualiza contexto literário de #{book.title}"
     end
 
     attr_reader :prefix

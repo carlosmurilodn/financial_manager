@@ -74,7 +74,10 @@ Rails.application.routes.draw do
   resources :nutrition_meals, path: "progresso/alimentacao/refeicoes", only: :destroy do
     member { post :copy, path: "copiar" }
     resources :nutrition_meal_items, path: "itens", only: %i[show create update destroy] do
-      collection { get :search, path: "pesquisa" }
+      collection do
+        get :search, path: "pesquisa"
+        get :history, path: "historico"
+      end
     end
   end
   get "progresso/alimentacao/nova", to: "physical_health#new_nutrition_week", as: :new_health_nutrition_week

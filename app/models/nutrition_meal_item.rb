@@ -12,6 +12,15 @@ class NutritionMealItem < ApplicationRecord
   validates :food_snapshot, presence: true, if: -> { source == "tabnut" }
 
   def same_tabnut_composition?(other)
-    %w[serving nutrients per_100g].all? { |key| food_snapshot[key] == other.food_snapshot[key] }
+    %w[serving nutrients per_100g per_100ml].all? { |key| food_snapshot[key] == other.food_snapshot[key] }
+  end
+
+  def quantity_unit
+    # The legacy quantity_grams column stores the amount in this native unit.
+    source == "tabnut" && food_snapshot.dig("serving", "unit") == "ml" ? "ml" : "g"
+  end
+
+  def nutrients_per_100
+    food_snapshot.fetch("per_100#{quantity_unit}", {})
   end
 end

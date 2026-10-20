@@ -1,15 +1,16 @@
 import { Controller } from "@hotwired/stimulus"
 import { showConfirmDialog } from "../confirm_dialog"
 
-const NUTRIENTS = { calories: "Calorias (kcal)", carbohydrates: "Carboidratos (g)", proteins: "Proteínas (g)", fats: "Gorduras (g)" }
+const NUTRIENTS = { calories: "Cal.", carbohydrates: "Carb.", proteins: "Prot.", fats: "Gord." }
 const SOURCES = { taco: "TACO", tabnut: "TabNut", custom: "Meus Alimentos", recipe: "Receitas" }
 
 export default class extends Controller {
-  static targets = ["dialog", "source", "query", "results", "status", "managementStatus", "totals", "summary", "done", "registrationDialog", "registrationTitle", "registrationStatus", "registrationBody"]
-  static values = { searchUrl: String, saveUrl: String }
+  static targets = ["dialog", "source", "query", "results", "status", "managementStatus", "totals", "summary", "done", "registrationDialog", "registrationTitle", "registrationStatus", "registrationBody", "searchForm", "searchButton", "historyButton", "newFoodButton", "itemCount"]
+  static values = { searchUrl: String, historyUrl: String, saveUrl: String }
 
   connect() {
     this.states ||= new Map()
+    this.mode ||= "search"
     this.formatter = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 2 })
   }
 
@@ -25,7 +26,53 @@ export default class extends Controller {
   open(event) {
     this.opener = event.currentTarget
     this.dialogTarget.showModal()
+    if (this.mode === "history") this.showHistory()
+    else this.queryTarget.focus()
+  }
+
+  setMode(mode) {
+    this.mode = mode
+    this.searchFormTarget.hidden = mode === "history"
+    this.highlightButton(mode)
+  }
+
+  highlightButton(mode) {
+    for (const [button, active] of [[this.searchButtonTarget, mode === "search"], [this.historyButtonTarget, mode === "history"], [this.newFoodButtonTarget, mode === "registration"]]) {
+      button.setAttribute("aria-pressed", String(active))
+      button.classList.toggle("app-btn--primary", active)
+      button.classList.toggle("app-btn--outline", !active)
+    }
+  }
+
+  showSearch() {
+    if (this.saving) return
+    this.setMode("search")
+    this.search()
     this.queryTarget.focus()
+  }
+
+  async showHistory() {
+    if (this.saving) return
+    this.setMode("history")
+    clearTimeout(this.searchTimer)
+    this.searchRequest?.abort()
+    this.detailsRequest?.abort()
+    const request = new AbortController()
+    this.searchRequest = request
+    this.resultsTarget.replaceChildren()
+    this.setStatus("Carregando histórico…")
+    try {
+      const response = await fetch(this.historyUrlValue, { headers: { Accept: "application/json" }, signal: request.signal })
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || "Não foi possível carregar o histórico.")
+      if (request.signal.aborted || this.mode !== "history") return
+      this.resultsTarget.replaceChildren()
+      data.foods.forEach(food => this.renderFood(food))
+      this.setStatus(data.foods.length ? "Últimos 20 alimentos e receitas distintos usados nas suas refeições." : "Histórico vazio. Pesquise e adicione alimentos à refeição.")
+      this.updateBusyState()
+    } catch (error) {
+      if (error.name !== "AbortError") this.setStatus(error.message === "Failed to fetch" ? "Não foi possível carregar o histórico. Tente novamente." : error.message, true)
+    }
   }
 
   close() {
@@ -71,7 +118,7 @@ export default class extends Controller {
       const response = await fetch(url, { headers: { Accept: "application/json" }, signal: this.searchRequest.signal })
       const data = await response.json()
       if (!response.ok) throw new Error(data.error || "Não foi possível pesquisar.")
-      if (name !== this.queryTarget.value.trim() || source !== this.selectedSource) return
+      if (this.mode !== "search" || name !== this.queryTarget.value.trim() || source !== this.selectedSource) return
       this.resultsTarget.replaceChildren()
       const pending = []
       data.foods.forEach(food => {
@@ -108,13 +155,15 @@ export default class extends Controller {
     if (food.needs_details) return this.renderTabNutSummary(food)
 
     const key = `${food.source}:${food.id}`
-    if (!this.states.has(key)) this.states.set(key, { quantity: "100", unit: "grams", quantities: { grams: "100", servings: "1" }, token: null, uncertain: false })
+    const quantityUnit = food.quantity_unit === "ml" ? "ml" : "g"
+    const defaultUnit = quantityUnit === "ml" ? "milliliters" : "grams"
+    if (!this.states.has(key)) this.states.set(key, { quantity: "100", unit: defaultUnit, quantities: { grams: "100", milliliters: "100", servings: "1" }, token: null, uncertain: false })
     const state = this.states.get(key)
     const portionGrams = Number(food.portion_grams)
     const supportsServings = food.source === "recipe" && Number.isFinite(portionGrams) && portionGrams > 0
-    if (!supportsServings && state.unit === "servings" && !state.uncertain) {
-      state.unit = "grams"
-      state.quantity = state.quantities.grams
+    if (!state.uncertain && ((!supportsServings && state.unit === "servings") || (state.unit !== "servings" && state.unit !== defaultUnit))) {
+      state.unit = defaultUnit
+      state.quantity = state.quantities[defaultUnit] || "100"
     }
     const card = document.createElement("article")
     card.className = "nutrition-meal-picker__result"
@@ -126,7 +175,7 @@ export default class extends Controller {
     const field = document.createElement("div")
     field.className = "app-filter-field"
     const label = document.createElement("label")
-    label.textContent = "Quantidade (g)"
+    label.textContent = `Quantidade (${quantityUnit})`
     const input = document.createElement("input")
     input.id = `${this.dialogTarget.querySelector("h2").id}-${food.source}-${food.id}`
     label.htmlFor = input.id
@@ -186,7 +235,7 @@ export default class extends Controller {
     })
     const preview = () => {
       const quantity = Number(state.quantity)
-      label.textContent = state.unit === "servings" ? "Quantidade (porções)" : "Quantidade (g)"
+      label.textContent = state.unit === "servings" ? "Quantidade (porções)" : `Quantidade (${quantityUnit})`
       const rawGrams = state.unit === "servings" ? quantity * portionGrams : quantity
       const grams = Number.isFinite(rawGrams) && rawGrams > 0 ? Number(rawGrams.toFixed(4)) : null
       conversion.textContent = supportsServings ? `1 porção = ${this.formatter.format(portionGrams)} g · Equivale a ${grams > 0 ? this.formatter.format(grams) : "—"} g` : ""
@@ -264,6 +313,7 @@ export default class extends Controller {
     clearTimeout(this.searchTimer)
     this.searchRequest?.abort()
     this.registrationTitleTarget.textContent = button.dataset.registrationTitle
+    this.highlightButton("registration")
     this.registrationDialogTarget.showModal()
     if (this.registrationUrl === button.dataset.url && this.registrationBodyTarget.querySelector("form")) {
       this.registrationBodyTarget.querySelector("input:not([type='hidden'])")?.focus()
@@ -293,7 +343,9 @@ export default class extends Controller {
     if (this.saving) return
     this.registrationRequest?.abort()
     this.registrationDialogTarget.close()
-    this.queryTarget.focus()
+    this.highlightButton(this.mode)
+    if (this.mode === "history") this.historyButtonTarget.focus()
+    else this.queryTarget.focus()
   }
 
   async saveRegistration(event) {
@@ -324,6 +376,10 @@ export default class extends Controller {
       this.registrationDialogTarget.close()
       this.registrationBodyTarget.replaceChildren()
       this.registrationUrl = null
+      if (this.mode === "history") {
+        this.resultsTarget.replaceChildren()
+      }
+      this.setMode("search")
       this.resultsTarget.querySelectorAll(".is-selected").forEach(row => row.classList.remove("is-selected"))
       const row = this.renderFood(data.food)
       this.resultsTarget.prepend(row)
@@ -424,6 +480,10 @@ export default class extends Controller {
 
     this.summaryTargets.forEach(summary => {
       summary.innerHTML = summary.closest("dialog") ? data.picker_html : data.html
+      if (!summary.closest("dialog") && this.hasItemCountTarget) {
+        const count = summary.querySelectorAll(".nutrition-card").length
+        this.itemCountTarget.textContent = `${count} ${count === 1 ? "item" : "itens"}`
+      }
     })
     this.element.dispatchEvent(new CustomEvent("nutrition-meals:changed", { bubbles: true, detail: data }))
   }
@@ -443,7 +503,7 @@ export default class extends Controller {
     this.element.querySelectorAll(".nutrition-meal-item-quantity button, .nutrition-meal-item-quantity input[type='number'], [data-action='meal-picker#deleteItem'], [data-action='meal-picker#deleteMeal']").forEach(control => {
       control.disabled = Boolean(this.saving)
     })
-    this.element.querySelectorAll("[data-action='meal-picker#newRegistration'], [data-action='meal-picker#cancelRegistration']").forEach(control => {
+    this.element.querySelectorAll("[data-action='meal-picker#newRegistration'], [data-action='meal-picker#cancelRegistration'], [data-action='meal-picker#showSearch'], [data-action='meal-picker#showHistory']").forEach(control => {
       control.disabled = Boolean(this.saving)
     })
   }

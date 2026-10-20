@@ -22,6 +22,12 @@ class NutritionMealItemsController < ApplicationController
     render json: { error: error.message }, status: :unprocessable_entity
   end
 
+  def history
+    render json: { foods: Nutrition::MealCatalog.new(current_user).history }
+  rescue Nutrition::TabNutClient::Unavailable, ArgumentError => error
+    render json: { error: error.message }, status: :unprocessable_entity
+  end
+
   def create
     attributes = params.require(:nutrition_meal_item).permit(:source, :source_id, :quantity_grams, :quantity, :unit, :request_token)
     Nutrition::AddMealItem.new(meal: @meal, **attributes.to_h.symbolize_keys).call

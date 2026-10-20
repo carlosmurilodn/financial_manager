@@ -6,7 +6,7 @@ module Nutrition
       @item_id = item_id
       @quantity = BigDecimal(quantity_grams.to_s)
     rescue ArgumentError
-      raise ArgumentError, "Informe uma quantidade válida em gramas."
+      raise ArgumentError, "Informe uma quantidade válida."
     end
 
     def call
@@ -39,6 +39,7 @@ module Nutrition
               existing.public_send("#{field}=", stored && value ? stored + value : nil)
             end
             existing.addition_tokens = (existing.addition_tokens + item.addition_tokens).uniq
+            existing.last_added_at = [existing.last_added_at || existing.created_at, item.last_added_at || item.created_at].max
             existing.save!
             item.destroy!
             next existing

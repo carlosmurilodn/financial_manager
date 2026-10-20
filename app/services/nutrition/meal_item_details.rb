@@ -31,7 +31,7 @@ module Nutrition
 
     def nutrients
       base = if @item.source == "tabnut"
-        @item.food_snapshot.fetch("per_100g", {}).symbolize_keys.transform_values { |value| decimal(value) }
+        @item.nutrients_per_100.symbolize_keys.transform_values { |value| decimal(value) }
       else
         composition(@item.source, @item.source_id)
       end

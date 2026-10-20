@@ -1212,6 +1212,27 @@ html[data-theme="night"] .progress-activity-day.is-not-done { color: #fb8ba1; }
     justify-content: center;
     width: 100%;
   }
+
+  .nutrition-week-summary-card .health-weight-goal-card__content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px 8px;
+  }
+
+  .nutrition-week-summary-card .health-weight-goal-card__identity-main {
+    grid-column: 1 / -1;
+  }
+
+  .nutrition-week-summary-card .health-weight-goal-card__content > .health-weight-goal-card__meta-item {
+    max-width: none;
+  }
+
+  .nutrition-week-summary-card .health-weight-goal-card__content > .health-weight-goal-card__actions {
+    grid-template-columns: repeat(2, auto);
+    justify-content: end;
+    width: auto;
+  }
 }
 
 .app-health-mobile-links { display: none; }

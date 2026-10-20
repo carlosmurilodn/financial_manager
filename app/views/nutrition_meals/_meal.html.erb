@@ -1,4 +1,4 @@
-<article class="nutrition-meal" data-controller="meal-picker meal-copy" data-meal-picker-search-url-value="<%= search_nutrition_meal_nutrition_meal_items_path(meal) %>" data-meal-picker-save-url-value="<%= nutrition_meal_nutrition_meal_items_path(meal) %>">
+<article class="nutrition-meal" data-controller="meal-picker meal-copy" data-meal-picker-search-url-value="<%= search_nutrition_meal_nutrition_meal_items_path(meal) %>" data-meal-picker-history-url-value="<%= history_nutrition_meal_nutrition_meal_items_path(meal) %>" data-meal-picker-save-url-value="<%= nutrition_meal_nutrition_meal_items_path(meal) %>">
   <header class="nutrition-meal__header nutrition-meal__header--inline">
     <div class="nutrition-meal__heading">
       <% meal_icon = { "Café da manhã" => "breakfast_dining", "Almoço" => "meal_lunch", "Lanche" => "fastfood", "Jantar" => "meal_dinner", "Ceia" => "cookie" }[meal.name] %>
@@ -12,7 +12,14 @@
     </div>
   </header>
   <p class="nutrition-meal-picker__status" role="status" aria-live="polite" data-meal-picker-target="managementStatus"></p>
-  <div data-meal-picker-target="summary"><%= render "nutrition_meals/items", meal: meal %></div>
+  <details class="nutrition-meal__foods">
+    <summary class="nutrition-meal__foods-toggle">
+      <% item_count = meal.nutrition_meal_items.size %>
+      <span data-meal-picker-target="itemCount"><%= item_count %> <%= item_count == 1 ? "item" : "itens" %></span>
+      <span class="material-symbols-rounded" aria-hidden="true">expand_more</span>
+    </summary>
+    <div class="nutrition-meal__foods-list" data-meal-picker-target="summary"><%= render "nutrition_meals/items", meal: meal %></div>
+  </details>
   <dialog class="nutrition-meal-picker nutrition-meal-copy" aria-labelledby="meal-copy-title-<%= meal.id %>" data-meal-copy-target="dialog" data-action="cancel->meal-copy#close click->meal-copy#closeOutside">
     <div class="nutrition-meal-picker__content">
       <h2 id="meal-copy-title-<%= meal.id %>">Copiar Refeição: <%= meal.name %></h2>
@@ -36,11 +43,12 @@
     <div class="nutrition-meal-picker__content">
       <header class="nutrition-meal__header"><h2 id="meal-picker-title-<%= meal.id %>">Adicionar à refeição: <%= meal.name %></h2>
       <div class="nutrition-meal-picker__header-actions">
-        <button type="button" class="app-btn app-btn--primary" data-action="meal-picker#newRegistration" data-url="<%= new_custom_food_path(nutrition_meal_id: meal.id) %>" data-registration-title="Novo Alimento"><span class="material-symbols-rounded" aria-hidden="true">add</span><span>Novo Alimento</span></button>
-        <button type="button" class="app-btn app-btn--primary" data-action="meal-picker#newRegistration" data-url="<%= new_nutrition_recipe_path(nutrition_meal_id: meal.id) %>" data-registration-title="Nova Receita"><span class="material-symbols-rounded" aria-hidden="true">menu_book</span><span>Nova Receita</span></button>
+        <button type="button" class="app-btn app-btn--primary" data-action="meal-picker#showSearch" data-meal-picker-target="searchButton" aria-pressed="true"><span class="material-symbols-rounded" aria-hidden="true">search</span><span>Pesquisar</span></button>
+        <button type="button" class="app-btn app-btn--outline" data-action="meal-picker#showHistory" data-meal-picker-target="historyButton" aria-pressed="false"><span class="material-symbols-rounded" aria-hidden="true">history</span><span>Histórico</span></button>
+        <button type="button" class="app-btn app-btn--outline" data-action="meal-picker#newRegistration" data-meal-picker-target="newFoodButton" aria-pressed="false" data-url="<%= new_custom_food_path(nutrition_meal_id: meal.id) %>" data-registration-title="Novo Alimento"><span class="material-symbols-rounded" aria-hidden="true">add</span><span>Novo Alimento</span></button>
       </div>
       </header>
-      <form class="app-filter-form" data-action="submit->meal-picker#search">
+      <form class="app-filter-form" data-meal-picker-target="searchForm" data-action="submit->meal-picker#search">
         <div class="health-index-filters nutrition-recipe-search-fields">
           <div class="app-filter-field">
             <span id="meal-source-label-<%= meal.id %>">Origem</span>

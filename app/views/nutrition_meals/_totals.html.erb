@@ -1,4 +1,4 @@
 <% items = meal.nutrition_meal_items.to_a %>
 <% if items.any? %>
-  <%= render "shared/nutrition_badges", values: Nutrition::MealSummary.totals(items) %>
+  <%= render "shared/nutrition_badges", values: Nutrition::MealSummary.totals(items), incomplete_fields: Nutrition::MealSummary.incomplete_fields(items) %>
 <% end %>

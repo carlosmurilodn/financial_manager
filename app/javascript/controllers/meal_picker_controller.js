@@ -5,7 +5,7 @@ const NUTRIENTS = { calories: "Cal.", carbohydrates: "Carb.", proteins: "Prot.",
 const SOURCES = { taco: "TACO", tabnut: "TabNut", custom: "Meus Alimentos", recipe: "Receitas" }
 
 export default class extends Controller {
-  static targets = ["dialog", "source", "query", "results", "status", "managementStatus", "totals", "summary", "done", "registrationDialog", "registrationTitle", "registrationStatus", "registrationBody", "searchForm", "searchButton", "historyButton", "newFoodButton"]
+  static targets = ["dialog", "source", "query", "results", "status", "managementStatus", "totals", "summary", "done", "registrationDialog", "registrationTitle", "registrationStatus", "registrationBody", "searchForm", "searchButton", "historyButton", "newFoodButton", "itemCount"]
   static values = { searchUrl: String, historyUrl: String, saveUrl: String }
 
   connect() {
@@ -480,6 +480,10 @@ export default class extends Controller {
 
     this.summaryTargets.forEach(summary => {
       summary.innerHTML = summary.closest("dialog") ? data.picker_html : data.html
+      if (!summary.closest("dialog") && this.hasItemCountTarget) {
+        const count = summary.querySelectorAll(".nutrition-card").length
+        this.itemCountTarget.textContent = `${count} ${count === 1 ? "item" : "itens"}`
+      }
     })
     this.element.dispatchEvent(new CustomEvent("nutrition-meals:changed", { bubbles: true, detail: data }))
   }

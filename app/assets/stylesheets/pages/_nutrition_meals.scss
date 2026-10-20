@@ -8,7 +8,12 @@
 .nutrition-meal-copy__days legend { color: var(--text-main); font-weight: 700; }
 @media (max-width: 400px) { .nutrition-meal-copy__days { grid-template-columns: minmax(0, 1fr); } }
 .nutrition-meal > .nutrition-meal-picker__status:empty { display: none; }
-.nutrition-meal > [data-meal-picker-target="summary"]:has(.nutrition-cards) { margin-top: 12px; }
+.nutrition-meal__foods { margin-top: 12px; border-top: 1px solid var(--card-border); }
+.nutrition-meal__foods-toggle { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; padding: 8px 0; color: var(--text-soft); cursor: pointer; list-style: none; }
+.nutrition-meal__foods-toggle::-webkit-details-marker { display: none; }
+.nutrition-meal__foods-toggle:focus-visible { outline: 2px solid var(--nav-active-bar); outline-offset: 2px; border-radius: 4px; }
+.nutrition-meal__foods[open] > .nutrition-meal__foods-toggle .material-symbols-rounded { transform: rotate(180deg); }
+.nutrition-meal__foods-list { padding-top: 8px; }
 .nutrition-meal-picker__header-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
 .nutrition-meal-picker { width: min(1000px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); margin: auto; padding: 20px; border: 1px solid var(--card-border); border-radius: 16px; background: var(--surface); color: var(--text-main); overflow-y: auto; }
 .nutrition-meal-picker::backdrop { background: rgba(0, 0, 0, .45); }

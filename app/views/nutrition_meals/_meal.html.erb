@@ -12,7 +12,14 @@
     </div>
   </header>
   <p class="nutrition-meal-picker__status" role="status" aria-live="polite" data-meal-picker-target="managementStatus"></p>
-  <div data-meal-picker-target="summary"><%= render "nutrition_meals/items", meal: meal %></div>
+  <details class="nutrition-meal__foods">
+    <summary class="nutrition-meal__foods-toggle">
+      <% item_count = meal.nutrition_meal_items.size %>
+      <span data-meal-picker-target="itemCount"><%= item_count %> <%= item_count == 1 ? "item" : "itens" %></span>
+      <span class="material-symbols-rounded" aria-hidden="true">expand_more</span>
+    </summary>
+    <div class="nutrition-meal__foods-list" data-meal-picker-target="summary"><%= render "nutrition_meals/items", meal: meal %></div>
+  </details>
   <dialog class="nutrition-meal-picker nutrition-meal-copy" aria-labelledby="meal-copy-title-<%= meal.id %>" data-meal-copy-target="dialog" data-action="cancel->meal-copy#close click->meal-copy#closeOutside">
     <div class="nutrition-meal-picker__content">
       <h2 id="meal-copy-title-<%= meal.id %>">Copiar Refeição: <%= meal.name %></h2>

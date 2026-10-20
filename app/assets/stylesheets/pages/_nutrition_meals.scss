@@ -1,5 +1,6 @@
 .nutrition-meals, .nutrition-meal-picker__content, .nutrition-meal-picker__results { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 .nutrition-meal { padding: 16px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); color: var(--text-main); }
+.nutrition-meal:has(> .nutrition-meal__foods:not([open])) { padding-bottom: 0px; }
 .nutrition-meal__header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .nutrition-meal__header h2, .nutrition-meal__header h3 { margin: 0; font-size: 1.1rem; overflow-wrap: anywhere; }
 .nutrition-meal__header--inline { display: flex; justify-content: space-between; margin-bottom: 0; }

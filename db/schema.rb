@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_14_140000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_20_120000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -313,6 +313,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_14_140000) do
     t.datetime "updated_at", null: false
     t.jsonb "addition_tokens", default: [], null: false
     t.jsonb "food_snapshot", default: {}, null: false
+    t.datetime "last_added_at"
     t.index ["nutrition_meal_id"], name: "index_nutrition_meal_items_on_nutrition_meal_id"
     t.index ["source", "source_id"], name: "index_nutrition_meal_items_on_source_and_source_id"
     t.check_constraint "calories >= 0::numeric AND carbohydrates >= 0::numeric AND proteins >= 0::numeric AND fats >= 0::numeric", name: "nutrition_meal_items_nonnegative_nutrients"

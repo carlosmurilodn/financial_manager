@@ -32,7 +32,7 @@ module Nutrition
     def find(id)
       raise ArgumentError, "Identificador TabNut inválido." unless id.to_s.match?(/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/) && id.length <= 500
 
-      Rails.cache.fetch(["tabnut-food-v1", id], expires_in: 24.hours) { extract(id) }
+      Rails.cache.fetch(["tabnut-food-v2", id], expires_in: 24.hours) { extract(id) }
     end
 
     private
@@ -58,7 +58,7 @@ module Nutrition
       food = graph.find { |node| node["@type"] == "Food" } or raise KeyError
       serving = food.fetch("nutrition").fetch("servingSize").match(/\A([\d.,]+)\s*(g|ml)\z/i)
       raise ArgumentError, "Porção TabNut não suportada." unless serving
-      raise ArgumentError, "Este alimento está em ml. Selecione um alimento com referência em gramas." unless serving[2].downcase == "g"
+      unit = serving[2].downcase
 
       amount = BigDecimal(serving[1].tr(",", "."))
       raise ArgumentError, "Porção TabNut inválida." unless amount.finite? && amount.positive?
@@ -86,10 +86,10 @@ module Nutrition
       end
       snapshot = { "version" => 1, "name" => food.fetch("name"), "source_url" => "#{BASE_URL}/alimentos/#{id}",
         "data_source" => food.fetch("additionalProperty", []).find { |p| p["name"] == "Fonte dos dados" }&.dig("value"),
-        "captured_at" => Time.current.iso8601, "serving" => { "amount" => amount.to_s("F"), "unit" => "g" },
-        "nutrients" => nutrients, "per_100g" => normalized }
+        "captured_at" => Time.current.iso8601, "serving" => { "amount" => amount.to_s("F"), "unit" => unit },
+        "nutrients" => nutrients, "per_100#{unit}" => normalized }
       { id: id, source: "tabnut", name: snapshot["name"], nutrients: normalized.symbolize_keys,
-        food_snapshot: snapshot, data_source: snapshot["data_source"], serving: "#{serving[1]} g" }
+        quantity_unit: unit, food_snapshot: snapshot, data_source: snapshot["data_source"], serving: "#{serving[1]} #{unit}" }
     rescue JSON::ParserError, KeyError
       raise Unavailable, "Estrutura TabNut indisponível ou alterada."
     end

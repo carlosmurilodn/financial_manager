@@ -61,11 +61,21 @@
   .nutrition-meal-copy { width: min(560px, calc(100vw - 24px)); }
   .nutrition-meal-picker__header-actions { margin-left: 0; width: 100%; }
   .nutrition-meal-picker__header-actions .app-btn { flex: 1 1 120px; min-height: 44px; }
+  .nutrition-meal-picker__header-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .nutrition-meal-picker__header-actions .app-btn { padding-inline: 8px; }
   .nutrition-card__actions, .nutrition-meal-item-quantity { width: 100%; min-width: 0; }
   .nutrition-meal-item-quantity__field { flex: 1 1 100%; }
   .nutrition-meal-item-quantity__field .app-form-control { width: 100%; }
   .nutrition-card__actions .app-btn { flex: 1 1 100px; min-height: 44px; }
+  .nutrition-meal-picker .nutrition-meal-item-quantity { flex-wrap: nowrap; }
+  .nutrition-meal-picker .nutrition-meal-item-quantity__field { flex: 1 1 0; min-width: 0; }
+  .nutrition-meal-picker .nutrition-meal-item-quantity > .app-btn { flex: 0 0 auto; }
   .nutrition-recipe-origins label { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
+  .nutrition-meal-picker .nutrition-recipe-origins { flex-wrap: nowrap; justify-content: space-between; width: 100%; gap: 4px; }
+  .nutrition-meal-picker .nutrition-recipe-origins label { gap: 4px; margin: 0; font-size: .72rem; }
+  .nutrition-meal-picker .nutrition-recipe-origins input[type="radio"] { flex-shrink: 0; margin: 0; }
+  .nutrition-meal-picker .nutrition-recipe-origins label > span { white-space: nowrap; }
+  .nutrition-meal-picker .nutrition-recipe-origins input[value="custom"] + span { width: min-content; white-space: normal; }
   .nutrition-recipe-result__identity { align-items: flex-start; }
   .nutrition-recipe-result__badge { overflow-wrap: anywhere; }
 }

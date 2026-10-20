@@ -6,7 +6,7 @@
         <div>
           <p class="app-page__eyebrow">Alimentação · <%= @meal.name %></p>
           <h1 class="app-page__title"><%= @item.name %></h1>
-          <p class="app-page__description"><%= @meal.occurred_on.strftime("%d/%m/%Y") %> · <%= { "taco" => "TACO", "tabnut" => "TabNut", "custom" => "Meus Alimentos", "recipe" => "Receitas" }[@item.source] %> · <%= taco_nutrient_value(@item.quantity_grams) %> g consumidos</p>
+          <p class="app-page__description"><%= @meal.occurred_on.strftime("%d/%m/%Y") %> · <%= { "taco" => "TACO", "tabnut" => "TabNut", "custom" => "Meus Alimentos", "recipe" => "Receitas" }[@item.source] %> · <%= taco_nutrient_value(@item.quantity_grams) %> <%= @item.quantity_unit %> consumidos</p>
         </div>
       </div>
       <div class="exercise-entry-show__actions">
@@ -24,7 +24,7 @@
       <h2>Quantidade consumida e refeição</h2>
       <%= form_with scope: :nutrition_meal_item, url: nutrition_meal_nutrition_meal_item_path(@meal, @item), method: :patch, class: "nutrition-meal-item-quantity" do |f| %>
         <div class="app-filter-field">
-          <%= f.label :quantity_grams, "Quantidade (g)", for: "meal-item-show-quantity-#{@item.id}" %>
+          <%= f.label :quantity_grams, "Quantidade (#{@item.quantity_unit})", for: "meal-item-show-quantity-#{@item.id}" %>
           <%= f.number_field :quantity_grams, value: @quantity || @item.quantity_grams, id: "meal-item-show-quantity-#{@item.id}", class: "app-form-control", min: "0.0001", max: "99999999.9999", step: "0.0001", required: true %>
         </div>
         <div class="app-filter-field nutrition-item-show__meal-field">

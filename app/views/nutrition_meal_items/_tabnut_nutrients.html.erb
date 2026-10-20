@@ -1,17 +1,17 @@
 <article class="app-panel nutrition-item-show__group">
   <h2>Composição · TabNut</h2>
   <table class="nutrition-item-show__table">
-    <thead><tr><th scope="col">Nutriente</th><th scope="col"><%= taco_nutrient_value(item.quantity_grams) %> g</th><th scope="col">100 g</th><th scope="col">VDR (%)</th></tr></thead>
+    <thead><tr><th scope="col">Nutriente</th><th scope="col"><%= taco_nutrient_value(item.quantity_grams) %> <%= item.quantity_unit %></th><th scope="col">100 <%= item.quantity_unit %></th><th scope="col">VDR (%)</th></tr></thead>
     <tbody>
       <% reference = BigDecimal(item.food_snapshot.fetch("serving").fetch("amount")) %>
       <% item.food_snapshot.fetch("nutrients", []).each do |nutrient| %>
-        <% per_100g = nutrient["value"] ? BigDecimal(nutrient["value"]) * 100 / reference : nil %>
-        <% consumed = per_100g ? per_100g * item.quantity_grams / 100 : nil %>
+        <% per_100 = nutrient["value"] ? BigDecimal(nutrient["value"]) * 100 / reference : nil %>
+        <% consumed = per_100 ? per_100 * item.quantity_grams / 100 : nil %>
         <tr>
           <th scope="row"><%= nutrient["name"] %> <small>(<%= nutrient["unit"] %>)</small></th>
           <td><%= meal_item_nutrient_value(consumed) %></td>
-          <td><%= meal_item_nutrient_value(per_100g) %></td>
-          <td><%= nutrient["key"] && item.food_snapshot.fetch("per_100g")[nutrient["key"]] ? meal_item_daily_reference(nutrient["key"].to_sym, consumed) : "—" %></td>
+          <td><%= meal_item_nutrient_value(per_100) %></td>
+          <td><%= nutrient["key"] && item.nutrients_per_100[nutrient["key"]] ? meal_item_daily_reference(nutrient["key"].to_sym, consumed) : "—" %></td>
         </tr>
       <% end %>
     </tbody>

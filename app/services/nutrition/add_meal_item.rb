@@ -13,7 +13,7 @@ module Nutrition
 
     def call
       raise ArgumentError, "Informe uma quantidade positiva com até quatro casas decimais." unless @quantity.finite? && @quantity.positive? && @quantity < 100_000_000 && @quantity == @quantity.round(4)
-      raise ArgumentError, "Unidade inválida." unless %w[grams servings].include?(@unit)
+      raise ArgumentError, "Unidade inválida." unless %w[grams milliliters servings].include?(@unit)
       raise ArgumentError, "Somente receitas podem ser registradas em porções." if @unit == "servings" && @source != "recipe"
       raise ArgumentError, "Identificador de inclusão inválido." unless @token.match?(/\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\z/i)
 
@@ -23,9 +23,14 @@ module Nutrition
 
         saved = @meal.nutrition_meal_items.find_by(source: @source, source_id: @source_id) if @source == "tabnut"
         food = if saved&.food_snapshot.present?
-          { id: saved.source_id, name: saved.name, nutrients: saved.food_snapshot.fetch("per_100g").symbolize_keys, food_snapshot: saved.food_snapshot }
+          { id: saved.source_id, name: saved.name, nutrients: saved.nutrients_per_100.symbolize_keys,
+            quantity_unit: saved.quantity_unit, food_snapshot: saved.food_snapshot }
         else
           MealCatalog.new(@meal.user).find(source: @source, id: @source_id)
+        end
+        expected_unit = food[:quantity_unit] == "ml" ? "milliliters" : "grams"
+        unless @unit == "servings" || @unit == expected_unit
+          raise ArgumentError, "Informe a quantidade em #{expected_unit == 'milliliters' ? 'ml' : 'gramas'} para este alimento."
         end
         if @unit == "servings"
           portion = food[:portion_grams]
@@ -46,6 +51,7 @@ module Nutrition
           item.public_send("#{field}=", existing ? (stored + added if stored && added) : added)
         end
         item.addition_tokens = item.addition_tokens + [ @token ]
+        item.last_added_at = Time.current
         item.save!
         item
       end

@@ -43,6 +43,7 @@ module Nutrition
               item.public_send("#{field}=", existing ? (stored + value if stored && value) : value)
             end
             item.addition_tokens = item.addition_tokens + [ @token ]
+            item.last_added_at = Time.current
             item.save!
           end
         end

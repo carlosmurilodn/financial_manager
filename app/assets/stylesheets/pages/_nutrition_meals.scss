@@ -15,6 +15,8 @@
 .nutrition-meal-picker__status { margin: 0; min-height: 1.4em; color: var(--text-soft); font-size: .85rem; }
 .nutrition-meal-picker__result { display: flex; flex-direction: column; gap: 12px; padding: 14px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface-muted); }
 .nutrition-meal-picker__result small { color: var(--text-soft); }
+.nutrition-meal-picker__result .nutrition-recipe-result__nutrients { gap: 4px; }
+.nutrition-meal-picker__result .nutrition-recipe-result__badge { padding: 3px 5px; }
 .nutrition-meal-picker__result-actions { display: flex; align-items: end; flex-wrap: wrap; gap: 12px; }
 .nutrition-meal-picker__result-actions .app-filter-field { flex: 1; min-width: 150px; }
 .nutrition-meal-picker__summary { border-top: 1px solid var(--card-border); padding-top: 16px; }

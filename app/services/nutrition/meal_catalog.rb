@@ -30,8 +30,32 @@ module Nutrition
 
     attr_reader :warning
 
+    def history
+      recent_items = NutritionMealItem.joins(:nutrition_meal)
+        .where(nutrition_meals: { user_id: @user.id })
+        .group(:source, :source_id)
+        .order(Arel.sql("MAX(COALESCE(nutrition_meal_items.last_added_at, nutrition_meal_items.created_at)) DESC, MAX(nutrition_meal_items.id) DESC"))
+        .limit(20).pluck(:source, :source_id)
+
+      recent_items.filter_map do |source, id|
+        find(source: source, id: id)
+      rescue ActiveRecord::RecordNotFound
+        nil
+      end
+    end
+
     def find(source:, id:)
-      return TabNutClient.new.find(id.to_s) if source == "tabnut"
+      if source == "tabnut"
+        saved = NutritionMealItem.joins(:nutrition_meal)
+          .where(nutrition_meals: { user_id: @user.id }, source: source, source_id: id.to_s)
+          .order(updated_at: :desc, id: :desc).first
+        if saved&.food_snapshot.present?
+          return { id: id.to_s, source: source, name: saved.name,
+            nutrients: saved.nutrients_per_100.symbolize_keys, quantity_unit: saved.quantity_unit,
+            food_snapshot: saved.food_snapshot, data_source: saved.food_snapshot["data_source"] }
+        end
+        return TabNutClient.new.find(id.to_s)
+      end
 
       record = case source
       when "taco" then TacoFood.find(id)

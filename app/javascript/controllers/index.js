@@ -25,6 +25,8 @@ application.register("meal-copy", MealCopyController)
 
 import ExerciseEntryFormController from "./exercise_entry_form_controller"
 application.register("exercise-entry-form", ExerciseEntryFormController)
+import ExerciseDayCopyController from "./exercise_day_copy_controller"
+application.register("exercise-day-copy", ExerciseDayCopyController)
 
 import BookCoverController from "./book_cover_controller"
 application.register("book-cover", BookCoverController)

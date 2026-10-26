@@ -1,0 +1,34 @@
+<%= render layout: "shared/form_page", locals: {
+  resource: @exercise_entry,
+  title: "Copiar dia de exercícios",
+  eyebrow: "Saúde Física · Exercícios",
+  description: "Copie todos os exercícios de #{@exercise_entry.performed_on.strftime('%d/%m/%Y')} para outras datas. Dias que já possuem exercícios não podem receber cópias.",
+  icon: "content_copy",
+  back_path: health_exercises_path
+} do %>
+  <%= form_with url: health_exercise_day_copy_path(@exercise_entry), method: :post, class: "app-form-page__form", data: { controller: "exercise-day-copy" } do |f| %>
+    <p>Duração, intensidade, observações, exercícios de musculação e séries serão mantidos. Se houver vários registros na origem, todos serão copiados.</p>
+
+    <div class="progress-review-form" data-exercise-day-copy-target="dates">
+      <% @dates.each_with_index do |date, index| %>
+        <%= render "date_field", date: date, field_id: "copy-date-#{index}" %>
+      <% end %>
+    </div>
+
+    <template data-exercise-day-copy-target="template">
+      <%= render "date_field", date: nil, field_id: "NEW_DATE" %>
+    </template>
+
+    <div class="app-filter-actions">
+      <button type="button" class="app-btn app-btn--secondary" data-action="exercise-day-copy#add">
+        <span class="material-symbols-rounded" aria-hidden="true">add</span>
+        <span>Adicionar data</span>
+      </button>
+    </div>
+
+    <div class="app-form-page__actions">
+      <%= link_to "Cancelar", health_exercises_path, class: "app-btn app-btn--outline" %>
+      <%= f.submit "Copiar dia", class: "app-btn app-btn--primary", data: { turbo_submits_with: "Copiando…" } %>
+    </div>
+  <% end %>
+<% end %>

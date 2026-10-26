@@ -6,6 +6,7 @@
         <div><p class="app-page__eyebrow">Saúde Física · Exercícios</p><h1 class="app-page__title">Treino de <%= @exercise_entry.performed_on.strftime("%d/%m/%Y") %></h1></div>
       </div>
       <div class="exercise-entry-show__actions">
+        <%= link_to new_health_exercise_day_copy_path(@exercise_entry), class: "app-btn app-btn--outline" do %><span class="material-symbols-rounded" aria-hidden="true">event_repeat</span><span>Copiar dia</span><% end %>
         <%= link_to health_exercises_path, class: "app-btn app-btn--outline" do %><span class="material-symbols-rounded" aria-hidden="true">arrow_back</span><span>Voltar</span><% end %>
         <%= link_to edit_health_exercise_path(@exercise_entry), class: "app-btn app-btn--primary", data: { turbo: false } do %><span class="material-symbols-rounded" aria-hidden="true">edit</span><span>Editar</span><% end %>
         <%= link_to duplicate_health_exercise_path(@exercise_entry), class: "app-btn app-btn--outline", data: { turbo: false } do %><span class="material-symbols-rounded" aria-hidden="true">content_copy</span><span>Duplicar</span><% end %>

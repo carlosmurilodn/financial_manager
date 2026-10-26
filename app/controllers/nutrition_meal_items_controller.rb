@@ -23,7 +23,7 @@ class NutritionMealItemsController < ApplicationController
   end
 
   def history
-    render json: { foods: Nutrition::MealCatalog.new(current_user).history }
+    render json: { foods: Nutrition::MealCatalog.new(current_user).history(meal_name: @meal.name) }
   rescue Nutrition::TabNutClient::Unavailable, ArgumentError => error
     render json: { error: error.message }, status: :unprocessable_entity
   end

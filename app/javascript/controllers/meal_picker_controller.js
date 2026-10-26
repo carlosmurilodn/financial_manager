@@ -68,7 +68,7 @@ export default class extends Controller {
       if (request.signal.aborted || this.mode !== "history") return
       this.resultsTarget.replaceChildren()
       data.foods.forEach(food => this.renderFood(food))
-      this.setStatus(data.foods.length ? "Últimos 20 alimentos e receitas distintos usados nas suas refeições." : "Histórico vazio. Pesquise e adicione alimentos à refeição.")
+      this.setStatus(data.foods.length ? "Últimos 20 alimentos e receitas distintos usados nesta refeição ao longo dos dias." : "Histórico desta refeição vazio. Pesquise e adicione alimentos à refeição.")
       this.updateBusyState()
     } catch (error) {
       if (error.name !== "AbortError") this.setStatus(error.message === "Failed to fetch" ? "Não foi possível carregar o histórico. Tente novamente." : error.message, true)

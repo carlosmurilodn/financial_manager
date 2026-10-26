@@ -30,9 +30,9 @@ module Nutrition
 
     attr_reader :warning
 
-    def history
+    def history(meal_name:)
       recent_items = NutritionMealItem.joins(:nutrition_meal)
-        .where(nutrition_meals: { user_id: @user.id })
+        .where(nutrition_meals: { user_id: @user.id, name: meal_name })
         .group(:source, :source_id)
         .order(Arel.sql("MAX(COALESCE(nutrition_meal_items.last_added_at, nutrition_meal_items.created_at)) DESC, MAX(nutrition_meal_items.id) DESC"))
         .limit(20).pluck(:source, :source_id)

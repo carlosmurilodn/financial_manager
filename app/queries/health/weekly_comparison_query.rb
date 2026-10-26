@@ -18,6 +18,7 @@ module Health
 
       rows = [row("Peso médio", :weight, previous_average, @current[:average_weight]&.round(2)).merge(previous_count: previous_count, current_count: @current[:weight_count])]
       rows.concat(goal_rows(previous_goals, @current[:goals]))
+      rows << nutrition_row(previous_start)
       rows.concat(exercise_rows(previous_start))
       previous_diaries = Health::SelfKnowledgeWeek.new(@user, previous_start)
       Health::SelfKnowledgeContent::METRICS.each do |attribute, content|
@@ -48,9 +49,18 @@ module Health
       end
     end
 
+    def nutrition_row(previous_start)
+      previous_progress = PhysicalProgressQuery.new(user: @user, week_start: previous_start).call
+      current_progress = @current[:physical_progress] || PhysicalProgressQuery.new(user: @user, week_start: @week_start).call
+      previous = previous_progress[:days].count { |day| day[:deficit]&.positive? }
+      current = current_progress[:days].count { |day| day[:deficit]&.positive? }
+      row("Alimentação", :nutrition_days, previous, current)
+    end
+
     def goal_rows(previous_goals, current_goals)
-      previous_goals = previous_goals.reject { |goal| WeeklyHealthGoal::LEGACY_EXERCISE_NAMES.include?(goal.name.parameterize) }
-      current_goals = current_goals.reject { |goal| WeeklyHealthGoal::LEGACY_EXERCISE_NAMES.include?(goal.name.parameterize) }
+      daily_names = WeeklyHealthGoal::LEGACY_EXERCISE_NAMES + [ "alimentacao" ]
+      previous_goals = previous_goals.reject { |goal| daily_names.include?(goal.name.parameterize) }
+      current_goals = current_goals.reject { |goal| daily_names.include?(goal.name.parameterize) }
       normalize = ->(goal) { goal.name.gsub(/[[:space:]]+/, " ").strip.downcase }
       previous_groups = previous_goals.group_by(&normalize)
       current_groups = current_goals.group_by(&normalize)

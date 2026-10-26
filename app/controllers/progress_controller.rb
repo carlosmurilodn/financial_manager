@@ -19,7 +19,7 @@ class ProgressController < ApplicationController
     @self_knowledge_reflection = current_user.health_weekly_reflections.find_by(week_start: @week_start)
     @saved_weekly_goals = @weekly_health_plan.persisted? ? @weekly_health_plan.weekly_health_goals.to_a : []
     ActiveRecord::Associations::Preloader.new(records: @saved_weekly_goals, associations: :weekly_health_goal_days).call
-    @physical_week_rows = Health::PhysicalWeekQuery.new(user: current_user, plan: @weekly_health_plan, week_start: @week_start).call
+    @physical_week_rows = Health::PhysicalWeekQuery.new(user: current_user, plan: @weekly_health_plan, week_start: @week_start, physical_progress: @physical_progress).call
     @saved_weekly_goals = @physical_week_rows.filter_map { |row| row[:goal] }
     @completed_weekly_goals_count = @physical_week_rows.count { |row| row[:goal] && row[:completed_count] >= row[:goal].target_count }
 
@@ -35,6 +35,7 @@ class ProgressController < ApplicationController
       user: current_user,
       week_start: @week_start,
       current: {
+        physical_progress: @physical_progress,
         average_weight: @weekly_average_weight,
         weight_count: @weekly_weight_count,
         goals: @weekly_health_plan.persisted? ? @weekly_health_plan.weekly_health_goals.to_a : [],

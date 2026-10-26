@@ -1,18 +1,19 @@
 module Health
   class PhysicalWeekQuery
-    def initialize(user:, plan:, week_start:)
+    def initialize(user:, plan:, week_start:, physical_progress: nil)
       @user = user
       @plan = plan
       @week_start = week_start
+      @physical_progress = physical_progress
     end
 
     def call
       rows = []
       goal = @plan&.weekly_health_goals&.find { |record| record.name.parameterize == "alimentacao" }
-      if goal&.persisted?
-        records = goal.weekly_health_goal_days.index_by(&:occurred_on)
-        days = week_dates.map { |date| { date: date, state: records[date]&.diet_status.presence || "unselected" } }
-        rows << { goal: goal, type: "nutrition", label: "Alimentação", days: days, completed_count: days.count { |day| day[:state] == "full" } }
+      progress = @physical_progress || PhysicalProgressQuery.new(user: @user, week_start: @week_start).call
+      if goal&.persisted? || progress[:days].any? { |day| day[:source] == :meals }
+        days = progress[:days].map { |day| { date: day[:date], state: nutrition_state(day) } }
+        rows << { goal: goal, type: "nutrition", label: "Alimentação", days: days, completed_count: days.count { |day| day[:state] == "deficit" } }
       end
 
       exercise_dates = @user.exercise_entries.joins(:exercise_items)
@@ -30,6 +31,15 @@ module Health
     end
 
     private
+
+    def nutrition_state(day)
+      return "unselected" unless day[:source] == :meals
+      return "pending" if day[:deficit].nil?
+      return "deficit" if day[:deficit].positive?
+      return "surplus" if day[:deficit].negative?
+
+      "balanced"
+    end
 
     def week_dates
       (@week_start..(@week_start + 6.days)).to_a

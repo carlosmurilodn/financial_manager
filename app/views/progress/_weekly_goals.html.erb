@@ -19,7 +19,7 @@
                 <% status = progress_activity_status(day[:state]) %>
                 <td><span class="progress-activity-day <%= status[:css] %>" role="img" aria-label="<%= status[:label] %>" title="<%= status[:label] %> em <%= day[:date].strftime('%d/%m/%Y') %>"><span class="material-symbols-rounded" aria-hidden="true"><%= status[:icon] %></span></span></td>
               <% end %>
-              <td title="<%= row[:type] == 'nutrition' ? 'Dias de dieta totalmente seguida / planejados' : 'Dias com exercícios registrados' %>"><strong><%= row[:completed_count] %><%= " / #{goal.target_count}" if goal %></strong><% if goal && row[:completed_count] >= goal.target_count %><small class="progress-activity-complete">Meta cumprida</small><% end %></td>
+              <td title="<%= row[:type] == 'nutrition' ? 'Dias em déficit calórico, conforme consumo registrado e gasto estimado' : 'Dias com exercícios registrados' %>"><strong><%= row[:completed_count] %><%= " / #{goal.target_count}" if goal %></strong><% if goal && row[:completed_count] >= goal.target_count %><small class="progress-activity-complete">Meta cumprida</small><% end %></td>
             </tr>
           <% end %>
         </tbody>

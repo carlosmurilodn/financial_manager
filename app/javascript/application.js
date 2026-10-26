@@ -1,5 +1,6 @@
 import "@hotwired/turbo-rails"
 import "./controllers"
+import "./page_loading"
 import "./select2_init"
 import "select2/dist/css/select2.css"
 import "./stylesheets/application.bootstrap.scss"

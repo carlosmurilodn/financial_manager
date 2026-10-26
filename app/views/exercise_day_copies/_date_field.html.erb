@@ -1,0 +1,5 @@
+<div data-date-row>
+  <%= label_tag field_id, "Data de destino" %>
+  <%= date_field_tag "dates[]", date, id: field_id, class: "app-form-control", required: true %>
+  <button type="button" class="app-btn app-btn--outline" data-action="exercise-day-copy#remove" aria-label="Remover data de destino">Remover</button>
+</div>

@@ -1,6 +1,10 @@
 module ProgressHelper
   def progress_activity_status(state)
     case state
+    when "deficit" then { label: "Déficit calórico — meta atingida", icon: "check", css: "is-done" }
+    when "surplus" then { label: "Superávit calórico — meta não atingida", icon: "close", css: "is-not-done" }
+    when "balanced" then { label: "Equilíbrio calórico — sem déficit", icon: "remove", css: "is-unselected" }
+    when "pending" then { label: "Dados insuficientes para calcular o saldo calórico", icon: "remove", css: "is-unselected" }
     when "full" then { label: "Segui a Dieta Totalmente", icon: "check", css: "is-done" }
     when "completed" then { label: "Realizado", icon: "check", css: "is-done" }
     when "partial" then { label: "Segui a Dieta Parcialmente", icon: "remove", css: "is-partial" }
@@ -19,7 +23,7 @@ module ProgressHelper
       "#{number_with_precision(value, precision: 2, separator: ',')} kg · #{pluralize(row.fetch(:"#{side}_count"), 'medição', 'medições')}"
     when :goals
       value.map { |goal| "#{goal.completed_count}/#{goal.target_count}" }.join(" · ")
-    when :exercise_days
+    when :exercise_days, :nutrition_days
       pluralize(value, "dia", "dias")
     when :score
       "#{value}/5"
@@ -40,7 +44,7 @@ module ProgressHelper
       "#{sign}#{number_with_precision(amount, precision: 2, separator: ',')} kg"
     when :goals
       "#{sign}#{pluralize(amount, 'realizado', 'realizados')}"
-    when :exercise_days
+    when :exercise_days, :nutrition_days
       "#{sign}#{pluralize(amount, 'dia', 'dias')}"
     when :score
       "#{sign}#{pluralize(amount, 'ponto', 'pontos')}"

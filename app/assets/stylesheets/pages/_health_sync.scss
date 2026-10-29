@@ -1,0 +1,69 @@
+.health-sync-page {
+  .app-page__hero-top { justify-content: space-between; gap: 1rem; }
+  .app-page__hero-copy { flex: 1 1 320px; }
+  .app-page__description { max-width: none; }
+  .app-panel { padding: 1.25rem; }
+  h2 { margin: 0; font-size: 1.05rem; font-weight: 800; }
+  p { line-height: 1.5; }
+  turbo-frame { display: block; min-width: 0; }
+
+  &__repository { display: flex; align-items: center; gap: .65rem; min-width: 0; color: var(--text-soft); }
+  &__repository div { display: grid; gap: .2rem; min-width: 0; }
+  &__repository strong { color: var(--text-main); font-size: .85rem; overflow-wrap: anywhere; }
+  &__repository div > span { font-size: .75rem; }
+  &__section-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+  &__section-heading p { margin: .3rem 0 0; color: var(--text-soft); font-size: .82rem; }
+  &__tag { display: inline-flex; align-items: center; gap: .3rem; font-size: .75rem; color: var(--text-soft); white-space: nowrap; }
+  &__tag .material-symbols-rounded { font-size: 1rem; }
+  &__send-options { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  &__day-form { display: flex; align-items: flex-end; gap: .65rem; margin: 0; }
+  &__day-form .app-filter-field { width: 190px; }
+  &__day-form .app-filter-field label { display: block; margin-bottom: .3rem; }
+  &__batch-actions { display: flex; flex-wrap: wrap; gap: .65rem; }
+  &__batch-actions form { margin: 0; }
+  &__send .app-btn { min-height: 38px; width: auto; white-space: nowrap; }
+  &__hint { margin: .85rem 0 0; color: var(--text-soft); font-size: .78rem; }
+  &__status { display: grid; gap: 1rem; }
+  &__metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+  &__metric { display: flex; align-items: center; gap: .85rem; padding: 1rem 1.25rem; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); }
+  &__metric > .material-symbols-rounded { padding: .6rem; border-radius: 10px; background: color-mix(in srgb, currentColor 10%, transparent); }
+  &__metric div { display: grid; gap: .15rem; }
+  &__metric div > span { color: var(--text-soft); font-size: .8rem; }
+  &__metric strong { font-size: 1.65rem; line-height: 1.2; color: var(--text-main); }
+  &__metric--success { color: var(--success); }
+  &__metric--pending { color: var(--primary); }
+  &__metric--error { color: var(--danger); }
+  &__notice { display: flex; align-items: flex-start; gap: .75rem; padding: 1rem 1.25rem; border: 1px solid color-mix(in srgb, var(--danger) 30%, var(--card-border)); border-radius: 12px; background: color-mix(in srgb, var(--danger) 6%, var(--surface)); color: var(--text-main); overflow-wrap: anywhere; }
+  &__notice > .material-symbols-rounded { color: var(--danger); flex-shrink: 0; }
+  &__notice strong { font-size: .9rem; }
+  &__notice p { margin: .3rem 0 0; font-size: .82rem; }
+  &__history .app-table-responsive { margin-top: 1rem; }
+  &__table thead { background: var(--app-bg-soft); }
+  &__table tbody tr:not(.health-sync-page__error-row) { border-top: 1px solid var(--card-border); }
+  &__table tbody th { font-size: .82rem; font-weight: 700; white-space: nowrap; }
+  &__table td:last-child { text-align: right; }
+  &__table .app-btn { min-width: 0; padding: .4rem .65rem; font-size: .75rem; }
+  &__table form { margin: 0; }
+  &__table .material-symbols-rounded { font-size: 1rem; }
+  &__badge { display: inline-flex; padding: .25rem .6rem; border-radius: 999px; font-size: .72rem; font-weight: 800; white-space: nowrap; }
+  &__badge--pending { color: var(--primary); background: color-mix(in srgb, var(--primary) 10%, transparent); }
+  &__badge--succeeded { color: var(--success); background: color-mix(in srgb, var(--success) 10%, transparent); }
+  &__badge--failed { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
+  &__table .health-sync-page__error-row td { padding-top: 0; font-size: .75rem; color: var(--danger); text-align: left; }
+
+  @media (max-width: 767px) {
+    .app-page__hero-top { align-items: flex-start; }
+    &__repository { width: 100%; }
+    &__section-heading { align-items: flex-start; }
+    &__tag { display: none; }
+    &__metrics { gap: .5rem; }
+    &__metric { gap: .4rem; padding: .75rem; }
+    &__metric > .material-symbols-rounded { display: none; }
+    &__metric div > span { font-size: .72rem; }
+    &__day-form, &__batch-actions { width: 100%; }
+    &__day-form .app-filter-field { flex: 1; width: auto; min-width: 0; }
+    &__batch-actions form { flex: 1 1 auto; }
+    &__batch-actions .app-btn { width: 100%; }
+    &__history .app-table { min-width: 620px; }
+  }
+}

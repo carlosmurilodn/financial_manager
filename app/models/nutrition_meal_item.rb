@@ -1,4 +1,5 @@
 class NutritionMealItem < ApplicationRecord
+  include HealthDataGithubTracking
   SOURCES = %w[taco custom recipe tabnut].freeze
   NUTRIENTS = %i[calories carbohydrates proteins fats].freeze
 
@@ -22,5 +23,13 @@ class NutritionMealItem < ApplicationRecord
 
   def nutrients_per_100
     food_snapshot.fetch("per_100#{quantity_unit}", {})
+  end
+
+  private
+
+  def health_data_github_coordinates
+    meal_ids = [nutrition_meal_id, nutrition_meal_id_before_last_save].compact.uniq
+    NutritionMeal.where(id: meal_ids).pluck(:user_id, :occurred_on)
+      .group_by(&:first).transform_values { |pairs| pairs.map(&:last) }
   end
 end

@@ -1,0 +1,46 @@
+<section class="app-page health-index-page self-knowledge-page health-sync-page" data-controller="health-sync" data-health-sync-url-value="<%= health_data_github_sync_path %>">
+  <div class="app-page__hero">
+    <div class="app-page__hero-top self-knowledge-section-hero">
+      <div class="app-page__hero-unit app-page__hero-copy self-knowledge-section-hero__heading">
+        <span class="app-page__hero-icon"><span class="material-symbols-rounded" aria-hidden="true">sync</span></span>
+        <div>
+          <p class="app-page__eyebrow">Cadastros Básicos</p>
+          <h1 class="app-page__title">Sincronização</h1>
+          <p class="app-page__description">Peso e alimentação sempre disponíveis no GitHub.</p>
+        </div>
+      </div>
+      <div class="health-sync-page__repository">
+        <span class="material-symbols-rounded" aria-hidden="true">folder_open</span>
+        <div><strong><%= @configuration.repository %></strong><span>Branch <%= @configuration.branch %> · Envio automático após alterações</span></div>
+      </div>
+    </div>
+  </div>
+
+  <% if @configuration.error_message %>
+    <div class="health-sync-page__notice health-sync-page__notice--error" role="alert"><span class="material-symbols-rounded" aria-hidden="true">error</span><div><strong>Configuração pendente</strong><p><%= @configuration.error_message %></p></div></div>
+  <% end %>
+
+  <div class="app-panel health-sync-page__send">
+    <div class="health-sync-page__section-heading">
+      <div><h2>Enviar registros</h2><p>Peso, calorias, macronutrientes e cardápio por refeição.</p></div>
+      <span class="health-sync-page__tag"><span class="material-symbols-rounded" aria-hidden="true">lock</span>Repositório privado</span>
+    </div>
+    <div class="health-sync-page__send-options">
+      <%= form_with url: health_data_github_sync_path, method: :post, class: "health-sync-page__day-form" do |form| %>
+        <%= form.hidden_field :scope, value: "day" %>
+        <div class="app-filter-field">
+          <%= form.label :date, "Enviar um dia" %>
+          <%= form.date_field :date, value: params[:date].presence || Date.current.iso8601, required: true, class: "app-form-control" %>
+        </div>
+        <%= form.button class: "app-btn app-btn--primary", disabled: !@configuration.configured?, data: { turbo_submits_with: "Solicitando…" } do %><span class="material-symbols-rounded" aria-hidden="true">cloud_upload</span>Enviar dia<% end %>
+      <% end %>
+      <div class="health-sync-page__batch-actions">
+        <%= button_to health_data_github_sync_path, params: { scope: "pending" }, class: "app-btn app-btn--secondary", disabled: !@configuration.configured?, data: { turbo_submits_with: "Solicitando…" } do %><span class="material-symbols-rounded" aria-hidden="true">refresh</span>Reenviar pendências<% end %>
+        <%= button_to health_data_github_sync_path, params: { scope: "history" }, class: "app-btn app-btn--outline", disabled: !@configuration.configured?, data: { turbo_submits_with: "Solicitando…" } do %><span class="material-symbols-rounded" aria-hidden="true">history</span>Enviar histórico completo<% end %>
+      </div>
+    </div>
+    <p class="health-sync-page__hint">Se houver falha, seus registros permanecem salvos e podem ser reenviados.</p>
+  </div>
+
+  <%= render "status" %>
+</section>

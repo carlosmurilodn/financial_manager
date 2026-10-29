@@ -29,6 +29,7 @@ module ApplicationHelper
     custom_foods
     nutrition_recipes
     nutrition_meal_items
+    health_data_github_syncs
   ].freeze
 
   def personal_development_section?
@@ -62,7 +63,9 @@ module ApplicationHelper
     when :milestones
       controller_name == "health_weight_goals"
     when :basic_registries
-      health_nav_active?(:profile) || health_nav_active?(:milestones) || health_nav_active?(:muscle_groups) || health_nav_active?(:strength_exercises) || health_nav_active?(:foods) || health_nav_active?(:recipes)
+      health_nav_active?(:profile) || health_nav_active?(:milestones) || health_nav_active?(:muscle_groups) || health_nav_active?(:strength_exercises) || health_nav_active?(:foods) || health_nav_active?(:recipes) || health_nav_active?(:synchronization)
+    when :synchronization
+      controller_name == "health_data_github_syncs"
     when :recipes
       controller_name == "nutrition_recipes"
     when :foods

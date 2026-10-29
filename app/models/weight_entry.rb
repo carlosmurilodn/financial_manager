@@ -1,4 +1,5 @@
 class WeightEntry < ApplicationRecord
+  include HealthDataGithubTracking
   belongs_to :user
 
   validates :measured_on, presence: true, uniqueness: { scope: :user_id, message: "já possui uma medição. Edite o registro existente." }
@@ -9,6 +10,14 @@ class WeightEntry < ApplicationRecord
   scope :recent, -> { order(measured_on: :desc) }
 
   private
+
+  def health_data_github_coordinates
+    coordinates = [[user_id, measured_on]]
+    if saved_change_to_measured_on? || saved_change_to_user_id?
+      coordinates << [user_id_before_last_save || user_id, measured_on_before_last_save]
+    end
+    coordinates.select { |_, date| date }.group_by(&:first).transform_values { |pairs| pairs.map(&:last) }
+  end
 
   def weight_format
     value = weight_kg_before_type_cast.to_s

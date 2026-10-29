@@ -55,8 +55,12 @@ module Health
       end
     rescue Writing::GithubClient::Error, DeadlineExceeded => error
       message = error.is_a?(DeadlineExceeded) ? "Envio excedeu o tempo disponível. Tente novamente." : error.message
-      record.update_columns(status: "failed", error_message: message)
-      raise Writing::GithubClient::Error, message
+      if error.is_a?(Writing::GithubClient::RepositoryUnavailable)
+        @user.health_data_github_syncs.outstanding.update_all(status: "failed", error_message: message)
+      else
+        record.update_columns(status: "failed", error_message: message)
+      end
+      raise(error.is_a?(Writing::GithubClient::Error) ? error : Writing::GithubClient::Error.new(message))
     end
 
     def github_client

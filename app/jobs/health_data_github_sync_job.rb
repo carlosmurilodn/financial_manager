@@ -3,6 +3,7 @@ class HealthDataGithubSyncJob < ApplicationJob
 
   retry_on Health::DataGithubSync::Busy, wait: 5.seconds, attempts: 5
   retry_on Writing::GithubClient::Error, wait: 1.minute, attempts: 3
+  discard_on Writing::GithubClient::RepositoryUnavailable
 
   def perform(user_id)
     user = User.find_by(id: user_id)

@@ -7,6 +7,7 @@ module Writing
   class GithubClient
     class Error < StandardError; end
     class Conflict < Error; end
+    class RepositoryUnavailable < Error; end
     API_VERSION = "2026-03-10"
 
     def initialize(configuration, book, prefix: nil, commit_message: nil)
@@ -26,7 +27,9 @@ module Writing
     def remote_files
       raise Error, @configuration.error_message unless @configuration.configured?
 
-      repository = request(:get, repository_path)
+      repository = request(:get, repository_path,
+        missing: "GitHub não permitiu acesso ao repositório #{@configuration.repository}. Confira o nome e autorize esse repositório no token do servidor com Contents: Read and write.",
+        missing_error: RepositoryUnavailable)
       raise Error, "Sincronização permitida somente com repositório privado." unless repository["private"] == true
 
       ref = request(:get, "#{repository_path}/git/ref/heads/#{encode(@configuration.branch)}", missing: "Branch indisponível. Inicialize o repositório e confira a branch configurada.")
@@ -96,7 +99,7 @@ module Writing
       entries
     end
 
-    def request(method, path, body: nil, missing: nil)
+    def request(method, path, body: nil, missing: nil, missing_error: Error)
       uri = URI.parse("https://api.github.com#{path}")
       http = Net::HTTP.new(uri.host, uri.port, nil)
       http.use_ssl = true
@@ -122,7 +125,7 @@ module Writing
       case code
       when 401 then raise Error, "GitHub recusou autenticação. Confira validade e autorização do token no servidor."
       when 403, 429 then raise Error, "GitHub recusou acesso ou limitou requisições. Confira Contents: Read and write e aguarde antes de tentar novamente."
-      when 404 then raise Error, missing || "Repositório ou branch indisponível. Confira configuração e acesso do token ao repositório privado."
+      when 404 then raise missing_error, missing || "Repositório ou branch indisponível. Confira configuração e acesso do token ao repositório privado."
       when 409 then raise Conflict, "Conflito de atualização no GitHub. Inicialize o repositório se estiver vazio; caso contrário, sincronize novamente para obter os SHAs atuais."
       when 422 then raise Error, "GitHub recusou a atualização. Confira branch, regras de proteção e limites dos documentos."
       when 500..599 then raise Error, "GitHub temporariamente indisponível. Tente novamente mais tarde."

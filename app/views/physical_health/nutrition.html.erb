@@ -1,6 +1,5 @@
 <section class="app-page health-index-page nutrition-page self-knowledge-page">
   <%= render "hero" %>
-  <div class="app-filter-actions"><%= link_to "Sincronizar GitHub", health_data_github_sync_path, class: "app-btn app-btn--outline" %></div>
   <%= render "week_filters" %>
   <div class="app-panel app-panel--table">
     <% if @weeks.any? %>

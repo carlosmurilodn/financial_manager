@@ -52,6 +52,8 @@ import GithubSyncController from "./github_sync_controller"
 application.register("github-sync", GithubSyncController)
 import GithubScheduleController from "./github_schedule_controller"
 application.register("github-schedule", GithubScheduleController)
+import HealthSyncController from "./health_sync_controller"
+application.register("health-sync", HealthSyncController)
 
 import ManuscriptChartController from "./manuscript_chart_controller"
 application.register("manuscript-chart", ManuscriptChartController)

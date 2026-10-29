@@ -1,8 +1,17 @@
 class HealthDataGithubSyncsController < ApplicationController
   def show
     @configuration = Health::DataGithubConfiguration.new
-    @pending_count = current_user.health_data_github_syncs.outstanding.count
-    @syncs = current_user.health_data_github_syncs.order(occurred_on: :desc).limit(100)
+    syncs = current_user.health_data_github_syncs
+    counts = syncs.group(:status).count
+    @pending_count = counts.fetch("pending", 0)
+    @failed_count = counts.fetch("failed", 0)
+    @succeeded_count = counts.fetch("succeeded", 0)
+    @outstanding_count = @pending_count + @failed_count
+    @last_success_at = syncs.maximum(:last_success_at)
+    @last_error = syncs.where(status: "failed").where.not(error_message: nil)
+      .order(Arel.sql("last_attempt_at DESC NULLS LAST"), id: :desc).first&.error_message
+    @syncs = syncs.order(occurred_on: :desc).limit(100)
+    render partial: "status" if turbo_frame_request_id == "health-data-github-status"
   end
 
   def create

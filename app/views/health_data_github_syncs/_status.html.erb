@@ -1,0 +1,44 @@
+<%= turbo_frame_tag "health-data-github-status", data: { health_sync_target: "frame" } do %>
+  <div class="health-sync-page__status" data-health-sync-outstanding="<%= @outstanding_count %>">
+    <% if @last_error.present? %>
+      <div class="health-sync-page__notice health-sync-page__notice--error" role="alert">
+        <span class="material-symbols-rounded" aria-hidden="true">cloud_off</span>
+        <div><strong>Não foi possível concluir o envio</strong><p><%= @last_error %></p><p>Resolva o problema informado e clique em “Reenviar pendências”.</p></div>
+      </div>
+    <% end %>
+    <div class="health-sync-page__metrics" role="group" aria-label="Resumo da sincronização" aria-live="polite">
+      <% [["Sincronizados", @succeeded_count, "cloud_done", "success"], ["Pendentes", @pending_count, "schedule", "pending"], ["Com falha", @failed_count, "error_outline", "error"]].each do |label, count, icon, state| %>
+        <article class="health-sync-page__metric health-sync-page__metric--<%= state %>"><span class="material-symbols-rounded" aria-hidden="true"><%= icon %></span><div><span><%= label %></span><strong><%= count %></strong></div></article>
+      <% end %>
+    </div>
+    <div class="app-panel health-sync-page__history">
+      <div class="health-sync-page__section-heading">
+        <div><h2>Histórico de envios</h2><p>Últimos 100 dias acompanhados · Atualização automática enquanto houver pendências.</p></div>
+        <%= link_to health_data_github_sync_path, class: "app-btn app-btn--outline", data: { turbo_frame: "health-data-github-status" }, aria: { label: "Atualizar status da sincronização" } do %><span class="material-symbols-rounded" aria-hidden="true">refresh</span>Atualizar<% end %>
+      </div>
+      <% if @last_success_at %><p class="health-sync-page__hint">Último envio concluído: <%= l(@last_success_at, format: :short) %></p><% end %>
+      <% if @syncs.empty? %>
+        <div class="dashboard-empty-state"><span class="material-symbols-rounded" aria-hidden="true">cloud_upload</span><strong>Nenhum envio registrado</strong><small>Envie um dia ou o histórico para começar.</small></div>
+      <% else %>
+        <div class="app-table-responsive">
+          <table class="app-table health-sync-page__table">
+            <caption class="visually-hidden">Estado dos envios de peso e alimentação por dia</caption>
+            <thead><tr><th scope="col">Dia</th><th scope="col">Status</th><th scope="col">Última tentativa</th><th scope="col">Último sucesso</th><th scope="col"><span class="visually-hidden">Ações</span></th></tr></thead>
+            <tbody>
+              <% @syncs.each do |sync| %>
+                <tr>
+                  <th scope="row"><time datetime="<%= sync.occurred_on.iso8601 %>"><%= sync.occurred_on.strftime("%d/%m/%Y") %></time></th>
+                  <td><span class="health-sync-page__badge health-sync-page__badge--<%= sync.status %>"><%= { "pending" => "Pendente", "succeeded" => "Sincronizado", "failed" => "Falha no envio" }.fetch(sync.status) %></span></td>
+                  <td><%= sync.last_attempt_at ? l(sync.last_attempt_at, format: :short) : "Não iniciada" %></td>
+                  <td><%= sync.last_success_at ? l(sync.last_success_at, format: :short) : "—" %></td>
+                  <td><%= button_to health_data_github_sync_path, params: { scope: "day", date: sync.occurred_on.iso8601 }, class: "app-btn app-btn--outline", disabled: !@configuration.configured?, form: { data: { turbo_frame: "_top" } }, aria: { label: "Reenviar dia #{sync.occurred_on.strftime('%d/%m/%Y')}" } do %><span class="material-symbols-rounded" aria-hidden="true">refresh</span>Reenviar<% end %></td>
+                </tr>
+                <% if sync.error_message.present? && sync.error_message != @last_error %><tr class="health-sync-page__error-row"><td colspan="5"><%= sync.error_message %></td></tr><% end %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

@@ -68,6 +68,7 @@ Rails.application.routes.draw do
   resources :writing_github_sync_statuses, path: "estudio-de-escrita/sincronizacoes-github", only: :index
   get "financeiro", to: "home#index", as: :financial_dashboard
   get "progresso", to: "progress#index", as: :progress
+  resource :health_data_github_sync, path: "progresso/peso-e-alimentacao/sincronizacao-github", only: %i[show create]
   resource :health_profile, path: "progresso/perfil", only: %i[show create update]
   get "progresso/alimentacao", to: "physical_health#nutrition", as: :health_nutrition
   post "progresso/alimentacao/:week_start/refeicoes", to: "nutrition_meals#create", as: :nutrition_week_meals

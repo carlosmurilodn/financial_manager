@@ -1,0 +1,44 @@
+<section class="app-page health-index-page">
+  <div class="app-page__hero">
+    <h1 class="app-page__title">Peso e alimentação no GitHub</h1>
+    <p>Repositório: <strong><%= @configuration.repository %></strong> · Branch: <%= @configuration.branch %></p>
+    <p>Alterações são enviadas automaticamente. Pendências: <strong><%= @pending_count %></strong>.</p>
+    <% if @configuration.error_message %>
+      <p role="alert"><%= @configuration.error_message %></p>
+    <% end %>
+    <div class="app-filter-actions">
+      <%= link_to "Balança", weight_entries_path, class: "app-btn app-btn--outline" %>
+      <%= link_to "Alimentação", health_nutrition_path, class: "app-btn app-btn--outline" %>
+    </div>
+  </div>
+  <div class="app-panel">
+    <h2>Enviar registros</h2>
+    <p>O envio reúne peso, calorias e macronutrientes do dia, alimentos e quantidades por refeição.</p>
+    <%= form_with url: health_data_github_sync_path, method: :post, class: "app-filter-form" do |form| %>
+      <%= form.hidden_field :scope, value: "day" %>
+      <div class="app-filter-field">
+        <%= form.label :date, "Dia" %>
+        <%= form.date_field :date, value: params[:date].presence || Date.current.iso8601, required: true, class: "app-form-control" %>
+      </div>
+      <%= form.submit "Enviar dia", class: "app-btn app-btn--primary", disabled: !@configuration.configured? %>
+    <% end %>
+    <div class="app-filter-actions">
+      <%= button_to "Reenviar pendências", health_data_github_sync_path, params: { scope: "pending" }, class: "app-btn app-btn--secondary", disabled: !@configuration.configured? %>
+      <%= button_to "Enviar todo o histórico", health_data_github_sync_path, params: { scope: "history" }, class: "app-btn app-btn--secondary", disabled: !@configuration.configured? %>
+    </div>
+    <p>Falhas preservam seus registros. Use “Reenviar pendências” para retomar envios interrompidos.</p>
+  </div>
+  <div class="app-panel">
+    <h2>Últimos 100 dias acompanhados</h2>
+    <% if @syncs.empty? %><p>Nenhum envio registrado.</p><% end %>
+    <% @syncs.each do |sync| %>
+      <article>
+        <h3><%= sync.occurred_on.strftime("%d/%m/%Y") %></h3>
+        <p><%= { "pending" => "Pendente", "succeeded" => "Sincronizado", "failed" => "Falha no envio" }.fetch(sync.status) %></p>
+        <% if sync.last_success_at %><p>Último sucesso: <%= l(sync.last_success_at, format: :short) %></p><% end %>
+        <% if sync.error_message.present? %><p role="alert"><%= sync.error_message %></p><% end %>
+        <%= button_to "Reenviar dia", health_data_github_sync_path, params: { scope: "day", date: sync.occurred_on.iso8601 }, class: "app-btn app-btn--outline", disabled: !@configuration.configured? %>
+      </article>
+    <% end %>
+  </div>
+</section>

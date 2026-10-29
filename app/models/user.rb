@@ -28,4 +28,5 @@ class User < ApplicationRecord
   has_many :strength_exercise_catalogs, dependent: :destroy
   has_many :muscle_groups, dependent: :destroy
   has_many :passkey_credentials, dependent: :destroy
+  has_many :health_data_github_syncs, dependent: :destroy
 end

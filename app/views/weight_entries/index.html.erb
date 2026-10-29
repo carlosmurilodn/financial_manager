@@ -12,6 +12,7 @@
       </div>
 
       <div class="app-page__hero-unit self-knowledge-page-actions">
+        <%= link_to "Sincronizar GitHub", health_data_github_sync_path, class: "app-btn app-btn--outline" %>
         <%= link_to new_weight_entry_path, class: "app-btn app-btn--primary", data: { turbo: false } do %>
           <span>
             <span class="material-symbols-rounded">add</span>

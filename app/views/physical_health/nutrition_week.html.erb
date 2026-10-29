@@ -31,6 +31,7 @@
       <% dates.each do |date| %>
         <section id="nutrition-panel-<%= date.iso8601 %>" class="nutrition-week__panel calorie-day" role="tabpanel" aria-labelledby="nutrition-tab-<%= date.iso8601 %>" tabindex="0" data-nutrition-tabs-target="panel" data-controller="nutrition-meal-form" data-action="nutrition-meals:changed->nutrition-meal-form#refresh" <%= "hidden" unless date == selected_date %>>
           <% meals = @nutrition_meals_by_date.fetch(date, []) %>
+          <%= link_to "Sincronizar dia no GitHub", health_data_github_sync_path(date: date.iso8601), class: "app-btn app-btn--outline" %>
           <div data-nutrition-meal-form-target="daySummary" aria-live="polite"><%= render "nutrition_meals/day_summary", meals: meals %></div>
           <p class="nutrition-meal-picker__status" role="status" aria-live="polite" data-nutrition-meal-form-target="status"></p>
           <p class="nutrition-week__empty" data-nutrition-meal-form-target="empty" <%= "hidden" if meals.any? %>>Nenhuma refeição registrada</p>

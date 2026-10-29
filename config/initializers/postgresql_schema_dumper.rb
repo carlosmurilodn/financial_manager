@@ -9,10 +9,10 @@ module PostgreSQLSchemaDumperWithIdempotentSchemas
 
   def table(table, stream)
     super
-    return unless table == "writing_github_syncs"
-    return unless @connection.select_value("SELECT relrowsecurity FROM pg_class WHERE oid = 'writing_github_syncs'::regclass")
+    return unless %w[writing_github_syncs health_data_github_syncs].include?(table)
+    return unless @connection.select_value("SELECT relrowsecurity FROM pg_class WHERE oid = #{@connection.quote(table)}::regclass")
 
-    stream.puts '  execute "ALTER TABLE writing_github_syncs ENABLE ROW LEVEL SECURITY"'
+    stream.puts "  execute #{"ALTER TABLE #{table} ENABLE ROW LEVEL SECURITY".inspect}"
   end
 
   def schemas(stream)

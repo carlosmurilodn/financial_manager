@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_20_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_29_151000) do
   create_schema "auth", if_not_exists: true
   create_schema "extensions", if_not_exists: true
   create_schema "graphql", if_not_exists: true
@@ -180,6 +180,24 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_20_120000) do
     t.index ["status"], name: "index_financial_goals_on_status"
     t.index ["user_id"], name: "index_financial_goals_on_user_id"
   end
+
+  create_table "health_data_github_syncs", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "occurred_on", null: false
+    t.bigint "revision", default: 1, null: false
+    t.bigint "synced_revision", default: 0, null: false
+    t.string "status", default: "pending", null: false
+    t.text "error_message"
+    t.datetime "last_attempt_at"
+    t.datetime "last_success_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "occurred_on"], name: "index_health_data_github_syncs_on_user_id_and_occurred_on", unique: true
+    t.index ["user_id"], name: "index_health_data_github_syncs_on_user_id"
+    t.check_constraint "revision >= synced_revision AND synced_revision >= 0", name: "health_data_github_syncs_revisions"
+    t.check_constraint "status::text = ANY (ARRAY['pending'::character varying, 'succeeded'::character varying, 'failed'::character varying]::text[])", name: "health_data_github_syncs_status"
+  end
+  execute "ALTER TABLE health_data_github_syncs ENABLE ROW LEVEL SECURITY"
 
   create_table "health_journal_entries", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -1079,6 +1097,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_20_120000) do
   add_foreign_key "financial_goal_resources", "financial_goals"
   add_foreign_key "financial_goals", "categories"
   add_foreign_key "financial_goals", "users"
+  add_foreign_key "health_data_github_syncs", "users"
   add_foreign_key "health_journal_entries", "users"
   add_foreign_key "health_profiles", "users"
   add_foreign_key "health_weekly_reflections", "users"

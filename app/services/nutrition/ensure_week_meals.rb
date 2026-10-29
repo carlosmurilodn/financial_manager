@@ -16,7 +16,7 @@ module Nutrition
           DEFAULT_NAMES.each do |name|
             next if existing.include?([ date, name ])
 
-            @user.nutrition_meals.create!(occurred_on: date, name: name)
+            @user.nutrition_meals.create!(occurred_on: date, name: name, skip_health_data_github_tracking: true)
           end
         end
       end

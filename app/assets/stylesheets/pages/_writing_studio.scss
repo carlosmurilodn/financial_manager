@@ -115,6 +115,12 @@
 
 .writing-chapters__heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
 .writing-book-page .writing-chapters__heading .writing-detail__title { margin: 0; }
+.writing-chapters > .writing-manuscript-cards {
+  max-height: min(440px, 60vh);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  padding: 2px;
+}
 .writing-chapters__list { margin: 0; padding-left: 1.5rem; }
 .writing-chapters__item { padding: .75rem 0; border-bottom: 1px solid var(--card-border); }
 .writing-chapters__item:last-child { border-bottom: 0; }

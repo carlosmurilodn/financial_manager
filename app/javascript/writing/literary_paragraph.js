@@ -1,6 +1,6 @@
 import Paragraph from "@tiptap/extension-paragraph"
 import Heading from "@tiptap/extension-heading"
-import { Extension, mergeAttributes } from "@tiptap/core"
+import { Extension, mergeAttributes, textInputRule } from "@tiptap/core"
 import { DOMSerializer } from "@tiptap/pm/model"
 import { Plugin } from "@tiptap/pm/state"
 
@@ -49,6 +49,10 @@ export const LiteraryHeading = Heading.extend({
 export const LiteraryEditing = Extension.create({
   name: "literaryEditing",
   priority: 1000,
+
+  addInputRules() {
+    return [textInputRule({ find: /--$/, replace: "—" })]
+  },
 
   addProseMirrorPlugins() {
     return [new Plugin({

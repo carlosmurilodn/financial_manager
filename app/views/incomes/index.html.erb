@@ -43,7 +43,7 @@
           <div class="app-filter-field">
             <%= label_tag :year, "Ano" %>
             <%= select_tag :year,
-              options_for_select([["Todos", 0]] + (Date.today.year - 5..Date.today.year + 1).to_a.reverse, @year || 0),
+              options_for_select([["Todos", 0]] + @income_years, @year || 0),
               class: "app-form-select" %>
           </div>
 

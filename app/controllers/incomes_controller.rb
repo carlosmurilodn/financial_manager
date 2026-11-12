@@ -2,6 +2,7 @@ class IncomesController < ApplicationController
   before_action :set_income, only: %i[show edit update destroy toggle_paid]
 
   def index
+    @income_years = current_user.incomes.distinct.pluck(:balance_month).compact.map(&:year).uniq.sort.reverse
     load_incomes
   end
 

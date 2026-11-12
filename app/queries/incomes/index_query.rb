@@ -47,9 +47,10 @@ module Incomes
     end
 
     def filter_by_month(incomes)
-      return incomes if month.blank? || year.blank?
-
-      incomes.select { |income| income.balance_month.month == month && income.balance_month.year == year }
+      incomes.select do |income|
+        (month.blank? || income.balance_month.month == month) &&
+          (year.blank? || income.balance_month.year == year)
+      end
     end
 
     def filter_by_description(incomes)

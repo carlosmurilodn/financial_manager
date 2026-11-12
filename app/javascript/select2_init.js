@@ -13,6 +13,25 @@ const SELECT2_OPTIONS = {
   }
 }
 
+function deferMobileSearchKeyboard(el) {
+  const instance = $(el).data("select2")
+  const searches = instance.$container.add(instance.dropdown.$dropdown).find(".select2-search__field")
+  const isMobile = () => window.matchMedia("(pointer: coarse)").matches
+
+  const lockSearch = () => searches.prop("readOnly", isMobile())
+
+  lockSearch()
+  $(el).off(".mobileSearch").on("select2:opening.mobileSearch select2:closing.mobileSearch", lockSearch)
+  searches.on("pointerdown.mobileSearch", function () {
+    if (!isMobile()) return
+
+    this.readOnly = false
+    // The field may already have focus from Select2's automatic focus calls.
+    if (document.activeElement === this) this.blur()
+    this.focus()
+  })
+}
+
 export function initSelect2(container = document) {
   // Defer to next frame so the browser paints the page first
   requestAnimationFrame(() => {
@@ -37,6 +56,7 @@ export function initSelect2(container = document) {
       }
 
       $(el).select2(options)
+      deferMobileSearchKeyboard(el)
 
       // Select2 triggers jQuery events only; dispatch a native event
       // so that vanilla addEventListener handlers (expense_form, etc.) work.

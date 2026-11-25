@@ -36,7 +36,7 @@
 
 .philosophical-table__caption { display: none; }
 @media (max-width: 700px) {
-  .philosophical-list-page .app-table-responsive { overflow-x: visible; }
+  .philosophical-list-page .app-table-responsive { overflow-x: visible; box-shadow: none; }
   .philosophical-list-page .app-table { display: block; }
   .philosophical-list-page .philosophical-table__caption { display: block; padding-bottom: 8px; color: var(--text-soft); font-size: .85rem; font-weight: 600; text-align: left; }
   .philosophical-list-page .app-table thead { display: block; margin-bottom: 16px; }

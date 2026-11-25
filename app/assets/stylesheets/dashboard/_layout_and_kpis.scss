@@ -72,6 +72,7 @@
 }
 
 .stat-card {
+  box-shadow: var(--shadow-card-subtle);
   display: flex;
   gap: 16px;
   padding: 22px;

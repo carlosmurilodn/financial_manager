@@ -116,7 +116,7 @@
 .writing-scenes-card .writing-detail__title { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 1.1rem; }
 .writing-scenes-card .writing-muted { margin: 0 0 16px; }
 .writing-manuscript-cards { display: grid; gap: var(--writing-card-gap, 14px); list-style: none; padding: 0; margin: 0; }
-.writing-manuscript-card { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 24px; padding: 18px 20px 18px 24px; border: 1px solid var(--card-border); border-left: 5px solid var(--primary); border-radius: 18px; background: var(--surface); }
+.writing-manuscript-card { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 24px; padding: 18px 20px 18px 24px; border: 0; box-shadow: var(--shadow-card-subtle); border-left: 5px solid var(--primary); border-radius: 18px; background: var(--surface); }
 .writing-manuscript-card__identity { display: flex; align-items: center; gap: 16px; min-width: 0; }
 .writing-manuscript-card__icon { display: grid; place-items: center; width: 58px; height: 58px; flex-shrink: 0; border-radius: 50%; background: color-mix(in srgb, var(--primary) 14%, transparent); color: var(--primary); font-size: 1.9rem; }
 .writing-manuscript-card__copy { display: grid; gap: 8px; min-width: 0; }

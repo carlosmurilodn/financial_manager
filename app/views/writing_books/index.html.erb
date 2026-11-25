@@ -37,11 +37,11 @@
               ["Título A → Z", "title:asc"], ["Título Z → A", "title:desc"],
               ["Criação Recente", "created_at:desc"], ["Criação Antiga", "created_at:asc"],
               ["Atualização Recente", "updated_at:desc"], ["Atualização Antiga", "updated_at:asc"]
-            ], "#{@sort}:#{@direction}"), {}, class: "form-select app-per-page-control__select app-sort-control__select", onchange: "this.form.requestSubmit()" %>
+            ], "#{@sort}:#{@direction}"), {}, class: "form-select app-per-page-control__select app-sort-control__select" %>
           </div>
           <div class="app-per-page-control">
             <%= f.label :per_page, "Exibir", class: "app-per-page-control__label" %>
-            <%= f.select :per_page, options_for_select(per_page_options, @per_page), {}, class: "form-select app-per-page-control__select", onchange: "this.form.requestSubmit()" %>
+            <%= f.select :per_page, options_for_select(per_page_options, @per_page), {}, class: "form-select app-per-page-control__select" %>
             <span class="app-per-page-control__suffix">por página</span>
           </div>
         </div>

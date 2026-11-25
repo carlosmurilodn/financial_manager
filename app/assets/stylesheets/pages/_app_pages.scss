@@ -6,7 +6,8 @@
 .app-page__hero,
 .app-panel,
 .app-report-card {
-  border: 1px solid var(--card-border);
+  border: 0;
+  box-shadow: var(--shadow-card-subtle);
   background: var(--surface);
   backdrop-filter: blur(22px);
 }
@@ -602,10 +603,10 @@
   display: grid;
   overflow: hidden;
   min-width: 0;
-  border: 1px solid var(--card-border);
+  border: 0;
+  box-shadow: var(--shadow-card-subtle);
   border-radius: 10px;
   background: var(--surface);
-  box-shadow: 0 14px 28px rgba(35, 55, 94, 0.08);
 }
 
 .app-category-card::before {
@@ -769,10 +770,10 @@
   display: grid;
   overflow: hidden;
   min-width: 0;
-  border: 1px solid var(--card-border);
+  border: 0;
+  box-shadow: var(--shadow-card-subtle);
   border-radius: 10px;
   background: var(--surface);
-  box-shadow: 0 14px 28px rgba(35, 55, 94, 0.08);
 }
 
 .app-card-card::before {
@@ -1107,7 +1108,7 @@
 .app-report-card--button {
   width: 100%;
   height: 100%;
-  border: 1px solid var(--card-border);
+  border: 0;
   font: inherit;
   text-align: left;
   cursor: pointer;

@@ -22,7 +22,7 @@
 .writing-empty > .material-symbols-rounded { font-size: 3rem; }
 .writing-fields, .writing-detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .writing-field-wide { grid-column: 1 / -1; }
-.writing-form-section { border: 1px solid var(--card-border); border-radius: 1rem; padding: 1.5rem; margin-bottom: 14px; min-width: 0; }
+.writing-form-section { border: 0; box-shadow: var(--shadow-card-subtle); border-radius: 1rem; padding: 1.5rem; margin-bottom: 14px; min-width: 0; }
 .writing-form-section legend { float: none; width: auto; padding: 0 .5rem; font-size: 1.1rem; font-weight: 700; }
 .writing-secondary-genres { min-width: 0; display: flex; flex-wrap: wrap; gap: .75rem; }
 .writing-secondary-genres legend { font-size: .95rem; }

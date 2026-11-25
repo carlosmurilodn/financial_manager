@@ -45,7 +45,7 @@
   .philosophical-list-page .app-table thead th:last-child { display: none; }
   .philosophical-list-page .app-table thead a { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--card-border); border-radius: 10px; }
   .philosophical-list-page .app-table tbody { display: grid; gap: 16px; }
-  .philosophical-list-page .app-table tbody tr { display: grid; min-width: 0; padding: 12px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); }
+  .philosophical-list-page .app-table tbody tr { display: grid; min-width: 0; padding: 12px; border: 0; box-shadow: var(--shadow-card-subtle); border-radius: 12px; background: var(--surface); }
   .philosophical-list-page .app-table tbody td { display: block; min-width: 0; padding: 8px 0; border: 0; white-space: normal; overflow-wrap: anywhere; }
   .philosophical-list-page .app-table tbody td::before { content: attr(data-label); display: block; margin-bottom: 4px; font-size: .75rem; font-weight: 700; color: var(--text-soft); }
   .philosophical-list-page .writing-character-actions { gap: 8px; }

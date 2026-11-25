@@ -9,7 +9,7 @@
 .writing-publication-page .app-checkbox { display: flex; align-items: center; gap: 10px; min-height: 32px; font-weight: 500; cursor: pointer; }
 .writing-publication-page .app-checkbox input { accent-color: var(--primary); width: 18px; height: 18px; flex-shrink: 0; }
 .writing-publication-page .app-checkbox > span { min-width: 0; overflow-wrap: anywhere; }
-.writing-publication-chapters { display: grid; gap: 8px; padding: 16px; border-radius: 12px; border: 1px solid var(--card-border); background: var(--app-bg-soft); margin-bottom: 14px; }
+.writing-publication-chapters { display: grid; gap: 8px; padding: 16px; border-radius: 12px; border: 0; box-shadow: var(--shadow-card-subtle); background: var(--app-bg-soft); margin-bottom: 14px; }
 .writing-publication-chapters .writing-book-tool__badge { margin-right: 6px; }
 .writing-publication-fieldset .writing-fields { gap: 14px; }
 .writing-publication-fieldset > .writing-muted { margin: 14px 0 0; }
@@ -19,7 +19,7 @@
 .writing-publication-status { background: color-mix(in srgb, var(--primary) 8%, var(--app-bg)); overflow-wrap: anywhere; }
 .writing-publication-status.app-alert--success { background: color-mix(in srgb, var(--success) 10%, var(--app-bg)); }
 .writing-publication-status.app-alert--danger { background: color-mix(in srgb, var(--danger) 10%, var(--app-bg)); }
-.writing-publication-frame { display: block; width: 100%; height: min(80vh, 900px); min-height: 420px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--app-bg-soft); }
+.writing-publication-frame { display: block; width: 100%; height: min(80vh, 900px); min-height: 420px; border: 0; box-shadow: var(--shadow-card-subtle); border-radius: 12px; background: var(--app-bg-soft); }
 .writing-github-page .writing-detail__title { display: flex; align-items: center; gap: .6rem; margin: 0 0 1rem; font-size: 1rem; font-weight: 700; line-height: 1.4; color: var(--text-soft); }
 .writing-github-page .writing-detail__title > .material-symbols-rounded { display: grid; place-items: center; width: 24px; height: 24px; flex: 0 0 24px; font-size: 20px; line-height: 1; }
 .writing-github-heading__copy { display: flex; align-items: center; gap: 16px; }

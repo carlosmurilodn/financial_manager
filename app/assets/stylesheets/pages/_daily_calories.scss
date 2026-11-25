@@ -1,4 +1,4 @@
-.calorie-day { display: flex; flex-direction: column; flex: 1 1 200px; gap: 12px; min-width: 0; padding: 14px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); color: var(--text-main); }
+.calorie-day { display: flex; flex-direction: column; flex: 1 1 200px; gap: 12px; min-width: 0; padding: 14px; border: 0; box-shadow: var(--shadow-card-subtle); border-radius: 12px; background: var(--surface); color: var(--text-main); }
 .calorie-day__header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 0.85rem; }
 @media (max-width: 640px) { .calorie-day { flex-basis: 100%; } }
 

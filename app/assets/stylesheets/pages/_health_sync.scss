@@ -25,7 +25,7 @@
   &__hint { margin: .85rem 0 0; color: var(--text-soft); font-size: .78rem; }
   &__status { display: grid; gap: 1rem; }
   &__metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-  &__metric { display: flex; align-items: center; gap: .85rem; padding: 1rem 1.25rem; border: 1px solid var(--card-border); border-radius: 12px; background: var(--surface); }
+  &__metric { display: flex; align-items: center; gap: .85rem; padding: 1rem 1.25rem; border: 0; box-shadow: var(--shadow-card-subtle); border-radius: 12px; background: var(--surface); }
   &__metric > .material-symbols-rounded { padding: .6rem; border-radius: 10px; background: color-mix(in srgb, currentColor 10%, transparent); }
   &__metric div { display: grid; gap: .15rem; }
   &__metric div > span { color: var(--text-soft); font-size: .8rem; }

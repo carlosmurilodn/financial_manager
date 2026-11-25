@@ -13,7 +13,8 @@
   gap: 4px;
   min-width: 0;
   padding: 14px;
-  border: 1px solid var(--card-border);
+  border: 0;
+  box-shadow: var(--shadow-card-subtle);
   border-radius: var(--radius-lg);
   background: var(--app-bg-soft);
 }
@@ -133,8 +134,12 @@
 
   .progress-comparison tr {
     margin-bottom: 16px;
-    border: 1px solid var(--table-border-color);
+    box-shadow: var(--shadow-card-subtle);
     border-radius: var(--radius-md);
+  }
+
+  .progress-comparison {
+    box-shadow: none;
   }
 
   .progress-comparison td::before {
@@ -407,7 +412,8 @@
   gap: 4px;
   min-width: 0;
   padding: 12px;
-  border: 1px solid var(--table-border-color);
+  border: 0;
+  box-shadow: var(--shadow-card-subtle);
   border-radius: var(--radius-md);
   background: var(--app-bg-soft);
 }
@@ -423,7 +429,6 @@
 }
 
 .progress-milestone.is-done {
-  border-color: transparent;
   background: var(--pill-success-bg);
 }
 
@@ -433,7 +438,7 @@
 }
 
 .progress-milestone.is-current {
-  border-color: var(--primary);
+  outline: 1px solid var(--primary);
   background: var(--stat-primary-bg);
 }
 
@@ -480,7 +485,8 @@
   gap: 6px;
   min-width: 0;
   padding: 14px;
-  border: 1px solid var(--table-border-color);
+  border: 0;
+  box-shadow: var(--shadow-card-subtle);
   border-radius: var(--radius-md);
   background: var(--app-bg-soft);
 }
@@ -724,7 +730,7 @@
 .progress-physical-summary__weight { --nutrient-color: #8950da; }
 .progress-physical-summary__info { color: var(--text-soft); font-size: 18px; cursor: help; }
 .progress-physical-summary__info:focus-visible, .progress-physical-table-wrap:focus-visible { outline: 2px solid var(--nav-active-bar); outline-offset: 3px; border-radius: 4px; }
-.progress-physical-table-wrap { flex: 1; overflow-x: auto; min-width: 0; border: 1px solid var(--card-border); border-radius: 10px; }
+.progress-physical-table-wrap { flex: 1; overflow-x: auto; min-width: 0; }
 .progress-physical-table { height: 100%; width: 100%; min-width: 920px; border-collapse: collapse; font-size: .8rem; color: var(--text-main); }
 .progress-physical-table thead th { padding: 10px 12px; background: color-mix(in srgb, var(--primary) 24%, var(--surface)); color: var(--text-main); font-size: .72rem; font-weight: 700; text-align: left; white-space: nowrap; }
 .progress-physical-table tbody th, .progress-physical-table tbody td { padding: 10px 12px; border-top: 1px solid var(--card-border); text-align: left; vertical-align: middle; }

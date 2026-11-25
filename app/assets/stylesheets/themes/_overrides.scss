@@ -82,13 +82,7 @@ html[data-theme="night"] .app-page__hero {
   background: var(--hero-bg);
 }
 
-html[data-theme="night"] .dashboard-card,
-html[data-theme="night"] .dashboard-hero,
-html[data-theme="night"] .app-page__hero,
-html[data-theme="night"] .app-panel,
-html[data-theme="night"] .app-panel--table,
-html[data-theme="night"] .app-sidebar__inner,
-html[data-theme="night"] .app-footer {
+html[data-theme="night"] .app-sidebar__inner {
   border: 1px solid var(--card-border);
   box-shadow: none;
 }
@@ -269,26 +263,6 @@ html[data-theme="night"] .app-table.table > tbody > tr:nth-child(even) > td {
 
 html[data-theme="night"] .app-table tbody tr:hover td {
   background-color: var(--table-hover-bg) !important;
-}
-
-html[data-theme="night"] .stat-card {
-  box-shadow: none;
-}
-
-html[data-theme="night"] .stat-card--success {
-  box-shadow: none;
-}
-
-html[data-theme="night"] .stat-card--primary {
-  box-shadow: none;
-}
-
-html[data-theme="night"] .stat-card--danger {
-  box-shadow: none;
-}
-
-html[data-theme="night"] .stat-card--warning {
-  box-shadow: none;
 }
 
 html[data-theme="night"] .app-calendar-table > :not(caption) > * > * {

@@ -5,7 +5,7 @@
     <div class="writing-character-actions"><%= link_to writing_action_label("add", "Novo Acontecimento"), new_writing_book_writing_timeline_event_path(@book), class: "app-btn app-btn--primary" %><%= link_to writing_action_label("arrow_back", "Voltar Ao Livro"), writing_book_path(@book), class: "app-btn app-btn--outline" %></div>
   </header>
   <section class="app-panel writing-timeline-filters" aria-label="Filtros da linha do tempo" data-controller="select2">
-    <%= form_with url: writing_book_writing_timeline_events_path(@book), method: :get do |f| %>
+    <%= form_with url: writing_book_writing_timeline_events_path(@book), method: :get, class: "app-filter-form" do |f| %>
       <div class="writing-fields">
         <div><%= f.label :query, "Pesquisar" %><%= f.search_field :query, value: @query, placeholder: "Buscar por título…", class: "app-form-control" %></div>
         <div><%= f.label :order, "Visualização" %><%= f.select :order, [["Ordem Cronológica", "chronological"], ["Ordem Narrativa", "narrative"]], { selected: @order }, class: "app-form-select" %></div>

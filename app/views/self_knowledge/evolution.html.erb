@@ -3,7 +3,7 @@
   <div class="app-panel evolution-toolbar">
     <%= form_with url: self_knowledge_evolution_path, method: :get, local: true, class: "evolution-period-form" do |f| %>
       <%= f.label :period, 'Período' %>
-      <%= f.select :period, [['30 dias', '30'], ['3 meses', '90'], ['6 meses', '180'], ['1 ano', '365'], ['Tudo', 'all']], { selected: @evolution.period }, class: 'app-form-select', onchange: 'this.form.requestSubmit()' %>
+      <%= f.select :period, [['30 dias', '30'], ['3 meses', '90'], ['6 meses', '180'], ['1 ano', '365'], ['Tudo', 'all']], { selected: @evolution.period }, class: 'app-form-select' %>
     <% end %>
     <div class="evolution-registration-pill"><span class="material-symbols-rounded" aria-hidden="true">calendar_month</span><strong><%= @evolution.days.size %></strong><span><%= @evolution.days.size == 1 ? 'dia registrado' : 'dias registrados' %></span></div>
   </div>

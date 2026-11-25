@@ -120,10 +120,10 @@
   display: grid;
   gap: 6px;
   padding: 8px 12px;
-  border: 1px solid transparent;
+  border: 0;
+  box-shadow: var(--shadow-card-subtle);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.55);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
 }
 
 .dashboard-goals-overview__metric:first-child {
@@ -167,7 +167,8 @@
   display: grid;
   gap: 8px;
   padding: 9px 10px;
-  border: 1px solid var(--card-border);
+  border: 0;
+  box-shadow: var(--shadow-card-subtle);
   border-radius: 10px;
   background: var(--surface);
 }
@@ -337,7 +338,8 @@
   min-height: 0;
   gap: 3px;
   padding: 8px 8px 2px 8px;
-  border: 1px solid var(--card-border);
+  border: 0;
+  box-shadow: var(--shadow-card-subtle);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.1);
 }
@@ -507,7 +509,8 @@
   max-height: 0;
   margin-top: 0;
   padding: 0 12px;
-  border: 1px solid var(--card-border);
+  border: 0;
+  box-shadow: var(--shadow-card-subtle);
   border-radius: 10px;
   background: var(--surface);
   opacity: 0;
@@ -631,7 +634,8 @@
   grid-template-columns: minmax(0, 1fr) auto minmax(90px, 28%);
   align-items: center;
   padding: 10px 12px;
-  border: 1px solid var(--card-border);
+  border: 0;
+  box-shadow: var(--shadow-card-subtle);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.1);
 }
@@ -757,7 +761,8 @@ html[data-theme="night"] .dashboard-goal-item {
   max-height: 0;
   margin-top: 0;
   padding: 0 12px;
-  border: 1px solid var(--card-border);
+  border: 0;
+  box-shadow: var(--shadow-card-subtle);
   border-radius: 10px;
   background: var(--surface);
   opacity: 0;
@@ -885,7 +890,8 @@ html[data-theme="night"] .dashboard-goal-item {
   align-items: center;
   gap: 12px;
   padding: 8px 8px 8px 10px;
-  border: 1px solid var(--card-border);
+  border: 0;
+  box-shadow: var(--shadow-card-subtle);
   border-left: 4px solid var(--movement-status-color);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.1);

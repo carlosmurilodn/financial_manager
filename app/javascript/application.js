@@ -21,6 +21,7 @@ import "./calendar_tabs"
 import "./flash_messages"
 import "./color_select_preview"
 import "./mobile_filter_accordion"
+import "./select_filters"
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
